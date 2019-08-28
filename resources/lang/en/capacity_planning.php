@@ -1,0 +1,27 @@
+<?php
+return [
+	'capacity_planning'                      => 'Capacity PLanning',
+	'customer_name'                       => 'Costomer Name',
+	'regenerate'                       => 'Generate Report',
+	'projects'                       => 'Project',
+	'hours_available'                       => 'Hours Available',
+	'hours_asigned'                       => 'Hours Asigned',
+	'project_manager'                       => 'Project Manager',
+	'period_from'                       => 'Report period from',
+	'period_to'                       => 'Report period to',
+	'workgroup'                       => 'Workgroup',
+	'all'                       => 'All',
+	'working_hours'                       => 'Working Hours',
+	'contract_working_hours'                       => 'Contract Working Hours',
+	'absents'                       => 'Absents',
+	'holidays'                       => 'Holidays',
+	'efective_capacity'                       => 'Effective Capacity',
+	'replacements_hours'                       => 'Replacements Hours',
+	'totals_availabe'                       => 'Totals Availabe',
+	'report_label'                       => 'Report Label',
+	'totals_availabe_text'                       => 'Total Hs Available',
+	'totals_asigned_text'                       => 'Total Hs Available',
+	'totals_effective_capacity_text'                       => 'Effective Capacity',
+	'hours'                       => 'Hours',
+
+];

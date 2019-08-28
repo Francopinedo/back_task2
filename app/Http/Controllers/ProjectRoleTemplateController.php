@@ -1,0 +1,140 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Validator;
+use Illuminate\Validation\Rule;
+
+use App\ProjectRoleTemplate;
+
+class ProjectRoleTemplateController extends Controller
+{
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    /**
+     * Muestra listado de template de project_role
+     */
+    public function index()
+    {
+        return view('project_role_template/index');
+    }
+
+    /**
+     * Form para crear template de project_role
+     */
+    public function create()
+    {
+    	return view('project_role_template/create');
+    }
+
+    /**
+     * Form para editar template de project_role
+     * @param  int $id ID
+     */
+    public function edit($id){
+    	$projectRoleTemplate = ProjectRoleTemplate::find($id);
+
+    	return response()->json([
+    		'view' => view('project_role_template/edit', ['projectRoleTemplate' => $projectRoleTemplate] )->render(),
+    	]);
+    }
+
+    /**
+     * Crear nuevo template de project_role
+     */
+    public function store(Request $request)
+    {
+    	// validacion del formulario
+    	$this->validate($request, [
+			'title'     => 'required'
+	    ]);
+
+    	$data = $request->all();
+
+    	$res = $this->apiCall('POST', 'project_role_templates', $data);
+
+
+    	// validacion de la respuesta del api
+    	if (!empty(json_decode($res->getBody()->__toString(), TRUE)['error']))
+    	{
+	    	$jsonRes = json_decode($res->getBody()->__toString(), TRUE)['error'];
+	    	Validator::make($jsonRes,
+	    		['status_code' => [Rule::in(['201', '200'])]],
+	    		['in' => __('api_errors.project_role_templates_store')]
+	    	)->validate();
+    	}
+    	else
+    	{
+    		session()->flash('message', __('general.added'));
+			session()->flash('alert-class', 'success');
+    	}
+
+    	return response()->json();
+    }
+
+    /**
+     * Actualizo idioma
+     */
+    public function update(Request $request)
+    {
+    	// validacion del formulario
+    	$this->validate($request, [
+			'title'     => 'required'
+	    ]);
+
+    	$data = $request->all();
+
+    	$res = $this->apiCall('PATCH', 'project_role_templates/'.$data['id'], $data);
+
+    	// validacion de la respuesta del api
+    	if (!empty(json_decode($res->getBody()->__toString(), TRUE)['error']))
+    	{
+	    	$jsonRes = json_decode($res->getBody()->__toString(), TRUE)['error'];
+	    	Validator::make($jsonRes,
+	    		['status_code' => [Rule::in(['201', '200'])]],
+	    		['in' => __('api_errors.project_role_templates_store')]
+	    	)->validate();
+    	}
+    	else
+    	{
+    		session()->flash('message', __('general.updated'));
+			session()->flash('alert-class', 'success');
+    	}
+
+    	return response()->json();
+    }
+
+    /**
+     * Elimina el idioma
+     * @param  int $id ID
+     */
+    public function delete($id)
+    {
+    	$res = $this->apiCall('DELETE', 'project_role_templates/'.$id);
+
+    	// validacion de la respuesta del api
+    	if (!empty(json_decode($res->getBody()->__toString(), TRUE)['error']))
+    	{
+	    	session()->flash('message', __('api_errors.delete'));
+			session()->flash('alert-class', 'danger');
+
+	    	$jsonRes = json_decode($res->getBody()->__toString(), TRUE)['error'];
+	    	Validator::make($jsonRes,
+	    		['status_code' => [Rule::in(['201', '200'])]],
+	    		['in' => __('api_errors.delete')]
+	    	)->validate();
+
+    	}
+    	else
+    	{
+    		session()->flash('message', __('general.deleted'));
+			session()->flash('alert-class', 'success');
+    	}
+
+    	return redirect()->action('ProjectRoleTemplateController@index');
+    }
+}

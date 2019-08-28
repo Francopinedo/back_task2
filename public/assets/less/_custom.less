@@ -1,0 +1,77 @@
+@import "custom/_fonts";
+@import "custom/_forms";
+@import "custom/_datatables";
+@import "custom/_header";
+@import "custom/_sidebar";
+@import "custom/_modal";
+@import "custom/_new_components";
+@import "custom/_customers_page";
+@import "custom/_department_page";
+@import "custom/_emails_page";
+@import "custom/_gantt";
+
+.hide_when_empty:empty { display: none }
+
+#add-new{
+	float: right;
+}
+
+.color_inherit{
+	color: inherit;
+	&:hover{
+		color: inherit;
+	}
+}
+/*Fix pagina de profile*/
+.user_heading_avatar .thumbnail{
+	padding: 0;
+}
+
+.md-list > li > .md-list-content .md-list-heading{
+	font-weight: 600;
+	&:empty{
+		display: inline-block;
+	}
+}
+
+/* Fix pagina de company preferences*/
+
+div[class^="new_department_div_"], .new_office_div, .new_seniority_div, .new_company_role_div, .new_project_role_div, .new_workgroup_div{
+	margin-top: 45px;
+}
+
+/*Fix para Tabs*/
+.tabs_inside .uk-sticky-placeholder{
+	margin-top: -82px!important;
+	color: #FFF;
+	.uk-tab {
+		li a{
+			color: #FFF;
+		}
+		li.uk-active a{
+			border-bottom-color: #FFF;
+		}
+	}
+}
+
+/*Fix para tabs*/
+.k-panelbar{
+	.k-item{
+		.k-link{
+			color: #777;
+			&.k-state-hover{
+				color: #FFF;
+			}
+		}
+	}
+}
+
+.k-panelbar{
+	.k-item{
+		.k-header{
+			&.k-state-hover{
+				color: #FFF!important;
+			}
+		}
+	}
+}

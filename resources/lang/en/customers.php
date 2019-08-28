@@ -1,0 +1,25 @@
+<?php
+return [
+	'customers' => 'Customers',
+	'add_new'   => 'ADD NEW',
+	'update'    => 'UPDATE',
+	'id'        => 'ID',
+	'name'      => 'Name',
+	'company'   => 'Company',
+	'address'   => 'Address',
+	'city'      => 'City',
+	'industry'  => 'Industry',
+	'email'     => 'Email',
+	'phone'     => 'Phone',
+	'billing_name'    => 'Billing Name',
+	'billing_address' => 'Billing Address',
+	'tax_number'      => 'Tax Number',
+	'bank_name'       => 'Bank Name',
+	'account_number'  => 'Account Number',
+	'swiftcode'       => 'Swift Code',
+	'aba'             => 'ABA',
+	'currency'        => 'Currency',
+	'industry'        => 'Industry',
+	'show'            => 'View details',
+	'info'            => 'Info'
+];

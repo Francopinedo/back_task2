@@ -1,0 +1,72 @@
+/*FIX para Sidebar*/
+.sidebar_mini{
+	.menu_title{
+		display: none;
+	}
+}
+.sidebar_main_open{
+	.menu_title, i{
+		color: #FFF;
+	}
+}
+.sidebar_mini, .sidebar_main_open{
+	#sidebar_main{
+		.menu_section > ul > li {
+			.current_section{
+				background: #071853;
+			}
+			&> a {
+				height: 52px;
+				.menu_icon{
+					height: 60px;
+				    padding: 12px 0;
+				}
+			}
+		}
+	}
+}
+.second_level{
+	li, a{
+		color: #777!important;
+	}
+}
+
+/*FIX para el menu de kendo*/
+.menu_section_alternative{
+	#kUI_menu{
+		background: transparent;
+		.k-item{
+			color: #FFF;
+		}
+	}
+}
+
+#kUI_menu{
+	.current_section, .active{
+		background: #071853;
+	}
+}
+
+.k-link{
+	.menu_title{
+		vertical-align: text-bottom;
+    	margin-left: 1em;
+	}
+}
+.k-menu .k-item>.k-link{
+	padding: 1em 1.5em;
+}
+
+.k-menu .k-item>.k-link>.k-i-arrow-e{
+	right: 0.1rem;
+}
+
+.md-input-select{
+	margin-top: 10px;
+	margin-bottom: 5px;
+	label{
+		top: -6px;
+    	font-size: 12px;
+    	line-height: 14px;
+	}
+}
