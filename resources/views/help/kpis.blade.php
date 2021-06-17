@@ -14,7 +14,7 @@
                         </div>
                 	@endif
                     @if(app()->getLocale()== 'en')
-                        <object width="100%" height="700px" type="application/pdf" data="{{ asset('/storage/app/public/help/English/BASIC-KPIs-GUIDE.pdf')}}?#zoom=100&scrollbar=0&toolbar=0&navpanes=0">
+                        <object width="100%" height="700px" type="application/pdf" data="{{ asset('/storage/app/public/help/English/TASKCONTROL-BASIC-KPIs-GUIDE.pdf')}}?#zoom=100&scrollbar=0&toolbar=0&navpanes=0">
                             <p>{{__('errors.500')}}</p>
                         </object>
                     @else

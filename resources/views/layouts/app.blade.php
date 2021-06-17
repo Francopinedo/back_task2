@@ -226,7 +226,7 @@
                         <div class="uk-modal-footer uk-text-right">
                             <a style="color: black" type="button" class="uk-button uk-button-default" href="{{url('/help-kpis')}}">{{__('header.see')}}</a>
                             @if(app()->getLocale() == 'en')
-                                <a style="color: black" type="button" class="uk-button uk-button-default" href="{{url('/download/English/BASIC-KPIs-GUIDE.pdf')}}">{{__('header.download')}}</a>
+                                <a style="color: black" type="button" class="uk-button uk-button-default" href="{{url('/download/English/TASKCONTROL-BASIC-KPIs-GUIDE.pdf')}}">{{__('header.download')}}</a>
                             @else
                                 <a style="color: black" type="button" class="uk-button uk-button-default" href="{{url('/download/Spanish/TASKCONTROL-GUIA-DE-KPIs.pdf')}}">{{__('header.download')}}</a>
                             @endif
@@ -244,7 +244,7 @@
                         <div class="uk-modal-footer uk-text-right">
                             <a style="color: black" class="uk-button uk-button-default" href="{{url('/admin')}}">{{__('header.see')}}</a>
                             @if(app()->getLocale() == 'en')
-                                <a style="color: black" class="uk-button uk-button-default" href="{{url('download/English/ADMIN-GUIDE.pdf')}}">{{__('header.download')}}</a>
+                                <a style="color: black" class="uk-button uk-button-default" href="{{url('download/English/TASKCONTROL-ADMIN-GUIDE.pdf')}}">{{__('header.download')}}</a>
                             @else
                                 <a style="color: black" class="uk-button uk-button-default" href="{{url('download/Spanish/TASKCONTROL-GUIA-DEL-ADMIN.pdf')}}">{{__('header.download')}}</a>
                             @endif
@@ -364,13 +364,13 @@
                         <div class="uk-dropdown uk-dropdown-small">
                             <ul class="uk-nav js-uk-prevent">
                                 {{-- <li><a href="{{ url('/help') }}">{{ __('header.help') }}</a></li> --}}
-                                <li><a class="info-modal" href="{{ url('/about') }}" data-uk-modal="{target:'#modal_info'}">{{ __('header.about') }}</a></li>
-                                <li><a class="info-modal" href="{{ url('/credit') }}" data-uk-modal="{target:'#modal_info'}">{{ __('header.credit') }}</a></li>
+                                {{-- <li><a class="info-modal" href="{{ url('/credit') }}" data-uk-modal="{target:'#modal_info'}">{{ __('header.credit') }}</a></li> --}}
                                 <!-- Archivos para ver o descargar -->
                                 <li><a href="#" data-uk-modal="{target:'#modal_started'}">{{ __('header.getting_started_guide') }}</a></li>
                                 <li><a href="#" data-uk-modal="{target:'#modal_admin'}">{{ __('header.guia_admin') }}</a></li>
                                 <li><a href="#" data-uk-modal="{target:'#modal_users'}">{{ __('header.guia_users') }}</a></li>
                                 <li><a href="#" data-uk-modal="{target:'#modal_kpis'}">{{ __('header.guia_kpis') }}</a></li>
+                                <li><a class="info-modal" href="{{ url('/about') }}" data-uk-modal="{target:'#modal_info'}">{{ __('header.about') }}</a></li>
                             </ul>
                         </div>
                     </li>
