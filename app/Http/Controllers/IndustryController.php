@@ -12,7 +12,7 @@ class IndustryController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit']);
     }
 
     /**
@@ -41,11 +41,14 @@ class IndustryController extends Controller
     public function store(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'name'       => 'required'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('POST', 'industries', $data);
 
@@ -74,11 +77,14 @@ class IndustryController extends Controller
     public function update(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'name'     => 'required'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('PATCH', 'industries/'.$data['id'], $data);
 

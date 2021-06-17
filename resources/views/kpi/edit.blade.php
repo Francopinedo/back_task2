@@ -89,7 +89,7 @@
                 <label>{{ __('kpis.show') }}</label>
                 <div class="md-input-wrapper">
 
-                    <input type="checkbox"  <?php if($kpi->show == '1') echo 'checked'; ?> class="md-input" name="show" required><span class="md-input-bar"></span>
+                    <input type="checkbox"  <?php if($kpi->showkpi == '1') echo 'checked'; ?> class="md-input" name="showkpi" required><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required query-error"></span></div>
 

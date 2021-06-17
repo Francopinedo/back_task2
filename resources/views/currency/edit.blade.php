@@ -33,7 +33,7 @@
 <script type="text/javascript">
 	$('.cancel-edit-btn').on('click', function(e){
     	e.preventDefault();
-    	$switcher_edit_toggle.hide();
+    	$('#edit_div_toggle').hide();
     	$('#edit_div').removeClass('switcher_active');
     });
 

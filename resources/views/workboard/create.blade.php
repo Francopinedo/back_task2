@@ -161,19 +161,23 @@
 
                 <div class="md-input-wrapper">
                 	<label>{{ __('tickets.acceptance_criteria') }}</label>
-                	<input type="text" class="md-input" name="acceptance_criteria" required><span class="md-input-bar"></span>
+					<textarea class="md-input" name="acceptance_criteria" required></textarea><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required" id="acceptance_criteria-error"></span></div>
 
                 <div class="md-input-wrapper">
                 	<label>{{ __('tickets.testing_name') }}</label>
-                	<input type="text" class="md-input" name="testing_name" required><span class="md-input-bar"></span>
+					<textarea class="md-input" name="testing_name" required></textarea>
+                	<span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required" id="testing_name-error"></span></div>
 
                 <div class="md-input-wrapper">
                 	<label>{{ __('tickets.done_name') }}</label>
-                	<input type="text" class="md-input" name="done_name" required><span class="md-input-bar"></span>
+										<textarea class="md-input" name="done_name" required></textarea>
+
+
+                	<span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required" id="done_name-error"></span></div>
 

@@ -32,12 +32,12 @@
 
 	                    </h2>
 	                </div>
-	                <a class="md-fab md-fab-small md-fab-accent hidden-print" href="#" id="save-preferences">
+	                <a title="{{__('general.save')}}" class="md-fab md-fab-small md-fab-accent hidden-print" href="#" id="save-preferences">
 	                    <i class="fa fa-floppy-o fa15"></i>
 	                </a>
 	            </div>
 	            <div class="user_content tabs_inside">
-	            	<form role="form" method="POST" action="{{ url('companies/update') }}" id="preferences-form" data-redirect-on-success="{{ url('companies') }}">
+	            	<form role="form" method="POST" action="{{ url('companies/update') }}" id="preferences-form" data-redirect-on-success="{{ url('companies') }}" enctype="multipart/form-data">
 	            		{!! method_field('patch') !!}
     	    			{{ csrf_field() }}
     	    			<input type="hidden" name="company[id]" value="{{ $company->id }}">
@@ -115,6 +115,29 @@
                 	                                <input type="text" class="md-input" name="company[phone]" value="{{ $company->phone }}" >
                 	                            </div>
                 	                        </div>
+
+							<div>
+  						 <div class="uk-input-group">
+                	                                <span class="uk-input-group-addon">
+                	                                <label>{{ __('companies.logo_path') }}</label>
+					<div class="thumbnail">
+                                        @if (empty($company->logo_path) || $company->logo_path=='')
+                                            <img alt="logo" id="logo_path_img2"
+                                                 src="{{ URL::to('/') }}/assets/img/avatardefault.png">
+
+                                        @else
+                                            <img src="{{ URL::to('/') .'/assets/img/companies/'. $company->id .'/'. $company->logo_path }}"
+                                                 alt="" id="logo_path_img2">
+                                        @endif
+                                    </div>
+  <a class="uk-form-file md-btn" id="upload_widget_opener">Upload image
+                                        <input type="file" name="company[logo_path]" accept="image/*" onchange="document.getElementById('logo_path_img2').src = window.URL.createObjectURL(this.files[0])" />
+                                    </a>
+
+                                    </div>
+
+
+</div>
                 	                    </div>
                 	                </div>
                 	                <div class="uk-width-large-1-2">

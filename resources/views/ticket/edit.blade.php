@@ -2,25 +2,25 @@
 
 
     #edit_div.switcher_active {
-        width: 600px;
+        width: 70%;
     }
 
-    .uk-width-medium-1-2 {
-        padding: 5px
-    }
-</style>
-<div class="uk-grid" data-uk-grid-margin>
-    <div class="uk-width-1-1">
-
-        <div class="uk-alert uk-alert-danger hide_when_empty status_code-error" data-uk-alert=""></div>
-
-        <form role="form" method="POST" action="{{ url('tickets/update') }}" id="data-form-edit"
+   
+</style>  
+ <form role="form" method="POST" action="{{ url('tickets/update') }}" id="data-form-edit"
               data-redirect-on-success="{{isset($redirect)?$redirect: url('tasks/'.$ticket->task_id.'/tickets') }}">
+               <div class="uk-alert uk-alert-danger hide_when_empty status_code-error" data-uk-alert=""></div>
+<div class="uk-grid" data-uk-grid-margin>
+    
+
+       
+
+     
             {{ csrf_field() }}
             <input type="hidden" name="task_id" value="{{ $ticket->task_id }}">
             <input type="hidden" name="id" value="{{ $ticket->id }}">
             <input type="hidden" name="last_updater_id" value="{{ Auth::id() }}">
-            <div class="uk-width-medium-1-2 uk-row-first">
+            <li class="uk-width-medium-1-3 uk-row-first">
 
                 <div class="md-input-wrapper md-input-filled">
                     <label>{{ __('tickets.description') }}</label>
@@ -89,6 +89,7 @@
 
                     <select name="requester_name" data-md-selectize>
                         <option value="">{{ __('tickets.requester') }}</option>
+
                         @foreach ($users2 as $user)
                             <option value="{{ $user->name }}" {{ ($user->name == $ticket->requester_name) ? 'selected' : '' }}>{{ $user->name }}</option>
                         @endforeach
@@ -109,6 +110,10 @@
                     </select>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required priority-error"></span></div>
+				
+				</li>
+            <li class="uk-width-medium-1-3 uk-row-first">
+			
                 <label>{{ __('tickets.severity') }}</label>
                 <div class="md-input-wrapper md-input-filled">
 
@@ -136,8 +141,7 @@
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required probability-error"></span></div>
 
-            </div>
-            <div class="uk-width-medium-1-2 uk-row-first">
+   
 
                 <label>{{ __('tickets.impact') }}</label>
                 <div class="md-input-wrapper md-input-filled">
@@ -194,7 +198,8 @@
                            data-uk-datepicker="{format:'YYYY-MM-DD'}">
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required approval_date-error"></span></div>
-
+		</li>
+            <li class="uk-width-medium-1-3 uk-row-first">
                 <div class="md-input-wrapper md-input-filled">
                     <label>{{ __('tickets.approver_name') }}</label>
 
@@ -212,37 +217,37 @@
 
                 <div class="md-input-wrapper md-input-filled">
                     <label>{{ __('tickets.acceptance_criteria') }}</label>
-                    <input type="text" class="md-input" name="acceptance_criteria"
-                           value="{{ $ticket->acceptance_criteria }}" required><span class="md-input-bar"></span>
+                    <textarea class="md-input" name="acceptance_criteria"
+						    required>{{ $ticket->acceptance_criteria }}</textarea><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required acceptance_criteria-error"></span>
                 </div>
 
                 <div class="md-input-wrapper md-input-filled">
                     <label>{{ __('tickets.testing_criteria') }}</label>
-                    <input type="text" class="md-input" name="testing_criteria" value="{{ $ticket->testing_criteria }}"
-                           required><span class="md-input-bar"></span>
+                    <textarea class="md-input" name="testing_criteria"
+                           required>{{ $ticket->testing_criteria }}</textarea><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required testing_criteria-error"></span>
                 </div>
 
                 <div class="md-input-wrapper md-input-filled">
                     <label>{{ __('tickets.done_criteria') }}</label>
-                    <input type="text" class="md-input" name="done_criteria" value="{{ $ticket->done_criteria }}"
-                           required><span class="md-input-bar"></span>
+                    <textarea class="md-input" name="done_criteria"
+                           required>{{ $ticket->done_criteria }}</textarea><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required done_criteria-error"></span></div>
 
                 <div class="md-input-wrapper md-input-filled">
                     <label>{{ __('tickets.label') }}</label>
-                    <input type="text" class="md-input" name="label" value="{{ $ticket->label }}" required><span
+                    <textarea class="md-input" name="label"  required>{{ $ticket->label }}</textarea><span
                             class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required label-error"></span></div>
 
                 <div class="md-input-wrapper md-input-filled">
                     <label>{{ __('tickets.comment') }}</label>
-                    <input type="text" class="md-input" name="comment" value="{{ $ticket->comment }}" required><span
+                    <textarea class="md-input" name="comment"  required>{{ $ticket->comment }}</textarea><span
                             class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required comment-error"></span></div>
@@ -257,8 +262,17 @@
                     </select>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required owner_id-error"></span></div>
-            </div>
-            <div class="uk-width-medium-1-1 uk-pading-left">
+<br>
+ 			 <div class="md-input-wrapper md-input-filled">
+                    <label>{{ __('tickets.contingency_plan') }}</label>
+<textarea placeholder="just fill in Risk Type Tickets" class="md-input" name="contingency_plan">{{ $ticket->contingency_plan }}</textarea><span class="md-input-bar"></span>                    
+                </div>
+                <div class="parsley-errors-list filled"><span class="parsley-required contingency_plan-error"></span></div>
+
+            </li>
+          
+
+		  <li class="uk-width-medium-1-1 uk-pading-left">
                 <div class="uk-margin-medium-top">
                     <a class="md-btn md-btn-primary md-btn-wave-light md-btn-block waves-effect waves-button waves-light"
                        href="#" id="update-btn">{{ __('requirements.update') }}</a>
@@ -266,13 +280,13 @@
                        href="#">{{ __('general.cancel') }}</a>
                 </div>
 
-            </div>
+            </li>
 
 
-        </form>
-    </div>
+       
+   
 </div>
-
+ </form>
     <script src="{{ asset('js/ticket.js') }}"></script>
     <script type="text/javascript">
         $('.cancel-edit-btn').on('click', function (e) {

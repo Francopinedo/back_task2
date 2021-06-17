@@ -44,8 +44,8 @@
 	            data: null,
 	            render: function (data, type, row) {
                     return '' +
-	            		'<a href="/teams/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
-	            		'<a href="/teams/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+	            		'<a title="{{__('general.edit')}}" href="/teams/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
+	            		'<a title="{{__('general.delete')}}" href="/teams/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
                 }
 	        } ],
 	        initComplete: function(settings, json) {

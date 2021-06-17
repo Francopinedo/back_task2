@@ -17,8 +17,8 @@
 	        ];
 
 		var actions = [
-			            { pre: '<a href="/taxes/', post: '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' },
-			            { pre: '<a href="/taxes/', post: '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>' }
+			            { pre: '<a title={{__('general.edit')}} href="/taxes/', post: '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' },
+			            { pre: '<a title={{__('general.delete')}} href="/taxes/', post: '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>' }
 			        ];
 
 		DtablesUtil(tableName, columns, actions, urlParameters);
@@ -45,13 +45,13 @@
                 	<table id="taxes-table" class="uk-table" cellspacing="0" width="100%">
                 	    <thead>
                 	        <tr>
-                	        	<th>{{ __('taxes.id') }}</th>
-                	        	<th>{{ __('taxes.detail') }}</th>
-                	        	<th>{{ __('taxes.value') }}</th>
-                	        	<th>{{ __('taxes.percentage') }}</th>
-                	        	<th>{{ __('taxes.currency') }}</th>
-                	        	<th>{{ __('taxes.country') }}</th>
-                	        	<th>{{ __('general.actions') }}</th>
+                	        	<th title="{{__('taxes_tooltip.id')}}">{{ __('taxes.id') }}</th>
+                	        	<th title="{{__('taxes_tooltip.detail')}}">{{ __('taxes.detail') }}</th>
+                	        	<th title="{{__('taxes_tooltip.value')}}">{{ __('taxes.value') }}</th>
+                	        	<th title="{{__('taxes_tooltip.percentage')}}">{{ __('taxes.percentage') }}</th>
+                	        	<th title="{{__('taxes_tooltip.currency')}}">{{ __('taxes.currency') }}</th>
+                	        	<th title="{{__('taxes_tooltip.country')}}">{{ __('taxes.country') }}</th>
+                	        	<th title="{{__('general.actions')}}">{{ __('general.actions') }}</th>
                 	        </tr>
                 	    </thead>
                 	</table>
@@ -59,7 +59,7 @@
                 		<div class="uk-width-medium-1-3" id="datatables-length"></div>
                 		<div class="uk-width-medium-1-3" id="datatables-pagination"></div>
                 		<div class="uk-width-medium-1-3">
-                			<a class="md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light" href="#" id="add-new">{{ __('taxes.add_new') }}</a>
+                			<a class="md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light" href="#" id="add-new" title="{{ __('taxes.add_new') }}">{{ __('taxes.add_new') }}</a>
                 		</div>
                 	</div>
                 </div>

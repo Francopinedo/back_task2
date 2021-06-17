@@ -14,7 +14,7 @@ class CapacityPlanningController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit']);
     }
 
     /**
@@ -27,7 +27,8 @@ class CapacityPlanningController extends Controller
         $data['project'] = $this->getFromApi('GET', 'projects/' . session('project_id'));
 
         if (is_object($data['project'])) {
-            $data['contracts'] = $this->getFromApi('GET', 'contracts/?project_id' . $data['project']->id);
+            $data['contracts'] = $this->getFromApi('GET', 'contracts?project_id' . $data['project']->id);
+            $data['sprints'] = $this->getFromApi('GET', 'sprints?project_id' . $data['project']->id);
         }
 
         if (isset($data['contracts'])) {
@@ -38,6 +39,17 @@ class CapacityPlanningController extends Controller
             $hours = $e[0] - $s[0];
 
             $data['hours'] = $hours;
+        }
+
+
+        if (isset($data['sprints'])) {
+
+
+            $sprint_s = explode(':', $data['sprints'][0]->start_date);
+            $sprint_e = explode(':', $data['sprints'][0]->finish_date);
+            $sprint_hours = intval($sprint_e[0]) - intval($sprint_s[0]);
+
+            $data['sprint_hours'] = $sprint_hours;
         }
 
         $data['customers'] = $this->getFromApi('GET', 'customers?company_id=' . $company->id);
@@ -62,6 +74,8 @@ class CapacityPlanningController extends Controller
         $company = $this->getFromApi('GET', 'companies/fromUser/' . Auth::id());
         $from = $request->period_from;
         $to = $request->period_to;
+    $sprint_from = $request->sprint_from;
+        $sprint_to = $request->sprint_to;
         $customer_id = $request->customer;
         $project = $request->project;
         $workgroup_id = $request->workgroup;
@@ -91,8 +105,8 @@ class CapacityPlanningController extends Controller
         }
 
 
-        $result = $this->getFromApi('GET', 'capacity_planning/datatables/?customer=' . $customer_id . '&project='
-            . $project . '&length=-1' . "&company=" . $company->id . '&period_from=' . $from . '&period_to=' . $to . '&workgroup=' . $workgroup_id .
+        $result = $this->getFromApi('GET', 'capacity_planning/datatables?customer=' . $customer_id . '&project='
+            . $project . '&length=-1' . "&company=" . $company->id . '&period_from=' . $from . '&period_to=' . $to .'&sprint_from=' . $sprint_from . '&sprint_to=' . $sprint_to . '&workgroup=' . $workgroup_id .
             '&draw=1&start=0');
 
         $data['data'] = $result;
@@ -227,15 +241,16 @@ class CapacityPlanningController extends Controller
 
     public function pdf(Request $request)
     {
-
+        try{
         $company = $this->getFromApi('GET', 'companies/fromUser/' . Auth::id());
         $from = $request->period_from;
         $to = $request->period_to;
+        $sprint_from = isset($request->sprint_from)?$request->sprint_from:'';
+        $sprint_to = isset($request->sprint_to)?$request->sprint_to:'';
         $customer_id = $request->customer;
         $project = $request->project;
         $workgroup_id = $request->workgroup;
         $report_label = $request->report_label;
-
 
         $data = array();
         $data['report_label'] = $report_label;
@@ -248,7 +263,7 @@ class CapacityPlanningController extends Controller
         }
 
         if (is_object($data['project'])) {
-            $data['contracts'] = $this->getFromApi('GET', 'contracts/?project_id' . $data['project']->id);
+            $data['contracts'] = $this->getFromApi('GET', 'contracts?project_id' . $data['project']->id);
         }
 
         if (isset($data['contracts'])) {
@@ -260,21 +275,41 @@ class CapacityPlanningController extends Controller
 
             $data['hours'] = $hours;
         }
+	   if (isset($data['sprints'])) {
 
+
+            $sprint_s = explode(':', $data['sprints'][0]->start_date);
+            $sprint_e = explode(':', $data['sprints'][0]->finish_date);
+            $sprint_hours = $sprint_e[0] - $sprint_s[0];
+
+            $data['sprint_hours'] = $sprint_hours;
+        }
 
         $data['period_from'] = $from;
         $data['period_to'] = $to;
 
-        $result = $this->getFromApi('GET', 'capacity_planning/datatables/?customer=' . $customer_id . '&project='
-            . $project . '&length=-1' . "&company=" . $company->id . '&period_from=' . $from . '&period_to=' . $to . '&workgroup=' . $workgroup_id .
-            '&draw=1&start=0');
-        // var_dump($result[0]->name);
-        $data['result'] = $result;
+ 	$data['sprint_from'] = $sprint_from;
+        $data['sprint_to'] = $sprint_to;
+        $sprints="";
+    if($sprint_from!='' && $sprint_to!=''){
+    $sprints="&sprint_from=" . $sprint_from . "&sprint_to=" . $sprint_to ;
+    }
 
+
+      $result = $this->apiCall('GET', 'capacity_planning/pdf?customer=' . $customer_id . '&project='. $project . "&company=" . $company->id . '&period_from=' . $from . '&period_to=' . $to .$sprints. '&workgroup=' . $workgroup_id );
+
+            $result_pdf=json_decode($result->getBody()->__toString(), TRUE);
+        $data['result'] = $result_pdf;
 
         $pdf = \PDF::loadView('capacity_planning/pdf', $data);
         $pdf->setPaper('A4', 'landscape');
         return $pdf->download('capacity_planning.pdf');
+    
+    }catch(\Exception $ex)
+    {
+        return $ex;
+    }
+    
     }
 
 

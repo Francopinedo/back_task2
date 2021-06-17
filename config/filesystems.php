@@ -62,6 +62,13 @@ return [
             'visibility' => 'public',
         ],
 
+        'help' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/help'),
+            'url' => env('APP_URL').'/storage/help',
+            'visibility' => 'public',
+        ],
+
         'repository' => [
             'driver' => 'local',
             'root' => storage_path('app/public/repository'),
@@ -75,6 +82,11 @@ return [
             'secret' => env('AWS_SECRET'),
             'region' => env('AWS_REGION'),
             'bucket' => env('AWS_BUCKET'),
+        ],
+
+        'local_public' => [
+            'driver' => 'local',
+            'root'   => public_path(),
         ],
 
     ],

@@ -14,5 +14,6 @@ return [
 	'add_new'             => 'ADD NEW',
 	'update'              => 'UPDATE',
 	'reload_emails'              => 'Reload Emails',
-	'reload_cat'              => 'Reload Categories'
+	'reload_cat'              => 'Reload Categories',
+	'cc'				  => 'CC (If you want to add more than one, separete e-mails by ;)'
 ];

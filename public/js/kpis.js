@@ -39,6 +39,7 @@ var Kpis = (function () {
             this.chartRrr();
             this.chartFnsl();
 
+
             this.chartActivities();
             this.chartMilestones();
             this.chartReviews();
@@ -46,6 +47,7 @@ var Kpis = (function () {
             this.chartOverdueTasks();
             this.chartTaskCompleted();
             this.chartPlannedHours();
+
             this.chartCompletedProjects();
             this.chartCancelledProjects();
 

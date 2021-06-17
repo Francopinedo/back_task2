@@ -11,7 +11,7 @@ class ProjectResourceController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit', 'deletecontrol']);
     }
 
     /**
@@ -56,21 +56,29 @@ class ProjectResourceController extends Controller
     public function store(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'project_id'     => 'required',
 			'project_role_id' => 'required',
 			'seniority_id'    => 'required',
-			'rate'         => 'required',
+			'rate'         => 
+
+
+
+
+'numeric|required',
 
 			'currency_id'     => 'required',
             'city_id'     => 'required',
             'country_id'     => 'required',
             'office_id'     => 'required',
 			'workplace'       => 'required',
-			'load'            => 'required'
+			'load'            => 'numeric|required'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('POST', 'project_resources', $data);
 
@@ -136,19 +144,22 @@ class ProjectResourceController extends Controller
     public function update(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			 'project_role_id' => 'required',
 			 'seniority_id'    => 'required',
 			 'currency_id'     => 'required',
 			 'workplace'       => 'required',
-			 'load'            => 'required',
+			 'load'            =>'numeric|required',
             'city_id'     => 'required',
             'country_id'     => 'required',
             'office_id'     => 'required',
-			 'rate'            => 'required',
+			 'rate'            =>'numeric|required',
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('PATCH', 'project_resources/'.$data['id'], $data);
 
@@ -198,7 +209,7 @@ class ProjectResourceController extends Controller
 			session()->flash('alert-class', 'success');
     	}
 
-    	return redirect('project_board/rows');
+    	return redirect('project_board/project_rows');
 
     	// if (!isset($jsonRes))
     	// {

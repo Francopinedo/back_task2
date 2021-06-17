@@ -11,7 +11,7 @@ class TaskExpenseController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit']);
     }
 
     /**
@@ -39,11 +39,14 @@ class TaskExpenseController extends Controller
     public function store(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'task_id' => 'required'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('POST', 'task_expenses', $data);
 
@@ -91,12 +94,15 @@ class TaskExpenseController extends Controller
     public function update(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
-			// 'cost'        => 'required',
+    	$validator =Validator::make($request->all(), [
+
+			// 'cost'        => 'numeric|required'
 			// 'currency_id' => 'required'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('PATCH', 'task_expenses/'.$data['id'], $data);
 

@@ -13,7 +13,7 @@ class CompanyExchangeRateController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit']);
     }
 
     /**
@@ -58,13 +58,16 @@ class CompanyExchangeRateController extends Controller
     public function store(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'currency_id' => 'required',
 			'company_id'  => 'required',
-			'value'       => 'required'
+			'value'       => 'numeric|required'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('POST', 'exchange_rates', $data);
 
@@ -92,13 +95,16 @@ class CompanyExchangeRateController extends Controller
     public function update($company_id, Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'currency_id' => 'required',
 			'company_id'  => 'required',
-			'value'       => 'required'
+			'value'       => 'numeric|required'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('PATCH', 'exchange_rates/'.$data['id'], $data);
 

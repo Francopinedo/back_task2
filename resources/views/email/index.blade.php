@@ -3,8 +3,8 @@
 @section('scripts')
     <script src="{{ asset('js/emails_page.js') }}"></script>
     <script src="{{ asset('js/table_actions.js') }}"></script>
-    <script src="/assets/js/pages/page_mailbox.min.js"></script>
-
+    <script src="{{ asset('assets/js/pages/page_mailbox.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('bower_components/bootstrap/dist/css/bootstrap.min.css') }}">
     <script type="text/javascript">
         var new_category = '{{ __('emails.new_category') }}';
         var company_id = '{{ is_object($company)?$company->id:'' }}';
@@ -15,66 +15,68 @@
         })
 
     </script>
+    <script>
+        window.clientKey = "{{ $clientKey ??'' }}";
+        window.secretKey = "{{ $secretKey ??'' }}";
+        window.hostKey = "{{ $hostKey ??'' }}";
+        window.tcApiHostKey = "{{ $tcApiHost ??'' }}";
+        window.userIdKey = "{{ $userIdKey ??'' }}";
+    </script>
 @endsection
 
 @section('content')
-    <div class="uk-grid-width-small-1-2 uk-grid-width-medium-1-2 uk-grid-width-large-1-3 uk-margin-large-bottom hierarchical_show"
-         data-uk-grid="{gutter: 20}">
-        @foreach ($emailCategories as $emailCategory)
-            <div>
-                <h4 class="heading_c uk-margin-bottom">
-                    {{ ($emailCategory->title) }}
 
 
-                    @if (Auth::user()->hasPermission('manage.emails') || Auth::user()->hasRole('user'))
-                        <a href="/emails/{{ $emailCategory->id }}/edit_category" class="edit-btn"><i
-                                    class="fa fa-pencil md-icon" aria-hidden="true"></i></a>
-                        <a href="/emails/{{ $emailCategory->id }}/delete_category" class="delete-btn"><i
-                                    class="fa fa-trash md-icon" aria-hidden="true"></i></a>
-
-                    @endif
-                    <div>
-                        <ul class="uk-nestable" id="nestable">
-                            @foreach ($emailCategory->emails->data as $email)
-                                <li data-id="1" class="uk-nestable-item">
-                                    <div class="uk-nestable-panel">
-                                        <div class="md-card-list-item-menu email-icons">
-                                            <a
-                                                    href="#mailbox_new_message"
-                                                    class="md-icon material-icons email-composer-link"
-                                                    data-uk-modal="{center:true}"
-                                                    data-id="{{ $email->id }}"
-                                                    title="{{ __('emails.compose') }}"
-                                            >
-                                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                                            </a>
-                                            @if (Auth::user()->hasPermission('manage.emails') || Auth::user()->hasRole('user') )
-                                                <a
-                                                        href="/emails/{{ $email->id }}/edit"
-                                                        class="md-icon material-icons edit-btn"
-                                                        data-id="{{ $email->id }}">
-                                                    <i class="fa fa-pencil" aria-hidden="true"></i>
-                                                </a>
-                                                <a
-                                                        href="/emails/{{ $email->id }}/delete"
-                                                        class="md-icon material-icons delete-btn"
-                                                        data-id="{{ $email->id }}">
-                                                    <i class="fa fa-trash-o" aria-hidden="true"></i>
-                                                </a>
-                                            @endif
-                                        </div>
-                                        {{ $email->title }} <br/>
-                                    </div>
-
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
+    <div class="md-card-content">
+        <div class="uk-grid" data-uk-grid-margin>
+            <div class="uk-width-1-1">
+                 <div id="app">
+                    <v-app>
+                          @if (empty(Auth::user()->theme) || Auth::user()->theme == 'app_theme_default')
+                            <theme-default></theme-default>
+                        @endif
+                        @if (Auth::user()->theme == 'app_theme_dark')
+                            <theme-dark></theme-dark>
+                        @endif
+                        @if (Auth::user()->theme == 'app_theme_b')
+                            <theme-purple></theme-purple>
+                        @endif
+                        @if (Auth::user()->theme == 'app_theme_c')
+                            <theme-brown></theme-brown>
+                        @endif
+                        @if (Auth::user()->theme == 'app_theme_d')
+                            <theme-default></theme-default>
+                        @endif
+                        @if (Auth::user()->theme == 'app_theme_e')
+                            <theme-gray></theme-gray>
+                        @endif
+                        @if (Auth::user()->theme == 'app_theme_f')
+                            <theme-gray></theme-gray>
+                        @endif
+                        @if (Auth::user()->theme == 'app_theme_g')
+                            <theme-purple></theme-purple>
+                        @endif
+                        @if (Auth::user()->theme == 'app_theme_h')
+                            <theme-red></theme-red>
+                        @endif
+                        @if (Auth::user()->theme == 'app_theme_i')
+                            <theme-yellow></theme-yellow>
+                        @endif
+                        <v-container fluid fill-height>
+{{--                            <search-bar></search-bar>--}}
+                            <navbar v-bind:selectedtheme="{{ json_encode($selectedtheme) }}"></navbar>
+                            <mails :key="$route.path"></mails>
+                            <compose-button v-bind:contacts="{{  json_encode($toSend) }}"></compose-button>
+                        </v-container>
+                    </v-app>
+                                     </div>
             </div>
-        @endforeach
+        </div>
     </div>
 
-    {{-- SECCTION DE EMAIL COMPOSER --}}
+    {{--        @endsection--}}
+
+ {{--   --}}{{-- SECCTION DE EMAIL COMPOSER --}}{{--
 
     <div class="md-fab-wrapper md-fab-in-card">
         <div class="md-fab md-fab-accent md-fab-sheet">
@@ -99,7 +101,7 @@
                 <span class="sr-only">{{ __('general.loading') }}...</span>
             </div>
             <button class="uk-modal-close uk-close" type="button"></button>
-            <form id="email-form"  enctype="multipart/form-data">
+            <form id="email-form"  enctype="multipart/form-data" >
                 {{ csrf_field() }}
                 <div class="uk-modal-header">
                     <h3 class="uk-modal-title">{{ __('emails.compose') }}</h3>
@@ -168,6 +170,7 @@
             </form>
         </div>
     </div>
+--}}
 @endsection
 
 

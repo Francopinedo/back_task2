@@ -11,7 +11,7 @@ class ProcurementOfferController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit']);
     }
 
     /**
@@ -44,13 +44,16 @@ class ProcurementOfferController extends Controller
     public function store(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'procurement_id'      => 'required',
-			'cost'     => 'required',
+			'cost'     => 'numeric|required',
 			'description'         => 'required'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('POST', 'procurement_offers', $data);
 
@@ -103,7 +106,8 @@ class ProcurementOfferController extends Controller
     public function update(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			// 'project_role_id' => 'required',
 			// 'seniority_id'    => 'required',
 			// 'currency_id'     => 'required',
@@ -111,7 +115,9 @@ class ProcurementOfferController extends Controller
 			// 'load'            => 'required',
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('PATCH', 'procurement_offers/'.$data['id'], $data);
 

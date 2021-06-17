@@ -2258,6 +2258,7 @@ html:not(.uk-touch) .uk-nav-offcanvas ul a:hover {
  ========================================================================== */
 .uk-navbar-flip {
   float: right;
+  margin-top: 5px;
 }
 /*
      * Apply same `border-radius` as `uk-navbar`

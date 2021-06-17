@@ -11,28 +11,28 @@ class KpiFunctionsController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit']);
 
     }
 
     /**
      * Muestra listado
      */
-    public function index()
+    public function index($category_kpi='')
     {
-        $company = $this->getFromApi('GET', 'companies/fromUser/' . Auth::id());
+        $company = $this->getFromApi('GET', 'companies/fromUser/' .Auth::id());
         //$indicadores= $this->getFromApi('GET', 'kpis/indicadores?company_id=' . $company->id.'&project_id='.session('project_id'));
 
 
-        $kpis = $this->getFromApi('GET', 'kpis/?company_id=' . $company->id);
+        $kpis = $this->getFromApi('GET', 'kpis?company_id=' . $company->id);
 
-        $categories = $this->getFromApi('GET', 'kpis_category/?company_id=' . $company->id);
+        $categories = $this->getFromApi('GET', 'kpis_category?company_id=' . $company->id);
 
 
         $return =[
             'kpis' => $kpis,
-
-            'categories' => $categories
+            'categories' => $categories,
+            'category_kpi'=>$category_kpi,
         ];
 
     /*    foreach ($indicadores as $clave => $valor){

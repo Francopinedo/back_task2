@@ -50,8 +50,8 @@
             type: 'POST',
             data: formData,
             async: false,
-            success: function (data) {
-                //  alert(data)
+            success: function (json) {
+               // console.log(json);
                 window.location.replace(form.data('redirect-on-success'));
             },
             error:function (json) {

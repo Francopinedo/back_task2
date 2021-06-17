@@ -1,12 +1,19 @@
+<style>
+
+    #create_div.switcher_active {
+        width: 50%;
+    }
+
+</style>   
+  	<form role="form" method="POST" action="{{ url('requirements') }}" id="data-form" data-redirect-on-success="{{ url($url) }}">
+
 <div class="uk-grid" data-uk-grid-margin>
-    <div class="uk-width-1-1">
-
+    		<li class="uk-width-medium-1-1 uk-row-first">
 		<div class="uk-alert uk-alert-danger hide_when_empty" data-uk-alert="" id="status_code-error"></div>
-
-    	<form role="form" method="POST" action="{{ url('requirements') }}" id="data-form" data-redirect-on-success="{{ url('requirements') }}">
+</li>
     	    {{ csrf_field() }}
     	    <input type="hidden" name="project_id" value="{{ session('project_id') }}">
-    		<div class="uk-width-medium-1-1 uk-row-first">
+    		<li class="uk-width-medium-1-2 uk-row-first">
 
                 <div class="md-input-wrapper">
                 	<label>{{ __('requirements.description') }}</label>
@@ -61,6 +68,8 @@
                 	</select>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required priority-error"></span></div>
+</li>
+    		<li class="uk-width-medium-1-2 uk-row-first">
 
                 <div class="md-input-wrapper md-input-select">
                 	<label>{{ __('requirements.business_value') }}</label>
@@ -111,15 +120,16 @@
                 	<input type="text" class="md-input" name="comment" required><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required comment-error"></span></div>
+</li>
+    		<li class="uk-width-medium-1-1 uk-row-first">
 
 				<div class="uk-margin-medium-top">
                     <a class="md-btn md-btn-primary md-btn-wave-light md-btn-block waves-effect waves-button waves-light" href="#" id="add-btn">{{ __('cities.add_new') }}</a>
                     <a class="md-btn md-btn-flat md-btn-wave md-btn-block waves-effect waves-button" href="#" id="cancel-btn">{{ __('general.cancel') }}</a>
                 </div>
 
-            </div>
+            </li>
 
-    	</form>
-    </div>
 </div>
+    	</form>
 

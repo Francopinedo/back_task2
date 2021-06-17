@@ -1,4 +1,4 @@
-@extends('layouts.app', ['favoriteTitle' => __('projects.board'), 'favoriteUrl' => 'rows'])
+    @extends('layouts.app', ['favoriteTitle' => __('projects.board'), 'favoriteUrl' => url(Request::path())])
 @if(session()->has('project_id'))
 
 @section('scripts')
@@ -67,8 +67,10 @@
                     render: function (data, type, row) {
                         if (row.type == 'ordinary') {
                             return '' +
-                                '<a href="/project_resources/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
-                                '<a href="/project_resources/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+                                '<a title="{{__('general.edit')}}" href="/project_resources/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' 
+                                <?php if (Auth::user()->hasPermission('delete.users')) { ?> +
+                                    '<a title="{{__('general.delete')}}" href="/project_resources/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>'
+                                <?php } ?>;
 
                         } else {
                             return '';
@@ -171,8 +173,10 @@
                     data: null,
                     render: function (data, type, row) {
                         return '' +
-                            '<a href="/project_expenses/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
-                            '<a href="/project_expenses/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+                            '<a title="{{__('general.edit')}}" href="/project_expenses/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' 
+                            <?php if (Auth::user()->hasPermission('delete.users')) { ?> +
+                                '<a title="{{__('general.delete')}}" href="/project_expenses/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>'
+                            <?php } ?>;
                     }
                 }],
                 "footerCallback": function (row, data, start, end, display) {
@@ -249,8 +253,10 @@
                     render: function (data, type, row) {
                         console.log(row);
                         return '' +
-                            '<a href="/project_services/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
-                            '<a href="/project_services/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+                            '<a title="{{__('general.edit')}}" href="/project_services/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' 
+                            <?php if (Auth::user()->hasPermission('delete.users')) { ?> +
+                                '<a title="{{__('general.delete')}}" href="/project_services/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>'
+                            <?php } ?>;
                     }
                 }],
                 "footerCallback": function (row, data, start, end, display) {
@@ -341,8 +347,10 @@
                     data: null,
                     render: function (data, type, row) {
                         return '' +
-                            '<a href="/project_materials/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
-                            '<a href="/project_materials/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+                            '<a title="{{__('general.edit')}}" href="/project_materials/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' 
+                            <?php if (Auth::user()->hasPermission('delete.users')) { ?> +
+                                '<a title="{{__('general.delete')}}" href="/project_materials/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>'
+                            <?php } ?>;
                     }
                 }],
                 "footerCallback": function (row, data, start, end, display) {
@@ -403,6 +411,104 @@
                     // tableActions.initDelete('{{ __('general.confirm') }}');
                 }
             });
+
+
+             /////////////////////////////////////////////////////
+            $('#debit_credit-table').DataTable({
+                processing: true,
+                serverSide: true,
+                bPaginate: false,
+                ajax: '{{ env('API_PATH') }}project_debit_credit/datatables?project_id={{ session('project_id') }}&contract_id={{$contracts[0]->id}}',
+                dom: '<"top">rt<"bottom"lp><"clear">',
+                language: {
+                    paginate: {
+                        previous: "<<",
+                        next: ">>"
+                    }
+                },
+                columns: [
+                    {data: 'id', name: 'id', visible: false},
+                    {data: 'detail', name: 'detail'},
+                     {data: 'signs', name: 'signs'},
+                    {data: 'cost', name: 'cost'},
+                    {data: 'cost_exchage', name: 'cost_exchage'},
+                    {data: 'amount', name: 'amount'},
+                    {data: 'rate_exchage', name: 'rate_exchage'},
+                     {data: 'frequency', name: 'frequency'},
+                    {data: 'currency_name', name: 'currency_name'},
+                    {data: 'actions', name: 'actions'}
+                ],
+                columnDefs: [{
+                    targets: -1,
+                    data: null,
+                    render: function (data, type, row) {
+                        return '' +
+                            '<a title="{{__('general.edit')}}" href="/project_debit_credit/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' 
+                            <?php if (Auth::user()->hasPermission('delete.users')) { ?> +
+                                '<a title="{{__('general.delete')}}" href="/project_debit_credit/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>'
+                            <?php } ?>;
+                    }
+                }],
+                "footerCallback": function (row, data, start, end, display) {
+                    var api = this.api();
+
+                    var i = 0;
+                    api.columns().every(function () {
+                        if (i == 4 || i == 6) {
+                            var sum = this
+                                .data()
+                                .reduce(function (a, b) {
+
+
+                                    var x = parseFloat(a) || 0;
+
+                                    if (isNaN(x)) {
+                                        x = 0;
+                                    }
+                                    //   console.log(x);
+                                    // console.log(b);
+                                    if (b != null) {
+
+                                        // console.log(b);
+
+
+                                        var y = parseFloat(b) || 0;
+
+
+                                        if (isNaN(y)) {
+                                            y = 0;
+                                        }
+                                        //  console.log(y);
+
+
+                                        return parseFloat(x) + parseFloat(y);
+                                    }
+                                }, 0);
+
+
+                            if (sum != undefined) {
+                                if (i == 4) {
+                                    subtotal = parseFloat(sum) + parseFloat(subtotal);
+                                    $("#subtotal").text(subtotal);
+                                }
+                                $(this.footer()).html(sum.toLocaleString('de-DE', {maximumFractionDigits: 2}));
+                            }
+
+                        }
+                        i++;
+                    });
+
+
+                },
+                initComplete: function (settings, json) {
+                    // projectBoard.data.materials = json.data;
+                    tableActions.initEdit();
+                    // tableActions.initAjaxCreate();
+                    // tableActions.initDelete('{{ __('general.confirm') }}');
+                }
+            });
+             ////////////////////////////////////////////////////
+
         });
 
         $(document).ready(function () {
@@ -457,7 +563,7 @@
             <div class="md-card-content">
                 <div class="uk-grid" data-uk-grid-margin>
                     <div class="uk-width-1-1">
-                        <div class="dt-buttons btn-group">
+                        <div class="dt-buttons btn-group"> <!--{{url('/')}}/project_board/pdf-->
                             <a class="md-btn" tabindex="0" id="project_board_pdf" href="#">
                                 <span>PDF</span>
                             </a>
@@ -484,23 +590,23 @@
                         <table id="project_resources-table" class="uk-table" cellspacing="0" width="100%">
                             <thead>
                             <tr>
-                                <th>{{ __('projects.id') }}</th>
-                                <th>{{ __('projects.project_role') }}</th>
-                                <th>{{ __('projects.seniority') }}</th>
-                                <th>{{ __('projects.user') }}</th>
-                                <th>{{ __('projects.working_hours') }}</th>
-                                <th>{{ __('projects.rate') }}</th>
-                                <th>{{ __('projects.type') }}</th>
-                                <th>{{ __('invoices.total') }}</th>
-                                <th>{{ __('projects.currency') }}</th>
-                                <th>{{ __('projects.exchanged') }}</th>
-                                <th>{{ __('projects.load') }}</th>
-                                <th>{{ __('projects.workplace') }}</th>
-                                <th>{{ __('projects.country') }}</th>
-                                <th>{{ __('projects.city') }}</th>
-                                <th>{{ __('projects.ofice') }}</th>
-                                <th>{{ __('projects.comments') }}</th>
-                                <th class="noprint">{{ __('general.actions') }}</th>
+                                <th title="{{__('projects_tooltip.id')}}">{{ __('projects.id') }}</th>
+                                <th title="{{__('projects_tooltip.project_role')}}">{{ __('projects.project_role') }}</th>
+                                <th title="{{__('projects_tooltip.seniority')}}">{{ __('projects.seniority') }}</th>
+                                <th title="{{__('projects_tooltip.user')}}">{{ __('projects.user') }}</th>
+                                <th title="{{__('projects_tooltip.working_hours')}}">{{ __('projects.working_hours') }}</th>
+                                <th title="{{__('projects_tooltip.rate')}}">{{ __('projects.rate') }}</th>
+                                <th title="{{__('projects_tooltip.type')}}">{{ __('projects.type') }}</th>
+                                <th title="{{__('projects_tooltip.total')}}">{{ __('projects.total') }}</th>
+                                <th title="{{__('projects_tooltip.currency')}}">{{ __('projects.currency') }}</th>
+                                <th title="{{__('projects_tooltip.exchanged')}}">{{ __('projects.exchanged') }}</th>
+                                <th title="{{__('projects_tooltip.load')}}">{{ __('projects.load') }}</th>
+                                <th title="{{__('projects_tooltip.workplace')}}">{{ __('projects.workplace') }}</th>
+                                <th title="{{__('projects_tooltip.country')}}">{{ __('projects.country') }}</th>
+                                <th title="{{__('projects_tooltip.city')}}">{{ __('projects.city') }}</th>
+                                <th title="{{__('projects_tooltip.office')}}">{{ __('projects.office') }}</th>
+                                <th title="{{__('projects_tooltip.comments')}}">{{ __('projects.comments') }}</th>
+                                <th title="{{__('general.actions')}}" class="noprint">{{ __('general.actions') }}</th>
                             </tr>
                             </thead>
                             <tfoot>
@@ -542,16 +648,16 @@
                         <table id="project_expenses-table" class="uk-table" cellspacing="0" width="100%">
                             <thead>
                             <tr>
-                                <th>{{ __('project.id') }}</th>
-                                <th>{{ __('projects.detail') }}</th>
-                                <th>{{ __('projects.reimbursable') }}</th>
-                                <th>{{ __('projects.cost') }}</th>
-                                <th>{{ __('projects.cost_exchanged') }}</th>
-                                <th>{{ __('projects.amount') }}</th>
-                                <th>{{ __('projects.amount_exchanged') }}</th>
-                                <th>{{ __('projects.frequency') }}</th>
-                                <th>{{ __('projects.currency') }}</th>
-                                <th class="noprint">{{ __('general.actions') }}</th>
+                                <th title="{{__('projects_tooltip.id')}}">{{ __('project.id') }}</th>
+                                <th title="{{__('projects_tooltip.detail')}}">{{ __('projects.detail') }}</th>
+                                <th title="{{__('projects_tooltip.reimbursable')}}">{{ __('projects.reimbursable') }}</th>
+                                <th title="{{__('projects_tooltip.cost')}}">{{ __('projects.cost') }}</th>
+                                <th title="{{__('projects_tooltip.cost_exchanged')}}">{{ __('projects.cost_exchanged') }}</th>
+                                <th title="{{__('projects_tooltip.amount')}}">{{ __('projects.amount') }}</th>
+                                <th title="{{__('projects_tooltip.amount_exchanged')}}">{{ __('projects.amount_exchanged') }}</th>
+                                <th title="{{__('projects_tooltip.frequency')}}">{{ __('projects.frequency') }}</th>
+                                <th title="{{__('projects_tooltip.currency')}}">{{ __('projects.currency') }}</th>
+                                <th title="{{__('general.actions')}}" class="noprint">{{ __('general.actions') }}</th>
                             </tr>
                             </thead>
                             <tfoot>
@@ -588,16 +694,16 @@
                         <table id="project_services-table" class="uk-table" cellspacing="0" width="100%">
                             <thead>
                             <tr>
-                                <th>{{ __('project.id') }}</th>
-                                <th>{{ __('projects.detail') }}</th>
-                                <th>{{ __('projects.reimbursable') }}</th>
-                                <th>{{ __('projects.cost') }}</th>
-                                <th>{{ __('projects.cost_exchanged') }}</th>
-                                <th>{{ __('projects.amount') }}</th>
-                                <th>{{ __('projects.amount_exchanged') }}</th>
-                                <th>{{ __('projects.frequency') }}</th>
-                                <th>{{ __('projects.currency') }}</th>
-                                <th class="noprint">{{ __('general.actions') }}</th>
+                                <th title="{{__('projects_tooltip.id')}}">{{ __('project.id') }}</th>
+                                <th title="{{__('projects_tooltip.detail')}}">{{ __('projects.detail') }}</th>
+                                <th title="{{__('projects_tooltip.reimbursable')}}">{{ __('projects.reimbursable') }}</th>
+                                <th title="{{__('projects_tooltip.cost')}}">{{ __('projects.cost') }}</th>
+                                <th title="{{__('projects_tooltip.cost_exchanged')}}">{{ __('projects.cost_exchanged') }}</th>
+                                <th title="{{__('projects_tooltip.amount')}}">{{ __('projects.amount') }}</th>
+                                <th title="{{__('projects_tooltip.amount_exchanged')}}">{{ __('projects.amount_exchanged') }}</th>
+                                <th title="{{__('projects_tooltip.frequency')}}">{{ __('projects.frequency') }}</th>
+                                <th title="{{__('projects_tooltip.currency')}}">{{ __('projects.currency') }}</th>
+                                <th title="{{__('general.actions')}}" class="noprint">{{ __('general.actions') }}</th>
                             </tr>
                             </thead>
                             <tfoot>
@@ -634,16 +740,61 @@
                         <table id="project_materials-table" class="uk-table" cellspacing="0" width="100%">
                             <thead>
                             <tr>
-                                <th>{{ __('project.id') }}</th>
-                                <th>{{ __('projects.detail') }}</th>
-                                <th>{{ __('projects.reimbursable') }}</th>
-                                <th>{{ __('projects.cost') }}</th>
-                                <th>{{ __('projects.cost_exchanged') }}</th>
-                                <th>{{ __('projects.amount') }}</th>
-                                <th>{{ __('projects.amount_exchanged') }}</th>
-                                <th>{{ __('projects.frequency') }}</th>
-                                <th>{{ __('projects.currency') }}</th>
-                                <th class="noprint">{{ __('general.actions') }}</th>
+                                <th title="{{__('projects_tooltip.id')}}">{{ __('project.id') }}</th>
+                                <th title="{{__('projects_tooltip.detail')}}">{{ __('projects.detail') }}</th>
+                                <th title="{{__('projects_tooltip.reimbursable')}}">{{ __('projects.reimbursable') }}</th>
+                                <th title="{{__('projects_tooltip.cost')}}">{{ __('projects.cost') }}</th>
+                                <th title="{{__('projects_tooltip.cost_exchanged')}}">{{ __('projects.cost_exchanged') }}</th>
+                                <th title="{{__('projects_tooltip.amount')}}">{{ __('projects.amount') }}</th>
+                                <th title="{{__('projects_tooltip.amount_exchanged')}}">{{ __('projects.amount_exchanged') }}</th>
+                                <th title="{{__('projects_tooltip.frequency')}}">{{ __('projects.frequency') }}</th>
+                                <th title="{{__('projects_tooltip.currency')}}">{{ __('projects.currency') }}</th>
+                                <th title="{{__('general.actions')}}" class="noprint">{{ __('general.actions') }}</th>
+                            </tr>
+                            </thead>
+                            <tfoot>
+                            <tr>
+                                <th>
+
+                                </th>
+                                <th>{{ __('invoices.total') }}</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th>{{ $currency->name }}</th>
+
+
+                                <th class="noprint"></th>
+
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+                <div class="md-card">
+            <div class="md-card-content">
+                <div class="uk-grid" data-uk-grid-margin>
+                    <div class="uk-width-1-1">
+
+                        <h4 class="heading_a uk-margin-bottom">{{ __('projects.debit_credit') }}</h4>
+                        <table id="debit_credit-table" class="uk-table" cellspacing="0" width="100%">
+                            <thead>
+                            <tr>
+                                <th title="{{__('projects_tooltip.id')}}">{{ __('project.id') }}</th>
+                                <th title="{{__('projects_tooltip.detail')}}">{{ __('projects.detail') }}</th>
+                                <th title="{{__('projects_tooltip.reimbursable')}}">{{ __('projects.reimbursable') }}</th>
+                                <th title="{{__('projects_tooltip.cost')}}">{{ __('projects.cost') }}</th>
+                                <th title="{{__('projects_tooltip.cost_exchanged')}}">{{ __('projects.cost_exchanged') }}</th>
+                                <th title="{{__('projects_tooltip.amount')}}">{{ __('projects.amount') }}</th>
+                                <th title="{{__('projects_tooltip.amount_exchanged')}}">{{ __('projects.amount_exchanged') }}</th>
+                                <th title="{{__('projects_tooltip.frequency')}}">{{ __('projects.frequency') }}</th>
+                                <th title="{{__('projects_tooltip.currency')}}">{{ __('projects.currency') }}</th>
+                                <th title="{{__('general.actions')}}" class="noprint">{{ __('general.actions') }}</th>
                             </tr>
                             </thead>
                             <tfoot>
@@ -683,6 +834,9 @@
                                 <th>
                                     <h3 id="subtotal"></h3>
                                 </th>
+                                 <th>
+                                    <h3 id=""> {{ $currency->name }}</h3>
+                                </th>
                             </tr>
                             </tbody>
 
@@ -708,6 +862,9 @@
                     <a href="{{ url('project_materials/'.session('project_id').'/create') }}"
                        class="md-color-white ajax_create-btn"><i
                                 class="fa fa-list-ul"></i> {{ __('projects.new_material') }}</a>
+                                 <a href="{{ url('project_debit_credit/'.session('project_id').'/create') }}"
+                       class="md-color-white ajax_create-btn"><i
+                                class="fa fa-list-ul"></i> {{ __('projects.new_debit_credit') }}</a>
                 </div>
             </div>
         </div>

@@ -110,7 +110,9 @@
 
         <tr>
             <td width="60%">
-                <img height="150" src="{{$company->logo_path}}">
+		@if($company->logo_path!="")
+                <img height="150" src="{{ base_path() .'/assets/img/companies/'. $company->id .'/'. $company->logo_path }}">
+		@endif
                 <h3 class="upper red">{{$company->name}}</h3>
                 <h4>{{$company->address}}</h4><br>
                 {{__('invoices.remit_to')}}: {{$invoice->remit_to}}<br>
@@ -118,12 +120,15 @@
 
             </td>
             <td>
-                <h1>{{__('invoices.invoice')}}</h1> <br><img height="100" src="{{$customer->logo_path}}">
+                <h1>{{__('invoices.invoice')}}</h1> <br>
+		@if($customer->logo_path!="")
+		<img height="100" src="{{ base_path()  .'/assets/img/customers/'. $customer->id .'/'. $customer->logo_path }}">
+		@endif
                 <br>
                 <b> {{$customer->address}}</b><br>
                 {{__('invoices.invoice')}}#{{$invoice->number}}<br>
                 {{__('invoices.date')}}: {{ date('d-m-Y', strtotime( $invoice->date->date )) }}<br>
-                <b>{{__('invoices.due_date')}}: {{ date('d-m-Y', strtotime( $invoice->due_date )) }}</b><br>
+                <b>{{__('invoices.due_date')}}: {{ $invoice->due_date=='0000-00-00'?'0000-00-00': date('d-m-Y', strtotime( $invoice->due_date )) }}</b><br>
                 {{__('invoices.page')}}: <span class="page"></span><br>
 
                 {{__('invoices.for')}}: {{$invoice->concept}}<br>
@@ -201,6 +206,8 @@
             $totaltaxes=0;
             $totaltaxespercent=0;
             $totalexpences=0;
+            $totaldebit=0;
+            $totalcredit=0;
             $totaldiscounts=0;
             $totaldiscountspercent=0;
             $countservices=0;
@@ -208,7 +215,10 @@
             $countexpences=0;
             $countdiscounts=0;
             $counttaxes=0;
+             $countdebit=0;
+              $countcredit=0;
             $totalresources_hours=0;
+            $total_invoices=0;
         @endphp
         <tbody>
         @foreach($invoice_resources as $resource)
@@ -219,6 +229,7 @@
                 $totalresources_hours = $totalresources_hours+$resource->hours;
 
                   $subtotal = $subtotal+($totalrate * $resource->hours);
+                  $total_invoices=$subtotal;
             @endphp
             <tr>
                 <td>{{$resource->user_name}}  {{$resource->project_role}}  {{$resource->seniority}}  {{$resource->load}}
@@ -246,6 +257,8 @@
 
                  $countservices++;
                 $subtotal = $subtotal+$totalrate
+
+
             @endphp
             <tr>
                 <td>{{$service->detail}} </td>
@@ -254,6 +267,9 @@
                 <td class="right">{{$currency->code}} {{ number_format($totalrate,2,',','.') }} </td>
             </tr>
         @endforeach
+        @php
+        $total_invoices=$total_invoices+$totalservices;
+        @endphp
         <tr class="">
             <th></th>
             <th class="right"></th>
@@ -277,7 +293,9 @@
                 <td class="right">{{$currency->code}} {{number_format($totalrate,2,',','.')}} </td>
             </tr>
         @endforeach
-
+        @php
+        $total_invoices=$total_invoices+$totalmaterials;
+        @endphp
 
         <tr class="">
             <th></th>
@@ -304,12 +322,70 @@
                 <td class="right">{{$currency->code}} {{number_format($totalrate,2,',','.')}} </td>
             </tr>
         @endforeach
-
+        @php
+        $total_invoices=$total_invoices+$totalexpences;
+        @endphp
         <tr class="">
             <th></th>
             <th class="right"></th>
             <th class="right upper">{{__('invoices.total_expences')}}</th>
             <th class="right">{{$currency->code}} {{  number_format(($totalexpences),2,',','.')}}</th>
+        </tr>
+
+
+       @foreach($invoice_debit as $debit)
+            @php
+
+
+                $totalrate=$debit->amount;
+                $totaldebit=$totaldebit+$debit->amount;
+                $countdebit++;
+                $subtotal = $subtotal+$totalrate
+            @endphp
+
+            <tr>
+                <td>{{$debit->detail}} </td>
+                <td class="right"> {{number_format($totalrate,2,',','.')}}</td>
+                <td class="right">1</td>
+                <td class="right">{{$currency->code}} {{number_format($totalrate,2,',','.')}} </td>
+            </tr>
+        @endforeach
+        @php
+        $total_invoices=$total_invoices+$totaldebit;
+        @endphp
+        <tr class="">
+            <th></th>
+            <th class="right"></th>
+            <th class="right upper">{{__('invoices.total_debit')}}</th>
+            <th class="right">{{$currency->code}} {{  number_format(($totaldebit),2,',','.')}}</th>
+        </tr>
+
+
+           @foreach($invoice_credit as $credit)
+            @php
+
+
+                $totalrate=$credit->amount;
+                $totalcredit=$totalcredit+$credit->amount;
+                $countcredit++;
+                $subtotal = $subtotal+$totalrate
+            @endphp
+
+            <tr>
+                <td>{{$credit->detail}} </td>
+                <td class="right"> {{number_format($totalrate,2,',','.')}}</td>
+                <td class="right">1</td>
+                <td class="right">{{$currency->code}} {{number_format($totalrate,2,',','.')}} </td>
+            </tr>
+        @endforeach
+        @php
+        $total_invoices=$total_invoices-$totalcredit;
+        @endphp
+        <tr class="">
+            <th></th>
+            <th class="right"></th>
+            <th class="right upper">{{__('invoices.total_credit')}}</th>
+            <th class="right"> - {{$currency->code}} {{  number_format(($totalcredit),2,',','.')}}</th>
         </tr>
 
 
@@ -356,6 +432,9 @@
              }
 
          $subtotal = $subtotal-$totaldiscounts;
+       
+        $total_invoices=$total_invoices-$totaldiscounts;
+       
         @endphp
 
         <tr class="">
@@ -392,7 +471,7 @@
                 $counttaxes++;
 
             @endphp
-
+      
 
             <tr>
                 <td></td>
@@ -410,6 +489,8 @@
              }
 
              $subtotal = $subtotal+$totaltaxes;
+        $total_invoices=$total_invoices+$totaltaxes;
+  
         @endphp
         <tr class="">
             <th class="upper"></th>
@@ -423,12 +504,12 @@
             <td></td>
             <td></td>
             <th class="right upper">{{__('invoices.total')}} </th>
-            <th class="right ">{{$currency->code}} {{number_format($subtotal,2,',','.')}} </th>
+            <th class="right ">{{$currency->code}} {{number_format($total_invoices,2,',','.')}} </th>
         </tr>
         </tfoot>
     </table>
 
-    <h3>{{__('invoices.observations')}} {{$invoice->comments}}</h3>
+    <h3>{{__('invoices.observations')}} </h3><h3><span style=" line-height: 1.6;">{{$invoice->comments}}</span></h3>
 
     <span class="page-break"></span>
 </div>

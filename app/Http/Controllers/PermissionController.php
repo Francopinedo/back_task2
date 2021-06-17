@@ -11,7 +11,7 @@ class PermissionController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit']);
     }
 
     /**
@@ -24,7 +24,6 @@ class PermissionController extends Controller
 
     	$companyRoles = $this->getFromApi('GET', 'company_roles?company_id='.$company->id.
             '&include[]=role.permissionRoles.permission&include[]=role.directoryRoles.directory');
-
     	$permissions = $this->getFromApi('GET', 'permissions');
     	$directories = $this->getFromApi('GET', 'directories');
 
@@ -59,21 +58,18 @@ class PermissionController extends Controller
 
 
     	$final_directories=array();
-
+        $finalfolders=array();
+        $finalsubfolders=array();
     	//var_dump($directories);
     	foreach ($directories as $directory){
 
             $dir = (Array) $directory;
             $folders= $this->getFromApi('GET', 'directories?parent='.$directory->id);
 
-            $finalfolders=array();
-
             foreach ($folders as $folder){
                 $fold = (Array) $folder;
 
                 $subfolders= $this->getFromApi('GET', 'directories?parent='.$folder->id);
-
-                $finalsubfolders=array();
 
                 foreach ($subfolders as $subfolder) {
                     $subfold = (Array)$subfolder;
@@ -82,7 +78,6 @@ class PermissionController extends Controller
                 }
 
                 $fold['subfolders']=$finalsubfolders;
-
 
                 array_push($finalfolders, $fold);
 
@@ -123,16 +118,18 @@ class PermissionController extends Controller
     public function store(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'name'       => 'required',
 			'location_name'   => 'required',
 			'country_id' => 'required'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        } $data = $request->all();
 
     	$res = $this->apiCall('POST', 'cities', $data);
-
 
     	// validacion de la respuesta del api
     	if (!empty(json_decode($res->getBody()->__toString(), TRUE)['error']))
@@ -158,13 +155,16 @@ class PermissionController extends Controller
     public function update(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'name'     => 'required',
 			'location_name'   => 'required',
 			'country_id' => 'required'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        } $data = $request->all();
 
     	$res = $this->apiCall('PATCH', 'cities/'.$data['id'], $data);
 

@@ -7,7 +7,7 @@
     	    {{ csrf_field() }}
     	    <input type="hidden" name="company_id" value="{{ $company->id }}">
     		<div class="uk-width-medium-1-1 uk-row-first">
-
+@if(!session('project_id'))
     			<div class="md-input-wrapper md-input-select">
     				<label>{{ __('contacts.project') }}</label>
     				<select name="project_id" data-md-selectize>
@@ -18,7 +18,11 @@
     				</select>
     			</div>
     			<div class="parsley-errors-list filled"><span class="parsley-required project_id-error"></span></div>
-
+@else
+            <input type="hidden" name="project_id" value="{{ session('project_id') }}">
+<label>{{ __('contacts.project') }} :{{ session('project_name') }}</label>
+<br>
+@endif
                 <div class="md-input-wrapper">
                 	<label>{{ __('contacts.name') }}</label>
                 	<input type="text" class="md-input" name="name" required><span class="md-input-bar"></span>
@@ -69,7 +73,7 @@
     				</select>
     			</div>
     			<div class="parsley-errors-list filled"><span class="parsley-required industry_id-error"></span></div>
-
+				<br><br><br>
     			<div class="md-input-wrapper">
                 	<label>{{ __('contacts.email') }}</label>
                 	<input type="email" class="md-input" name="email" required><span class="md-input-bar"></span>
@@ -77,7 +81,7 @@
                 <div class="parsley-errors-list filled"><span class="parsley-required email-error"></span></div>
 
                 <div class="md-input-wrapper">
-                	<label>{{ __('contacts.phone') }}</label>
+                	<label>{{ __('contacts.phone') }}</label><br>
                 	<input type="text" class="md-input" name="phone" required><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required phone-error"></span></div>

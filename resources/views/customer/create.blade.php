@@ -1,15 +1,22 @@
+<style>
+
+    #create_div.switcher_active {
+        width: 40%;
+    }
+
+</style>
+    	<form role="form"  action="{{ url('customers') }}" id="data-form" data-redirect-on-success="{{ url('customers') }}">
+
 <div class="uk-grid" data-uk-grid-margin>
-    <div class="uk-width-1-1">
-
+    		<li class="uk-width-medium-1-1 uk-row-first">
 		<div class="uk-alert uk-alert-danger hide_when_empty" data-uk-alert="" id="status_code-error"></div>
-
-    	<form role="form" method="POST" action="{{ url('customers') }}" id="data-form" data-redirect-on-success="{{ url('customers') }}">
+</li>
     	    {{ csrf_field() }}
     	    <input type="hidden" name="company_id" value="{{ $company->id }}">
 
-    	    <input type="hidden" class="md-input" name="user_id" value="{{ Auth::id() }}"><span class="md-input-bar"></span>
+    	    <input type="hidden" class="md-input" name="user_id" value="{{ Auth::id() }}">
 
-    		<div class="uk-width-medium-1-1 uk-row-first">
+    		<li class="uk-width-medium-1-3 uk-row-first">
                 <div class="md-input-wrapper">
                 	<label>{{ __('customers.name') }}</label>
                 	<input type="text" class="md-input" name="name" required><span class="md-input-bar"></span>
@@ -22,9 +29,24 @@
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required address-error"></span></div>
 
+
+
+                <div class="md-input-wrapper md-input-filled md-input-select">
+                	<label>{{ __('customers.country') }}</label>
+                	<select name="country_id" id="country_id" data-md-selectize>
+                	    <option value="">{{ __('customers.country') }}...</option>
+                	    @foreach ($countries as $country)
+                	        <option value="{{ $country->id }}" >{{ $country->name }} </option>
+                	    @endforeach
+                	</select>
+                </div>
+                <div class="parsley-errors-list filled"><span class="parsley-required country_id-error"></span></div>
+
+
+
                 <div class="md-input-wrapper md-input-select">
                 	<label>{{ __('customers.city') }}</label>
-                	<select name="city_id" data-md-selectize>
+                	<select name="city_id" id="city_id" data-md-selectize>
                 	    <option value="">{{ __('customers.city') }}...</option>
                 	    @foreach ($cities as $city)
                 	        <option value="{{ $city->id }}">{{ $city->name }} ({{ $city->location_name }})</option>
@@ -56,6 +78,10 @@
                 	<input type="text" class="md-input" name="billing_address"><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required billing_address-error"></span></div>
+
+</li>
+    		<li class="uk-width-medium-1-3 uk-row-first">
+
 
                 <div class="md-input-wrapper">
                 	<label>{{ __('customers.tax_number') }}</label>
@@ -108,14 +134,77 @@
                 	</select>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required industry_id-error"></span></div>
+		
 
+
+			</li>
+
+
+            <li class="uk-width-medium-1-3 uk-row-first">
+
+
+
+        <div class="md-input-wrapper md-input-select">
+        <label>{{ __('customers.logo_path') }}</label>    
+<br/>
+                <div class="thumbnail">
+
+                                            <img alt="logo" id="logo_path_img"
+                                                 src="{{ URL::to('/') }}/assets/img/avatardefault.png">
+
+                                    
+                                    </div>  
+                               
+                                    <a class="uk-form-file md-btn" id="upload_widget_opener">Upload image
+                                        <input type="file"
+                                               id="logo_path" name="logo_path" accept="image/*" onchange="document.getElementById('logo_path_img').src = window.URL.createObjectURL(this.files[0])"
+                                               >
+                                    </a>
+                                </div>  
+            </li>
+
+    		<li class="uk-width-medium-1-1 uk-row-first">
 				<div class="uk-margin-medium-top">
                     <a class="md-btn md-btn-primary md-btn-wave-light md-btn-block waves-effect waves-button waves-light" href="#" id="add-btn">{{ __('customers.add_new') }}</a>
                     <a class="md-btn md-btn-flat md-btn-wave md-btn-block waves-effect waves-button" href="#" id="cancel-btn">{{ __('general.cancel') }}</a>
                 </div>
 
-            </div>
 
+		</li>
+		</div>
     	</form>
-    </div>
-</div>
+
+<script>
+  var form = $('#data-form');
+            $('#add-btn').on('click', function (e) {
+                form.submit();
+            });
+
+            $(form).submit(function (event) {
+                var formdata = new FormData(form.get(0));
+                event.preventDefault();
+                $.ajax({
+                    url: form.attr('action'),
+                    type: 'POST',
+                    data: formdata,
+                    dataType: 'json',
+                    processData: false, //For posting uploaded files we add this
+                    contentType: false, //For posting uploaded files we add this
+                    success: function (json) {
+                        window.location.replace(form.data('redirect-on-success'));
+                    },
+                    error: function (json) {
+                        if (json.status === 422) {
+                            var errors = json.responseJSON;
+                            $.each(json.responseJSON, function (key, value) {
+                                $('.' + key + '-error').html(value);
+                            });
+                        } else {
+                            // Error
+                        }
+                    }
+                });
+            });
+</script>
+
+

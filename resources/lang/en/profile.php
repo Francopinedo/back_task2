@@ -27,5 +27,8 @@ return [
 	'theme_h'        => 'Theme H',
 	'theme_i'        => 'Theme I',
 	'theme_dark'        => 'Theme Dark',
-	'basic' => 'Basic'
+	'basic' => 'Basic',
+	'tooltip'=>'Tooltips',
+	'language'          => 'Language'
+
 ];

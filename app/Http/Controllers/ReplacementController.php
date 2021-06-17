@@ -11,7 +11,7 @@ class ReplacementController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit']);
     }
 
     /**
@@ -57,14 +57,18 @@ class ReplacementController extends Controller
     public function store(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'from'            => 'required',
 			'absence_id'      => 'required',
 			'user_id'         => 'required'
 	    ]);
 
-    	$data = $request->all();
-
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
+$data['project_id']=session('project_id');
+//
     	$res = $this->apiCall('POST', 'replacements', $data);
 
     	// validacion de la respuesta del api
@@ -92,20 +96,25 @@ class ReplacementController extends Controller
     public function update(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'from'            => 'required',
 			'absence_id'      => 'required',
 			'user_id'         => 'required'
 	    ]);
 
-    	$data = $request->all();
-
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
+$data['project_id']=session('project_id');
     	$res = $this->apiCall('PATCH', 'replacements/'.$data['id'], $data);
 
     	// validacion de la respuesta del api
     	if (!empty(json_decode($res->getBody()->__toString(), TRUE)['error']))
     	{
+
 	    	$jsonRes = json_decode($res->getBody()->__toString(), TRUE)['error'];
+            //return $jsonRes;
 	    	Validator::make($jsonRes,
 	    		['status_code' => [Rule::in(['201', '200'])]],
 	    		['in' => __('api_errors.replacement_store')]
@@ -147,6 +156,6 @@ class ReplacementController extends Controller
 			session()->flash('alert-class', 'success');
     	}
 
-    	return redirect()->action('ReplacementController@index');
+    	return redirect()->back();
     }
 }

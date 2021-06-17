@@ -5,7 +5,7 @@
 	<script type="text/javascript">
 
 		$(document).ready(function () {
-			companyPreference.initDelete();
+			companyPreference.init();
 		});
 
 	</script>
@@ -25,7 +25,7 @@
 	                    	<span class="sub-heading"><i class="fa fa-building-o" aria-hidden="true"></i>&nbsp;&nbsp;{{ $company->industry->data->name or '' }}</span>
 	                    </h2>
 	                </div>
-	                <a class="md-fab md-fab-small md-fab-accent hidden-print" href="{{ url('companies/edit') }}">
+	                <a title="{{__('general.edit')}}" class="md-fab md-fab-small md-fab-accent hidden-print" href="{{ url('companies/edit') }}">
 	                    <i class="fa fa-pencil fa15"></i>
 	                </a>
 	            </div>
@@ -76,6 +76,25 @@
 							                <div class="md-list-content">
 							                    <span class="md-list-heading">{{ $company->phone }}</span>
 							                    <span class="uk-text-small uk-text-muted">{{ __('companies.phone') }}</span>
+							                </div>
+							            </li>
+     <li>
+							                <div class="md-list-addon-element">
+							                    <i class="fa fa-photo fa-15"></i>
+							                </div>
+							                <div class="md-list-content">
+  <div class="thumbnail">
+
+								 @if (empty($company->logo_path) || $company->logo_path=='')
+                                            <img alt="logo" id="logo_path_img2"
+                                                 src="{{ URL::to('/') }}/assets/img/avatardefault.png">
+
+                                        @else
+                                            <img src="{{ URL::to('/') .'/assets/img/companies/'. $company->id .'/'. $company->logo_path }}"
+                                                 alt="" id="logo_path_img2">
+                                        @endif
+                        </div>
+							                    <span class="uk-text-small uk-text-muted">{{ __('companies.logo_path') }}</span>
 							                </div>
 							            </li>
 							        </ul>

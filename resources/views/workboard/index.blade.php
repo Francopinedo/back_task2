@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app', ['favoriteTitle' => __('workboard.workboard'), 'favoriteUrl' => url(Request::path())])
 <style>
 
     td, th{    word-wrap: break-word; }
@@ -100,26 +100,26 @@
 								    <thead>
 								        <tr>
 
-											<th>{{ __('tickets.ticket_id') }}</th>
-								        	<th>{{ __('workboard.task_description') }}</th>
-								        	<th>{{ __('workboard.workgroup') }}</th>
-								        	<th>{{ __('workboard.ticket_description') }}</th>
-								        	<th>{{ __('tickets.type') }}</th>
-								        	<th>{{ __('workboard.owner') }}</th>
+											<th title="{{ __('tickets_tooltip.id') }}">{{ __('tickets.id') }}</th>
+								        	<th title="{{ __('workboard_tooltip.task_description') }}">{{ __('workboard.task_description') }}</th>
+								        	<th title="{{ __('workboard_tooltip.workgroup') }}">{{ __('workboard.workgroup') }}</th>
+								        	<th title="{{ __('workboard_tooltip.ticket_description') }}">{{ __('workboard.ticket_description') }}</th>
+								        	<th title="{{ __('tickets_tooltip.type') }}">{{ __('tickets.type') }}</th>
+								        	<th title="{{ __('workboard_tooltip.owner') }}">{{ __('workboard.owner') }}</th>
 
-								        	<th>{{ __('tickets.status') }}</th>
-								        	<th>{{ __('tickets.group') }}</th>
-								        	<th>{{ __('tickets.sprint') }}</th>
-								        	<th>{{ __('tickets.due_date') }}</th>
-								        	<th>{{ __('tickets.requester') }}</th>
-								        	<th>{{ __('tickets.priority') }}</th>
-								        	<th>{{ __('tickets.version') }}</th>
-								        	<th>{{ __('tickets.release') }}</th>
-								        	<th>{{ __('tickets.label') }}</th>
-								        	<th>{{ __('tickets.comment') }}</th>
-								        	<th>{{ __('tickets.estimated_hours') }}</th>
-								        	<th>{{ __('tickets.burned_hours') }}</th>
-								        	<th>{{ __('general.actions') }}</th>
+								        	<th title="{{ __('tickets_tooltip.status') }}">{{ __('tickets.status') }}</th>
+								        	<th title="{{ __('tickets_tooltip.group') }}">{{ __('tickets.group') }}</th>
+								        	<th title="{{ __('tickets_tooltip.sprint') }}">{{ __('tickets.sprint') }}</th>
+								        	<th title="{{ __('tickets_tooltip.due_date') }}">{{ __('tickets.due_date') }}</th>
+								        	<th title="{{ __('tickets_tooltip.requester') }}">{{ __('tickets.requester') }}</th>
+								        	<th title="{{ __('tickets_tooltip.priority') }}">{{ __('tickets.priority') }}</th>
+								        	<th title="{{ __('tickets_tooltip.version') }}">{{ __('tickets.version') }}</th>
+								        	<th title="{{ __('tickets_tooltip.release') }}">{{ __('tickets.release') }}</th>
+								        	<th title="{{ __('tickets_tooltip.label') }}">{{ __('tickets.label') }}</th>
+								        	<th title="{{ __('tickets_tooltip.comment') }}">{{ __('tickets.comment') }}</th>
+								        	<th title="{{ __('tickets_tooltip.estimated_hours') }}">{{ __('tickets.estimated_hours') }}</th>
+								        	<th title="{{ __('tickets_tooltip.burned_hours') }}">{{ __('tickets.burned_hours') }}</th>
+								        	<th title="{{ __('general.actions') }}">{{ __('general.actions') }}</th>
 								        </tr>
 								    </thead>
 								    <tbody>
@@ -147,8 +147,8 @@
 								    			<td>{{ $ticket->estimated_hours }}</td>
 								    			<td>{{ $ticket->burned_hours }}</td>
 								    			<td>
-								    				@if (Auth::id() == $ticket->owner_id or Auth::user()->workgroup_id == $ticket->workgroup_id)
-		    					            			<a href="/workboard/{{$ticket->id}}/edit" data-id="{{ $ticket->id }}" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+		@if (Auth::id() == $ticket->owner_id or Auth::user()->workgroup_id == $ticket->workgroup_id or \App\Role::find(\App\RoleUser::where('user_id',Auth::user()->id)->first()->role_id)->slug>=3)
+		    					            			<a title="{{__('general.edit')}}" href="/workboard/{{$ticket->id}}/edit" data-id="{{ $ticket->id }}" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>
 		    					            			@endif
 								    			</td>
 								    		</tr>

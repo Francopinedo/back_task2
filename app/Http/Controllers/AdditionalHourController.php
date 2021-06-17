@@ -11,7 +11,7 @@ class AdditionalHourController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit', 'deletecontrol']);
     }
 
     /**
@@ -99,7 +99,8 @@ class AdditionalHourController extends Controller
     public function store(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'project_id' => 'required',
 			'user_id'    => 'required',
 			'project_role_id'    => 'required',
@@ -109,13 +110,37 @@ class AdditionalHourController extends Controller
 			'city_id'    => 'required',
 			'country_id'    => 'required',
 			'currency_id'    => 'required',
-			'rate'    => 'required',
+			'rate'    => 'numeric|required',
 			'date'       => 'required',
-			'hours'      => 'required',
+			'hours'      => 'numeric|required',
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
+        
+            $rateres = $this->apiCall('GET', 'team_users/get_rate/'.$request->user_id);
+
+            $rateapi=json_decode($rateres->getBody()->__toString(), TRUE);
+
+        $rate=$rateapi+$request->rate;
+        //var_dump($load);
+        if($rateapi>100)
+            {
+          return response()->json(array('rate' => array('Total Rate is mayor than 100%')), 422);
+
+                }else{
+                    $data['rate']=$rateapi;
+                }
+      $get_sum_hoursres = $this->apiCall('GET', 'additional_hours/get_sum_hours/'.$request->user_id);
+
+            $ratesumhours=json_decode($get_sum_hoursres->getBody()->__toString(), TRUE);
+ 
+        if($ratesumhours>=24)
+            {
+          return response()->json(array('rate' => array('Total Additional Hours is mayor than 24')), 422);
+                }
     	$res = $this->apiCall('POST', 'additional_hours', $data);
 
     	// validacion de la respuesta del api
@@ -142,10 +167,11 @@ class AdditionalHourController extends Controller
     public function update(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'user_id'    => 'required',
 			'date'       => 'required',
-			'rate'       => 'required',
+			'rate'       => 'numeric|required',
             'project_role_id'    => 'required',
             'seniority_id'    => 'required',
             'office_id'    => 'required',
@@ -153,10 +179,35 @@ class AdditionalHourController extends Controller
             'workplace'    => 'required',
             'city_id'    => 'required',
             'country_id'    => 'required',
-			'hours'      => 'required',
+			'hours'      => 'numeric|required',
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
+
+            $rateres = $this->apiCall('GET', 'team_users/get_rate/'.$request->user_id);
+
+            $rateapi=json_decode($rateres->getBody()->__toString(), TRUE);
+
+        $rate=$rateapi+$request->rate;
+        //var_dump($load);
+        if($rateapi>100)
+            {
+          return response()->json(array('rate' => array('Total Rate is mayor than 100%')), 422);
+
+                }else{
+                    $data['rate']=$rateapi;
+                }
+
+                  $get_sum_hoursres = $this->apiCall('GET', 'additional_hours/get_sum_hours/'.$request->user_id);
+
+            $ratesumhours=json_decode($get_sum_hoursres->getBody()->__toString(), TRUE);
+ 
+        if($ratesumhours>=24)
+            {
+          return response()->json(array('rate' => array('Total Additional Hours is mayor than 24')), 422);
+                }
 
     	$res = $this->apiCall('PATCH', 'additional_hours/'.$data['id'], $data);
 

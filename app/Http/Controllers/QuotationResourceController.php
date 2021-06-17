@@ -11,7 +11,7 @@ class QuotationResourceController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit']);
     }
 
     /**
@@ -54,18 +54,31 @@ class QuotationResourceController extends Controller
     public function store(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'quotation_id'      => 'required',
 			'currency_id'     => 'required',
 			'user_id'         => 'required',
             'city_id'     => 'required',
             'country_id'     => 'required',
             'office_id'     => 'required',
-			'load'            => 'required',
-			'rate'            => 'required',
+			'load'            => 
+
+
+
+
+'numeric|required',
+			'rate'            => 
+
+
+
+
+'numeric|required',
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('POST', 'quotation_resources', $data);
 
@@ -135,7 +148,8 @@ class QuotationResourceController extends Controller
     public function update(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
             'city_id'     => 'required',
             'country_id'     => 'required',
             'office_id'     => 'required',
@@ -143,10 +157,12 @@ class QuotationResourceController extends Controller
 			 'seniority_id'    => 'required',
 			 'currency_id'     => 'required',
 			 'workplace'       => 'required',
-			 'load'            => 'required',
+			 'load'            => 'numeric|required',
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('PATCH', 'quotation_resources/'.$data['id'], $data);
 

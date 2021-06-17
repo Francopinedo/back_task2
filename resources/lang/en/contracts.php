@@ -23,7 +23,6 @@ return [
 	'workinghours'   => 'Working Hours',
 	'workinghours_from'   => 'Working Hours From',
 	'workinghours_to'     => 'Working Hours To',
-	'items'               => 'Items',
 	'select_a_project'    => 'Select a Project',
 	'items'               => 'Items',
 	'resources'           => 'Resources',
@@ -33,6 +32,7 @@ return [
 	'seniority'           => 'Seniority',
 	'rate'                => 'Rate',
 	'currency'            => 'Currency',
+	'total'     => 'Total',
 	'total_exchanged'            => 'Total exchanged',
 	'workplace'           => 'Workplace',
 	'comments'            => 'Comments',
@@ -61,4 +61,5 @@ return [
 	'weekly'        => 'Weekly',
 	'anualy'        => 'Anualy',
 	'semester'        => 'Semester',
+	'file'			=> 'Download pdf',
 ];

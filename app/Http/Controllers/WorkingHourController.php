@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+
 use DateInterval;
 use DatePeriod;
 use DateTime;
@@ -14,7 +15,7 @@ class WorkingHourController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit']);
     }
 
     /**
@@ -32,32 +33,32 @@ class WorkingHourController extends Controller
         if (session()->has('project_id')) {
             $data['project'] = $this->getFromApi('GET', 'projects/' . session('project_id'));
 
+            if (isset($request->start)) {
+                $begin = new DateTime($request->start);
+            } else {
+                $begin = new DateTime($data['project']->start);
+            }
+
+            if (isset($request->finish)) {
+                $end = new DateTime($request->finish);
+            } else {
+                $end = new DateTime($data['project']->start);
+            }
+
+            // $end->add(new DateInterval('P1D'));
+
+            $end->setTime(0, 0, 1);
+            $interval = DateInterval::createFromDateString('1 day');
+            $period = new DatePeriod($begin, $interval, $end);
+
+            $workingHours = [];
+            $additionalHours = [];
 
             foreach ($users as $user) {
+
                 $totaluser = 0;
                 $totaluserAddti = 0;
                 $newusr = $user;
-                if (isset($request->start)) {
-                    $begin = new DateTime($request->start);
-                } else {
-                    $begin = new DateTime($data['project']->start);
-                }
-
-                if (isset($request->finish)) {
-                    $end = new DateTime($request->finish);
-                } else {
-                    $end = new DateTime($data['project']->start);
-                }
-
-
-                // $end->add(new DateInterval('P1D'));
-
-                $end->setTime(0, 0, 1);
-                $interval = DateInterval::createFromDateString('1 day');
-                $period = new DatePeriod($begin, $interval, $end);
-
-                $workingHours = [];
-                $additionalHours = [];
 
                 foreach ($period as $dt) {
 
@@ -66,20 +67,31 @@ class WorkingHourController extends Controller
                         '&period_to=' . $dt->format("Y-m-d") . '&customer=' . $data['project']->customer_id . '&project=' . $data['project']->id);
 
                     if (!in_array($dt->format("Y-m-d"), $dates)) {
+                        
                         array_push($dates, $dt->format("Y-m-d"));
                     }
-
+ 		if (!empty($workingHoursFromApi)) {
+            
                     //var_dump($workingHoursFromApi);
+            
                     $wh = [];
                     $wh['date'] = $dt->format("Y-m-d");
                     $wh['hours'] = $workingHoursFromApi->hours;
+                   
                     if ($workingHoursFromApi->hours >= 0) {
                         $totaluser = $totaluser + $workingHoursFromApi->hours;
                     }
+		}else{
+ 			$wh = [];
+                    $wh['date'] = $dt->format("Y-m-d");
+                    $wh['hours'] = 0;
+			$totaluser =0;
+
+			}
 
                     $workingHours[$dt->format("Y-m-d")] = (object)$wh;
                     //$workingHours[$dt->format("Y-m-d")]  = $wh;
-                    $hoursADitionsls = $this->getFromApi('GET', 'additional_hours/?project_id=' . $data['project']->id . '&date=' . $dt->format("Y-m-d").
+                    $hoursADitionsls = $this->getFromApi('GET', 'additional_hours?project_id=' . $data['project']->id . '&date=' . $dt->format("Y-m-d").
                 '&user_id='.$user->id);
                     $whAddi = [];
                     $whAddi['date'] = $dt->format("Y-m-d");
@@ -123,6 +135,7 @@ class WorkingHourController extends Controller
     public
     function show($team_user_id)
     {
+        
         $teamUser = $this->getFromApi('GET', 'team_users/' . $team_user_id);
         $team = $this->getFromApi('GET', 'teams/' . $teamUser->team_id);
         $project = $this->getFromApi('GET', 'projects/' . $team->project_id);
@@ -158,14 +171,17 @@ class WorkingHourController extends Controller
     function store(Request $request)
     {
         // validacion del formulario
-        $this->validate($request, [
+        $validator =Validator::make($request->all(), [
+
             'project_id' => 'required',
             'user_id' => 'required',
             'date' => 'required',
-            'hours' => 'required',
+            'hours' => 'numeric|required',
         ]);
 
-        $data = $request->all();
+        if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
         $res = $this->apiCall('POST', 'working_hours', $data);
 
@@ -191,13 +207,16 @@ class WorkingHourController extends Controller
     function update(Request $request)
     {
         // validacion del formulario
-        $this->validate($request, [
+        $validator =Validator::make($request->all(), [
+
             'user_id' => 'required',
             'date' => 'required',
-            'hours' => 'required',
+            'hours' => 'numeric|required',
         ]);
 
-        $data = $request->all();
+        if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
         $res = $this->apiCall('PATCH', 'working_hours/' . $data['id'], $data);
 

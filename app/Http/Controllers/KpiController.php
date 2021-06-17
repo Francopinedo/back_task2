@@ -11,7 +11,7 @@ class KpiController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit']);
     }
 
     /**
@@ -20,7 +20,7 @@ class KpiController extends Controller
     public function index()
     {
     	$company = $this->getFromApi('GET', 'companies/fromUser/'.Auth::id());
-    	$categories = $this->getFromApi('GET', 'kpis_category/?company_id='.$company->id);
+    	$categories = $this->getFromApi('GET', 'kpis_category?company_id='.$company->id);
 
         return view('kpi/index', [
 			'company'   => $company,
@@ -36,14 +36,17 @@ class KpiController extends Controller
     public function store(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'company_id'  => 'required',
 			'category'    => 'required',
 			'description' => 'required',
 			//'query'       => 'required',
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('POST', 'kpis', $data);
 
@@ -73,7 +76,7 @@ class KpiController extends Controller
     	$kpi = $this->getFromApi('GET', 'kpis/'.$id);
 
     	$company = $this->getFromApi('GET', 'companies/fromUser/'.Auth::id());
-        $categories = $this->getFromApi('GET', 'kpis_category/?company_id='.$company->id);
+        $categories = $this->getFromApi('GET', 'kpis_category?company_id='.$company->id);
     	return response()->json([
     		'view' => view('kpi/edit', [
 				'kpi'   => $kpi,
@@ -89,13 +92,16 @@ class KpiController extends Controller
     public function update(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'category'    => 'required',
 			'description' => 'required',
 			//'query'       => 'required',
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('PATCH', 'kpis/'.$data['id'], $data);
 

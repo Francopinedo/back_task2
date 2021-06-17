@@ -1,0 +1,27 @@
+<?php
+return [
+'settings'               => 'General Settings',		
+'plugins_enabled'               => 'Plugins Enabled',
+			'workflows_enabled'               => 'WorkFLow Enabled',
+			'payments_enabled'               => 'Payments Enabled',
+			'wiki_enabled'               => 'Wiki Enabled',
+			'mail_server_enable'               => 'Mail Server Enabled',
+			'mail_server_protocol'               => 'Protocol',
+			'mail_server_encryption'               => 'Encryption',
+			'mail_server_hosts'               =>'Host'	,
+			'mail_server_port'               => 'Port'	,
+			'mail_server_user'               => 'User'	,
+			'mail_server_pass'               => 'Password'	,
+			'mail_server_from_email'			 => 'From',
+			'chat_server_enable'			 =>  'Chat Server Enabled',
+			'chat_server_url'			 => 'Chat Server URL',
+			'payment_integration'			 => 'Payment Integration',
+			'payment_gateway'			 => 'Payment Gateway',
+			'digital_signature'			 => 'Digital Signature',
+			'cloud_storage'			 => 'Cloud Storage',
+			'cloud_storage_provider'			 => 'Cloud Storage Provider',
+			'task_creation_email'			 => 'Task Creation from Email',
+			'fields_add_feature'			 => 'Fields add Feature',
+			'alfred_active'			 => 'Alfred Active',
+			'field_captions'			 => 'Fields Caption'
+];

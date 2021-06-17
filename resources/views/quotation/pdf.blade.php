@@ -113,15 +113,20 @@
 
         <tr>
             <td width="60%">
-                <img height="150" src="{{$company->logo_path}}">
+               @if(!empty($company->logo_path) || $company->logo_path!='' ) 
+                <img height="150" src="{{ base_path() .'/assets/img/companies/'. $company->id .'/'. $company->logo_path}}">
+                @endif
                 <h3 class="upper red">{{$company->name}}</h3>
                 <h4>{{$company->address}}</h4><br>
                 {{__('quotations.remit_to')}}: {{$quotation->remit_to}}<br>
                 {{__('quotations.bill_to')}}: {{$quotation->bill_to}}<br>
-
+ <b>{{__('quotations.all_amounts')}}: {{$currency->name}}</b>
             </td>
             <td>
-                <h1>{{__('quotations.quotation')}}</h1> <br><img height="100" src="{{$customer->logo_path}}">
+                <h1>{{__('quotations.quotation')}}</h1> <br>
+                @if(!empty($customer->logo_path) || $customer->logo_path!='' ) 
+                <img height="100" src="{{ base_path() .'/assets/img/customers/'. $customer->id .'/'. $customer->logo_path }}">
+                @endif
                 <br>
 
                 <b> {{$customer->address}}</b><br>
@@ -140,50 +145,10 @@
         </tr>
 
 
-        <tr>
-            <td colspan="2">
-                <br>
-                <b>{{__('quotations.all_amounts')}}: {{$currency->name}}</b><br>
-
-            </td>
-        </tr>
+       
     </table>
 </header>
-<!--
-<footer>
-    <table>
-        <thead>
-        <tr>
-            <th colspan="2">
-                {{__('quotations.wire_payment')}}
-            </th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>{{__('quotations.account_owner')}}</td>
-            <td>{{$company->name}}</td>
-        </tr>
-        <tr>
-            <td>{{__('quotations.banck_name')}}</td>
-            <td>{{$company->bank_name}}</td>
-        </tr>
-        <tr>
-            <td>{{__('quotations.swift_code')}}</td>
-            <td>{{$company->swiftcode}}</td>
-        </tr>
-        <tr>
-            <td>{{__('quotations.aba')}}</td>
-            <td>{{$company->aba}}</td>
-        </tr>
-        <tr>
-            <td>{{__('quotations.currency')}}</td>
-            <td>{{$currency->name}}</td>
-        </tr>
 
-        </tbody>
-    </table>
-</footer>-->
 
 <div class="main">
     <table width="100%" class="detail_table">
@@ -221,11 +186,12 @@
             <th class=""></th>
             <th class=""></th>
         </tr>
+ @if($resources_select=='1')
         @foreach($tasks as $task)
             <?php $totaltarea =0;
             $totlahorastarea=0;?>
             <tr>
-                <td colspan="4" style="padding-top:20px; padding-left: {{$task->level}}0px"><h3>{{$task->description}}</h3></td>
+                <td colspan="4" style="padding-top:1px; padding-left: {{$task->level}}0px"><h3>{{$task->description}}</h3></td>
             </tr>
             @foreach($quotation_resources as $resource)
                 @if($resource->task_id==$task->id)
@@ -251,13 +217,13 @@
             @endforeach
             <?php if($task->level==3){?>
             <tr>
-                <td colspan="2" style="padding-top:20px; padding-left: {{$task->level}}0px"><h3>Total</h3></td>
+                <td colspan="2" style="padding-top:5px; padding-left: {{$task->level}}0px"><h3>Total</h3></td>
                 <td>{{$totlahorastarea}}</td>
                 <td >{{number_format($totaltarea,2,',','.')}}</td>
             </tr>
             <?php } ?>
         @endforeach
-
+@endif
         <tr class="">
             <th></th>
             <th class="right"></th>
@@ -271,6 +237,7 @@
             <th class=""></th>
             <th class=""></th>
         </tr>
+ @if($services_select=='1')
         @foreach($quotation_services as $service)
 
             @php
@@ -288,6 +255,7 @@
                 <td class="right">{{$currency->code}} {{ number_format($totalrate,2,',','.') }} </td>
             </tr>
         @endforeach
+@endif
         <tr class="">
             <th></th>
             <th class="right"></th>
@@ -301,6 +269,7 @@
             <th class=""></th>
             <th class=""></th>
         </tr>
+@if($materials_select=='1')
         @foreach($quotation_materials as $material)
             @php
 
@@ -316,7 +285,7 @@
                 <td class="right">{{$currency->code}} {{number_format($totalrate,2,',','.')}} </td>
             </tr>
         @endforeach
-
+@endif
 
         <tr class="">
             <th></th>
@@ -331,6 +300,7 @@
             <th class=""></th>
             <th class=""></th>
         </tr>
+@if($expenses_select=='1')
         @foreach($quotation_expenses as $expens)
             @php
 
@@ -348,7 +318,7 @@
                 <td class="right">{{$currency->code}} {{number_format($totalrate,2,',','.')}} </td>
             </tr>
         @endforeach
-
+@endif
         <tr class="">
             <th></th>
             <th class="right"></th>

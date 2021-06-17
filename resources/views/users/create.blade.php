@@ -1,18 +1,24 @@
-@if (!empty($company_id))
+<style>
 
+    #create_div.switcher_active {
+        width: 40%;
+    }
+
+</style>
+{{-- @if (!empty($company_id)) --}}
+          <form autocomplete="off" role="form" method="POST" action="{{ url('users') }}" id="data-form"
+                  data-redirect-on-success="{{ url($url) }}">
+  
     <div class="uk-grid" data-uk-grid-margin>
-        <div class="uk-width-1-1">
 
             <div class="uk-alert uk-alert-danger hide_when_empty" data-uk-alert="" id="status_code-error"></div>
 
-            <form autocomplete="off" role="form" method="POST" action="{{ url('users') }}" id="data-form"
-                  data-redirect-on-success="{{ url('users') }}">
                 {{ csrf_field() }}
                 <input type="hidden" name="company_id" value="{{ isset($company_id)?$company_id:'' }}">
                 @if (Auth::user()->hasRole('user'))
                     <input type="hidden" name="user_id" value="{{ Auth::id() }}">
                 @endif
-                <div class="uk-width-medium-1-1 uk-row-first">
+                <li class="uk-width-medium-1-2 uk-row-first">
                     <div class="md-input-wrapper">
                         <label>{{ __('users.name') }}</label>
                         <input type="text" class="md-input" name="name" required><span class="md-input-bar"></span>
@@ -66,6 +72,21 @@
                     <div class="parsley-errors-list filled"><span class="parsley-required cell_phone-error"></span>
                     </div>
 
+                     <div class="md-input-wrapper md-input-select">
+                        <label>{{ __('cities.timezone') }}</label>
+                        <select name="timezone" id="timezone" data-md-selectize>
+                            <option value="">{{ __('cities.timezone') }}...</option>
+                            @foreach ($timezones as $timezone)
+                                <option value="{{ $timezone->timezone }}">{{ $timezone->timezone }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="parsley-errors-list filled"><span class="parsley-required timezone-error"></span>
+                    </div>
+					</li>
+                <li class="uk-width-medium-1-2 uk-row-first">
+
 
                     <div class="md-input-wrapper md-input-select">
                         <label>{{ __('users.city') }}</label>
@@ -82,9 +103,11 @@
 
                     <div class="md-input-wrapper md-input-select">
                         <label>{{ __('users.office') }}</label>
-                        <select name="office_id" id="office_id">
+                        <select name="office_id" id="office_id" data-md-selectize>
                             <option value="">{{ __('users.office') }}...</option>
-
+                            @foreach ($offices as $office)
+                                <option value="{{ $office->id }}">{{ $office->title }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="parsley-errors-list filled"><span class="parsley-required office_id-error"></span>
@@ -102,6 +125,8 @@
                     </div>
                     <div class="parsley-errors-list filled"><span class="parsley-required"
                                                                   id="company_role_id-error"></span></div>
+                @if (!empty($projectRoles))
+
 
 
                     <div class="md-input-wrapper md-input-select">
@@ -115,7 +140,11 @@
                     </div>
                     <div class="parsley-errors-list filled"><span class="parsley-required"
                                                                   id="project_role_id-error"></span></div>
+					
+	
 
+					
+			@endif
 
                 @if (!empty($seniorities))
                         <div class="md-input-wrapper md-input-select">
@@ -147,23 +176,54 @@
 
                     @endif
 
-                    <div class="uk-margin-medium-top">
+                   
+
+                </li>
+				                <li class="uk-width-medium-1-1 uk-row-first">
+								 <div class="uk-margin-medium-top">
                         <a class="md-btn md-btn-primary md-btn-wave-light md-btn-block waves-effect waves-button waves-light"
                            href="#" id="add-btn">{{ __('users.add_new') }}</a>
                         <a class="md-btn md-btn-flat md-btn-wave md-btn-block waves-effect waves-button" href="#"
                            id="cancel-btn">{{ __('general.cancel') }}</a>
                     </div>
+                </li>
 
-                </div>
 
-            </form>
-        </div>
     </div>
+            </form>
 
-@endif
+{{-- @endif --}}
 
 <script src="{{ asset('js/table_actions.js') }}"></script>
 <script type="text/javascript">
+    
+    $(function(){
+        $("#city_id").on('change', function () {
+            console.log('chage....');
+            var html = '<option value="">Office...</option>';
+            $.ajax({
+                url: API_PATH + '/offices',
+                type: 'GET',
+                data: {city_id: $(this).val(), company_id:$("#company_id").val()},
+                dataType: 'json'
+            }).done(
+                function (data) {
+                    var html = '<option value="">Office...</option>';
+                    
+                    $('#office_id').selectize()[0].selectize.destroy();
+
+                    $.each(data.data, function (i, value) {
+                        console.log(value);
+                        html += '<option value="' + value.id + '">' + value.title + '</option>';
+                    });
+
+                    $('#office_id').html(html);
+                    $('#office_id').selectize();
+                }
+            );
+        });
+    });
+
     $('.cancel-ajax_create-btn').on('click', function (e) {
         e.preventDefault();
         $('#ajax_create_div_toggle').hide();
@@ -172,12 +232,5 @@
 
     tableActions.initAjaxCreateForm();
 
-    altair_forms.init();
-</script>
-
-
-<script src="{{ asset('js/users.js') }}"></script>
-<script type="text/javascript">
-
-    Users.init('<?php echo e(env('API_PATH')); ?>', '<?php echo e(env('APP_URL')); ?>');
+    // altair_forms.init();
 </script>

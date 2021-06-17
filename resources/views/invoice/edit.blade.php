@@ -1,12 +1,19 @@
-<div class="uk-grid" data-uk-grid-margin>
-    <div class="uk-width-1-1">
+<style>
 
-		<div class="uk-alert uk-alert-danger hide_when_empty status_code-error" data-uk-alert=""></div>
+    #edit_div.switcher_active {
+        width: 50%;
+    }
 
+</style> 
     	<form role="form" method="POST" action="{{ url('invoices/update') }}" id="data-form-edit" data-redirect-on-success="{{ url('invoices') }}">
+
+<div class="uk-grid" data-uk-grid-margin>
+    		<li class="uk-width-medium-1-1 uk-row-first">
+		<div class="uk-alert uk-alert-danger hide_when_empty status_code-error" data-uk-alert=""></div>
+</li>
     	    {{ csrf_field() }}
     	    <input type="hidden" name="id" value="{{ $invoice->id }}">
-    		<div class="uk-width-medium-1-1 uk-row-first">
+    		<li class="uk-width-medium-1-2 uk-row-first">
 
     			<div class="md-input-wrapper md-input-filled">
                 	<label>{{ __('invoices.number') }}</label>
@@ -37,6 +44,9 @@
                     <input class="md-input" type="text" id="uk_dp_1" name="to" value="{{ $invoice->to }}" data-uk-datepicker="{format:'YYYY-MM-DD'}">
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required to-error"></span></div>
+</li>
+    		<li class="uk-width-medium-1-2 uk-row-first">
+
 
                 <div class="md-input-wrapper md-input-filled md-input-select">
                 	<label>{{ __('invoices.contact') }}</label>
@@ -62,7 +72,7 @@
 
                 <div class="md-input-wrapper md-input-filled">
                     <label for="uk_dp_1">{{ __('invoices.due_date') }}</label>
-                    <input class="md-input"  required type="text" id="uk_dp_1" value="{{ $invoice->due_date }}" name="due_date" data-uk-datepicker="{format:'YYYY-MM-DD'}">
+                    <input class="md-input"  required type="text" id="uk_dp_1" value="{{ $invoice->due_date=='0000-00-00'?'2050-01-01':$invoice->due_date }}" name="due_date" data-uk-datepicker="{format:'YYYY-MM-DD'}">
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required due_date-error"></span></div>
 
@@ -87,18 +97,18 @@
                 <div class="parsley-errors-list filled"><span class="parsley-required remit_to-error"></span></div>
 
 
-
+</li>
+    		<li class="uk-width-medium-1-1 uk-row-first">
 
                 <div class="uk-margin-medium-top">
                     <a class="md-btn md-btn-primary md-btn-wave-light md-btn-block waves-effect waves-button waves-light" href="#" id="update-btn">{{ __('invoices.update') }}</a>
                     <a class="md-btn md-btn-flat md-btn-wave md-btn-block waves-effect waves-button cancel-edit-btn" href="#">{{ __('general.cancel') }}</a>
                 </div>
 
-            </div>
+            </li>
 
-    	</form>
-    </div>
 </div>
+    	</form>
 
 <script type="text/javascript">
 	$('.cancel-edit-btn').on('click', function(e){

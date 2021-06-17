@@ -32,7 +32,7 @@ class LoginController extends Controller
 	    $id = Auth::id();
 
 	    $roleUser = RoleUser::where('user_id', $id)->first();
-
+//return $roleUser;
 	    // redirijo si es admin
 	    if ($roleUser && $roleUser->role_id == 1)
 	    {

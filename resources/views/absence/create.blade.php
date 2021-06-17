@@ -3,7 +3,7 @@
 
 		<div class="uk-alert uk-alert-danger hide_when_empty" data-uk-alert="" id="status_code-error"></div>
 
-    	<form role="form" method="POST" action="{{ url('absences') }}" id="data-form" data-redirect-on-success="{{ url('absences') }}">
+    	<form role="form" method="POST" action="{{ url('absences') }}" id="data-form" data-redirect-on-success="{{ url($url) }}">
     	    {{ csrf_field() }}
             <input type="hidden" name="company_id" id="company_id" value="{{ $company->id }}">
     	     <input type="hidden" name="project_id" value="{{ session('project_id') }}">

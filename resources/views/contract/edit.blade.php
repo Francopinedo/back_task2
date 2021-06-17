@@ -1,3 +1,10 @@
+<style>
+
+    #edit_div.switcher_active {
+        width: 50%;
+    }
+
+</style> 
 <script src="{{ asset('js/contracts.js') }}"></script>
 <script>
 
@@ -7,15 +14,15 @@
 
 
 </script>
-<div class="uk-grid" data-uk-grid-margin>
-    <div class="uk-width-1-1">
-
-		<div class="uk-alert uk-alert-danger hide_when_empty status_code-error" data-uk-alert=""></div>
-
     	<form role="form" method="POST" action="{{ url('contracts/update') }}" id="data-form-edit" data-redirect-on-success="{{ url('contracts') }}">
+
+<div class="uk-grid" data-uk-grid-margin>
+    		<li class="uk-width-medium-1-1 uk-row-first">
+		<div class="uk-alert uk-alert-danger hide_when_empty status_code-error" data-uk-alert=""></div>
+</li>
     	    {{ csrf_field() }}
     	    <input type="hidden" name="id" value="{{ $contract->id }}">
-    		<div class="uk-width-medium-1-1 uk-row-first">
+    		<li class="uk-width-medium-1-2 uk-row-first">
 
                 <div class="md-input-wrapper md-input-filled md-input-select">
                 	<label>{{ __('contracts.customer') }}</label>
@@ -71,6 +78,8 @@
                     <input class="md-input" type="text" id="uk_dp_1" name="date" value="{{ $contract->date }}" data-uk-datepicker="{format:'YYYY-MM-DD'}">
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required date-error"></span></div>
+</li>
+    		<li class="uk-width-medium-1-2 uk-row-first">
 
                 <div class="md-input-wrapper md-input-filled">
                     <label for="start_date">{{ __('contracts.start_date') }}</label>
@@ -112,17 +121,18 @@
                 	<input type="text" class="md-input" name="workinghours_to" value="{{ $contract->workinghours_to }}" data-uk-timepicker><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required workinghours_to-error"></span></div>
+</li>    	
+		<li class="uk-width-medium-1-1 uk-row-first">
 
 				<div class="uk-margin-medium-top">
                     <a class="md-btn md-btn-primary md-btn-wave-light md-btn-block waves-effect waves-button waves-light" href="#" id="update-btn">{{ __('contracts.update') }}</a>
                     <a class="md-btn md-btn-flat md-btn-wave md-btn-block waves-effect waves-button cancel-edit-btn" href="#">{{ __('general.cancel') }}</a>
                 </div>
 
-            </div>
+            </li>
 
-    	</form>
-    </div>
 </div>
+    	</form>
 
 <script type="text/javascript">
 	$('.cancel-edit-btn').on('click', function(e){

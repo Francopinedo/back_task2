@@ -1,15 +1,18 @@
-@extends('layouts.app', ['favoriteTitle' => __('contacts.contacts'), 'favoriteUrl' => 'contacts'])
+@extends('layouts.app', ['favoriteTitle' => __('contacts.contacts'), 'favoriteUrl' => url(Request::path())])
 
 @section('scripts')
 	@include('datatables.basic')
 	<script>
 	$(function() {
 		var tableName = 'contacts';
-		var urlParameters = '?company_id={{ $company->id }}';
+		var urlParameters = '?project_id={{ session('project_id')==null?'': session('project_id') }}&user_id={{ Auth::id() }}';
 		var columns = [
 	            { data: 'id', name: 'id', visible: false },
 	            { data: 'name', name: 'name' },
-	            { data: 'project_name', name: 'project_name' },
+	            { data: 'project_name',name: 'project_name',
+			  render: function ( data, type, row ) {
+     			    return data===''?'General Contact':data;
+     			 },defaultContent:'General Contact'},
 	            { data: 'company', name: 'company' },
 	            { data: 'department', name: 'department' },
 	            { data: 'country_name', name: 'country_name' },
@@ -60,8 +63,10 @@
         }];
 
 		var actions = [
-			            { pre: '<a href="/contacts/', post: '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' },
-			            { pre: '<a href="/contacts/', post: '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>' }
+			            { pre: '<a title="{{__('general.edit')}}" href="/contacts/', post: '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' },
+                        <?php if (Auth::user()->hasPermission('delete.users')) { ?>
+			            { pre: '<a title="{{__('general.delete')}}" href="/contacts/', post: '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>' }
+                        <?php } ?>
 			        ];
 
 		DtablesUtil(tableName, columns, actions, urlParameters, extra_buttons);
@@ -96,18 +101,18 @@
                 	<table id="contacts-table" class="uk-table" cellspacing="0" width="100%">
                 	    <thead>
                 	        <tr>
-                	        	<th>{{ __('contacts.id') }}</th>
-                	        	<th>{{ __('contacts.name') }}</th>
-                	        	<th>{{ __('contacts.project') }}</th>
-                	        	<th>{{ __('contacts.company') }}</th>
-                	        	<th>{{ __('contacts.department') }}</th>
-                	        	<th>{{ __('contacts.country') }}</th>
-                	        	<th>{{ __('contacts.city') }}</th>
-                	        	<th>{{ __('contacts.industry') }}</th>
-                	        	<th>{{ __('contacts.email') }}</th>
-                	        	<th>{{ __('contacts.phone') }}</th>
-                	        	<th>{{ __('contacts.comments') }}</th>
-                	        	<th>{{ __('general.actions') }}</th>
+                	        	<th title="{{__('contacts_tooltip.id')}}">{{ __('contacts.id') }}</th>
+                	        	<th title="{{__('contacts_tooltip.name')}}">{{ __('contacts.name') }}</th>
+                	        	<th title="{{__('contacts_tooltip.project')}}">{{ __('contacts.project') }}</th>
+                	        	<th title="{{__('contacts_tooltip.company')}}">{{ __('contacts.company') }}</th>
+                	        	<th title="{{__('contacts_tooltip.department')}}">{{ __('contacts.department') }}</th>
+                	        	<th title="{{__('contacts_tooltip.country')}}">{{ __('contacts.country') }}</th>
+                	        	<th title="{{__('contacts_tooltip.city')}}">{{ __('contacts.city') }}</th>
+                	        	<th title="{{__('contacts_tooltip.industry')}}">{{ __('contacts.industry') }}</th>
+                	        	<th title="{{__('contacts_tooltip.email')}}">{{ __('contacts.email') }}</th>
+                	        	<th title="{{__('contacts_tooltip.phone')}}">{{ __('contacts.phone') }}</th>
+                	        	<th title="{{__('contacts_tooltip.comments')}}">{{ __('contacts.comments') }}</th>
+                	        	<th title="{{__('general.actions')}}">{{ __('general.actions') }}</th>
                 	        </tr>
                 	    </thead>
                 	</table>
@@ -115,7 +120,7 @@
                 		<div class="uk-width-medium-1-3" id="datatables-length"></div>
                 		<div class="uk-width-medium-1-3" id="datatables-pagination"></div>
                 		<div class="uk-width-medium-1-3">
-                			<a class="md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light" href="#" id="add-new">{{ __('contacts.add_new') }}</a>
+                			<a class="md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light" href="#" id="add-new" title="{{ __('contacts.add_new') }}">{{ __('contacts.add_new') }}</a>
                 		</div>
                 	</div>
                 	{{-- @endif --}}

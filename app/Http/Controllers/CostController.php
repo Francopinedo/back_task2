@@ -13,7 +13,7 @@ class CostController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit']);
     }
 
     /**
@@ -74,12 +74,16 @@ class CostController extends Controller
     public function store(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
-			'value'       => 'required',
+    	$validator =Validator::make($request->all(), [
+
+			'value'       => 'numeric|required',
 			'project_role_id'   => 'required'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        } 
+        $data = $request->all();
 
     	// dd($data);
 
@@ -110,12 +114,16 @@ class CostController extends Controller
     public function update(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
-			'value'     => 'required',
+    	$validator =Validator::make($request->all(), [
+
+			'value'     => 'numeric|required',
 			'project_role_id'   => 'required'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        } 
+        $data = $request->all();
 
     	$res = $this->apiCall('PATCH', 'costs/'.$data['id'], $data);
 

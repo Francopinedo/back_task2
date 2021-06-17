@@ -23,8 +23,8 @@
             <div class="uk-grid" data-uk-grid-margin>
                 <div class="uk-width-large-10-10">
                     <div class="md-card">
-                        <form action="{{ env('APP_URL').'/profile/update' }}" data-redirect-on-success="{{ url('profile') }}"
-                              method="post" class=" uk-form-stacked" id="user_edit_form">
+                        <form action="{{ URL::to('/') }}/profile/update" data-redirect-on-success="{{ url('profile') }}"
+                              method="post" class=" uk-form-stacked" id="user_edit_form" >
                             {{ csrf_field() }}
                             <input type="hidden" name="id" value="{{Auth::id()}}">
                             <div class="user_heading" data-uk-sticky="{ top: 48, media: 960 }">
@@ -35,7 +35,7 @@
                                                  src="{{ URL::to('/') }}/assets/img/avatardefault.png">
 
                                         @else
-                                            <img src="{{$file}}"
+                                            <img src="{{ URL::to('/') .'/assets/img/users/profile/'.Auth::user()->id.'/'.Auth::user()->profile_image_path }}"
                                                  alt="user avatar" id="profile_photo">
                                         @endif
                                     </div>
@@ -129,6 +129,23 @@
                                                                        value="{{ $user->cell_phone }}"/>
                                                             </div>
                                                         </div>
+                                                        <div>
+                                                            <div class="uk-input-group">
+                                                                <span class="uk-input-group-addon">
+                                                                    <i class="fa fa-language fa-15"></i>
+                                                                </span>
+                                                                <label>{{ __('profile.language') }}</label>
+                                                                <select name="language_id"  data-md-selectize>
+                                                                    <option value="">{{ __('profile.language') }}...</option>
+                                                                    @foreach ($languages as $language)
+                                                                    <option value="{{ $language->id }}" {{ ($language->id == $user->language_id) ? 'selected' : '' }}>{{ $language->name }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+
+                                                   
                                                     </div>
                                                 </div>
                                             </div>
@@ -165,6 +182,24 @@
                                                     </label>
                                                 </div>
                                             </div>
+
+                                              <div class="uk-width-medium-1-4 uk-row-first">
+                                            <h3 class="heading_a">{{ __('profile.tooltip') }}</h3>
+                                            <br>
+                                            <div>
+                                                    <label class="inline-label">
+                                                    <input
+                                                        type="checkbox"
+                                                        class="ios-switch-cb"
+                                                        name="tooltip" 
+                                                        id="tooltip"
+                                                        value="{{ Auth::user()->tooltip}}"  {{ Auth::user()->tooltip == '0'?'':'checked'}}>
+                                                    <span class="switchery"></span>
+                                                    {{ __('profile.tooltip') }}
+                                                </label>
+                                            </div>
+                                            
+                                        </div>
                                             <div class="uk-width-medium-1-4">
                                                 <h3 class="heading_a">{{ __('profile.theme') }}</h3>
                                                 <br>
@@ -262,16 +297,10 @@
                                                 </div>
                                             </div>
                                             <div class="uk-width-medium-1-4">
-                                                Qui unde quia libero quaerat et voluptas nemo temporibus delectus magnam
-                                                rerum et quia eius perspiciatis quisquam voluptatum ea aut
-                                                exercitationem culpa enim hic distinctio magni laboriosam est sint
-                                                veritatis id mollitia veniam consequatur eos quos pariatur in ad aut.
+                                               
                                             </div>
                                             <div class="uk-width-medium-1-4">
-                                                Quae dolor nesciunt qui ut accusamus culpa molestiae sed libero rerum
-                                                blanditiis tempora repellendus commodi rerum aliquid voluptate
-                                                voluptatem eaque id est provident alias impedit ut ratione vel
-                                                architecto cupiditate eum totam ipsa.
+                                                
                                             </div>
                                         </div>
 
@@ -287,4 +316,13 @@
 
         </div>
     </div>
+    <script>
+  
+// var changeCheckbox = document.querySelector('#tooltip')
+
+// changeCheckbox.onchange = function() {
+// changeCheckbox.checked;
+// };
+
+    </script>
 @endsection

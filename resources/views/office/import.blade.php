@@ -2,7 +2,7 @@
     <div class="uk-width-1-1">
 
         <div class="uk-alert uk-alert-danger hide_when_empty status_code-error" data-uk-alert=""></div>
-        <div class="uk-alert uk-alert-info  status_code-error" data-uk-alert="">{{__('general.import_instructions')}} title, city, workinghours_from, workinghours_to, hours_by_day
+        <div class="uk-alert uk-alert-info  status_code-error" data-uk-alert="">{{__('general.import_instructions')}} title, city, workinghours_from, workinghours_to, real_working_hours,effective_workinghours
         </div>
         <form role="form" method="POST" enctype="multipart/form-data" action="{{ url('offices/do_import') }}"
               id="data-form-import" data-redirect-on-success="{{ url('offices') }}">

@@ -10,7 +10,7 @@ class CountryController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit']);
     }
 
     /**
@@ -53,11 +53,14 @@ class CountryController extends Controller
     public function store(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'name'     => 'required',
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        } $data = $request->all();
 
     	$res = $this->apiCall('POST', 'countries', $data);
 
@@ -86,11 +89,14 @@ class CountryController extends Controller
     public function update(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'name'     => 'required',
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        } $data = $request->all();
 
     	$res = $this->apiCall('PATCH', 'countries/'.$data['id'], $data);
 
@@ -159,7 +165,6 @@ class CountryController extends Controller
             $language = $this->getFromApi('GET', 'languages?name=' . $template->languages[0]->name);
             $currency = $this->getFromApi('GET', 'currencies?name=' . $template->currencies[0]->name);
 
-
             $exist = $this->getFromApi('GET','countries?name='.$template->name);
             if (sizeof($exist)<1) {
 
@@ -185,8 +190,6 @@ class CountryController extends Controller
 
                  $this->apiCall('PATCH', 'countries/'.$exist[0]->id, $country);
             }
-
-
 
         }
 

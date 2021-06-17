@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use GuzzleHttp\Client as GuzzleHttpClient;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 use Validator;
 
 class CityTemplateController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit']);
     }
 
     /**
@@ -24,7 +25,7 @@ class CityTemplateController extends Controller
         $countries = json_decode($res->getBody()->__toString())->data;
 
         return view('city_template/index', [
-            'countries' => $countries,
+            'countries' => $countries
 
         ]);
     }
@@ -51,16 +52,18 @@ class CityTemplateController extends Controller
     public function store(Request $request)
     {
         // validacion del formulario
-        $this->validate($request, [
+        $validator =Validator::make($request->all(), [
+
             'name' => 'required',
             'location_name' => 'required',
             'country_id' => 'required'
         ]);
 
-        $data = $request->all();
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        } $data = $request->all();
 
         $res = $this->apiCall('POST', 'cities_template', $data);
-
 
         // validacion de la respuesta del api
         if (!empty(json_decode($res->getBody()->__toString(), TRUE)['error'])) {
@@ -83,13 +86,16 @@ class CityTemplateController extends Controller
     public function update(Request $request)
     {
         // validacion del formulario
-        $this->validate($request, [
+        $validator =Validator::make($request->all(), [
+
             'name' => 'required',
             'location_name' => 'required',
             'country_id' => 'required'
         ]);
 
-        $data = $request->all();
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        } $data = $request->all();
 
         $res = $this->apiCall('PATCH', 'cities_template/' . $data['id'], $data);
 

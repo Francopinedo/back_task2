@@ -3,7 +3,7 @@
 
 		<div class="uk-alert uk-alert-danger hide_when_empty" data-uk-alert="" id="status_code-error"></div>
 
-    	<form role="form" method="POST" action="{{ url('additional_hours') }}" id="data-form" data-redirect-on-success="{{ url('additional_hours') }}">
+    	<form role="form" method="POST" action="{{ url('additional_hours') }}" id="data-form" data-redirect-on-success="{{ url($url) }}">
     	    {{ csrf_field() }}
     	    <input type="hidden" name="project_id" value="{{ session('project_id') }}">
             <input type="hidden" name="rate_id" id="rate_id" value="">
@@ -117,8 +117,8 @@
 
                 <div class="md-input-wrapper">
                     <label>{{ __('contracts.rate') }}</label>
-                    <input type="text"  class="md-input" name="rate" id="rate" required><span
-                            class="md-input-bar"></span>
+                    <input type="text"  class="md-input" name="rate" id="rate"><span
+                            class="md-input-bar" ></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required rate-error"></span></div>
 
@@ -141,13 +141,15 @@
     </div>
 </div>
 
-
+<script src="{{ asset('js/contracts.js') }}"></script>
 <script type="text/javascript">
+
     contracts.initResources();
+
     $("#project_role_id").on('change', function () {
         console.log('searinch user...');
         $.ajax({
-            url: API_PATH + 'users/',
+            url: API_PATH + 'users',
             type: 'GET',
             data: {'project_role_id':$("#project_role_id").val()},
             dataType: 'json'

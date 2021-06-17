@@ -11,7 +11,7 @@ class TaskResourceController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit']);
     }
 
     /**
@@ -21,7 +21,7 @@ class TaskResourceController extends Controller
     public function create($task_id)
     {
         $company = $this->getFromApi('GET', 'companies/fromUser/' . Auth::id());
-        $users = $this->getFromApi('GET', 'users/?company_id=' . $company->id);
+        $users = $this->getFromApi('GET', 'users?company_id=' . $company->id);
         $roles = $this->getFromApi('GET', 'project_roles?company_id=' . $company->id);
         $task = $this->getFromApi('GET', 'tasks/' . $task_id);
 
@@ -54,18 +54,21 @@ class TaskResourceController extends Controller
     {
 
         // validacion del formulario
-        $this->validate($request, [
+        $validator =Validator::make($request->all(), [
+
             'task_id' => 'required',
             'project_role_id' => 'required',
             'seniority_id' => 'required',
-            'rate' => 'required',
+            'rate' => 'numeric|required',
             'currency_id' => 'required',
             // 'workplace'       => 'required',
             'quantity' => 'required|numeric|max:' . $request->task_estimated_hours,
             // 'load'            => 'required'
         ]);
 
-        $data = $request->all();
+        if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
         $current_resources = $this->getFromApi('GET', 'task_resources?task_id=' . $data['task_id']);
 
@@ -142,18 +145,21 @@ class TaskResourceController extends Controller
     public function update(Request $request)
     {
         // validacion del formulario
-        $this->validate($request, [
+        $validator =Validator::make($request->all(), [
+
 
             'project_role_id' => 'required',
             'seniority_id' => 'required',
-            'rate' => 'required',
+            'rate' => 'numeric|required',
             'currency_id' => 'required',
             // 'workplace'       => 'required',
             'quantity' => 'required|numeric|max:' . $request->task_estimated_hours,
             // 'load'            => 'required'
         ]);
 
-        $data = $request->all();
+        if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
 
         $current_resources = $this->getFromApi('GET', 'task_resources?task_id=' . $data['task_id']);

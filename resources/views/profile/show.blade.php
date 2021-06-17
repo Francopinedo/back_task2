@@ -24,7 +24,7 @@
 								<img class="md-user-image"
 									 src="{{ URL::to('/') }}/assets/img/avatardefault.png">
                            	@else
-                            	<img src="{{ URL::to('/') }}/assets/img/{{ '.Auth::user()->profile_image_path }}" alt="user avatar"/>
+                            	<img src="{{ URL::to('/') }}/assets/img/users/profile/{{ '.Auth::user()->id }}/{{ '.Auth::user()->profile_image_path }}" alt="user avatar"/>
                         	@endif
                         </div>
                     </div>
@@ -93,10 +93,19 @@
                                                 <span class="md-list-heading">{{ Auth::user()->cell_phone }}</span>
                                                 <span class="uk-text-small uk-text-muted">{{ __('profile.cell_phone') }}</span>
                                             </div>
+										</li>
+										<li>
+                                            <div class="md-list-addon-element">
+                                                <i class="fa fa-mobile fa-15"></i>
+                                            </div>
+                                            <div class="md-list-content">
+                                                <span class="md-list-heading">{{ Auth::user()->language_id }}</span>
+                                                <span class="uk-text-small uk-text-muted">{{ __('profile.language_id') }}</span>
+                                            </div>
                                         </li>
                                     </ul>
                                 </div>
-                                <div class="uk-width-large-1-2">
+           <!--                      <div class="uk-width-large-1-2">
                                     <h4 class="heading_c uk-margin-small-bottom">{{ __('profile.my_projects') }}</h4>
                                     <ul class="md-list">
                                         <li>
@@ -124,7 +133,7 @@
                                             </div>
                                         </li>
                                     </ul>
-                                </div>
+                                </div> -->
                             </div>
                         </li>
                         <!--=============================================
@@ -160,6 +169,26 @@
 												</label>
 											</div>
 	        	                        </div>
+	        	                        
+	        	                         <div class="uk-width-medium-1-4 uk-row-first">
+	        	                            <h3 class="heading_a">{{ __('profile.tooltip') }}</h3>
+											<br>
+											<div>
+													<label class="inline-label">
+												    <input
+												    	type="radio"
+												    	class="ios-switch-cb"
+												    	name="tooltip"
+												    	value={{ (Auth::user()->tooltip == '0' || empty(Auth::user()->tooltip)) ? '' : 'checked' }} disabled>
+												    <span class="switchery"></span>
+												    {{ __('profile.tooltip') }}
+												</label>
+											</div>
+											
+	        	                        </div>
+
+
+
 	        	                        <div class="uk-width-medium-1-4">
 	        	                            <h3 class="heading_a">{{ __('profile.theme') }}</h3>
 											<br>
@@ -247,10 +276,10 @@
 											</div>
 	        	                        </div>
 	        	                        <div class="uk-width-medium-1-4">
-	        	                            Qui unde quia libero quaerat et voluptas nemo temporibus delectus magnam rerum et quia eius perspiciatis quisquam voluptatum ea aut exercitationem culpa enim hic distinctio magni laboriosam est sint veritatis id mollitia veniam consequatur eos quos pariatur in ad aut.
+	        	                         
 	        	                        </div>
 	        	                        <div class="uk-width-medium-1-4">
-	        	                            Quae dolor nesciunt qui ut accusamus culpa molestiae sed libero rerum blanditiis tempora repellendus commodi rerum aliquid voluptate voluptatem eaque id est provident alias impedit ut ratione vel architecto cupiditate eum totam ipsa.
+	        	                       
 	        	                        </div>
 	        	                    </div>
 

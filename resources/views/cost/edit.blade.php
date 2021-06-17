@@ -64,6 +64,7 @@
 
                 <div class="md-input-wrapper">
                 	<label>{{ __('costs.detail') }}</label>
+                    <br>
                 	<input type="text" class="md-input" name="detail" value="{{ $cost->detail }}"><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required detail-error"></span></div>

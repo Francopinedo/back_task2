@@ -28,6 +28,10 @@
     <script src="{{ asset('js/invoices.js') }}"></script>
     <script src="{{ asset('js/contracts.js') }}"></script>
 
+	 <!-- <script   src="{{ asset('bower_components/uikit/dist/js/uikit.js') }}"></script>
+	<script  src="{{ asset('bower_components/uikit/dist/js/uikit-icons.js') }}"></script>
+   <link rel="stylesheet" href="{{ asset('bower_components/uikit/dist/css/uikit.css') }}" media="all">-->
+
     <script>
 
 
@@ -36,6 +40,10 @@
         var totaltaxesporcentaje = 0;
         var totaldescuento = 0;
         var totaldescuentoporcentaje = 0;
+        var total_resources_dt = 0;
+        var total_expenses_dt = 0;
+        var total_materials_dt = 0;
+        var total_services_dt = 0;
 
         $(function () {
             $('#quotation_resources-table').DataTable({
@@ -71,8 +79,8 @@
                     render: function (data, type, row) {
                         if (row.emited == '0') {
                             return '' +
-                                '<a href="/quotation_resources/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
-                                '<a href="/quotation_resources/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+                                '<a title{{__('general.edit')}} href="/quotation_resources/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
+                                '<a title{{__('general.delete')}} href="/quotation_resources/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
                         } else {
                             return '';
                         }
@@ -124,6 +132,8 @@
 
                                 if(i==9){
                                     subtotal=subtotal+sum;
+                                    total_resources_dt=sum;
+                                      totalquotationcalc();
                                 }
                                 $(this.footer()).html(sum.toLocaleString('de-DE', {maximumFractionDigits: 2}));
                             }
@@ -192,6 +202,7 @@
                                 if (sum != undefined) {
                                     if(i==2) {
                                         subtotal = sum + subtotal;
+                                        total_expenses_dt=sum;
                                     }
                                     $(this.footer()).html(sum.toLocaleString('de-DE', {maximumFractionDigits: 2}));
                                 }
@@ -216,8 +227,8 @@
                         render: function (data, type, row) {
                             if (row.emited == '0') {
                                 return '' +
-                                    '<a href="/quotation_expenses/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
-                                    '<a href="/quotation_expenses/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+                                    '<a title="{{__('general.edit')}}" href="/quotation_expenses/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
+                                    '<a title="{{__('general.delete')}}" href="/quotation_expenses/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
                             } else {
                                 return '';
                             }
@@ -285,6 +296,7 @@
                                 if (sum != undefined) {
                                     if(i==2) {
                                         subtotal = sum + subtotal;
+                                         total_services_dt=sum;
                                     }
                                     $(this.footer()).html(sum.toLocaleString('de-DE', {maximumFractionDigits: 2}));
                                 }
@@ -309,8 +321,8 @@
                         render: function (data, type, row) {
                             if (row.emited == '0') {
                                 return '' +
-                                    '<a href="/quotation_services/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
-                                    '<a href="/quotation_services/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+                                    '<a title={{__('general.edit')}} href="/quotation_services/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
+                                    '<a title={{__('general.delete')}} href="/quotation_services/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
                             } else {
                                 return '';
                             }
@@ -355,8 +367,8 @@
                         render: function (data, type, row) {
                             if (row.emited == '0') {
                                 return '' +
-                                    '<a href="/quotation_materials/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
-                                    '<a href="/quotation_materials/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+                                    '<a title="{{__('general.edit')}}" href="/quotation_materials/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
+                                    '<a title="{{__('general.delete')}}" href="/quotation_materials/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
                             } else {
                                 return '';
                             }
@@ -400,6 +412,7 @@
                                 if (sum != undefined) {
                                     if(i==2) {
                                         subtotal = sum + subtotal;
+                                        total_materials_dt=sum;
                                     }
                                     $(this.footer()).html(sum.toLocaleString('de-DE', {maximumFractionDigits: 2}));
                                 }
@@ -413,7 +426,7 @@
 
                     initComplete: function (settings, json) {
                         tableActions.initEdit();
-                        discounts();
+                      //  discounts();
                         // tableActions.initAjaxCreate();
                         // tableActions.initDelete('{{ __('general.confirm') }}');
                     }
@@ -426,13 +439,92 @@
 
 
         $(document).ready(function () {
+
             tableActions.initAjaxCreate();
+
             tableActions.initDelete('{{ __('general.confirm') }}');
 
             invoice.init('{{ __('projects.confirm_update') }}');
+
         });
 
     </script>
+
+<script>
+      $(".resources_a").on("click", function()
+    {
+if( document.getElementById("resources_select").value == "1"){
+      document.getElementById("resources_select").value = "0";
+}else{
+document.getElementById("resources_select").value = "1";
+}
+totalquotationcalc();
+    });
+  $(".expenses_a").on("click", function()
+    {
+if( document.getElementById("expenses_select").value == "1")
+{      document.getElementById("expenses_select").value = "0";
+}else{
+document.getElementById("expenses_select").value = "1";
+}
+totalquotationcalc();
+    });
+    $(".services_a").on("click", function()
+    {
+if( document.getElementById("services_select").value == "1")
+{      document.getElementById("services_select").value = "0";
+}else{
+document.getElementById("services_select").value = "1";
+}
+totalquotationcalc();
+    });
+
+ $(".materials_a").on("click", function()
+    {
+    if( document.getElementById("materials_select").value == "1")
+  {         document.getElementById("materials_select").value = "0";
+   } else{
+    document.getElementById("materials_select").value = "1";
+}
+
+totalquotationcalc();
+    });
+
+function  totalquotationcalc()
+{
+materials_select=document.getElementById("materials_select").value;
+services_select=document.getElementById("services_select").value;
+expenses_select=document.getElementById("expenses_select").value;
+resources_select=document.getElementById("resources_select").value;
+
+var totalquotationcalc = 0;
+
+ss=services_select=="1"? total_services_dt:0;
+ms=materials_select=="1"?total_materials_dt:0;
+es=expenses_select=="1"?total_expenses_dt:0;
+rs=resources_select=="1"?total_resources_dt:0;
+totalquotationcalc= ss+ms+es+rs;
+
+document.getElementById("total_quotation").innerText=totalquotationcalc;
+}
+
+$("#confirm").on("click", function()
+    {
+
+materials_select=document.getElementById("materials_select").value;
+services_select=document.getElementById("services_select").value;
+expenses_select=document.getElementById("expenses_select").value;
+resources_select=document.getElementById("resources_select").value;
+
+
+   window.open("../../quotation/pdf/{{ $quotation_id }}/"+resources_select+"/"+expenses_select+"/"+services_select+"/"+materials_select );
+
+
+});
+
+
+
+</script>
 @endsection
 
 @section('section_title', __('invoices.items'))
@@ -456,7 +548,7 @@
         <a class="md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light" id="confirm"
            onclick="$('#update_from_project_board').css('display', 'none')"
            data-quotation_id="{{ $quotation_id }}"
-           href="../../quotation/pdf/{{ $quotation_id }}">{{ __('invoices.confirm') }}</a>
+           >{{ __('invoices.confirm') }}</a>
 
         <a class="md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light table-actions delete-btn"
            data-quotation_id="{{ $quotation_id }}"
@@ -470,7 +562,7 @@
 
     @if(session()->has('project_id') && $quotation->emited==1)
         <a class="md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light" id="confirm"
-           data-quotation_id="{{ $quotation_id }}" href="../../quotation/pdf/{{ $quotation_id }}">{{ __('invoices.pdf') }}</a>
+           data-quotation_id="{{ $quotation_id }}" >{{ __('invoices.pdf') }}</a>
     @endif
 
 
@@ -491,8 +583,19 @@
            	</div>
     	</div>
     </div>-->
+   <input type="hidden" name="resources_select" id="resources_select" value="1">
+   <input type="hidden" name="expenses_select" id="expenses_select" value="0">
+   <input type="hidden" name="services_select" id="services_select" value="0">
+   <input type="hidden" name="materials_select" id="materials_select" value="0">
 
-        <div class="md-card">
+<ul class="panel-group" id="accordion">
+    <li>
+        <a id="resources_a" data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+            <div class="uk-accordion-title resources_a">
+            <h4 class="heading_a uk-margin-bottom">{{ __('invoices.resources') }}</h4>
+                </div>
+        </a>
+        <div id="collapse1" class="md-card panel-collapse collapse in">
             <div class="md-card-content">
                 <div class="uk-grid" data-uk-grid-margin>
                     <div class="uk-width-1-1">
@@ -504,23 +607,23 @@
                             </div>
                         @endif
 
-                        <h4 class="heading_a uk-margin-bottom">{{ __('invoices.resources') }}</h4>
+                        <!--<h4 class="heading_a uk-margin-bottom">{{ __('invoices.resources') }}</h4>-->
                         <table id="quotation_resources-table" class="uk-table" cellspacing="0" width="100%">
                             <thead>
                             <tr>
-                                <th>{{ __('invoices.id') }}</th>
-                                <th>{{ __('invoices.user') }}</th>
-                                <th>{{ __('invoices.project_role') }}</th>
-                                <th>{{ __('invoices.seniority') }}</th>
-                                <th>{{ __('invoices.currency') }}</th>
-                                <th>{{ __('invoices.workplace') }}</th>
-                                <th>{{ __('invoices.load') }}</th>
-                                <th>{{ __('invoices.rate') }}</th>
-                                <th>{{ __('invoices.hours') }}</th>
-                                <th>{{ __('invoices.total') }}</th>
-                                <th>{{ __('invoices.type') }}</th>
-                                <th>{{ __('invoices.comments') }}</th>
-                                <th class="noprint">{{ __('general.actions') }}</th>
+                                <th title="{{__('quotations_tooltip.id')}}">{{ __('quotations.id') }}</th>
+                                <th title="{{__('quotations_tooltip.user')}}">{{ __('quotations.user') }}</th>
+                                <th title="{{__('quotations_tooltip.project_role')}}">{{ __('quotations.project_role') }}</th>
+                                <th title="{{__('quotations_tooltip.seniority')}}">{{ __('quotations.seniority') }}</th>
+                                <th title="{{__('quotations_tooltip.currency')}}">{{ __('quotations.currency') }}</th>
+                                <th title="{{__('quotations_tooltip.workplace')}}">{{ __('quotations.workplace') }}</th>
+                                <th title="{{__('quotations_tooltip.load')}}">{{ __('quotations.load') }}</th>
+                                <th title="{{__('quotations_tooltip.rate')}}">{{ __('quotations.rate') }}</th>
+                                <th title="{{__('quotations_tooltip.hours')}}">{{ __('quotations.hours') }}</th>
+                                <th title="{{__('quotations_tooltip.total')}}">{{ __('quotations.total') }}</th>
+                                <th title="{{__('quotations_tooltip.type')}}">{{ __('quotations.type') }}</th>
+                                <th title="{{__('quotations_tooltip.comments')}}">{{ __('quotations.comments') }}</th>
+                                <th title="{{__('general.actions')}}" class="noprint">{{ __('general.actions') }}</th>
                             </tr>
                             </thead>
 
@@ -551,21 +654,29 @@
                 </div>
             </div>
         </div>
+</li>
+<li>
 
-        <div class="md-card">
+
+        <a id="expenses_a" data-toggle="collapse" data-parent="#accordion" href="#collapse2">
+            <div class="uk-accordion-title expenses_a">
+          <h4 class="heading_a uk-margin-bottom">{{ __('invoices.expenses') }}</h4>
+                </div>
+        </a>
+          <div id="collapse2" class="md-card panel-collapse collapse ">
             <div class="md-card-content">
                 <div class="uk-grid" data-uk-grid-margin>
                     <div class="uk-width-1-1">
 
-                        <h4 class="heading_a uk-margin-bottom">{{ __('invoices.expenses') }}</h4>
+                        <!--<h4 class="heading_a uk-margin-bottom">{{ __('invoices.expenses') }}</h4>-->
                         <table id="quotation_expenses-table" class="uk-table" cellspacing="0" width="100%">
                             <thead>
                             <tr>
-                                <th>{{ __('invoice.id') }}</th>
-                                <th>{{ __('invoices.detail') }}</th>
-                                <th>{{ __('invoices.amount') }}</th>
-                                <th> {{ __('invoices.currency') }}</th>
-                                <th class="noprint">{{ __('general.actions') }}</th>
+                                <th title="{{__('quotations_tooltip.id')}}">{{ __('quotations.id') }}</th>
+                                <th title="{{__('quotations_tooltip.detail')}}">{{ __('quotations.detail') }}</th>
+                                <th title="{{__('quotations_tooltip.amount')}}">{{ __('quotations.amount') }}</th>
+                                <th title="{{__('quotations_tooltip.currency')}}"> {{ __('quotations.currency') }}</th>
+                                <th title="{{__('general.actions')}}" class="noprint">{{ __('general.actions') }}</th>
                             </tr>
                             </thead>
                             <tfoot>
@@ -586,21 +697,27 @@
                 </div>
             </div>
         </div>
-
-        <div class="md-card">
+</li>
+<li>
+     <a id="services_a" data-toggle="collapse" data-parent="#accordion" href="#collapse3">
+            <div class="uk-accordion-title services_a">
+        <h4 class="heading_a uk-margin-bottom">{{ __('invoices.services') }}</h4>
+         </div>
+        </a>
+          <div id="collapse3" class="md-card panel-collapse collapse ">
             <div class="md-card-content">
                 <div class="uk-grid" data-uk-grid-margin>
                     <div class="uk-width-1-1">
 
-                        <h4 class="heading_a uk-margin-bottom">{{ __('invoices.services') }}</h4>
+                        <!--<h4 class="heading_a uk-margin-bottom">{{ __('invoices.services') }}</h4>-->
                         <table id="quotation_services-table" class="uk-table" cellspacing="0" width="100%">
                             <thead>
                             <tr>
-                                <th>{{ __('invoice.id') }}</th>
-                                <th>{{ __('invoices.detail') }}</th>
-                                <th>{{ __('invoices.amount') }}</th>
-                                <th>{{ __('invoices.currency') }}</th>
-                                <th class="noprint">{{ __('general.actions') }}</th>
+                                <th title="{{__('quotations_tooltip.id')}}">{{ __('quotations.id') }}</th>
+                                <th title="{{__('quotations_tooltip.detail')}}">{{ __('quotations.detail') }}</th>
+                                <th title="{{__('quotations_tooltip.amount')}}">{{ __('quotations.amount') }}</th>
+                                <th title="{{__('quotations_tooltip.currency')}}">{{ __('quotations.currency') }}</th>
+                                <th title="{{__('general.actions')}}" class="noprint">{{ __('general.actions') }}</th>
                             </tr>
                             </thead>
 
@@ -624,28 +741,35 @@
                 </div>
             </div>
         </div>
+</li>
+<li>
 
-        <div class="md-card">
+
+
+     <a id="materials_a" data-toggle="collapse" data-parent="#accordion" href="#collapse4">
+            <div class="uk-accordion-title materials_a">
+<h4 class="heading_a uk-margin-bottom">{{ __('invoices.materials') }}</h4>
+        </div>
+        </a>
+          <div id="collapse4" class="md-card panel-collapse collapse ">
             <div class="md-card-content">
                 <div class="uk-grid" data-uk-grid-margin>
                     <div class="uk-width-1-1">
 
-                        <h4 class="heading_a uk-margin-bottom">{{ __('invoices.materials') }}</h4>
+                        <!--<h4 class="heading_a uk-margin-bottom">{{ __('invoices.materials') }}</h4>-->
                         <table id="quotation_materials-table" class="uk-table" cellspacing="0" width="100%">
                             <thead>
                             <tr>
-                                <th>{{ __('invoice.id') }}</th>
-                                <th>{{ __('invoices.detail') }}</th>
-                                <th>{{ __('invoices.amount') }}</th>
-                                <th>{{ __('invoices.currency') }}</th>
-                                <th class="noprint">{{ __('general.actions') }}</th>
+                                <th title="{{__('quotations_tooltip.id')}}">{{ __('quotations.id') }}</th>
+                                <th title="{{__('quotations_tooltip.detail')}}">{{ __('quotations.detail') }}</th>
+                                <th title="{{__('quotations_tooltip.amount')}}">{{ __('quotations.amount') }}</th>
+                                <th title="{{__('quotations_tooltip.currency')}}">{{ __('quotations.currency') }}</th>
+                                <th title="{{__('general.actions')}}" class="noprint">{{ __('general.actions') }}</th>
                             </tr>
                             </thead>
                             <tfoot>
                             <tr>
-                                <th>
-
-                                </th>
+                                <th></th>
                                 <th>{{ __('invoices.total') }}</th>
                                 <th></th>
                                 <th>{{ $currency->name }}</th>
@@ -660,19 +784,26 @@
             </div>
         </div>
 
+</li>
+<li>
 
-        <div class="md-card">
+     <a id="total_quotation_a" data-toggle="collapse" data-parent="#accordion" href="#collapse5">
+        </a>
+          <div id="collapse5" class="md-card panel-collapse collapse in">
             <div class="md-card-content">
+
                 <div class="uk-grid" data-uk-grid-margin>
                     <div class="uk-width-1-1">
-
 
                         <table id="" class="uk-table" cellspacing="0" width="100%">
                             <tbody>
                             <tr>
-                                <th><h3>{{ __('quotations.total_quotation') }}</h3></th>
+                                <th><!--<h3>{{ __('quotations.total_quotation') }}</h3>--></th>
                                 <th>
-                                    <h3>{{number_format($quotation->total,2,',','.')}}</h3>
+                                    <h3 id="total_quotation">{{ number_format($quotation->total,2,',','.')}}</h3>
+                                </th>
+                                 <th>
+                                    <h3 id="">{{ $currency->name}}</h3>
                                 </th>
                             </tr>
                             </tbody>
@@ -682,7 +813,7 @@
                 </div>
             </div>
         </div>
-
+</ul>
         @if(!$quotation->emited)
             <div class="md-fab-wrapper md-fab-in-card" style="position: fixed;">
                 <div class="md-fab md-fab-accent md-fab-sheet">

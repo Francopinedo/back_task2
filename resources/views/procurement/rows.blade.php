@@ -52,8 +52,8 @@
 	            data: null,
 	            render: function (data, type, row) {
                     return '' +
-	            		'<a href="/procurement_offers/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
-	            		'<a href="/procurement_offers/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+	            		'<a title="{{__('general.edit')}}" href="/procurement_offers/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
+	            		'<a title="{{__('general.delete')}}" href="/procurement_offers/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
                 }
 	        } ],
 	        initComplete: function(settings, json) {
@@ -102,16 +102,16 @@
                 	<table id="procurement_offers-table" class="uk-table" cellspacing="0" width="100%">
                 	    <thead>
                 	        <tr>
-                	        	<th>{{ __('procurements.id') }}</th>
-                	        	<th>{{ __('procurements.description') }}</th>
-                	        	<th>{{ __('procurements.specifications') }}</th>
-                	        	<th>{{ __('procurements.delivery_max_days_offered') }}</th>
-                	        	<th>{{ __('procurements.delivery_responsable') }}</th>
-                	        	<th>{{ __('procurements.cost') }}</th>
-                	        	<th>{{ __('procurements.quality') }}</th>
-                	        	<th>{{ __('procurements.provider') }}</th>
-                	        	<th>{{ __('procurements.comment') }}</th>
-                	        	<th>{{ __('general.actions') }}</th>
+                	        	<th title="{{__('procurements_tooltip.id')}}">{{ __('procurements.id') }}</th>
+                	        	<th title="{{__('procurements_tooltip.description')}}">{{ __('procurements.description') }}</th>
+                	        	<th title="{{__('procurements_tooltip.specifications')}}">{{ __('procurements.specifications') }}</th>
+                	        	<th title="{{__('procurements_tooltip.delivery_max_days_offered')}}">{{ __('procurements.delivery_max_days_offered') }}</th>
+                	        	<th title="{{__('procurements_tooltip.delivery_responsable')}}">{{ __('procurements.delivery_responsable') }}</th>
+                	        	<th title="{{__('procurements_tooltip.cost')}}">{{ __('procurements.cost') }}</th>
+                	        	<th title="{{__('procurements_tooltip.quality')}}">{{ __('procurements.quality') }}</th>
+                	        	<th title="{{__('procurements_tooltip.provider')}}">{{ __('procurements.provider') }}</th>
+                	        	<th title="{{__('procurements_tooltip.comment')}}">{{ __('procurements.comment') }}</th>
+                	        	<th title="{{__('general.actions')}}">{{ __('general.actions') }}</th>
                 	        </tr>
                 	    </thead>
                 	</table>

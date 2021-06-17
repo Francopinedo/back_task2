@@ -11,7 +11,7 @@ class ProjectRowController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit']);
     }
 
     /**
@@ -24,6 +24,7 @@ class ProjectRowController extends Controller
     	$project = $this->getFromApi('GET', 'projects/'.$project_id);
 
         return view('project_row/index', [
+            'project_id'=>$project_id,
 			'company'  => $company,
 			'project'  => $project,
 			'kpis'  => $kpis,

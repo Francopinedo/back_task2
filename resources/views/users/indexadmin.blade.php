@@ -1,4 +1,4 @@
-@extends('layouts.app', ['favoriteTitle' => __('users.users'), 'favoriteUrl' => 'users'])
+@extends('layouts.app', ['favoriteTitle' => __('users.admin_users'), 'favoriteUrl' => 'users'])
 
 @section('scripts')
     @include('datatables.basic')
@@ -24,27 +24,32 @@
             ];
 
             var actions = [
+               // {
+               //     pre: '<a href="/users/',
+               //     post: '/show" class="table-actions info-btn" data-uk-modal="{target:\'#modal_info\'}"><i class="fa fa-info-circle" aria-hidden="true"></i></a>'
+              //  },
                 {
-                    pre: '<a href="/users/',
-                    post: '/show" class="table-actions info-btn" data-uk-modal="{target:\'#modal_info\'}"><i class="fa fa-info-circle" aria-hidden="true"></i></a>'
+                    pre: '<a title="{{__('general.edit')}}" href="/users/',
+                    post: '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>'
                 },
 
-
-
                 {
-                    pre: '<a href="/users/',
+                    pre: '<a title={{__('general.password')}} href="/users/',
                     post: '/password" class="table-actions edit-btn"><i class="fa fa-key" aria-hidden="true"></i></a>'
                 },
-
+                {
+                    pre: '<a title="{{__('general.delete')}}" href="/users/',
+                    post: '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>'
+                }
             ];
             var confirm = '{{__('general.confirm')}}';
             var API_PATH = '<?php echo e(env('API_PATH')); ?>';
-            DtablesUtil(tableName, columns, actions, urlParameters, API_PATH, confirm);
+            DtablesUtil(tableName, columns, actions, urlParameters);
         });
     </script>
 @endsection
 
-@section('section_title', __('users.users'))
+@section('section_title', __('users.admin_users'))
 
 @section('content')
 
@@ -71,20 +76,20 @@
                     <table id="users-table" class="uk-table" cellspacing="0" width="100%">
                         <thead>
                         <tr>
-                            <th>{{ __('users.id') }}</th>
-                            <th>{{ __('users.name') }}</th>
-                            <th>{{ __('users.email') }}</th>
-                            <th>{{ __('users.address') }}</th>
-                            <th>{{ __('users.home_phone') }}</th>
-                            <th>{{ __('users.cell_phone') }}</th>
-                            <th>{{ __('users.city') }}</th>
-                            <th>{{ __('users.office') }}</th>
-                            <th>{{ __('users.company_role') }}</th>
-                            <th>{{ __('users.seniority') }}</th>
-                            <th>{{ __('users.workplace') }}</th>
-                            <th>{{ __('users.workgroup') }}</th>
-                            <th>{{ __('users.hours_by_day') }}</th>
-                            <th>{{ __('general.actions') }}</th>
+                            <th title="{{__('users_tooltip.id')}}">{{ __('users.id') }}</th>
+                            <th title="{{__('users_tooltip.name')}}">{{ __('users.name') }}</th>
+                            <th title="{{__('users_tooltip.email')}}">{{ __('users.email') }}</th>
+                            <th title="{{__('users_tooltip.address')}}">{{ __('users.address') }}</th>
+                            <th title="{{__('users_tooltip.home_phone')}}">{{ __('users.home_phone') }}</th>
+                            <th title="{{__('users_tooltip.cell_phone')}}">{{ __('users.cell_phone') }}</th>
+                            <th title="{{__('users_tooltip.city')}}">{{ __('users.city') }}</th>
+                            <th title="{{__('users_tooltip.office')}}">{{ __('users.office') }}</th>
+                            <th title="{{__('users_tooltip.company_role')}}">{{ __('users.company_role') }}</th>
+                            <th title="{{__('users_tooltip.seniority')}}">{{ __('users.seniority') }}</th>
+                            <th title="{{__('users_tooltip.workplace')}}">{{ __('users.workplace') }}</th>
+                            <th title="{{__('users_tooltip.workgroup')}}">{{ __('users.workgroup') }}</th>
+                            <th title="{{__('users_tooltip.hours_by_day')}}">{{ __('users.hours_by_day') }}</th>
+                            <th title="{{__('general.actions')}}">{{ __('general.actions') }}</th>
                         </tr>
                         </thead>
                     </table>
@@ -92,10 +97,10 @@
                         <div class="uk-width-medium-1-3" id="datatables-length"></div>
                         <div class="uk-width-medium-1-3" id="datatables-pagination"></div>
                         <div class="uk-width-medium-1-3">
-                            @if(!Auth::user()->hasRole('admin'))  <a
+                              <a
                                     class="md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light"
-                                    href="#" id="add-new">{{ __('users.add_new') }}</a>
-                            @endif
+                                    href="#" id="add-new" title="{{ __('users.add_new') }}">{{ __('users.add_new') }}</a>
+                            
                         </div>
                     </div>
 
@@ -133,6 +138,10 @@
             if (isset($workgroups) && !empty($workgroups) && count($workgroups) > 0)
             {
                 $data['workgroups'] = $workgroups;
+            }
+            if (isset($timezones))
+            {
+                $data['timezones'] = $timezones;
             }
     @endphp
     @component('users/create', $data)

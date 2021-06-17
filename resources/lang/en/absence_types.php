@@ -1,11 +1,11 @@
 <?php
 return [
-	'absence_types' => 'Absence Types',
+	'absence_types' => 'Absence',
 	'add_new'       => 'ADD NEW',
 	'update'        => 'UPDATE',
 	'id'            => 'ID',
-	'title'         => 'Title',
-	'days'          => 'Days',
+	'title'         => 'Title: ie. Exam Day',
+	'days'          => 'Days: # of Days of Absence',
 	'country'       => 'Country',
-	'city'       => 'City',
+	'city'          => 'City',
 ];

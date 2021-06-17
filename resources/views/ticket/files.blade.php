@@ -232,7 +232,7 @@ text/plain, application/pdf, image/*" multiple>
 </script>
 
 
-<script src="https://blueimp.github.io/JavaScript-Templates/js/tmpl.min.js"></script>
+<script src="{{ asset('JavaScript-Templates/tmpl.min.js') }}"></script>
 
 <script src="{{ asset('jQuery-File-Upload-master/js/vendor/jquery.ui.widget.js')}}"></script>
 <script src="{{ asset('jQuery-File-Upload-master/app.js')}}"></script>

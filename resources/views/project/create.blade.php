@@ -6,28 +6,31 @@
     }
 
     #create_div.switcher_active {
-        width: 600px;
+        width: 50%;
     }
 
 </style>
+ <form role="form" method="POST" action="{{ url('projects') }}" id="data-form"
+              data-redirect-on-success="{{ url($url) }}">
+
+
 
 <div class="uk-grid" data-uk-grid-margin>
-    <div class="uk-width-1-1">
 
-        <div class="uk-alert uk-alert-danger hide_when_empty" data-uk-alert="" id="status_code-error"></div>
+   <li class="uk-width-medium-1-1 uk-row-first">
+        <div class="uk-alert uk-alert-danger hide_when_empty status_code-error" data-uk-alert=""></div>
+            </li>
 
-        <form role="form" method="POST" action="{{ url('projects') }}" id="data-form"
-              data-redirect-on-success="{{ url('projects') }}">
-            {{ csrf_field() }}
-            <div class="uk-width-medium-1-1 uk-row-first">
+             {{ csrf_field() }}
+            <li class="uk-width-medium-1-3 uk-row-first">
                 <div class="md-input-wrapper">
-                    <label>{{ __('projects.name') }}</label>
+                    <label>{{ __('projects_tooltip.name') }}</label>
                     <input type="text" class="md-input" name="name" required><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required name-error"></span></div>
 
                 <div class="md-input-wrapper md-input-select">
-                    <label>{{ __('projects.customer') }}</label>
+                    <label>{{ __('projects_tooltip.customer') }}</label>
                     <select name="customer_id" data-md-selectize>
                         <option value="">{{ __('projects.customer') }}...</option>
                         @foreach ($customers as $customer)
@@ -38,27 +41,27 @@
                 <div class="parsley-errors-list filled"><span class="parsley-required customer_id-error"></span></div>
 
                 <div class="md-input-wrapper">
-                    <label>{{ __('projects.customer_name') }}</label>
+                    <label>{{ __('projects_tooltip.customer_name') }}</label>
                     <input type="text" class="md-input" name="customer_name" required><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required customer_name-error"></span></div>
 
                 <div class="md-input-wrapper">
-                    <label for="uk_dp_1">{{ __('projects.start') }}</label>
+                    <label for="uk_dp_1">{{ __('projects_tooltip.start') }}</label>
                     <input class="md-input" type="text" id="uk_dp_1" name="start"
                            data-uk-datepicker="{format:'YYYY-MM-DD'}">
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required start-error"></span></div>
 
                 <div class="md-input-wrapper">
-                    <label for="uk_dp_1">{{ __('projects.finish') }}</label>
+                    <label for="uk_dp_1">{{ __('projects_tooltip.finish') }}</label>
                     <input class="md-input" type="text" id="uk_dp_1" name="finish"
                            data-uk-datepicker="{format:'YYYY-MM-DD'}">
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required finish-error"></span></div>
 
                 <div class="md-input-wrapper md-input-select">
-                    <label>{{ __('projects.project_manager') }}</label>
+                    <label>{{ __('projects_tooltip.project_manager') }}</label>
                     <select name="project_manager_id" data-md-selectize>
                         <option value="">{{ __('projects.project_manager') }}...</option>
                         @foreach ($project_managers as $pm)
@@ -70,7 +73,7 @@
                 </div>
 
                 <div class="md-input-wrapper md-input-select">
-                    <label>{{ __('projects.technical_director') }}</label>
+                    <label>{{ __('projects_tooltip.technical_director') }}</label>
                     <select name="technical_director_id" data-md-selectize>
                         <option value="">{{ __('projects.technical_director') }}...</option>
                         @foreach ($technical_directors as $pm)
@@ -80,9 +83,8 @@
                 </div>
                 <div class="parsley-errors-list filled"><span
                             class="parsley-required technical_director_id-error"></span></div>
-
-                <div class="md-input-wrapper md-input-select">
-                    <label>{{ __('projects.delivery_manager') }}</label>
+		<div class="md-input-wrapper md-input-select">
+                    <label>{{ __('projects_tooltip.delivery_manager') }}</label>
                     <select name="delivery_manager_id" data-md-selectize>
                         <option value="">{{ __('projects.delivery_manager') }}...</option>
                         @foreach ($delivery_managers as $pm)
@@ -92,21 +94,25 @@
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required delivery_manager_id-error"></span>
                 </div>
+		</li>
+	            <li class="uk-width-medium-1-3 uk-row-first">
+
+
 
                 <div class="md-input-wrapper">
-                    <label>{{ __('projects.sow_number') }}</label>
+                    <label>{{ __('projects_tooltip.sow_number') }}</label>
                     <input type="text" class="md-input" name="sow_number"><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required sow_number-error"></span></div>
 
                 <div class="md-input-wrapper">
-                    <label>{{ __('projects.identificator') }}</label>
+                    <label>{{ __('projects_tooltip.identificator') }}</label>
                     <input type="text" class="md-input" name="identificator"><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required identificator-error"></span></div>
 
                 <div class="md-input-wrapper md-input-select">
-                    <label>{{ __('projects.status') }}</label>
+                    <label>{{ __('projects_tooltip.status') }}</label>
                     <select name="status" data-md-selectize>
                         <option value="">{{ __('projects.status') }}...</option>
                         <option value="{{ __('projects.initiating') }}">{{ __('projects.initiating') }}...</option>
@@ -121,21 +127,21 @@
                 <div class="parsley-errors-list filled"><span class="parsley-required status-error"></span></div>
 
                 <div class="md-input-wrapper">
-                    <label>{{ __('projects.presales_responsable') }}</label>
+                    <label>{{ __('projects_tooltip.presales_responsable') }}</label>
                     <input type="text" class="md-input" name="presales_responsable"><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span
                             class="parsley-required presales_responsable-error"></span></div>
 
                 <div class="md-input-wrapper">
-                    <label>{{ __('projects.technical_estimator') }}</label>
+                    <label>{{ __('projects_tooltip.technical_estimator') }}</label>
                     <input type="text" class="md-input" name="technical_estimator"><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required technical_estimator-error"></span>
                 </div>
 
                 <div class="md-input-wrapper md-input-select">
-                    <label>{{ __('projects.engagement') }}</label>
+                    <label>{{ __('projects_tooltip.engagement') }}</label>
                     <select name="engagement" data-md-selectize>
                         <option value="">{{ __('projects.engagement') }}...</option>
                         @foreach ($engagements as $engagement)
@@ -145,29 +151,54 @@
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required engagement-error"></span></div>
 
-                <div class="md-input-wrapper">
-                    <label>{{ __('projects.estimated_revenue') }}</label>
+ <div class="md-input-wrapper">
+                    <label>{{ __('projects_tooltip.estimated_revenue') }}</label>
                     <input type="text" class="md-input" name="estimated_revenue"><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required estimated_revenue-error"></span>
                 </div>
 
+
+
+
+
+			<label>{{ __('projects_tooltip.name_convention') }}</label>
+                <div class="md-input-wrapper ">
+
+
+                    <select name="name_convention[]" multiple data-md-selectize>
+                        <option value="">{{ __('projects.name_convention') }}...</option>
+                        <option value="CustomerName">CustomerName</option>
+                        <option value="ProjectName">ProjectName</option>
+                        <option value="ArtifactName">ArtifactName</option>
+                        <option value="YYYYMMDDHHMMSS">YYYYMMDDHHMMSS</option>
+                        <option value="VersionNumber">VersionNumber</option>
+                    </select>
+                </div>
+                <div class="parsley-errors-list filled"><span
+                            class="parsley-required name_convention-error"></span></div>
+
+
+			</li>
+				            <li class="uk-width-medium-1-3 uk-row-first">
+
+
                 <div class="md-input-wrapper">
-                    <label>{{ __('projects.estimated_cost') }}</label>
+                    <label>{{ __('projects_tooltip.estimated_cost') }}</label>
                     <input type="text" class="md-input" name="estimated_cost"><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required estimated_cost-error"></span>
                 </div>
 
                 <div class="md-input-wrapper">
-                    <label>{{ __('projects.estimated_margin') }}</label>
+                    <label>{{ __('projects_tooltip.estimated_margin') }}</label>
                     <input type="text" class="md-input" name="estimated_margin"><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required estimated_margin-error"></span>
                 </div>
 
                 <div class="md-input-wrapper">
-                    <label>{{ __('projects.estimated_department_margin') }}</label>
+                    <label>{{ __('projects_tooltip.estimated_department_margin') }}</label>
                     <input type="text" class="md-input" name="estimated_department_margin"><span
                             class="md-input-bar"></span>
                 </div>
@@ -175,13 +206,13 @@
                             class="parsley-required estimated_department_margin-error"></span></div>
 
                 <div class="md-input-wrapper">
-                    <label>{{ __('projects.target_margin') }}</label>
+                    <label>{{ __('projects_tooltip.target_margin') }}</label>
                     <input type="text" class="md-input" name="target_margin"><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required target_margin-error"></span></div>
 
                 <div class="md-input-wrapper">
-                    <label>{{ __('projects.financial_deviation_threshold') }}</label>
+                    <label>{{ __('projects_tooltip.financial_deviation_threshold') }}</label>
                     <input type="text" class="md-input" name="financial_deviation_threshold"><span
                             class="md-input-bar"></span>
                 </div>
@@ -189,7 +220,7 @@
                             class="parsley-required financial_deviation_threshold-error"></span></div>
 
                 <div class="md-input-wrapper">
-                    <label>{{ __('projects.time_deviation_threshold') }}</label>
+                    <label>{{ __('projects_tooltip.time_deviation_threshold') }}</label>
                     <input type="text" class="md-input" name="time_deviation_threshold"><span
                             class="md-input-bar"></span>
                 </div>
@@ -197,18 +228,19 @@
                             class="parsley-required time_deviation_threshold-error"></span></div>
 
                 <div class="md-input-wrapper">
-                    <label>{{ __('projects.hours_by_day') }}</label>
+                    <label>{{ __('projects_tooltip.hours_by_day') }}</label>
                     <input type="text" class="md-input hours_by_day" name="hours_by_day"><span
                             class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span
                             class="parsley-required hours_by_day-error"></span></div>
 
-                <label>{{ __('projects.week_holy_days') }}</label>
+                <label>{{ __('projects_tooltip.week_holy_days') }}</label>
                 <div class="md-input-wrapper ">
 
 
                     <select name="holy_days[]" multiple data-md-selectize>
+                        <option value="">{{ __('projects.week_holy_days') }}...</option>
                         <option value="0">Sunday</option>
                         <option value="1">Monday</option>
                         <option value="2">Tuesday</option>
@@ -224,7 +256,7 @@
 
 
                 <div class="md-input-wrapper md-input-select">
-                    <label>{{ __('projects.department') }}</label>
+                    <label>{{ __('projects_tooltip.department') }}</label>
                     <select name="department_id" data-md-selectize>
                         <option value="">{{ __('projects.department') }}...</option>
                         @foreach ($departments as $department)
@@ -236,16 +268,19 @@
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required department_id-error"></span></div>
 
-                <div class="uk-margin-medium-top">
+
+
+            </li>
+ <li class="uk-width-medium-1-1 uk-row-first">
+     <div class="uk-margin-medium-top">
                     <a class="md-btn md-btn-primary md-btn-wave-light md-btn-block waves-effect waves-button waves-light"
                        href="#" id="add-btn">{{ __('projects.add_new') }}</a>
                     <a class="md-btn md-btn-flat md-btn-wave md-btn-block waves-effect waves-button" href="#"
                        id="cancel-btn">{{ __('general.cancel') }}</a>
                 </div>
-
+ </li>
             </div>
-
-        </form>
-    </div>
 </div>
+        </form>
+
 

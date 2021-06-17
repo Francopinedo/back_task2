@@ -1,5 +1,8 @@
 <?php
 
+header('Access-Control-Allow-Origin:  *');
+header('Access-Control-Allow-Methods:  POST, GET, OPTIONS, PUT, DELETE');
+header('Access-Control-Allow-Headers:  Content-Type, X-Auth-Token, Origin, Authorization');
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -10,6 +13,11 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('locale/{locale}', function ($locale){
+    Session::put('locale', $locale);
+    return redirect()->back();
+});
+
 
 Route::get('/', function () {
     return view('auth.login');
@@ -27,6 +35,7 @@ Route::get('/soon', 'SoonController@index');
 
 // Users
 Route::get('/users', 'UsersController@index');
+Route::get('/main-menu/{parameter}/{parameter2}/users', 'UsersController@index');
 Route::get('/users/{id}/show', 'UsersController@show');
 Route::get('/users/create', 'UsersController@create');
 Route::post('/users', 'UsersController@store');
@@ -78,7 +87,9 @@ Route::post('/cities', 'CityController@store');
 Route::get('/cities/{id}/edit', 'CityController@edit');
 Route::get('/cities/{id}/delete', 'CityController@delete');
 Route::post('/cities/update', 'CityController@update');
-
+Route::get('/cities/import', 'CityController@import');
+Route::post('/cities/do_import', 'CityController@do_import');
+Route::get('/cities/reload', 'CityController@reload');
 
 // Cities template
 Route::get('/cities_template', 'CityTemplateController@index');
@@ -87,7 +98,6 @@ Route::post('/cities_template', 'CityTemplateController@store');
 Route::get('/cities_template/{id}/edit', 'CityTemplateController@edit');
 Route::get('/cities_template/{id}/delete', 'CityTemplateController@delete');
 Route::post('/cities_template/update', 'CityTemplateController@update');
-Route::get('/cities_template/reload', 'CityTemplateController@reload');
 
 // Industries
 Route::get('/industries', 'IndustryController@index');
@@ -122,6 +132,7 @@ Route::get('/company_role_templates/{id}/edit', 'CompanyRoleTemplateController@e
 Route::get('/company_role_templates/{id}/delete', 'CompanyRoleTemplateController@delete');
 Route::post('/company_role_templates/update', 'CompanyRoleTemplateController@update');
 
+
 // AbsenceType
 Route::get('/absence_types', 'AbsenceTypeController@index');
 Route::get('/absence_types/create', 'AbsenceTypeController@create');
@@ -130,7 +141,9 @@ Route::post('/absence_types', 'AbsenceTypeController@store');
 Route::get('/absence_types/{id}/edit', 'AbsenceTypeController@edit');
 Route::get('/absence_types/{id}/delete', 'AbsenceTypeController@delete');
 Route::post('/absence_types/update', 'AbsenceTypeController@update');
-
+Route::post('/absence_types/do_import', 'AbsenceTypeController@do_import');
+Route::get('/absence_types/import', 'AbsenceTypeController@import');
+Route::get('/absence_types/reload', 'AbsenceTypeController@reload');
 
 // AbsenceTypeTemplate
 Route::get('/absence_types_template', 'AbsenceTypeTemplateController@index');
@@ -163,6 +176,9 @@ Route::patch('/companies/update', 'CompanyController@update');
 // Customers
 Route::get('/customers', 'CustomerController@index');
 Route::get('/customers/forProjectSelection', 'CustomerController@forProjectSelection');
+Route::get('/customers/forProjectSelectionButton/{customer_id}', 'CustomerController@forProjectSelectionButton');
+
+
 Route::get('/customers/import', 'CustomerController@import');
 Route::get('/customers/{id}', 'CustomerController@show');
 
@@ -174,12 +190,12 @@ Route::get('/customers/{id}/edit', 'CustomerController@edit');
 Route::post('/customers/update', 'CustomerController@update');
 Route::post('/customers/do_import', 'CustomerController@do_import');
 
-// Studios
-Route::get('/studios/create', 'StudioController@create');
-Route::post('/studios', 'StudioController@store');
-Route::get('/studios/{id}/edit', 'StudioController@edit');
-Route::get('/studios/{id}/delete', 'StudioController@delete');
-Route::post('/studios/update', 'StudioController@update');
+// // Studios
+// Route::get('/studios/create', 'StudioController@create');
+// Route::post('/studios', 'StudioController@store');
+// Route::get('/studios/{id}/edit', 'StudioController@edit');
+// Route::get('/studios/{id}/delete', 'StudioController@delete');
+// Route::post('/studios/update', 'StudioController@update');
 
 // Seniorities
 Route::get('/seniorities/create', 'SeniorityController@create');
@@ -194,7 +210,8 @@ Route::post('/company_roles', 'CompanyRoleController@store');
 Route::get('/company_roles/{id}/edit', 'CompanyRoleController@edit');
 Route::get('/company_roles/{id}/delete', 'CompanyRoleController@delete');
 Route::post('/company_roles/update', 'CompanyRoleController@update');
-
+Route::get('/company_roles/import', 'CompanyRoleController@import');
+Route::post('/company_roles/do_import', 'CompanyRoleController@do_import');
 // Project Roles
 Route::get('/project_roles/create', 'ProjectRoleController@create');
 Route::post('/project_roles', 'ProjectRoleController@store');
@@ -222,24 +239,34 @@ Route::post('/holidays_templates', 'HolidayTemplateController@store');
 Route::get('/holidays_templates/{id}/edit', 'HolidayTemplateController@edit');
 Route::get('/holidays_templates/{id}/delete', 'HolidayTemplateController@delete');
 Route::post('/holidays_templates/update', 'HolidayTemplateController@update');
-Route::get('/holidays_templates/reload', 'HolidayTemplateController@reload');
 
 //Catalog
-Route::get('/catalog', 'CatalogController@index');
-Route::get('/catalog/form', 'CatalogController@form');
-Route::get('/catalog/show/{lang}/{directory}', 'CatalogController@show');
-Route::get('/catalog/download/{lang}/{directory}/{file}', 'CatalogController@download');
+Route::get('/catalog', 'CatalogController@index')->name('catalog');
+Route::get('/catalog/{parameter}/view/{lang_system}/{type}/{directory}', 'CatalogController@index');
 
+
+Route::get('/catalog/form', 'CatalogController@form');
+Route::get('/catalog/show/{lang_system}/{type}/{directory}', 'CatalogController@show');
+
+
+Route::get('/catalog/download/', 'CatalogController@download');
+Route::post('/catalog/uploadfile', 'CatalogController@uploadFile');
+Route::get('/catalog/delete/', 'CatalogController@delete');
 //Repository
 Route::get('/repository', 'RepositoryController@index');
+Route::get('/repository/view/{customer_name}/{project_name}/{lang}/{process_group}/{knowledge_area}/{directory}', 'RepositoryController@index');
+
 Route::get('/repository/form', 'RepositoryController@form');
-Route::get('/repository/show/{customer}/{project}/{directory}', 'RepositoryController@show')->where('directory', '(.*)');
+
+//Route::get('/repository/show/{customer}/{project}/{directory}', 'RepositoryController@show')->where('directory', '(.*)');
+ Route::get('/repository/show/{customer_name}/{project_name}/{lang}/{process_group}/{knowledge_area}/{directory}', 'RepositoryController@show');
 Route::get('/repository/download/', 'RepositoryController@download');
 Route::get('/repository/delete/', 'RepositoryController@delete');
 Route::post('/repository/uploadfile', 'RepositoryController@uploadFile');
 
 //Repository
 Route::get('/repository_backup', 'RepositoryBackupController@index');
+Route::get('/main-menu/{parameter}/repository_backup', 'RepositoryBackupController@index');
 Route::post('/repository_backup/download', 'RepositoryBackupController@download');
 Route::post('/repository_backup/validate_download', 'RepositoryBackupController@validate_download');
 
@@ -251,6 +278,7 @@ Route::post('/holidays', 'HolidayController@store');
 Route::get('/holidays/{id}/edit', 'HolidayController@edit');
 Route::get('/holidays/{id}/delete', 'HolidayController@delete');
 Route::post('/holidays/update', 'HolidayController@update');
+Route::get('/holidays/reload', 'HolidayController@reload');
 
 // Costs
 Route::get('/costs', 'CostController@index');
@@ -278,6 +306,7 @@ Route::post('/email_templates/update', 'EmailTemplateController@update');
 
 // Emails
 Route::get('/emails', 'EmailController@index');
+Route::get('/emails/templates', 'EmailController@templates');
 Route::get('/emails/create', 'EmailController@create');
 Route::post('/emails', 'EmailController@store');
 Route::get('/emails/{id}/edit', 'EmailController@edit');
@@ -291,20 +320,34 @@ Route::post('/emails/send', 'EmailController@send');
 
 // Projects
 Route::get('/projects', 'ProjectController@index');
+Route::get('/main-menu/{parameter}/{parameter2}/projects', 'ProjectController@index');
 Route::get('/projects/create', 'ProjectController@create');
 Route::post('/projects/select', 'ProjectController@select');
 Route::get('/projects/forProjectSelection/{customer_id}', 'ProjectController@forProjectSelection');
+Route::get('/projects/forProjectSelectionButton/{customer_id}', 'ProjectController@forProjectSelectionButton');
 Route::get('/projects/forContracts/{customer_id}', 'ProjectController@forContracts');
 Route::post('/projects', 'ProjectController@store');
 Route::get('/projects/{id}/edit', 'ProjectController@edit');
-Route::get('/projects/{id}/delete', 'ProjectController@delete');
-Route::post('/projects/update', 'ProjectController@update');
+Route::get('/projects/{id}/pdf', 'ProjectController@pdf');
 
+Route::post('/projects/delete', 'ProjectController@delete');
+Route::post('/projects/update', 'ProjectController@update');
+Route::get('/projects/{id}/show', 'ProjectController@show');
+Route::post('/projects/download', 'ProjectController@download');
+Route::post('/projects/validate', 'ProjectController@validate_download');
 
 // Capacity Planing
 Route::get('/capacity_planing', 'CapacityPlanningController@index');
 Route::get('/capacity_planing/datatables', 'CapacityPlanningController@datatables');
 
+Route::get('/risk_report', 'RiskReportController@index');
+Route::get('/risk_report/excel', 'RiskReportController@excel');
+Route::get('/risk_report/pdf', 'RiskReportController@pdf');
+
+Route::get('/scopechanges_report', 'ScopeChangesReportController@index');
+Route::get('/main-menu/knowledge_area/scope_management/scopechanges_report', 'ScopeChangesReportController@index');
+Route::get('/scopechanges_report/excel', 'ScopeChangesReportController@excel');
+Route::get('/scopechanges_report/pdf', 'ScopeChangesReportController@pdf');
 
 // Rates
 Route::get('/rates', 'RateController@index');
@@ -350,6 +393,16 @@ Route::get('/materials/{id}/delete', 'MaterialController@delete');
 Route::post('/materials/update', 'MaterialController@update');
 Route::post('/materials/do_import', 'MaterialController@do_import');
 
+// Expenses
+Route::get('/debit_credit', 'DebitCreditController@index');
+Route::get('/debit_credit/create', 'DebitCreditController@create');
+Route::post('/debit_credit', 'DebitCreditController@store');
+Route::get('/debit_credit/{id}/edit', 'DebitCreditController@edit');
+Route::get('/debit_credit/import', 'DebitCreditController@import');
+Route::get('/debit_credit/{id}/delete', 'DebitCreditController@delete');
+Route::post('/debit_credit/update', 'DebitCreditController@update');
+Route::post('/debit_credit/do_import', 'DebitCreditController@do_import');
+
 // Discounts
 Route::get('/discounts', 'DiscountController@index');
 Route::get('/discounts/create', 'DiscountController@create');
@@ -368,6 +421,7 @@ Route::post('/taxes/update', 'TaxController@update');
 
 // Absences
 Route::get('/absences', 'AbsenceController@index');
+Route::get('/main-menu/{parameter}/absences', 'AbsenceController@index');
 Route::get('/absences/create', 'AbsenceController@create');
 Route::post('/absences', 'AbsenceController@store');
 Route::get('/absences/{id}/edit', 'AbsenceController@edit');
@@ -376,6 +430,7 @@ Route::post('/absences/update', 'AbsenceController@update');
 
 // Replacements
 Route::get('/replacements', 'ReplacementController@index');
+Route::get('/main-menu/{parameter}/replacements', 'ReplacementController@index');
 Route::get('/replacements/create', 'ReplacementController@create');
 Route::post('/replacements', 'ReplacementController@store');
 Route::get('/replacements/{id}/edit', 'ReplacementController@edit');
@@ -392,6 +447,7 @@ Route::post('/teams/update', 'TeamController@update');
 
 // TeamUsers
 Route::get('/team_users', 'TeamUserController@index');
+Route::get('/main-menu/{parameter}/{parameter2}/team_users', 'TeamUserController@index');
 Route::get('/team_users/create', 'TeamUserController@create');
 Route::post('/team_users', 'TeamUserController@store');
 Route::get('/team_users/{id}/edit', 'TeamUserController@edit');
@@ -410,6 +466,7 @@ Route::post('/contacts/do_import', 'ContactController@do_import');
 
 // Stakeholders
 Route::get('/stakeholders', 'StakeholderController@index');
+Route::get('/main-menu/{parameter}/{parameter2}/stakeholders', 'StakeholderController@index');
 Route::get('/stakeholders/create', 'StakeholderController@create');
 Route::post('/stakeholders', 'StakeholderController@store');
 Route::get('/stakeholders/{id}/edit', 'StakeholderController@edit');
@@ -450,12 +507,18 @@ Route::get('/kpis_category/{id}/delete', 'KpiCategoryController@delete');
 Route::post('/kpis_category/update', 'KpiCategoryController@update');
 
 Route::get('/kpis_functions', 'KpiFunctionsController@index');
+Route::get('/main-menu/{parameter}/{parameter2}/kpis_functions', 'KpiFunctionsController@index');
+Route::get('/kpis_functions/{category_kpi}', 'KpiFunctionsController@index');
 
 // ProjectRows
 Route::get('/project/rows/{id}', 'ProjectRowController@index');
 
 // ProjectKpiAlerts
 Route::get('/project_kpi_alerts/create', 'ProjectKpiAlertController@create');
+
+Route::post('/project_kpi_alerts/{id}/update', 'ProjectKpiAlertController@update');
+Route::post('/project_kpi_alerts/{id}', 'ProjectKpiAlertController@store');
+
 Route::post('/project_kpi_alerts', 'ProjectKpiAlertController@store');
 Route::get('/project_kpi_alerts/{id}/edit', 'ProjectKpiAlertController@edit');
 Route::get('/project_kpi_alerts/{id}/delete', 'ProjectKpiAlertController@delete');
@@ -463,12 +526,16 @@ Route::post('/project_kpi_alerts/update', 'ProjectKpiAlertController@update');
 
 // Contracts
 Route::get('/contracts', 'ContractController@index');
+Route::get('/main-menu/{parameter}/{parameter2}/contracts', 'ContractController@index');
 
 Route::get('/contracts/create', 'ContractController@create');
 Route::post('/contracts', 'ContractController@store');
+Route::get('/contracts/{id}/show', 'ContractController@show');
 Route::get('/contracts/{id}/edit', 'ContractController@edit');
-Route::get('/contracts/{id}/delete', 'ContractController@delete');
+Route::post('/contracts/delete', 'ContractController@delete');
 Route::post('/contracts/update', 'ContractController@update');
+Route::post('/contracts/download', 'ContractController@download');
+Route::post('/contracts/validate', 'ContractController@validate_download');
 
 // ContractRows
 Route::get('/contract/rows/{id}', 'ContractRowController@index');
@@ -504,6 +571,7 @@ Route::post('/contract_materials/update', 'ContractMaterialController@update');
 
 // AdditionalHours
 Route::get('/additional_hours', 'AdditionalHourController@index');
+Route::get('/main-menu/{parameter}/additional_hours', 'AdditionalHourController@index');
 Route::get('/additional_hours/create', 'AdditionalHourController@create');
 Route::post('/additional_hours', 'AdditionalHourController@store');
 Route::get('/additional_hours/{id}/edit', 'AdditionalHourController@edit');
@@ -512,6 +580,7 @@ Route::post('/additional_hours/update', 'AdditionalHourController@update');
 
 // WorkingHours
 Route::get('/working_hours', 'WorkingHourController@index');
+Route::get('/main-menu/{parameter}/{parameter2}/working_hours', 'WorkingHourController@index');
 Route::get('/working_hours/{team_user_id}/show', 'WorkingHourController@show');
 Route::get('/working_hours/create', 'WorkingHourController@create');
 Route::post('/working_hours', 'WorkingHourController@store');
@@ -520,7 +589,10 @@ Route::get('/working_hours/{id}/delete', 'WorkingHourController@delete');
 Route::post('/working_hours/update', 'WorkingHourController@update');
 
 // ProjectBoardRows
-Route::get('/project_board/rows', 'ProjectBoardRowController@index');
+Route::get('/project_board/project_rows', 'ProjectBoardRowController@index');
+Route::get('/main-menu/{parameter}/project_board/project_rows', 'ProjectBoardRowController@index');
+Route::get('/project_board/pdf', 'ProjectBoardRowController@pdf');
+
 
 // ProjectResources
 Route::get('/project_resources/{id}/create', 'ProjectResourceController@create');
@@ -550,8 +622,16 @@ Route::get('/project_materials/{id}/edit', 'ProjectMaterialController@edit');
 Route::get('/project_materials/{id}/delete', 'ProjectMaterialController@delete');
 Route::post('/project_materials/update', 'ProjectMaterialController@update');
 
+// DEbit Credit Adjustment
+Route::get('/project_debit_credit/{id}/create', 'ProjectDebitCreditController@create');
+Route::post('/project_debit_credit', 'ProjectDebitCreditController@store');
+Route::get('/project_debit_credit/{id}/edit', 'ProjectDebitCreditController@edit');
+Route::get('/project_debit_credit/{id}/delete', 'ProjectDebitCreditController@delete');
+Route::post('/project_debit_credit/update', 'ProjectDebitCreditController@update');
+
 // Invoices
 Route::get('/invoices', 'InvoiceController@index');
+Route::get('/main-menu/{parameter}/invoices', 'InvoiceController@index');
 Route::get('/invoices/create', 'InvoiceController@create');
 Route::get('/invoices/rows/{id}', 'InvoiceController@rows');
 Route::get('/invoices/pdf/{id}', 'InvoiceController@pdf');
@@ -562,10 +642,13 @@ Route::post('/invoices/update', 'InvoiceController@update');
 
 //Quotations
 Route::get('/quotation', 'QuotationController@index');
+Route::get('/main-menu/{parameter}/{parameter2}/quotation', 'QuotationController@index');
 Route::get('/quotation/create', 'QuotationController@create');
 Route::get('/quotation/rows/{id}', 'QuotationController@rows');
 Route::get('/quotations/rows/{id}', 'QuotationController@rows');
-Route::get('/quotation/pdf/{id}', 'QuotationController@pdf');
+//Route::get('/quotation/pdf/{id}', 'QuotationController@pdf');
+Route::get('/quotation/pdf/{id}/{resources_select}/{expenses_select}/{services_select}/{materials_select}', 'QuotationController@pdf');
+
 Route::post('/quotation', 'QuotationController@store');
 Route::get('/quotation/{id}/edit', 'QuotationController@edit');
 Route::get('/quotation/{id}/delete', 'QuotationController@delete');
@@ -622,6 +705,13 @@ Route::get('/invoice_materials/{id}/edit', 'InvoiceMaterialController@edit');
 Route::get('/invoice_materials/{id}/delete', 'InvoiceMaterialController@delete');
 Route::post('/invoice_materials/update', 'InvoiceMaterialController@update');
 
+// InvoiceMaterials
+Route::get('/invoice_debit_credit/{id}/create', 'InvoiceDebitCreditController@create');
+Route::post('/invoice_debit_credit', 'InvoiceDebitCreditController@store');
+Route::get('/invoice_debit_credit/{id}/edit', 'InvoiceDebitCreditController@edit');
+Route::get('/invoice_debit_credit/{id}/delete', 'InvoiceDebitCreditController@delete');
+Route::post('/invoice_debit_credit/update', 'InvoiceDebitCreditController@update');
+
 
 
 
@@ -659,6 +749,7 @@ Route::post('/providers/do_import', 'ProviderController@do_import');
 
 // Procurements
 Route::get('/procurements', 'ProcurementController@index');
+Route::get('/main-menu/{parameter}/procurements', 'ProcurementController@index');
 Route::get('/procurements/create', 'ProcurementController@create');
 Route::get('/procurements/{id}', 'ProcurementController@show');
 Route::get('/procurements/{id}/rows', 'ProcurementController@rows');
@@ -676,6 +767,7 @@ Route::post('/procurement_offers/update', 'ProcurementOfferController@update');
 
 // Requirements
 Route::get('/requirements', 'RequirementController@index');
+Route::get('/main-menu/{parameter}/{parameter2}/requirements', 'RequirementController@index');
 Route::get('/requirements/create', 'RequirementController@create');
 Route::get('/requirements/{id}', 'RequirementController@show');
 Route::post('/requirements', 'RequirementController@store');
@@ -686,15 +778,35 @@ Route::post('/requirements/update', 'RequirementController@update');
 // Tasks
 Route::get('/tasks', 'TaskController@index');
 Route::get('/tasks/create', 'TaskController@create');
+Route::get('/tasks/export', 'TaskController@export');
+Route::get('/tasks/import', 'TaskController@import');
+
 Route::get('/tasks/{id}', 'TaskController@show');
 Route::post('/tasks', 'TaskController@store');
 Route::get('/tasks/{id}/edit', 'TaskController@edit');
 Route::get('/tasks/{id}/delete', 'TaskController@delete');
 Route::post('/tasks/update', 'TaskController@update');
-Route::get('/projects/{id}/tasks', 'ProjectTaskController@index');
+
+// Route::get('/projects/{id}/tasks', 'ProjectTaskController@index');
+
+Route::post('/tasks/do_import', 'TaskController@do_import');
+
+// Sprints
+Route::get('/sprints/{project_id}', 'SprintsController@index');
+Route::get('/sprints/{project_id}/{parameter?}', 'SprintsController@index');
+Route::get('/sprints/create', 'SprintsController@create');
+Route::get('/sprints/{id}/tickets', 'TicketController@indexsprints');
+Route::get('/sprints/{id}', 'SprintsController@show');
+Route::post('/sprints', 'SprintsController@store');
+Route::get('/sprints/{id}/edit', 'SprintsController@edit');
+Route::get('/sprints/{id}/delete', 'SprintsController@delete');
+Route::post('/sprints/update', 'SprintsController@update');
+
+
 
 // Tickets
 Route::get('/tasks/{id}/tickets', 'TicketController@index');
+
 Route::get('/tickets/create', 'TicketController@create');
 Route::get('/tickets/{id}', 'TicketController@show');
 Route::post('/tickets', 'TicketController@store');
@@ -778,7 +890,7 @@ Route::get('/project_roles/{id}/edit', 'ProjectRoleController@edit');
 Route::get('/project_roles/import', 'ProjectRoleController@import');
 Route::get('/project_roles/{id}/delete', 'ProjectRoleController@delete');
 Route::post('/project_roles/update', 'ProjectRoleController@update');
-Route::post('/project_roles/do_import', 'ProjectRoleController@import');
+Route::post('/project_roles/do_import', 'ProjectRoleController@do_import');
 
 // Seniorities
 Route::get('/seniorities', 'SeniorityController@index');
@@ -807,6 +919,8 @@ Route::post('/company_roles', 'CompanyRoleController@store');
 Route::get('/company_roles/{id}/edit', 'CompanyRoleController@edit');
 Route::get('/company_roles/{id}/delete', 'CompanyRoleController@delete');
 Route::post('/company_roles/update', 'CompanyRoleController@update');
+Route::get('/company_roles/import', 'CompanyRoleController@import');
+Route::post('/company_roles/do_import', 'CompanyRoleController@do_import');
 
 // ExchangeRates
 Route::get('/exchange_rates', 'ExchangeRateController@index');
@@ -815,7 +929,8 @@ Route::post('/exchange_rates', 'ExchangeRateController@store');
 Route::get('/exchange_rates/{id}/edit', 'ExchangeRateController@edit');
 Route::get('/exchange_rates/{id}/delete', 'ExchangeRateController@delete');
 Route::post('/exchange_rates/update', 'ExchangeRateController@update');
-
+Route::get('/exchange_rates/import', 'ExchangeRateController@import');
+Route::post('/exchange_rates/do_import', 'ExchangeRateController@do_import');
 // Notes
 Route::get('/notes', 'NoteController@index');
 Route::get('/notes/create', 'NoteController@create');
@@ -830,14 +945,153 @@ Route::get('/workboard/{id}/edit', 'WorkboardController@edit');
 
 // Capacity Planning
 Route::get('/capacity_planning', 'CapacityPlanningController@index');
+Route::get('/main-menu/{parameter}/{parameter2}/capacity_planning', 'CapacityPlanningController@index');
 Route::get('/capacity_planning/excel', 'CapacityPlanningController@excel');
 Route::get('/capacity_planning/pdf', 'CapacityPlanningController@pdf');
 
 // Pofit and loss
 
 Route::get('/profit_and_loss', 'ProfitAndLossController@index');
+Route::get('/main-menu/{parameter}/profit_and_loss', 'ProfitAndLossController@index');
 Route::get('/profit_and_loss/pdf', 'ProfitAndLossController@pdf');
+
+//Forecast
+Route::get('/forecast', 'ForecastController@index');
+Route::get('/main-menu/{parameter}/forecast', 'ForecastController@index');
+Route::get('/forecast/pdf', 'ForecastController@pdf');
 
 // Reports
 Route::get('/reports/tasks', 'ReportController@getTasks');
+Route::get('/main-menu/{parameter}/reports/tasks', 'ReportController@getTasks');
+Route::get('/reports/tasks/pdf', 'ReportController@pdf');
+
 Route::get('/reports/{id}/tickets', 'ReportController@getTicketsByTask');
+
+//Document Generation
+Route::get('metadocuments','MetaDocumentsController@index');
+Route::get('metadocuments/create', 'MetaDocumentsController@create');
+Route::post('metadocuments', 'MetaDocumentsController@store');
+Route::get('metadocuments/{id}/edit', 'MetaDocumentsController@edit');
+Route::post('metadocuments/update', 'MetaDocumentsController@update');
+Route::get('metadocuments/{id}/destroy', 'MetaDocumentsController@destroy');
+
+
+
+//Metavariables
+Route::get('metavariables','MetavariablesController@index');
+Route::get('metavariables/create', 'MetavariablesController@create');
+Route::post('metavariables', 'MetavariablesController@store');
+Route::get('metavariables/{id}/edit', 'MetavariablesController@edit');
+Route::post('metavariables/update', 'MetavariablesController@update');
+Route::get('metavariables/{id}/destroy', 'MetavariablesController@destroy');
+
+
+//Metagrids
+Route::get('metagrids','MetagridsController@index');
+Route::get('metagrids/create', 'MetagridsController@create');
+Route::post('metagrids', 'MetagridsController@store');
+Route::get('metagrids/{id}/edit', 'MetagridsController@edit');
+Route::post('metagrids/update', 'MetagridsController@update');
+Route::get('metagrids/{id}/destroy', 'MetagridsController@destroy');
+
+
+//Document Generation
+
+Route::get('document_generation', 'MetaDocumentsController@generateDocument');
+Route::get('metavariables/get_from_file/{lang}/{folder}/{file}', 'MetavariablesController@getFromFile');
+ Route::get('metagrids/get_from_file/{lang}/{folder}/{file}', 'MetagridsController@getFromFile'); 
+Route::post('repository/store', 'RepositoryController@store');
+Route::post('update_preview', 'RepositoryController@updatePreview');
+ Route::post('repository/send_by_mail', 'RepositoryController@sendFile');
+ 
+// Settings
+
+
+Route::get('/settings', 'SettingsController@index');
+Route::post('/settings/update/{id}', 'SettingsController@update');
+
+//Help
+
+Route::get('/credit', 'HelpController@credit');
+Route::get('/help', 'HelpController@help');
+Route::get('/about', 'HelpController@about');
+Route::get('/started', 'HelpController@started');
+Route::get('/kpis', 'HelpController@kpis');
+Route::get('/admin', 'HelpController@admin');
+Route::get('/guie-users', 'HelpController@users');
+Route::get('/guie/{archivo}', 'HelpController@download');
+Route::get('/help-kpis', 'HelpController@kpis');
+Route::get('/admin', 'HelpController@admin');
+Route::get('/guie-users', 'HelpController@users');
+Route::get('/download/{lang}/{archivo}', 'HelpController@download');
+
+
+// AuditLog
+
+
+Route::get('/audit_log', 'AuditlogController@index');
+
+
+// WhatIf
+Route::get('/whatif', 'WhatIfController@index');
+Route::get('/whatif/create', 'WhatIfController@create');
+Route::post('/whatif', 'WhatIfController@store');
+Route::get('/whatif/{id}/edit', 'WhatIfController@edit');
+Route::get('/whatif/{id}/delete', 'WhatIfController@delete');
+Route::post('/whatif/update', 'WhatIfController@update');
+
+// WhatIfTasks
+Route::get('/whatif_tasks/{whatif_id}', 'WhatIfTaskController@index');
+Route::get('/whatif_tasks/{whatif_id}/create', 'WhatIfTaskController@create');
+Route::get('/whatif_tasks/{id}', 'WhatIfTaskController@show');
+Route::post('/whatif_tasks/{whatif_id}', 'WhatIfTaskController@store');
+Route::get('/whatif_tasks/{id}/edit', 'WhatIfTaskController@edit');
+Route::get('/whatif_tasks/{id}/{whatif_id}/delete', 'WhatIfTaskController@delete');
+Route::post('/whatif_tasks/{whatif_id}/update', 'WhatIfTaskController@update');
+Route::get('/projects/{id}/{whatif_id}/whatif_tasks', 'WhatIfTaskController@whatif_index');
+
+
+// WhatIfTasksRows
+Route::get('/whatif_tasks/{id}/rows', 'WhatIfTaskRowController@index');
+
+// WhatIfTasksResources
+Route::get('/whatif_task_resource/{id}/create', 'WhatIfTaskResourceController@create');
+Route::post('/whatif_task_resource', 'WhatIfTaskResourceController@store');
+Route::get('/whatif_task_resource/{id}/edit', 'WhatIfTaskResourceController@edit');
+Route::get('/whatif_task_resource/{id}/delete', 'WhatIfTaskResourceController@delete');
+Route::post('/whatif_task_resource/update', 'WhatIfTaskResourceController@update');
+
+// WhatIfTasksServices
+Route::get('/whatif_task_service/{id}/create', 'WhatIfTaskServiceController@create');
+Route::post('/whatif_task_service', 'WhatIfTaskServiceController@store');
+Route::get('/whatif_task_service/{id}/edit', 'WhatIfTaskServiceController@edit');
+Route::get('/whatif_task_service/{id}/delete', 'WhatIfTaskServiceController@delete');
+Route::post('/whatif_task_service/update', 'WhatIfTaskServiceController@update');
+
+// WhatIfTaskMaterials
+Route::get('/whatif_task_material/{id}/create', 'WhatIfTaskMaterialController@create');
+Route::post('/whatif_task_material', 'WhatIfTaskMaterialController@store');
+Route::get('/whatif_task_material/{id}/edit', 'WhatIfTaskMaterialController@edit');
+Route::get('/whatif_task_material/{id}/delete', 'WhatIfTaskMaterialController@delete');
+Route::post('/whatif_task_material/update', 'WhatIfTaskMaterialController@update');
+
+
+// WhatIfTaskExpenses
+Route::get('/whatif_task_expense/{id}/create', 'WhatIfTaskExpenseController@create');
+Route::post('/whatif_task_expense', 'WhatIfTaskExpenseController@store');
+Route::get('/whatif_task_expense/{id}/edit', 'WhatIfTaskExpenseController@edit');
+Route::get('/whatif_task_expense/{id}/delete', 'WhatIfTaskExpenseController@delete');
+Route::post('/whatif_task_expense/update', 'WhatIfTaskExpenseController@update');
+
+//Wiki
+Route::get('/wiki', 'WikiController@index');
+Route::get('/wiki/create', 'WikiController@create');
+Route::post('/wiki', 'WikiController@store');
+Route::get('/wiki/{id}', 'WikiController@show');
+Route::get('/wiki/{id}/edit', 'WikiController@edit');
+Route::get('/wiki/{id}/delete', 'WikiController@delete');
+Route::post('wiki/update', 'WikiController@update');
+
+Route::get('/wiki/pdf/{id}', 'WikiController@pdf');
+
+route::get('error', 'ErrorController@index' );

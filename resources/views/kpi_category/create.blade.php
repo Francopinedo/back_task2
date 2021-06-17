@@ -10,7 +10,7 @@
             <div class="uk-width-medium-1-1 uk-row-first">
 
                 <div class="md-input-wrapper md-input-filled">
-                    <label>{{ __('kpis.nombre') }}</label>
+                    <label>{{ __('kpicategory.nombre') }}</label>
                     <input type="text" class="md-input" name="name" value="" required><span
                             class="md-input-bar"></span>
                 </div>
@@ -32,7 +32,7 @@
 
                 <div class="uk-margin-medium-top">
                     <a class="md-btn md-btn-primary md-btn-wave-light md-btn-block waves-effect waves-button waves-light"
-                       href="#" id="add-btn">{{ __('kpis.add_new') }}</a>
+                       href="#" id="add-btn">{{ __('kpicategory.add_new') }}</a>
                     <a class="md-btn md-btn-flat md-btn-wave md-btn-block waves-effect waves-button" href="#"
                        id="cancel-btn">{{ __('general.cancel') }}</a>
                 </div>

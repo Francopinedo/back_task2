@@ -3,15 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Validator;
+use App\Provider;
 
 class ProviderController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit']);
     }
 
     /**
@@ -41,15 +43,26 @@ class ProviderController extends Controller
     public function store(Request $request)
     {
         // validacion del formulario
-        $this->validate($request, [
+        $validator =Validator::make($request->all(), [
+
             'name' => 'required',
             'city_id' => 'required',
             'currency_id' => 'required',
-            'industry_id' => 'required'
+            'industry_id' => 'required',
+            'phone_1'                 => 'phone:VE,US,AR|nullable',
+            'phone_2'                 => 'phone:VE,US,AR|nullable',
+            'phone_3'                 => 'phone:VE,US,AR|nullable',
+            'email_1'                 => 'email|nullable',
+            'email_2'                 => 'email|nullable',
+            'email_3'                 => 'email|nullable'
         ]);
+    
+	$file = $request->file('logo_path');
 
-        $data = $request->all();
-
+        if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
+        $data['logo_path'] =($file!=null || $file!='') ? $file->getClientOriginalName() : '';
         $res = $this->apiCall('POST', 'providers', $data);
 
 
@@ -61,6 +74,15 @@ class ProviderController extends Controller
                 ['in' => __('api_errors.company_store')]
             )->validate();
         } else {
+		$prov=array();
+		$prov=json_decode($res->getBody(), true);
+		$destinationPath = "assets/img/users/providers/" . $prov['data']['id'].'/';
+
+	
+            if($file!=null || $file!='') {
+                $file->move(($destinationPath), $file->getClientOriginalName());
+
+            }
             session()->flash('message', __('general.added'));
             session()->flash('alert-class', 'success');
         }
@@ -82,6 +104,8 @@ class ProviderController extends Controller
         $industries = $this->getFromApi('GET', 'industries');
         $company = $this->getFromApi('GET', 'companies/fromUser/' . Auth::id());
 
+        //return $provider;
+
         return response()->json([
             'view' => view('provider/edit', [
                 'provider' => $provider,
@@ -99,14 +123,34 @@ class ProviderController extends Controller
      */
     public function update(Request $request)
     {
+	$provider = Provider::find($request->id);
         // validacion del formulario
-        $this->validate($request, [
-            'name' => 'required'
+        $validator =Validator::make($request->all(), [
+
+            'name' => 'required',
+            'phone_1'                 => 'phone:VE,US,AR|nullable',
+            'phone_2'                 => 'phone:VE,US,AR|nullable',
+            'phone_3'                 => 'phone:VE,US,AR|nullable',
+            'email_1'                 => 'email|nullable',
+            'email_2'                 => 'email|nullable',
+            'email_3'                 => 'email|nullable'
         ]);
+        $file = $request->file('logo_path');
 
-        $data = $request->all();
-
+        if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
+        $data['logo_path'] =($file!=null || $file!='') ? $file->getClientOriginalName() : $provider->logo_path;
         $res = $this->apiCall('PATCH', 'providers/' . $data['id'], $data);
+
+
+  	$destinationPath = "assets/img/providers/" . $request->id.'/';
+
+ 	if($file!=null || $file!='') {
+                $file->move(($destinationPath), $file->getClientOriginalName());
+
+            }
+
 
         // validacion de la respuesta del api
         if (!empty(json_decode($res->getBody()->__toString(), TRUE)['error'])) {
@@ -186,7 +230,8 @@ class ProviderController extends Controller
         $company = $this->getFromApi('GET', 'companies/fromUser/' . Auth::id());
         $array = array();
         try {
-            $this->validate($request, [
+            $validator =Validator::make($request->all(), [
+
                 'file' => 'required'
             ]);
 
@@ -194,25 +239,27 @@ class ProviderController extends Controller
 
             $array = procces_import($file);
 
-            //var_dump($array);
+        //    var_dump($array);
+
+            $city =array();
+            $currency =array();
+            $industry =array();
+            $item = array();
 
             foreach ($array as $value) {
+              //  foreach ($val as $value) {
+                if (isset($value[16]) && isset($value[17])  && isset($value[2])) {
 
-                $city =array();
-                $currency =array();
-                $industry =array();
-                if (isset($value[17]) && isset($value[18])  && isset($value[2])) {
-                    $item = array();
+ //var_dump($value); 
 
 
-                    $city = $this->getFromApi('GET', 'cities/?name=' . $value[2] . '&company_id=' . $company->id);
-                    $currency = $this->getFromApi('GET', 'currencies/?code=' . $value[17]);
-                    $industry = $this->getFromApi('GET', 'industries/?name=' . $value[18]);
+                    $city = $this->getFromApi('GET', 'cities?name=' . $value[2] . '&company_id=' . $company->id);
+                    $currency = $this->getFromApi('GET', 'currencies?code=' . $value[16]);
+                    $industry = $this->getFromApi('GET', 'industries?name=' . $value[17]);
 
-
-                      //var_dump($city);
-                    //  var_dump($industry);
-                    if (isset($city[0]) && isset($currency[0]) && isset($industry[0])) {
+                   // var_dump($industry);
+                  
+                    if (!empty($city) && !empty($currency) && !empty($industry)) {
 
                         $item['city_id'] = $city[0]->id;
                         $item['currency_id'] = $currency[0]->id;
@@ -231,15 +278,61 @@ class ProviderController extends Controller
                         $item['tax_number'] = $value[11];
                         $item['bank_name'] = $value[12];
                         $item['account_number'] = $value[13];
-                        $item['account_number'] = $value[14];
-                        $item['swiftcode'] = $value[15];
-                        $item['aba'] = $value[16];
+                        $item['swiftcode'] = $value[14];
+                        $item['aba'] = $value[15];
 
-
-                        $this->apiCall('POST', 'providers', $item);
+                   // var_dump($item);
+                        $res = $this->apiCall('POST', 'providers', $item);
+               // var_dump($res);
+                      //  return (json_decode($res->getBody()->__toString(), TRUE));
+    if (!empty(json_decode($res->getBody()->__toString(), TRUE)['error']))
+        {
+            $jsonRes = json_decode($res->getBody()->__toString(), TRUE)['error'];
+             session()->flash('message', 'Error with format file, some rows not import');
+            session()->flash('alert-class', 'error');
+             return response()->json(array('error' => true, 'message' => 'Error with format file, some rows not import'));
+        }
+                    }else{
+                         session()->flash('message', 'Error with format file, some rows not import');
+            session()->flash('alert-class', 'error');
+                        return response()->json(array('error' => true, 'message' => 'Error with data in rows'));
                     }
                 }
             }
+        //}
+        } catch (Exception $exception) {
+            session()->flash('message', 'Error with format file');
+            session()->flash('alert-class', 'error');
+          return response()->json(array('error' => true, 'message' => 'Error with format file'));
+       }
+         session()->flash('message', __('general.added'));
+            session()->flash('alert-class', 'success');
+        //return response()->json();
+        return response()->json(array('success' => true));
+           
+    }
+
+
+  public function upload(Request $request, $id)
+    {
+        try {
+            var_dump($request);
+            $file = $request->file('logo_path');
+
+		$data = $request->all();
+            $data['logo_path'] = !isNull($file) ? $file->getClientOriginalName() : '';
+            //$res = $this->apiCall('PATCH', 'providers/' . $id, $data);
+
+
+            $destinationPath = "assets/img/providers/" . $id.'/';
+            // echo $file->getClientOriginalName();
+ 	if($file!=null || $file!='') {
+                $file->move(($destinationPath), $file->getClientOriginalName());
+
+            }
+
+
+
         } catch (FileException $exception) {
 
             return response()->json(array('success' => false, 'message' => 'Error uplading file'));
@@ -247,6 +340,7 @@ class ProviderController extends Controller
 
         return response()->json(array('success' => true));
     }
+
 
 
 }

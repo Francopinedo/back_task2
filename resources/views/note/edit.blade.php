@@ -24,20 +24,28 @@
                 	<div class="uk-form-row">
 						<div class="uk-width-medium-1-1">
                             <span class="icheck-inline">
+<div class="md-card md-bg-white-500-notes">
                                 <input type="radio" name="color" name="white" value="white" data-md-icheck {{ ($note->color == NULL) ? 'checked' : '' }}/>
                                 <label class="inline-label">{{ __('notes.white') }}</label>
+</div>
                             </span>
                             <span class="icheck-inline">
+<div class="md-card md-bg-green-500-notes">
                                 <input type="radio" name="color" name="green" value="green" data-md-icheck {{ ($note->color == 'green') ? 'checked' : '' }} />
-                                <label class="inline-label md-bg-green-100" style="padding: 5px;">{{ __('notes.green') }}</label>
+                                <label class="inline-label " style="padding: 5px;">{{ __('notes.green') }}</label>
+</div>
                             </span>
                             <span class="icheck-inline">
+<div class="md-card md-bg-yellow-500-notes">
                                 <input type="radio" name="color" name="yellow" value="yellow" data-md-icheck {{ ($note->color == 'yellow') ? 'checked' : '' }} />
-                                <label class="inline-label md-bg-yellow-100" style="padding: 5px;">{{ __('notes.yellow') }}</label>
+                                <label class="inline-label " style="padding: 5px;">{{ __('notes.yellow') }}</label>
+</div>
                             </span>
                             <span class="icheck-inline">
+<div class="md-card md-bg-red-500-notes">
                                 <input type="radio" name="color" name="red" value="red" data-md-icheck {{ ($note->color == 'red') ? 'checked' : '' }} />
-                                <label class="inline-label md-bg-red-100" style="padding: 5px;">{{ __('notes.red') }}</label>
+                                <label class="inline-label " style="padding: 5px;">{{ __('notes.red') }}</label>
+</div>
                             </span>
                         </div>
     	            </div>

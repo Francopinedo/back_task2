@@ -1,4 +1,4 @@
-@extends('layouts.app', ['favoriteTitle' => __('users.users'), 'favoriteUrl' => 'users'])
+@extends('layouts.app', ['favoriteTitle' => __('users.users'), 'favoriteUrl' => url(Request::path())])
 
 @section('scripts')
     @include('datatables.basic')
@@ -21,6 +21,7 @@
                 {data: 'workplace', name: 'workplace'},
                 {data: 'workgroup_title', name: 'workgroup_title'},
                 {data: 'hours_by_day', name: 'hours_by_day'},
+                {data: 'timezone', name: 'timezone'},
                 {data: 'actions', name: 'actions'}
             ];
             var extra_buttons = [{
@@ -61,20 +62,20 @@
             }];
             var actions = [
                 {
-                    pre: '<a href="/users/',
+                    pre: '<a title={{__('general.show')}} href="/users/',
                     post: '/show" class="table-actions info-btn" data-uk-modal="{target:\'#modal_info\'}"><i class="fa fa-info-circle" aria-hidden="true"></i></a>'
                 },
                 {
-                    pre: '<a href="/users/',
+                    pre: '<a title={{__('general.edit')}} href="/users/',
                     post: '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>'
                 },
 
                 {
-                    pre: '<a href="/users/',
+                    pre: '<a title={{__('general.password')}} href="/users/',
                     post: '/password" class="table-actions edit-btn"><i class="fa fa-key" aria-hidden="true"></i></a>'
                 },
                 {
-                    pre: '<a href="/users/',
+                    pre: '<a title={{__('general.delete')}} href="/users/',
                     post: '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>'
                 }
             ];
@@ -112,21 +113,22 @@
                     <table id="users-table" class="uk-table" cellspacing="0" width="100%">
                         <thead>
                         <tr>
-                            <th>{{ __('users.id') }}</th>
-                            <th>{{ __('users.name') }}</th>
-                            <th>{{ __('users.email') }}</th>
-                            <th>{{ __('users.address') }}</th>
-                            <th>{{ __('users.home_phone') }}</th>
-                            <th>{{ __('users.cell_phone') }}</th>
-                            <th>{{ __('users.city') }}</th>
-                            <th>{{ __('users.office') }}</th>
-                            <th>{{ __('users.permission_role') }}</th>
-                            <th>{{ __('users.project_role') }}</th>
-                            <th>{{ __('users.seniority') }}</th>
-                            <th>{{ __('users.workplace') }}</th>
-                            <th>{{ __('users.workgroup') }}</th>
-                            <th>{{ __('users.hours_by_day') }}</th>
-                            <th>{{ __('general.actions') }}</th>
+                            <th title="{{ __('users_tooltip.id')}}">{{ __('users.id') }}</th>
+                            <th title="{{ __('users_tooltip.name')}}">{{ __('users.name') }}</th>
+                            <th title="{{ __('users_tooltip.email')}}">{{ __('users.email') }}</th>
+                            <th title="{{ __('users_tooltip.address')}}">{{ __('users.address') }}</th>
+                            <th title="{{ __('users_tooltip.home_phone')}}">{{ __('users.home_phone') }}</th>
+                            <th title="{{ __('users_tooltip.cell_phone')}}">{{ __('users.cell_phone') }}</th>
+                            <th title="{{ __('users_tooltip.city')}}">{{ __('users.city') }}</th>
+                            <th title="{{ __('users_tooltip.office')}}">{{ __('users.office') }}</th>
+                            <th title="{{ __('users_tooltip.permission_role')}}">{{ __('users.permission_role') }}</th>
+                            <th title="{{ __('users_tooltip.project_role')}}">{{ __('users.project_role') }}</th>
+                            <th title="{{ __('users_tooltip.seniority')}}">{{ __('users.seniority') }}</th>
+                            <th title="{{ __('users_tooltip.workplace')}}">{{ __('users.workplace') }}</th>
+                            <th title="{{ __('users_tooltip.workgroup')}}">{{ __('users.workgroup') }}</th>
+                            <th title="{{ __('users_tooltip.hours_by_day')}}">{{ __('users.hours_by_day') }}</th>
+                            <th title="{{ __('cities.timezone')}}">{{ __('cities.timezone') }}</th>
+                            <th title="{{__('general.actions')}}">{{ __('general.actions') }}</th>
                         </tr>
                         </thead>
                     </table>
@@ -136,7 +138,7 @@
                         <div class="uk-width-medium-1-3">
                             @if(!Auth::user()->hasRole('admin'))  <a
                                     class="md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light"
-                                    href="#" id="add-new">{{ __('users.add_new') }}</a>
+                                    href="#" id="add-new" title="{{ __('users_tooltip.add_new')}}">{{ __('users.add_new') }}</a>
                             @endif
                         </div>
                     </div>
@@ -153,15 +155,19 @@
         if (!empty($cities)){
             $data['cities'] = $cities;
           }
-
+         
             if (!empty($company_id))
             {
                 $data['company_id'] = $company_id;
             }
-
+            if (!empty($countries))
+            {
+                $data['countries'] = $countries;
+            }
 
                 $data['companyRoles'] = $companyRoles;
                 $data['projectRoles'] = $projectRoles;
+                $data['url'] = Request::path();
 
             if (!empty($seniorities))
             {
@@ -177,15 +183,12 @@
             {
                 $data['workgroups'] = $workgroups;
             }
+            if (isset($timezones))
+            {
+                $data['timezones'] = $timezones;
+            }
     @endphp
     @component('users/create', $data)
 
     @endcomponent
 @endsection
-
-
-<script src="{{ asset('js/projects.js') }}"></script>
-<script type="text/javascript">
-
-    Projects.init('<?php echo e(env('API_PATH')); ?>', '<?php echo e(env('APP_URL')); ?>');
-</script>

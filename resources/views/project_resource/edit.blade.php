@@ -1,20 +1,29 @@
+<style>
+
+    #edit_div.switcher_active {
+        width: 50%;
+    }
+
+</style> 
+ 	<form role="form" method="POST" action="{{ url('project_resources/update') }}"
+			  id="data-form-edit" data-redirect-on-success="{{ url('project_board/project_rows') }}">
+
 <div class="uk-grid" data-uk-grid-margin>
-    <div class="uk-width-1-1">
 
         @if(session()->has('message'))
+    		<li class="uk-width-medium-1-1 uk-row-first">
             <div class="uk-alert uk-alert-{{ session('alert-class', 'close') }}" data-uk-alert>
                 <a href="#" class="uk-alert-close uk-close"></a>
                 {{ session('message') }}
             </div>
+	</li>
         @endif
 
-    	<form role="form" method="POST" action="{{ url('project_resources/update') }}"
-			  id="data-form-edit" data-redirect-on-success="{{ url('project_board/rows') }}">
-    	    {{ csrf_field() }}
+       	    {{ csrf_field() }}
     	    <input type="hidden" name="id" value="{{ $projectResource->id }}">
     	    <input type="hidden" name="company_id" id="company_id" value="{{ $company->id }}">
     	    <input type="hidden" name="rate_id" id="rate_id" value="{{ $projectResource->rate_id }}">
-    		<div class="uk-width-medium-1-1 uk-row-first">
+    		<li class="uk-width-medium-1-2 uk-row-first">
 
                 <div class="md-input-wrapper md-input-filled md-input-select">
 					<label>{{ __('projects.project_role') }}</label>
@@ -83,7 +92,8 @@
 					</select>
 				</div>
 				<div class="parsley-errors-list filled"><span class="parsley-required city_id-error"></span></div>
-
+</li>
+    		<li class="uk-width-medium-1-2 uk-row-first">
 				<div class="md-input-wrapper md-input-select">
 					<label>{{ __('rates.office') }}</label>
 					<select name="office_id"  id="office_id2"  required data-md-selectize>
@@ -128,7 +138,8 @@
                 	<input type="text" class="md-input" name="comments" value="{{ $projectResource->comments }}" required><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required comments-error"></span></div>
-
+</li>
+    		<li class="uk-width-medium-1-1 uk-row-first">
 
 
 				<div class="uk-margin-medium-top">
@@ -136,11 +147,10 @@
                     <a class="md-btn md-btn-flat md-btn-wave md-btn-block waves-effect waves-button cancel-edit-btn" href="#">{{ __('general.cancel') }}</a>
                 </div>
 
-            </div>
+            </li>
 
-    	</form>
-    </div>
 </div>
+    	</form>
 
 <script type="text/javascript">
 	$('.cancel-edit-btn').on('click', function(e){

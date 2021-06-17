@@ -11,7 +11,7 @@ class TaxController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit']);
     }
 
     /**
@@ -59,16 +59,19 @@ class TaxController extends Controller
     public function store(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'detail'      => 'required',
-            'value'      => 'required',
-            'percentage'      => 'required',
+            'value'        => 'numeric|required',
+            'percentage'      => 'numeric|required',
 			'currency_id' => 'required',
 			'company_id'  => 'required',
 			'country_id'  => 'required'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('POST', 'taxes', $data);
 
@@ -97,16 +100,19 @@ class TaxController extends Controller
     public function update(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'detail'      => 'required',
 			'currency_id' => 'required',
 			'company_id'  => 'required',
 			'country_id'  => 'required',
-            'value'      => 'required',
-            'percentage'      => 'required'
+            'value'        => 'numeric|required',
+            'percentage'      => 'numeric|required'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('PATCH', 'taxes/'.$data['id'], $data);
 

@@ -56,6 +56,7 @@
                         <option value="Defect or Bugs">Defect or Bugs</option>
                         <option value="Review Coverage">Review Coverage</option>
                         <option value="Version Report">Version Report</option>
+                         <option value="Dashboard">Dashboard</option>
                     </select><span
                             class="md-input-bar"></span>
                 </div>
@@ -133,7 +134,7 @@
                 <label>{{ __('kpis.show') }}</label>
                 <div class="md-input-wrapper">
 
-                    <input type="checkbox" checked class="md-input" name="show" required><span class="md-input-bar"></span>
+                    <input type="checkbox" checked class="md-input" name="showkpi" required><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required query-error"></span></div>
 

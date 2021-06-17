@@ -1,12 +1,19 @@
-<div class="uk-grid" data-uk-grid-margin>
-    <div class="uk-width-1-1">
 
+<style>
+
+    #edit_div.switcher_active {
+        width: 50%;
+    }
+
+</style>
+  	<form role="form" enctype="multipart/form-data" method="POST" id="data-form-edit" action="{{ url('providers/update') }}"   data-redirect-on-success="{{ url('providers') }}">
+  <div class="uk-grid" data-uk-grid-margin>
+    		<li class="uk-width-medium-1-1 uk-row-first">
 		<div class="uk-alert uk-alert-danger hide_when_empty status_code-error" data-uk-alert=""></div>
-
-    	<form role="form" method="POST" action="{{ url('providers/update') }}" id="data-form-edit" data-redirect-on-success="{{ url('providers') }}">
+</li>
     	    {{ csrf_field() }}
     	    <input type="hidden" name="id" value="{{ $provider->id }}">
-    		<div class="uk-width-medium-1-1 uk-row-first">
+    		<li class="uk-width-medium-1-4 uk-row-first">
                 <div class="md-input-wrapper md-input-filled">
                 	<label>{{ __('providers.name') }}</label>
                 	<input type="text" class="md-input" name="name" value="{{ $provider->name }}" required><span class="md-input-bar"></span>
@@ -47,6 +54,8 @@
                 	<input type="text" class="md-input" name="email_3" value="{{ $provider->email_3 }}"><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required email_3-error"></span></div>
+</li>
+    		<li class="uk-width-medium-1-4 uk-row-first">
 
                 <div class="md-input-wrapper md-input-filled">
                 	<label>{{ __('providers.phone_1') }}</label>
@@ -83,6 +92,8 @@
                 	<input type="text" class="md-input" name="tax_number" value="{{ $provider->tax_number }}"><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required tax_number-error"></span></div>
+</li>
+    		<li class="uk-width-medium-1-4 uk-row-first">
 
                 <div class="md-input-wrapper md-input-filled">
                 	<label>{{ __('providers.bank_name') }}</label>
@@ -113,7 +124,7 @@
                 	<select name="currency_id" data-md-selectize>
                 	    <option value="">{{ __('providers.currency') }}...</option>
                 	    @foreach ($currencies as $currency)
-                	        <option value="{{ $currency->id }}" {{ ($city->id == $provider->currency_id) ? 'selected' : '' }}>{{ $currency->name }}</option>
+                	        <option value="{{ $currency->id }}" {{ ($currency->id == $provider->currency_id) ? 'selected' : '' }}>{{ $currency->name }}</option>
                 	    @endforeach
                 	</select>
                 </div>
@@ -124,22 +135,87 @@
                 	<select name="industry_id" data-md-selectize>
                 	    <option value="">{{ __('providers.industry') }}...</option>
                 	    @foreach ($industries as $industry)
-                	        <option value="{{ $industry->id }}" {{ ($city->id == $provider->industry_id) ? 'selected' : '' }}>{{ $industry->name }}</option>
+                	        <option value="{{ $industry->id }}" {{ ($industry->id == $provider->industry_id) ? 'selected' : '' }}>{{ $industry->name }}</option>
                 	    @endforeach
                 	</select>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required industry_id-error"></span></div>
+                
 
-				<div class="uk-margin-medium-top">
+			
+            </li>
+
+        <li class="uk-width-medium-1-4 uk-row-first">
+
+    
+                    <label>{{ __('providers.logo_path') }}</label>      
+                               <br/>
+                <div class="thumbnail">
+                                        @if (empty($provider->logo_path) || $provider->logo_path=='')
+                                            <img alt="logo" id="logo_path_img2"
+                                                 src="{{ URL::to('/') }}/assets/img/avatardefault.png">
+
+                                        @else
+                                            <img src="{{ URL::to('/') .'/assets/img/providers/'. $provider->id .'/'. $provider->logo_path }}"
+                                                 id="logo_path_img2" alt="" >
+                                        @endif
+                                    </div>  
+                               
+                                    <a class="uk-form-file md-btn" id="upload_widget_opener">Upload image
+                                        <input type="file" name="logo_path" accept="image/*" onchange="document.getElementById('logo_path_img2').src = window.URL.createObjectURL(this.files[0])" />
+                                    </a>
+                                </div>  
+        <div class="parsley-errors-list filled"><span class="parsley-required logo_path-error"></span></div>
+
+
+
+
+            </li>
+
+        <li class="uk-width-medium-1-4 uk-row-first">
+
+
+
+
+            </li>
+
+        <li class="uk-width-medium-1-4 uk-row-first">
+
+
+                    <label>{{ __('providers.logo_path') }}</label>
+                               <br/>
+                <div class="thumbnail">
+                                        @if (empty($provider->logo_path) || $provider->logo_path=='')
+                                            <img alt="logo" id="logo_path_img2"
+                                                 src="{{ URL::to('/') }}/assets/img/avatardefault.png">
+
+                                        @else
+                                            <img src="{{ URL::to('/') .'/assets/img/providers/'. $provider->id .'/'. $provider->logo_path }}"
+                                                 id="logo_path_img2" alt="" >
+                                        @endif
+                                    </div>
+
+                                    <a class="uk-form-file md-btn" id="upload_widget_opener">Upload image
+                                        <input type="file" name="logo_path" accept="image/*" onchange="document.getElementById('logo_path_img2').src = window.URL.createObjectURL(this.files[0])" />
+                                    </a>
+                                </div>
+        <div class="parsley-errors-list filled"><span class="parsley-required logo_path-error"></span></div>
+
+
+
+
+            </li>
+
+			    		<li class="uk-width-medium-1-1 uk-row-first">
+							<div class="uk-margin-medium-top">
                     <a class="md-btn md-btn-primary md-btn-wave-light md-btn-block waves-effect waves-button waves-light" href="#" id="update-btn">{{ __('providers.update') }}</a>
                     <a class="md-btn md-btn-flat md-btn-wave md-btn-block waves-effect waves-button cancel-edit-btn" href="#">{{ __('general.cancel') }}</a>
                 </div>
 
-            </div>
+				</li>
 
-    	</form>
-    </div>
 </div>
+    	</form>
 
 <script type="text/javascript">
 	$('.cancel-edit-btn').on('click', function(e){
@@ -148,5 +224,39 @@
     	$('#edit_div').removeClass('switcher_active');
     });
 
-    tableActions.initEditForm();
+    // tableActions.initEditForm();
+
+
+
+
+     var form = $('#data-form-edit');
+            $('#update-btn').on('click', function (e) {
+                form.submit();
+            });
+
+            $(form).submit(function (event) {
+                var formdata = new FormData(form.get(0));
+                event.preventDefault();
+                $.ajax({
+                    url: form.attr('action'),
+                    type: 'POST',
+                    data: formdata,
+                    dataType: 'json',
+                    processData: false, //For posting uploaded files we add this
+                    contentType: false, //For posting uploaded files we add this
+                    success: function (json) {
+                        window.location.replace(form.data('redirect-on-success'));
+                    },
+                    error: function (json) {
+                        if (json.status === 422) {
+                            var errors = json.responseJSON;
+                            $.each(json.responseJSON, function (key, value) {
+                                $('#' + key + '-error').html(value);
+                            });
+                        } else {
+                            // Error
+                        }
+                    }
+                });
+            });
 </script>

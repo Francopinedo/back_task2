@@ -1,0 +1,20 @@
+<?php
+return [
+	'team_users'    => 'Miembros',
+	'add_new'       => 'Añadir Nuevo',
+	'update'        => 'UPDATE',
+	'id'            => 'ID',
+	'project'       => 'Proyecto',
+	'user'          => 'Usuario',
+	'load'          => 'Carga',
+	'working_hours' => 'Horas Trabajables',
+	'from'          => 'Fecha Desde',
+	'to'            => 'Fecha Hasta',
+	'rate'          => 'Cargo',
+	'country'          => 'Pais',
+	'city'          => 'Ciudad',
+	'permission_role'          => 'Permisos de Rol',
+	'project_role'          => 'Rol de Proyecto',
+	'seniority'          => 'seniority',
+	'workplace'          => 'Lugar de Trabajo',
+];

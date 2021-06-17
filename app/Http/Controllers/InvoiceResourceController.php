@@ -11,7 +11,7 @@ class InvoiceResourceController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit']);
     }
 
     /**
@@ -54,18 +54,21 @@ class InvoiceResourceController extends Controller
     public function store(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'invoice_id'      => 'required',
 			'currency_id'     => 'required',
 			'user_id'         => 'required',
             'city_id'     => 'required',
             'country_id'     => 'required',
             'office_id'     => 'required',
-			'load'            => 'required',
-			'rate'            => 'required',
+			'load'            => 'numeric|required',
+			'rate'            => 'numeric|required',
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('POST', 'invoice_resources', $data);
 
@@ -135,7 +138,8 @@ class InvoiceResourceController extends Controller
     public function update(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
             'city_id'     => 'required',
             'country_id'     => 'required',
             'office_id'     => 'required',
@@ -143,10 +147,12 @@ class InvoiceResourceController extends Controller
 			 'seniority_id'    => 'required',
 			 'currency_id'     => 'required',
 			 'workplace'       => 'required',
-			 'load'            => 'required',
+			 'load'            => 'numeric|required',
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('PATCH', 'invoice_resources/'.$data['id'], $data);
 

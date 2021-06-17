@@ -11,7 +11,7 @@ class ActivityHistoryController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit']);
     }
 
     /**
@@ -20,7 +20,8 @@ class ActivityHistoryController extends Controller
     public function store(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'agenda_id'   => 'required',
 			'date'        => 'required',
 			'description' => 'required',
@@ -28,7 +29,9 @@ class ActivityHistoryController extends Controller
 			'due'         => 'required'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('POST', 'activities_history', $data);
 
@@ -77,14 +80,17 @@ class ActivityHistoryController extends Controller
     public function update(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'date'        => 'required',
 			'description' => 'required',
 			'follower_id' => 'required',
 			'due'         => 'required'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('PATCH', 'activities_history/'.$data['id'], $data);
 

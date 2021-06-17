@@ -38,7 +38,7 @@ return [
     |
     */
 
-    'debug' => env('APP_DEBUG', false),
+    'debug' => env('APP_DEBUG', true),
 
     /*
     |--------------------------------------------------------------------------
@@ -51,7 +51,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://panel.taskcontrol.co/'),
+    'url' => env('APP_URL', 'http://taskcontrol/'),
 
     /*
     |--------------------------------------------------------------------------
@@ -164,7 +164,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
        // Yajra\DataTables\DataTablesServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
-
+   Propaganistas\LaravelPhone\PhoneServiceProvider::class,
         /*
          * Package Service Providers...
          */
@@ -183,7 +183,8 @@ return [
         Barryvdh\Cors\ServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
         Pyaesone17\ActiveState\ActiveStateServiceProvider::class,
-
+        Way\Generators\GeneratorsServiceProvider::class,
+        Xethron\MigrationsGenerator\MigrationsGeneratorServiceProvider::class,
     ],
 
     /*
@@ -237,7 +238,7 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
 
         'Active' => Pyaesone17\ActiveState\ActiveFacade::class,
-       // 'DataTables' => Yajra\DataTables\Facades\DataTables::class,
+        // 'DataTables' => Yajra\DataTables\Facades\DataTables::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
 

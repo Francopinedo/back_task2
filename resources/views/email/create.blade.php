@@ -6,6 +6,7 @@
     	<form role="form" method="POST" action="{{ url('emails') }}" id="data-form" data-redirect-on-success="{{ url('emails') }}">
     	    {{ csrf_field() }}
             <input type="hidden" name="added_by" value="form">
+    	    <input type="hidden" name="user_id" id="user_id" value="{{ Auth::id() }}">
             <div class="uk-width-medium-1-1 uk-row-first">
                 <div class="md-input-wrapper">
                 	<label>{{ __('emails.title') }}</label>

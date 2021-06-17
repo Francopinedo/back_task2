@@ -16,10 +16,10 @@
 
 		var actions = [
             {
-                pre: '<a href="/admin_companies/',
+                pre: '<a title="{{__('general.edit')}}" href="/admin_companies/',
                 post: '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>'
             },
-            { pre: '<a href="/admin_companies/', post: '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>' },
+            { pre: '<a title="{{__('general.delete')}}" href="/admin_companies/', post: '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>' },
 
             { pre: '<a href="/admin_companies/', post: '" title="{{ __('companies.show') }}" class="table-actions info-btn" data-uk-modal="{target:\'#modal_info\'}"><i class="fa fa-info-circle" aria-hidden="true"></i></a>' }
 			        ];
@@ -48,12 +48,12 @@
                 	<table id="companies-table" class="uk-table" cellspacing="0" width="100%">
                 	    <thead>
                 	        <tr>
-                	        	<th>{{ __('companies.id') }}</th>
-                	        	<th>{{ __('companies.name') }}</th>
-                	        	<th>{{ __('companies.phone') }}</th>
-                	        	<th>{{ __('companies.city') }}</th>
-                	        	<th>{{ __('companies.industry') }}</th>
-                	        	<th>{{ __('general.actions') }}</th>
+                	        	<th title="{{__('companies_tooltip.id')}}">{{ __('companies.id') }}</th>
+                	        	<th title="{{__('companies_tooltip.name')}}">{{ __('companies.name') }}</th>
+                	        	<th title="{{__('companies_tooltip.phone')}}">{{ __('companies.phone') }}</th>
+                	        	<th title="{{__('companies_tooltip.city')}}">{{ __('companies.city') }}</th>
+                	        	<th title="{{__('companies_tooltip.industry')}}">{{ __('companies.industry') }}</th>
+                	        	<th title="{{__('general.actions')}}">{{ __('general.actions') }}</th>
                 	        </tr>
                 	    </thead>
                 	</table>
@@ -63,7 +63,7 @@
                 		<div class="uk-width-medium-1-3">
                 			@role('Admin')
                 			@else
-                				<a class="md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light" href="#" id="add-new">{{ __('companies.add_new') }}</a>
+                				<a class="md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light" href="#" id="add-new" title="{{ __('companies.add_new') }}">{{ __('companies.add_new') }}</a>
                 			@endrole
                 		</div>
                 	</div>

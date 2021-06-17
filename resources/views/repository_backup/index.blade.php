@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app', ['favoriteTitle' => __('catalog.repository_backup'), 'favoriteUrl' => url(Request::path())])
 
 @section('section_title', __('catalog.repository_backup'))
 

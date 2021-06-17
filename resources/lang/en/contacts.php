@@ -11,7 +11,7 @@ return [
 	'country'    => 'Country',
 	'city'       => 'City',
 	'industry'   => 'Industry',
-	'email'      => 'Email',
+	'email'      => 'E-mail',
 	'phone'      => 'Phone',
 	'comments'   => 'Comments',
 ];

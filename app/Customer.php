@@ -8,7 +8,7 @@ class Customer extends Model {
 
 	protected $table = 'customers';
 	public $timestamps = true;
-	protected $fillable = array('company_id', 'name', 'address', 'city_id', 'industry_id', 'email', 'phone');
+	protected $fillable = array('company_id', 'name', 'address', 'city_id', 'industry_id', 'email', 'phone','logo_path');
 
 	public function Company()
 	{

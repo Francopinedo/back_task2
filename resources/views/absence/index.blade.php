@@ -1,4 +1,4 @@
-@extends('layouts.app', ['favoriteTitle' => __('absences.absences'), 'favoriteUrl' => 'absences'])
+@extends('layouts.app', ['favoriteTitle' => __('absences.absences'), 'favoriteUrl' => url(Request::path())])
 
 @section('scripts')
 	@include('datatables.basic')
@@ -20,8 +20,10 @@
 	        ];
 
 		var actions = [
-			            { pre: '<a href="/absences/', post: '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' },
-			            { pre: '<a href="/absences/', post: '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>' }
+			            { pre: '<a title={{__('general.edit')}} href="/absences/', post: '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' },
+                        <?php if (Auth::user()->hasPermission('delete.users')) { ?>
+	                       { pre: '<a title={{__('general.delete')}} href="/absences/', post: '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>' }
+                        <?php } ?>
 			        ];
 
 		DtablesUtil(tableName, columns, actions, urlParameters);
@@ -78,16 +80,16 @@
                 	<table id="absences-table" class="uk-table" cellspacing="0" width="100%">
                 	    <thead>
                 	        <tr>
-                	        	<th>{{ __('absences.id') }}</th>
-                	        	<th>{{ __('absences.type') }}</th>
-                	        	<th>{{ __('absences.country') }}</th>
-                	        	<th>{{ __('absences.city') }}</th>
-                	        	<th>{{ __('absences.comment') }}</th>
-                	        	<th>{{ __('absences.from') }}</th>
-                	        	<th>{{ __('absences.to') }}</th>
-                	        	<th>{{ __('absences.days') }}</th>
-                	        	<th>{{ __('absences.user') }}</th>
-                	        	<th>{{ __('general.actions') }}</th>
+                	        	<th title="{{ __('absences_tooltip.id')}}">{{ __('absences.id') }}</th>
+                	        	<th title="{{ __('absences_tooltip.type')}}">{{ __('absences.type') }}</th>
+                	        	<th title="{{ __('absences_tooltip.country')}}">{{ __('absences.country') }}</th>
+                	        	<th title="{{ __('absences_tooltip.city')}}">{{ __('absences.city') }}</th>
+                	        	<th title="{{ __('absences_tooltip.comment')}}">{{ __('absences.comment') }}</th>
+                	        	<th title="{{ __('absences_tooltip.from')}}">{{ __('absences.from') }}</th>
+                	        	<th title="{{ __('absences_tooltip.to')}}">{{ __('absences.to') }}</th>
+                	        	<th title="{{ __('absences_tooltip.days')}}">{{ __('absences.days') }}</th>
+                	        	<th title="{{ __('absences_tooltip.user')}}">{{ __('absences.user') }}</th>
+                	        	<th title="{{__('general.actions')}}">{{ __('general.actions') }}</th>
                 	        </tr>
                 	    </thead>
                 	</table>
@@ -95,7 +97,7 @@
                 		<div class="uk-width-medium-1-3" id="datatables-length"></div>
                 		<div class="uk-width-medium-1-3" id="datatables-pagination"></div>
                 		<div class="uk-width-medium-1-3">
-                			<a class="md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light" href="#" id="add-new">{{ __('absences.add_new') }}</a>
+                			<a class="md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light" href="#" id="add-new" title="{{ __('absences_tooltip.add_new')}}">{{ __('absences.add_new') }}</a>
                 		</div>
                 	</div>
                 	@endif
@@ -106,7 +108,7 @@
 @endsection
 
 @section('create_div')
-	@component('absence/create', ['countries' => $countries, 'users' => $users, 'company'=>$company])
+	@component('absence/create', ['countries' => $countries, 'users' => $users, 'company'=>$company, 'url'=>Request::path()])
 
 	@endcomponent
 @endsection

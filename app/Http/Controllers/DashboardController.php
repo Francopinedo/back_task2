@@ -15,7 +15,7 @@ class DashboardController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit']);
     }
 
     /**
@@ -25,6 +25,27 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        return view('dashboard.index');
-    }
-}
+        try
+        {
+
+            $company = $this->getFromApi('GET', 'companies/fromUser/' . \Auth::id());
+            if(empty($company))
+            {
+                return view('dashboard.index');
+            }
+    	$categories = $this->getFromApi('GET', 'dashboard_category?company_id='.$company->id.'&withdashboard=1');
+
+
+        $kpis = $this->getFromApi('GET', 'dashboard?company_id=' . $company->id.'&showdashboard=1');
+
+
+        $kpiscount=count($kpis);
+       
+         return view('dashboard.index',compact('kpis','kpiscount','categories'));
+         
+        }catch(Exception $ex)
+        {
+        echo $ex;
+        }
+            }
+        }

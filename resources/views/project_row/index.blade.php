@@ -24,22 +24,32 @@
     <script>
 	$(function() {
 	    $('#project_kpi_alerts-table').DataTable({
+            lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
 	        processing: true,
 	        serverSide: true,
-	        ajax:  '{{ env('API_PATH') }}project_kpi_alerts/datatables?project_id={{ $project->id }}',
-	        dom: '<"top">rt<"bottom"lp><"clear">',
+	        ajax:  '{{ env('API_PATH') }}project_kpi_alerts/datatables?project_id={{ $project_id }}',
+	        dom: '<"top">Brt<"bottom"lp><"clear">',
 	        language: {
 			    paginate: {
 			      	previous: "<<",
 			      	next: ">>"
 			    }
 			},
+			buttons: [
+			            { extend: 'copyHtml5', exportOptions: { columns: ':visible:not(:last-child)' } },
+			            { extend: 'excelHtml5', exportOptions: { columns: ':visible:not(:last-child)' } },
+			            { extend: 'csvHtml5', exportOptions: { columns: ':visible:not(:last-child)' } },
+				        { extend: 'pdfHtml5', orientation:'landscape',exportOptions: { columns: ':visible:not(:last-child)' } },
+			        ],
 	        columns: [
 	            { data: 'id', name: 'id', visible: false },
 	            { data: 'kpi_description', name: 'kpi_description' },
 	            { data: 'red_alert', name: 'red_alert' },
 	            { data: 'yellow_alert', name: 'yellow_alert' },
 	            { data: 'green_alert', name: 'green_alert' },
+				{ data: 'percent_red_alert', name: 'percent_red_alert' },
+	            { data: 'percent_yellow_alert', name: 'percent_yellow_alert' },
+	            { data: 'percent_green_alert', name: 'percent_green_alert' },
 	            { data: 'actions', name: 'actions'}
 	        ],
 	        columnDefs: [ {
@@ -47,8 +57,10 @@
 	            data: null,
 	            render: function (data, type, row) {
                     return '' +
-	            		'<a href="/project_kpi_alerts/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
-	            		'<a href="/project_kpi_alerts/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+	            		'<a title="{{__('general.edit')}}" href="/project_kpi_alerts/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' 
+	            		<?php if (Auth::user()->hasPermission('delete.users')) { ?>+
+	            			'<a title="{{__('general.delete')}}" href="/project_kpi_alerts/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>'
+	            		<?php } ?>;
                 }
 	        } ],
 	        initComplete: function(settings, json) {
@@ -63,10 +75,12 @@
 		$("#datatables-pagination").append($(".simple_numbers"));
 	});
 
+
+
 	</script>
 @endsection
 
-@section('section_title', __('projects.items'))
+@section('section_title', __('projects.alerts'))
 
 @section('content')
 
@@ -89,12 +103,15 @@
                 	<table id="project_kpi_alerts-table" class="uk-table" cellspacing="0" width="100%">
                 	    <thead>
                 	        <tr>
-                	        	<th>{{ __('project_kpi_alerts.id') }}</th>
-                	        	<th>{{ __('project_kpi_alerts.kpi') }}</th>
-                	        	<th>{{ __('project_kpi_alerts.red_alert') }}</th>
-                	        	<th>{{ __('project_kpi_alerts.yellow_alert') }}</th>
-                	        	<th>{{ __('project_kpi_alerts.green_alert') }}</th>
-                	        	<th>{{ __('general.actions') }}</th>
+                	        	<th title="{{__('project_kpi_alerts_tooltip.id')}}">{{ __('project_kpi_alerts.id') }}</th>
+                	        	<th title="{{__('project_kpi_alerts_tooltip.kpi')}}">{{ __('project_kpi_alerts.kpi') }}</th>
+                	        	<th title="{{__('project_kpi_alerts_tooltip.red_alert')}}">{{ __('project_kpi_alerts.red_alert') }}</th>
+                	        	<th title="{{__('project_kpi_alerts_tooltip.yellow_alert')}}">{{ __('project_kpi_alerts.yellow_alert') }}</th>
+                	        	<th title="{{__('project_kpi_alerts_tooltip.green_alert')}}">{{ __('project_kpi_alerts.green_alert') }}</th>
+								<th title="{{__('project_kpi_alerts_tooltip.percent_red_alert')}}">{{ __('project_kpi_alerts.percent_red_alert') }}</th>
+                	        	<th title="{{__('project_kpi_alerts_tooltip.percent_yellow_alert')}}">{{ __('project_kpi_alerts.percent_yellow_alert') }}</th>
+                	        	<th title="{{__('project_kpi_alerts_tooltip.percent_green_alert')}}">{{ __('project_kpi_alerts.percent_green_alert') }}</th>
+                	        	<th title="{{__('general.actions')}}">{{ __('general.actions') }}</th>
                 	        </tr>
                 	    </thead>
                 	</table>
@@ -113,7 +130,7 @@
 @endsection
 
 @section('create_div')
-	@component('project_kpi_alert/create', ['kpis' => $kpis])
+	@component('project_kpi_alert/create', ['kpis' => $kpis,'project_id'=>$project_id, 'url'=>Request::path()])
 
 	@endcomponent
 @endsection

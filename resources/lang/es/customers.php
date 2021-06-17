@@ -1,0 +1,26 @@
+<?php
+return [
+	'customers'       => 'Clientes',
+	'add_new'         => 'Añadir Nuevo',
+	'update'          => 'Actualizar',
+	'id'              => 'ID',
+	'name'            => 'Nombre',
+	'company'         => 'Compañia',
+	'address'         => 'Direccion',
+	'city'            => 'Ciudad',
+	'industry'        => 'Industria',
+	'email'           => 'Correo Electronico',
+	'phone'           => 'Telefono',
+	'billing_name'    => 'Nombre Para La Facturacion',
+	'billing_address' => 'Direccion Para La Facturacion',
+	'tax_number'      => 'Numero de Impuesto',
+	'bank_name'       => 'Nombre del Banco',
+	'account_number'  => 'Numero de Cuenta',
+	'swiftcode'       => 'Swift Code',
+	'aba'             => 'ABA (EEUU Solamente)',
+	'currency'        => 'Moneda',
+	'industry'        => 'Industria',
+	'show'            => 'Ver Detalles',
+	'info'            => 'Info',
+    'logo_path'       => 'Logo'
+];

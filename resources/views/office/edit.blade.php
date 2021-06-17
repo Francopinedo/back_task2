@@ -36,6 +36,7 @@
                 	<input type="text" class="md-input" name="workinghours_to" value="{{ $office->workinghours_to }}"><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required workinghours_to-error"></span></div>
+
                 <label>{{ __('offices.hours_by_day') }}</label>
                 <div class="md-input-wrapper">
 
@@ -43,6 +44,15 @@
                            value="{{ $office->hours_by_day }}"><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required hours_by_day-error"></span></div>
+
+  		 <label>{{ __('offices.effective_workinghours') }}</label>
+                <div class="md-input-wrapper">
+
+                    <input type="number" min="0" max="24" class="md-input" name="effective_workinghours"
+                           value="{{ $office->effective_workinghours }}"><span class="md-input-bar"></span>
+                </div>
+                <div class="parsley-errors-list filled"><span class="parsley-required effective_workinghours-error"></span></div>
+
 
                 <div class="uk-margin-medium-top">
                     <a class="md-btn md-btn-primary md-btn-wave-light md-btn-block waves-effect waves-button waves-light" href="#" id="update-btn">{{ __('offices.update') }}</a>

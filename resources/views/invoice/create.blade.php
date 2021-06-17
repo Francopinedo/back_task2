@@ -1,14 +1,21 @@
+<style>
 
+    #create_div.switcher_active {
+        width: 50%;
+    }
+
+</style> 
+   <form role="form" method="POST" action="{{ url('invoices') }}" id="data-form" data-redirect-on-success="{{ url('invoices/rows/') }}">
+            {{ csrf_field() }}
+            
 <div class="uk-grid" data-uk-grid-margin>
-    <div class="uk-width-1-1">
-
+    		<li class="uk-width-medium-1-1 uk-row-first">
 		<div class="uk-alert uk-alert-danger hide_when_empty" data-uk-alert="" id="status_code-error"></div>
-
-    	<form role="form" method="POST" action="{{ url('invoices') }}" id="data-form" data-redirect-on-success="{{ url('invoices/rows/') }}">
-    	    {{ csrf_field() }}
+</li>
+    	
     	    <input type="hidden" name="project_id" value="{{ session('project_id') }}">
 
-    		<div class="uk-width-medium-1-1 uk-row-first">
+    		<li class="uk-width-medium-1-2 uk-row-first">
 
                 <input type="hidden" name="from_project_board" value="{{ isset($from_project_board)?$from_project_board:0 }}">
     			<div class="md-input-wrapper">
@@ -40,6 +47,8 @@
                     <input class="md-input" type="text" id="uk_dp_1" name="to" value="{{$project->finish}}"  data-uk-datepicker="{format:'YYYY-MM-DD'}">
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required to-error"></span></div>
+</li>
+    		<li class="uk-width-medium-1-2 uk-row-first">
 
                 <div class="md-input-wrapper md-input-select">
                 	<label>{{ __('invoices.contact') }}</label>
@@ -89,6 +98,8 @@
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required remit_to-error"></span></div>
 
+</li>
+    		<li class="uk-width-medium-1-1 uk-row-first">
 
 
                 <div class="uk-margin-medium-top">
@@ -96,10 +107,9 @@
                     <a class="md-btn md-btn-flat md-btn-wave md-btn-block waves-effect waves-button" href="#" id="cancel-btn">{{ __('general.cancel') }}</a>
                 </div>
 
-            </div>
+            </li>
+
+</div>
 
     	</form>
-
-    </div>
-</div>
 

@@ -47,7 +47,7 @@
                 <h2 class="heading_b uk-text-success">Can't log in?</h2>
                 <p>Here’s the info to get you back in to your account as quickly as possible.</p>
                 <p>First, try the easiest thing: if you remember your password but it isn’t working, make sure that Caps Lock is turned off, and that your username is spelled correctly, and then try again.</p>
-                <p>If your password still isn’t working, it’s time to <a href="#" id="password_reset_show">reset your password</a>.</p>
+                <p>If your password still isn’t working, it’s time to <a href="{{ route('password.request') }}" id="">reset your password</a>.</p>
                 <a class="btn btn-link" href="{{ route('password.request') }}">
                                     Forgot Your Password?
                                 </a>
@@ -67,6 +67,6 @@
             </div>
         </div>
         <div class="uk-margin-top uk-text-center">
-            <a href="{{ url('register') }}">Create an account</a>
-        </div>
+<!--             <a href="{{ url('register') }}">Create an account</a>
+ -->        </div>
 @endsection

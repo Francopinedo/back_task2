@@ -11,7 +11,7 @@ class DiscountController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit']);
     }
 
     /**
@@ -54,15 +54,18 @@ class DiscountController extends Controller
     public function store(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'detail'      => 'required',
-			'amount'      => 'required',
-			'percentage'      => 'required',
+			'amount'      => 'numeric|required',
+			'percentage'      => 'numeric|required',
 			'company_id'  => 'required',
 			'currency_id' => 'required'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('POST', 'discounts', $data);
 
@@ -91,14 +94,17 @@ class DiscountController extends Controller
     public function update(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'detail'      => 'required',
-			'amount'      => 'required',
-			'percentage'      => 'required',
+			'amount'      => 'numeric|required',
+			'percentage'      => 'numeric|required',
 			'currency_id' => 'required'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('PATCH', 'discounts/'.$data['id'], $data);
 

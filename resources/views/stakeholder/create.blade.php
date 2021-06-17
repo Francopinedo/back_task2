@@ -3,7 +3,7 @@
 
 		<div class="uk-alert uk-alert-danger hide_when_empty" data-uk-alert="" id="status_code-error"></div>
 
-    	<form role="form" method="POST" action="{{ url('stakeholders') }}" id="data-form" data-redirect-on-success="{{ url('stakeholders') }}">
+    	<form role="form" method="POST" action="{{ url('stakeholders') }}" id="data-form" data-redirect-on-success="{{ url($url) }}">
     	    {{ csrf_field() }}
     		<div class="uk-width-medium-1-1 uk-row-first">
 

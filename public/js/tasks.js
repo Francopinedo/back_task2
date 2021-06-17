@@ -201,29 +201,29 @@ var tasks = (function () {
 
                                     "tasks": taskslist,
                                     // [
-                                    //   	{
-                                    //   		"id": -1,
-                                    //   		"name": "Gantt editor",
-                                    //   		"progress": 0,
-                                    //   		"progressByWorklog": false,
-                                    //   		"relevance": 0,
-                                    //   		"type": "",
-                                    //   		"typeId": "",
-                                    //   		"description": "",
-                                    //   		"code": "",
-                                    //   		"level": 0,
-                                    //   		"status": "STATUS_ACTIVE",
-                                    //   		"depends": "",
-                                    //   		"canWrite": true,
-                                    //   		"start": 1396994400000,
-                                    //   		"duration": 20,
-                                    //   		"end": 1399586399999,
-                                    //   		"startIsMilestone": false,
-                                    //   		"endIsMilestone": false,
-                                    //   		"collapsed": false,
-                                    //   		"assigs": [],
-                                    //   		"hasChild": false
-                                    //   	},
+                                    //      {
+                                    //          "id": -1,
+                                    //          "name": "Gantt editor",
+                                    //          "progress": 0,
+                                    //          "progressByWorklog": false,
+                                    //          "relevance": 0,
+                                    //          "type": "",
+                                    //          "typeId": "",
+                                    //          "description": "",
+                                    //          "code": "",
+                                    //          "level": 0,
+                                    //          "status": "STATUS_ACTIVE",
+                                    //          "depends": "",
+                                    //          "canWrite": true,
+                                    //          "start": 1396994400000,
+                                    //          "duration": 20,
+                                    //          "end": 1399586399999,
+                                    //          "startIsMilestone": false,
+                                    //          "endIsMilestone": false,
+                                    //          "collapsed": false,
+                                    //          "assigs": [],
+                                    //          "hasChild": false
+                                    //      },
                                     // ],
                                     "canWrite": true,
                                     "canDelete": true,
@@ -379,6 +379,25 @@ var tasks = (function () {
                 );
             },
 
+        addwhatif: function () {
+
+
+                $.ajax({
+                    url: 'whatif/create',
+                    type: 'GET',
+                    dataType: 'json'
+                }).done(
+                    function (data) {
+                        var $switcher_ajax_create = $('#ajax_create_div'),
+                            $switcher_ajax_create_toggle = $('#ajax_create_div_toggle');
+
+                        $('#ajax_create_div').addClass('switcher_active');
+                        $('#ajax_create_div').css('position', 'absolute');
+                        $('.ajax_create_div').html(data.view);
+                    }
+                );
+            },
+
 
             initEdit: function () {
 
@@ -395,6 +414,39 @@ var tasks = (function () {
                         alert(saveFirst);
                     }
                 });
+            }
+            ,
+		  exitTasks: function (save) {
+                var self = this;
+                $("#btn_exit").addClass('disabled');
+                console.log('exiting');
+                var element = $("#page_content");
+                kendo.ui.progress(element, true);
+     			//e.preventDefault();
+     			///////////////////////////////
+			  UIkit.modal.confirm('Save Changes before Exit?', function () {
+                kendo.ui.progress(element, true);
+                   var self = this;
+                if (save != undefined) {
+                    setTimeout(function () {
+                        this.tasks.saveOnServer()
+                    }, 3000);
+                }
+//                kendo.ui.progress(element, false);
+
+
+            },function () {
+                   //var self = this;
+               tasks.loadTasks(self.project_id);
+               tasks.redraw();
+             
+            },{
+                labels: {
+                   'ok': 'Save Changes and Exit',
+                    'cancel': 'Exit Without Save'
+                }
+            });
+			  //////////////////////////////////
             }
             ,
             showLoading: function (save) {
@@ -578,7 +630,24 @@ var tasks = (function () {
                     ge.updateLinks(task);
 
                     console.log('editando esto', ge);
-
+                    console.log('UPDATE TASK');
+                    
+                    
+                    $.ajax({
+                        url: API_PATH + 'tasks/'+task.id,
+                        type: 'POST',
+                        async: false,
+                        data: $('#data-form-edit').serializeArray(), 
+                        dataType: 'json',
+                        success: function (json) {
+                        self.loadTasks(self.project_id);
+                         self.redraw();
+                        },
+                        error: function (json) {
+                            console.log('error');
+                            console.log(json);
+                        }
+                    });
 
                     $('#edit_div_toggle').hide();
                     $('#edit_div').removeClass('switcher_active');
@@ -596,6 +665,8 @@ var tasks = (function () {
 
                 var self = this;
                 if (ge.deletedTaskIds > 0) {
+                    console.log(ge.deletedTaskIds);
+                    console.log('DELETE TASK');
                     $.ajax({
                         url: API_PATH + 'tasks/delete/all',
                         type: 'DELETE',
@@ -603,7 +674,8 @@ var tasks = (function () {
                         data: {'tasks': ge.deletedTaskIds},
                         dataType: 'json',
                         success: function (json) {
-
+                            self.loadTasks(self.project_id);
+                                    self.redraw();
                         },
                         error: function (json) {
                             console.log('error');
@@ -690,18 +762,37 @@ var tasks = (function () {
                     data.estimated_hours = estimated;
 
 
-                    if (Math.floor(value.id) == value.id && $.isNumeric(value.id)) {
-                        tasksToEdit.push(data);
+                    if ((Math.floor(value.id) == value.id && $.isNumeric(value.id))) {
+                        if(indx==(value.index))
+                        {
+                         tasksToEdit.push(data);
+                        console.log('EDIT TASK'+data);
+                        }else{
+                          tasksToAdd.push(data);
+                        console.log('ADD TASK'+data);
+                        }
                     } else {
                         tasksToAdd.push(data);
+                        console.log('ADD TASK'+data);
+
+
                     }
-
+                    
                     if (lengttasks === indx) {
+                    }
+                    
+                           
 
-                        if (tasksToAdd.length > 0) {
+                    indx++;
+                });
+                
+                   if (tasksToAdd.length > 0) {
 
+                             console.log(tasksToAdd);
+                            console.log('ADD TASK');
+                    
 
-                            url = API_PATH + 'tasks/store/all';
+                           var url = API_PATH + 'tasks/store/all';
                             $.ajax({
                                 url: url,
                                 type: 'POST',
@@ -709,7 +800,8 @@ var tasks = (function () {
                                 async: false,
                                 dataType: 'json',
                                 success: function (json) {
-
+                                     self.loadTasks(self.project_id);
+                                    self.redraw();
                                 },
                                 error: function (json) {
                                     console.log('error');
@@ -717,35 +809,33 @@ var tasks = (function () {
                                 }
                             });
                         }
+                    
+                         if (tasksToAdd.length == 0 && tasksToEdit.length > 0) {
 
-                        if (tasksToEdit.length > 0) {
+                             console.log(tasksToEdit);
+                            console.log('UPDATE TASK');
+                    
 
-                            url = API_PATH + 'tasks/update/all';
+                           var url = API_PATH + 'tasks/update/all';
                             $.ajax({
                                 url: url,
-                                type: 'PATCH',
+                                type: 'POST',
                                 data: {tasks: tasksToEdit},
                                 async: false,
                                 dataType: 'json',
                                 success: function (json) {
-                                    self.loadTasks(self.project_id);
+                                     self.loadTasks(self.project_id);
                                     self.redraw();
-
                                 },
                                 error: function (json) {
                                     console.log('error');
                                     console.log(json);
-                                    self.redraw();
                                 }
                             });
                         }
+                 
 
-
-                    }
-
-                    indx++;
-                });
-
+                    
 
             }
             ,

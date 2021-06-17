@@ -13,8 +13,10 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        Commands\CreatePermissions::class
-    ];
+        Commands\CreatePermissions::class,
+ Commands\EnvironmentSetCommand::class,
+            Commands\CreateCompany::class
+                ];
 
     /**
      * Define the application's command schedule.

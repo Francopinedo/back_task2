@@ -21,8 +21,8 @@
 	        ];
 
 		var actions = [
-			            { pre: '<a href="/rates/', post: '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' },
-			            { pre: '<a href="/rates/', post: '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>' }
+			            { pre: '<a title={{__('general.edit')}} href="/rates/', post: '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' },
+			            { pre: '<a title={{__('general.delete')}} href="/rates/', post: '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>' }
 			        ];
 
 		DtablesUtil(tableName, columns, actions, urlParameters);
@@ -49,17 +49,17 @@
                 	<table id="rates-table" class="uk-table" cellspacing="0" width="100%">
                 	    <thead>
                 	        <tr>
-                	        	<th>{{ __('rates.id') }}</th>
-                	        	<th>{{ __('rates.country') }}</th>
-                	        	<th>{{ __('rates.city') }}</th>
-                	        	<th>{{ __('rates.project_role') }}</th>
-                	        	<th>{{ __('rates.seniority') }}</th>
-                	        	<th>{{ __('rates.title') }}</th>
-                	        	<th>{{ __('rates.value') }}</th>
-                	        	<th>{{ __('rates.currency') }}</th>
-                	        	<th>{{ __('rates.workplace') }}</th>
-                	        	<th>{{ __('rates.office') }}</th>
-                	        	<th>{{ __('general.actions') }}</th>
+                	        	<th title="{{ __('rates_tooltip.id')}}">{{ __('rates.id') }}</th>
+                	        	<th title="{{ __('rates_tooltip.country')}}">{{ __('rates.country') }}</th>
+                	        	<th title="{{ __('rates_tooltip.city')}}">{{ __('rates.city') }}</th>
+                	        	<th title="{{ __('rates_tooltip.project_role')}}">{{ __('rates.project_role') }}</th>
+                	        	<th title="{{ __('rates_tooltip.seniority')}}">{{ __('rates.seniority') }}</th>
+                	        	<th title="{{ __('rates_tooltip.title')}}">{{ __('rates.title') }}</th>
+                	        	<th title="{{ __('rates_tooltip.value')}}">{{ __('rates.value') }}</th>
+                	        	<th title="{{ __('rates_tooltip.currency')}}">{{ __('rates.currency') }}</th>
+                	        	<th title="{{ __('rates_tooltip.workplace')}}">{{ __('rates.workplace') }}</th>
+                	        	<th title="{{ __('rates_tooltip.office')}}">{{ __('rates.office') }}</th>
+                	        	<th title="{{__('general.actions')}}">{{ __('general.actions') }}</th>
                 	        </tr>
                 	    </thead>
                 	</table>
@@ -67,7 +67,7 @@
                 		<div class="uk-width-medium-1-3" id="datatables-length"></div>
                 		<div class="uk-width-medium-1-3" id="datatables-pagination"></div>
                 		<div class="uk-width-medium-1-3">
-                			<a class="md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light" href="#" id="add-new">{{ __('rates.add_new') }}</a>
+                			<a class="md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light" href="#" id="add-new" title="{{ __('rates_tooltip.add_new')}}">{{ __('rates.add_new') }}</a>
                 		</div>
                 	</div>
                 </div>

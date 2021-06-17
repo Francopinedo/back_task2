@@ -1,11 +1,4 @@
-<br>
+<option value="-1" disabled selected hidden>{{ __('header.select_a_project') }}...</option>
 @foreach ($projects as $project)
-	<a class="md-btn md-btn-large md-btn-block md-btn-wave-light waves-effect waves-button waves-light project_for_selection"
-		data-id="{{ $project->id }}" data-name="{{ $project->name }}" data-csrf="{{ csrf_token() }}" href="#">
-		{{ $project->name }}
-	</a>
+	<option data-customer_name="{{ $project->name }}"   data-customer_id="{{ $project->id }}" value="{{ $project->id }}">{{ $project->name }}</option>
 @endforeach
-
-<script type="text/javascript">
-	layout.selectProject();
-</script>

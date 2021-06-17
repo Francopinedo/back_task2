@@ -8,7 +8,7 @@
 		var urlParameters = '?company_id={{ $company->id }}';
 		var columns = [
 	            { data: 'id', name: 'id', visible: false },
-	            { data: 'detail', name: 'detail' },
+	            { data: 'detail', name: 'detail',tooltip:'TEST'},
 	            { data: 'amount', name: 'amount' },
 	            { data: 'currency_name', name: 'currency_name' },
 	            { data: 'reimbursable', name: 'reimbursable' },
@@ -55,12 +55,21 @@
         }];
 
 		var actions = [
-			            { pre: '<a href="/services/', post: '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' },
-			            { pre: '<a href="/services/', post: '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>' }
+			            { pre: '<a title={{__('general.edit')}} href="/services/', post: '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' },
+			            { pre: '<a title={{__('general.delete')}} href="/services/', post: '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>' }
 			        ];
 
 		DtablesUtil(tableName, columns, actions, urlParameters, extra_buttons);
 	});
+
+    /*$('#services-table thead th').each(function () {
+                            var sTitle;
+                            var nTds = $(this);
+                            var columnTitle= $(nTds).text();
+
+                             this.setAttribute('title', columnTitle);
+                        });*/
+
 	</script>
 @endsection
 
@@ -83,14 +92,14 @@
                 	<table id="services-table" class="uk-table" cellspacing="0" width="100%">
                 	    <thead>
                 	        <tr>
-                	        	<th>{{ __('services.id') }}</th>
-                	        	<th>{{ __('services.detail') }}</th>
-                	        	<th>{{ __('services.amount') }}</th>
-                	        	<th>{{ __('services.currency') }}</th>
-                	        	<th>{{ __('services.reimbursable') }}</th>
-                	        	<th>{{ __('services.cost') }}</th>
-                	        	<th>{{ __('services.cost_currency') }}</th>
-                	        	<th>{{ __('general.actions') }}</th>
+                	        	<th title="{{ __('services_tooltip.id')}}">{{ __('services.id') }}</th>
+                	        	<th title="{{ __('services_tooltip.detail')}}">{{ __('services.detail') }}</th>
+                	        	<th title="{{ __('services_tooltip.amount')}}">{{ __('services.amount') }}</th>
+                	        	<th title="{{ __('services_tooltip.currency')}}">{{ __('services.currency') }}</th>
+                	        	<th title="{{ __('services_tooltip.reimbursable')}}">{{ __('services.reimbursable') }}</th>
+                	        	<th title="{{ __('services_tooltip.cost')}}">{{ __('services.cost') }}</th>
+                	        	<th title="{{ __('services_tooltip.cost_currency')}}">{{ __('services.cost_currency') }}</th>
+                	        	<th title="{{ __('general.actions') }}">{{ __('general.actions') }}</th>
                 	        </tr>
                 	    </thead>
                 	</table>
@@ -98,7 +107,7 @@
                 		<div class="uk-width-medium-1-3" id="datatables-length"></div>
                 		<div class="uk-width-medium-1-3" id="datatables-pagination"></div>
                 		<div class="uk-width-medium-1-3">
-                			<a class="md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light" href="#" id="add-new">{{ __('services.add_new') }}</a>
+                			<a class="md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light" href="#" id="add-new')}}" title="{{ __('services.add_new') }}">{{ __('services.add_new') }}</a>
                 		</div>
                 	</div>
                 </div>

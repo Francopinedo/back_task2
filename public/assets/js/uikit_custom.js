@@ -9149,7 +9149,7 @@
 
         defaults: {
             offset: 5,
-            pos: 'top',
+            pos: 'right',
             animation: false,
             delay: 0, // in miliseconds
             cls: '',
@@ -9819,6 +9819,9 @@
 // http://getuikit.com/docs/documentation_javascript.html#js-override
 
 if (typeof UIkit !== 'undefined') {
+    if (typeof UIkit.components !== 'undefined') {
+
+
     UIkit.on('beforeready.uk.dom', function () {
 
         // accrodion
@@ -9923,4 +9926,5 @@ if (typeof UIkit !== 'undefined') {
         }
 
     });
+}
 }

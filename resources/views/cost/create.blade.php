@@ -70,6 +70,7 @@
 
                 <div class="md-input-wrapper">
                 	<label>{{ __('costs.value') }}</label>
+                    <br>
                 	<input type="text" class="md-input" name="value"><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required value-error"></span></div>

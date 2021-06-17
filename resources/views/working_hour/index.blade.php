@@ -1,4 +1,4 @@
-@extends('layouts.app', ['favoriteTitle' => __('working_hours.working_hours'), 'favoriteUrl' => 'working_hours'])
+@extends('layouts.app', ['favoriteTitle' => __('working_hours.working_hours'), 'favoriteUrl' => url(Request::path())])
 
 <style>
     .weekend {
@@ -6,7 +6,7 @@
     }
 
     .total {
-        background: #85a4ff;
+        background: #5271af;
     }
 </style>
 @section('scripts')
@@ -183,11 +183,20 @@
                                         </div>
                                         <div class="uk-width-1-6">
                                             <div class="md-input-wrapper">
-                                                <input class="md-input" required type="text" readonly id="period_from"
+                                                {{-- No se ha encontrado razon para bloquear la fecha de inicio de acuerdo al proyecto --}}
+                                                {{-- <input class="md-input" required type="text" readonly id="period_from"
                                                        name="start"
                                                        placeholder="{{ __('capacity_planning.period_from') }}"
                                                        value="{{$begin}}"
-                                                       data-uk-datepicker="{format:'YYYY-MM-DD', minDate:'{{$project->start}}',  maxDate:'{{$project->finish}}'}">
+                                                       data-uk-datepicker="{format:'YYYY-MM-DD', minDate:'{{$project->start}}',  maxDate:'{{$project->finish}}'}"> --}}
+
+                                                <input class="md-input" 
+                                                    required type="text" 
+                                                    readonly id="period_from"
+                                                    name="start"
+                                                    placeholder="{{ __('capacity_planning.period_from') }}"
+                                                    value="{{$begin}}"
+                                                    data-uk-datepicker="{format:'YYYY-MM-DD'}">
                                             </div>
                                         </div>
                                         <div class="uk-width-1-6">
@@ -200,12 +209,20 @@
 
                                         <div class="uk-width-1-6">
                                             <div class="md-input-wrapper">
-                                                <input class="md-input" required
+                                                {{-- No se ha encontrado razon para bloquear la fecha de finalizacion de acuerdo al proyecto --}}
+                                                {{-- <input class="md-input" required
                                                        placeholder="{{ __('capacity_planning.period_to') }} "
                                                        type="text"
                                                        readonly name="finish" id="period_to"
                                                        value="{{$end}}"
-                                                       data-uk-datepicker="{format:'YYYY-MM-DD', minDate:'{{$project->start}}',  maxDate:'{{$project->finish}}'}">
+                                                       data-uk-datepicker="{format:'YYYY-MM-DD', minDate:'{{$project->start}}',  maxDate:'{{$project->finish}}'}"> --}}
+
+                                                <input class="md-input" required
+                                                   placeholder="{{ __('capacity_planning.period_to') }} "
+                                                   type="text"
+                                                   readonly name="finish" id="period_to"
+                                                   value="{{$end}}"
+                                                   data-uk-datepicker="{format:'YYYY-MM-DD'}">
                                             </div>
                                         </div>
 
@@ -213,7 +230,7 @@
                                         <div class="uk-width-1-6 float-right">
                                             <button class="md-btn md-btn-primary md-btn-wave-light md-btn-block waves-effect waves-button waves-light"
                                                     type="submit">
-                                                {{ __('team_users.working_hours') }}
+                                                {{ __('working_hours.working_hours') }}
                                             </button>
 
 

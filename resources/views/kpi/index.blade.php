@@ -14,18 +14,26 @@
                 {data: 'nombre', name: 'nombre'},
 
                 {data: 'description', name: 'description'},
-                {data: 'show', name: 'show'},
-                //{data: 'type_of_result', name: 'type_of_result'},
-                //{data: 'graphic_type', name: 'graphic_type'},
-                //{data: 'query', name: 'query'},
-                {data: 'actions', name: 'actions'},
+                {data: 'showkpi', name: 'show',
+		 render: function (data, type, row) {
+                        if (row.showkpi == '1') {
+			return 'YES';
+			}else{
+			return 'NO';}
+			}
+
+			},
+               // {data: 'type_of_result', name: 'type_of_result'},
+               // {data: 'graphic_type', name: 'graphic_type'},
+               // {data: 'query', name: 'query'},
+                {data: 'actions', name: 'actions'}
             ];
 
             var actions = [
                 {
-                    pre: '<a href="/kpis/',
+                    pre: '<a title={{__('general.edit')}} href="/kpis/',
                     post: '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>'
-                },
+                }
                 /* {
                  pre: '<a href="/kpis/',
                  post: '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>'
@@ -73,17 +81,17 @@
                     <table id="kpis-table" class="uk-table" cellspacing="0" width="100%">
                         <thead>
                         <tr>
-                            <th>{{ __('kpis.id') }}</th>
-                            <th>{{ __('kpis.kpi') }}</th>
-                            <th>{{ __('kpis.category') }}</th>
-                            <th>{{ __('kpis.nombre') }}</th>
+                            <th title="{{__('kpis_tooltip.id')}}">{{ __('kpis.id') }}</th>
+                            <th title="{{__('kpis_tooltip.kpi')}}">{{ __('kpis.kpi') }}</th>
+                            <th title="{{__('kpis_tooltip.category')}}">{{ __('kpis.category') }}</th>
+                            <th title="{{__('kpis_tooltip.nombre')}}">{{ __('kpis.nombre') }}</th>
 
-                            <th>{{ __('kpis.description') }}</th>
-                        <!--   <th>{{ __('kpis.type_of_result') }}</th>
-                            <th>{{ __('kpis.graphic_type') }}</th>
-                            <th>{{ __('kpis.query') }}</th>-->
-                            <th>{{ __('kpis.show') }}</th>
-                            <th>{{ __('general.actions') }}</th>
+                            <th title="{{__('kpis_tooltip.description')}}">{{ __('kpis.description') }}</th>
+                        <!--   <th title="{{__('kpis_tooltip.type_of_result')}}">{{ __('kpis.type_of_result') }}</th>
+                            <th title="{{__('kpis_tooltip.graphic_type')}}">{{ __('kpis.graphic_type') }}</th>
+                            <th title="{{__('kpis_tooltip.query')}}">{{ __('kpis.query') }}</th>-->
+                            <th title="{{__('kpis_tooltip.show')}}">{{ __('kpis.show') }}</th>
+                            <th title="{{__('general.actions')}}">{{ __('general.actions') }}</th>
                         </tr>
                         </thead>
                     </table>
@@ -91,8 +99,8 @@
                         <div class="uk-width-medium-1-3" id="datatables-length"></div>
                         <div class="uk-width-medium-1-3" id="datatables-pagination"></div>
                         <div class="uk-width-medium-1-3">
-                          <!--  <a class="md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light"
-                               href="#" id="add-new">{{ __('kpis.add_new') }}</a>-->
+                           <a class="md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light"
+                               href="#" id="add-new" title="{{ __('kpis.add_new') }}">{{ __('kpis.add_new') }}</a>
                         </div>
                     </div>
                     {{-- @endif --}}

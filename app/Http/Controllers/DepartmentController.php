@@ -11,7 +11,7 @@ class DepartmentController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit']);
     }
 
     /**
@@ -54,12 +54,15 @@ class DepartmentController extends Controller
     public function store(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'title'             => 'required',
 			'office_id'         => 'required',
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('POST', 'departments', $data);
 
@@ -88,12 +91,15 @@ class DepartmentController extends Controller
     public function update(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'title'             => 'required',
 			'office_id'         => 'required'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('PATCH', 'departments/'.$data['id'], $data);
 
@@ -165,7 +171,8 @@ class DepartmentController extends Controller
         $company = $this->getFromApi('GET', 'companies/fromUser/' . Auth::id());
         $array = array();
         try {
-            $this->validate($request, [
+            $validator =Validator::make($request->all(), [
+
                 'file' => 'required'
             ]);
 
@@ -173,22 +180,18 @@ class DepartmentController extends Controller
 
             $array = procces_import($file);
 
+            $item = array();
+
             foreach ($array as $value) {
 
                 if (isset($value[1])) {
-                    $item = array();
 
-
-                    $office = $this->getFromApi('GET', 'offices/?title=' . $value[1]);
-
-
+                    $office = $this->getFromApi('GET', 'offices?title=' . $value[1]);
 
                     if (isset($office[0])) {
 
                         $item['office_id'] = $office[0]->id;
                         $item['title'] = $value[0];
-
-
 
                         $this->apiCall('POST', 'departments', $item);
                     }

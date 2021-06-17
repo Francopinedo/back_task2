@@ -11,7 +11,7 @@ class ContactController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit', 'deletecontrol']);
     }
 
     /**
@@ -39,21 +39,31 @@ class ContactController extends Controller
      */
     public function store(Request $request)
     {
+
     	// validacion del formulario
-    	$this->validate($request, [
-			'project_id'            => 'required',
+    	$validator =Validator::make($request->all(), [
+			//'project_id'            => 'required',
 			'company_id'            => 'required',
 			'name'                  => 'required',
 			'company'               => 'required',
 			'department'            => 'required',
 			'country_id'            => 'required',
 			'industry_id'           => 'required',
-			'email'                 => 'required',
-			'phone'                 => 'required'
+			'email'                 => 'required|email',
+			'phone'                 => 'required|phone:VE,US,AR'
 	    ]);
 
-    	$data = $request->all();
+	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  }
 
+
+
+
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
+	$data['user_id']=Auth::id();
     	$res = $this->apiCall('POST', 'contacts', $data);
 
     	// validacion de la respuesta del api
@@ -82,7 +92,9 @@ class ContactController extends Controller
     	$contact = $this->getFromApi('GET', 'contacts/'.$id);
 
     	$company = $this->getFromApi('GET', 'companies/fromUser/'.Auth::id());
+
     	$projects = $this->getFromApi('GET', 'projects?company_id='.$company->id);
+	
     	$countries = $this->getFromApi('GET', 'countries');
     	$cities = $this->getFromApi('GET', 'cities?country_id='.$contact->country_id);
     	$industries = $this->getFromApi('GET', 'industries');
@@ -105,20 +117,24 @@ class ContactController extends Controller
     public function update(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
-            'project_id'            => 'required',
-
+    	$validator =Validator::make($request->all(), [
+            //'project_id'            => 'required',
             'name'                  => 'required',
             'company'               => 'required',
             'department'            => 'required',
             'country_id'            => 'required',
             'industry_id'           => 'required',
-            'email'                 => 'required',
-            'phone'                 => 'required'
+            'email'                 => 'required|email',
+            'phone'                 => 'required|phone:VE,US,AR'
 	    ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
 
-    	$data = $request->all();
-
+    	if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        } $data = $request->all();
+        $data['user_id']=Auth::id();
     	$res = $this->apiCall('PATCH', 'contacts/'.$data['id'], $data);
 
     	// validacion de la respuesta del api
@@ -190,36 +206,29 @@ class ContactController extends Controller
         $company = $this->getFromApi('GET', 'companies/fromUser/' . Auth::id());
         $array = array();
         try {
-            $this->validate($request, [
+            $validator =Validator::make($request->all(), [
+
                 'file' => 'required'
             ]);
 
             $file = $request->file('file');
 
             $array = procces_import($file);
-
-
+            $item = array();
+            $item['user_id']=Auth::id();
+            $item['company_id'] =$company->id;
 
             foreach ($array as $value) {
 
-
                 if (isset($value[2])) {
-                    $item = array();
 
-
-
-                    $country = $this->getFromApi('GET', 'countries/?name=' . $value[2] . '&company_id=' . $company->id);
-                    $city = $this->getFromApi('GET', 'cities/?name=' . $value[3] . '&company_id=' . $company->id);
-                    $industry = $this->getFromApi('GET', 'industries/?name=' . $value[4] . '&company_id=' . $company->id);
-
-
-
+                    $country = $this->getFromApi('GET', 'countries?name=' . $value[2] . '&company_id=' . $company->id);
+                    $city = $this->getFromApi('GET', 'cities?name=' . $value[3] . '&company_id=' . $company->id);
+                    $industry = $this->getFromApi('GET', 'industries?name=' . $value[4] . '&company_id=' . $company->id);
 
                     if (isset($city[0]) && isset($country[0]) && isset($industry[0]) ) {
 
-
                         $item['name'] = $value[0];
-                        $item['company_id'] =$company->id;
 
                         $item['department'] = $value[1];
                         $item['country_id'] = $country[0]->id;
@@ -230,9 +239,7 @@ class ContactController extends Controller
                         $item['comments'] = $value[7];
                         $item['company'] = $value[8];
 
-
-                       $result = $this->apiCall('POST', 'contacts', $item);
-
+                        $result = $this->apiCall('POST', 'contacts', $item);
 
                     }
                 }

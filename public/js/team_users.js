@@ -18,7 +18,7 @@ var TeamUsers = (function () {
         },
 
         searchOffice:function (id) {
-            console.log('searinch office...');
+            console.log('searching office...');
             $.ajax({
                 url: TeamUsers.API_PATH + 'offices/'+id,
                 type: 'GET',
@@ -34,7 +34,7 @@ var TeamUsers = (function () {
         },
 
         serachUser:function () {
-            console.log('searinch user...');
+            console.log('searching user...');
             $.ajax({
                 url: TeamUsers.API_PATH + 'users/'+$("#user_id").val(),
                 type: 'GET',
@@ -55,7 +55,7 @@ var TeamUsers = (function () {
             $('#office_id').selectize();
 
             $("#city_id").on('change', function () {
-                console.log('chage....');
+                console.log('change....');
                 $.ajax({
                     url: TeamUsers.API_PATH + '/offices',
                     type: 'GET',
@@ -84,7 +84,7 @@ var TeamUsers = (function () {
             $('#country_id2').selectize();
 
             $("#country_id, #country_id2").on('change', function () {
-                console.log('chage....');
+                console.log('change....');
                 $.ajax({
                     url: TeamUsers.API_PATH + '/cities',
                     type: 'GET',
@@ -117,7 +117,7 @@ var TeamUsers = (function () {
 
             $('#user_id').selectize()[0].selectize.destroy();
             $("#country_id, #city_id, #office_id, #company_role_id, #seniority_id, #workplace").on('change', function () {
-                console.log('chage....');
+                console.log('change....');
                 $.ajax({
                     url: TeamUsers.API_PATH + '/users',
                     type: 'GET',
@@ -130,9 +130,9 @@ var TeamUsers = (function () {
 
                         $('#user_id').selectize()[0].selectize.destroy();
 
-                        $.each(data.data, function (i, value) {
-                            console.log(value);
-                            html += '<option value="' + value.id + '">' + value.name + '</option>';
+                        $.each(data.data, function () {
+                            console.log(this.name);
+                            html += '<option value="' + this.id + '">' + this.name + '</option>';
                         });
 
                         $('#user_id').html(html);

@@ -45,7 +45,7 @@
 			            { extend: 'copyHtml5', exportOptions: { columns: ':visible:not(:last-child)' } },
 			            { extend: 'excelHtml5', exportOptions: { columns: ':visible:not(:last-child)' } },
 			            { extend: 'csvHtml5', exportOptions: { columns: ':visible:not(:last-child)' } },
-				        { extend: 'pdfHtml5', exportOptions: { columns: ':visible:not(:last-child)' } },
+				        { extend: 'pdfHtml5',orientation:'landscape',exportOptions: { columns: ':visible:not(:last-child)' } },
 			        ],
 			        columns: columns,
 			        columnDefs: [ {

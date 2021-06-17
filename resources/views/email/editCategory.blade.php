@@ -6,6 +6,7 @@
     	<form role="form" method="POST" action="{{ url('emails/update_category') }}" id="data-form-edit" data-redirect-on-success="{{ url('emails') }}">
     	    {{ csrf_field() }}
     	    <input type="hidden" name="id" value="{{ $emailCategory->id }}">
+    	    <input type="hidden" name="user_id" value="{{ Auth::id() }}">
     		<div class="uk-width-medium-1-1 uk-row-first">
                 <div class="md-input-wrapper md-input-filled">
                 	<label>{{ __('emails.title') }}</label>

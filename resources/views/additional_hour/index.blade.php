@@ -1,4 +1,4 @@
-@extends('layouts.app', ['favoriteTitle' => __('additional_hours.additional_hours'), 'favoriteUrl' => 'additional_hours'])
+@extends('layouts.app', ['favoriteTitle' => __('additional_hours.additional_hours'), 'favoriteUrl' => url(Request::path())])
 
 @section('scripts')
     @include('datatables.basic')
@@ -40,8 +40,10 @@
                     data: null,
                     render: function (data, type, row) {
                         return '' +
-                            '<a href="/additional_hours/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
-                            '<a href="/additional_hours/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+                            '<a title={{__('general.edit')}} href="/additional_hours/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
+                            <?php if (Auth::user()->hasPermission('delete.users')) { ?>
+                                '<a title={{__('general.delete')}} href="/additional_hours/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+                            <?php } ?>
                     }
                 }],
 
@@ -123,19 +125,19 @@
                         <table id="additional_hours-table" class="uk-table" cellspacing="0" width="100%">
                             <thead>
                             <tr>
-                                <th>{{ __('additional_hours.id') }}</th>
-                                <th>{{ __('additional_hours.user') }}</th>
-                                <th>{{ __('additional_hours.project_role') }}</th>
-                                <th>{{ __('additional_hours.seniority') }}</th>
-                                <th>{{ __('additional_hours.currency') }}</th>
-                                <th>{{ __('additional_hours.office') }}</th>
-                                <th>{{ __('additional_hours.country') }}</th>
-                                <th>{{ __('additional_hours.city') }}</th>
-                                <th>{{ __('additional_hours.comments') }}</th>
-                                <th>{{ __('additional_hours.date') }}</th>
-                                <th>{{ __('additional_hours.hours') }}</th>
-                                <th>{{ __('additional_hours.rate') }}</th>
-                                <th>{{ __('general.actions') }}</th>
+                                <th title="{{__('additional_hours_tooltip.id')}}">{{ __('additional_hours.id') }}</th>
+                                <th title="{{__('additional_hours_tooltip.user')}}">{{ __('additional_hours.user') }}</th>
+                                <th title="{{__('additional_hours_tooltip.project_role')}}">{{ __('additional_hours.project_role') }}</th>
+                                <th title="{{__('additional_hours_tooltip.seniority')}}">{{ __('additional_hours.seniority') }}</th>
+                                <th title="{{__('additional_hours_tooltip.currency')}}">{{ __('additional_hours.currency') }}</th>
+                                <th title="{{__('additional_hours_tooltip.office')}}">{{ __('additional_hours.office') }}</th>
+                                <th title="{{__('additional_hours_tooltip.country')}}">{{ __('additional_hours.country') }}</th>
+                                <th title="{{__('additional_hours_tooltip.city')}}">{{ __('additional_hours.city') }}</th>
+                                <th title="{{__('additional_hours_tooltip.comments')}}">{{ __('additional_hours.comments') }}</th>
+                                <th title="{{__('additional_hours_tooltip.date')}}">{{ __('additional_hours.date') }}</th>
+                                <th title="{{__('additional_hours_tooltip.hours')}}">{{ __('additional_hours.hours') }}</th>
+                                <th title="{{__('additional_hours_tooltip.rate')}}">{{ __('additional_hours.rate') }}</th>
+                                <th title="{{__('general.actions')}}">{{ __('general.actions') }}</th>
                             </tr>
                             </thead>
 
@@ -164,7 +166,7 @@
                             <div class="uk-width-medium-1-3" id="datatables-pagination"></div>
                             <div class="uk-width-medium-1-3">
                                 <a class="md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light"
-                                   href="#" id="add-new">{{ __('additional_hours.add_new') }}</a>
+                                   href="#" id="add-new" title="{{__('additional_hours.add_new')}}">{{ __('additional_hours.add_new') }}</a>
                             </div>
                         </div>
                     @endif
@@ -175,15 +177,17 @@
 @endsection
 
 @section('create_div')
-    @component('additional_hour/create', ['users' => $users,
-     'projectRoles'          => $projectRoles,
-                'seniorities'          => $seniorities,
-                'countries'          => $countries,
-'company'          => $company,
-
-                'currencies'          => $currencies,
-                'cities'          => $cities,
-                'offices'          => $offices,])
+    @component('additional_hour/create', [
+        'users' => $users,
+        'projectRoles'  => $projectRoles,
+        'seniorities'   => $seniorities,
+        'countries'     => $countries,
+        'company'       => $company,
+        'currencies'    => $currencies,
+        'cities'        => $cities,
+        'offices'       => $offices,
+        'url'           => Request::path()
+    ])
 
     @endcomponent
 @endsection

@@ -11,7 +11,7 @@ class MaterialController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit']);
     }
 
     /**
@@ -54,14 +54,17 @@ class MaterialController extends Controller
     public function store(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'detail'      => 'required',
-			'amount'      => 'required',
+			'amount'      => 'numeric|required',
 			'company_id'  => 'required',
 			'currency_id' => 'required'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('POST', 'materials', $data);
 
@@ -90,13 +93,16 @@ class MaterialController extends Controller
     public function update(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'detail'      => 'required',
-			'amount'      => 'required',
+			'amount'      => 'numeric|required',
 			'currency_id' => 'required'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('PATCH', 'materials/'.$data['id'], $data);
 
@@ -169,7 +175,8 @@ class MaterialController extends Controller
         $company = $this->getFromApi('GET', 'companies/fromUser/' . Auth::id());
         $array = array();
         try {
-            $this->validate($request, [
+            $validator =Validator::make($request->all(), [
+
                 'file' => 'required'
             ]);
 
@@ -179,16 +186,16 @@ class MaterialController extends Controller
 
 
 
+            $item = array();
             foreach ($array as $value) {
 
 
                 if (isset($value[1])) {
-                    $item = array();
 
 
 
-                    $curency_amount = $this->getFromApi('GET', 'currencies/?code=' . $value[4] . '&company_id=' . $company->id);
-                    $curency_cost = $this->getFromApi('GET', 'currencies/?code=' . $value[5] . '&company_id=' . $company->id);
+                    $curency_amount = $this->getFromApi('GET', 'currencies?code=' . $value[4] . '&company_id=' . $company->id);
+                    $curency_cost = $this->getFromApi('GET', 'currencies?code=' . $value[5] . '&company_id=' . $company->id);
 
 
 

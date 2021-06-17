@@ -1,6 +1,6 @@
 <?php
 return [
-	'seniorities'   => 'Seniorities',
+	'seniorities'   => 'Seniorities:',
 	'add_new'       => 'ADD NEW',
 	'update'        => 'UPDATE',
 	'id'            => 'ID',

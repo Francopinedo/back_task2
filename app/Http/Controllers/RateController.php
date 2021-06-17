@@ -11,7 +11,7 @@ class RateController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit']);
     }
 
     /**
@@ -74,11 +74,12 @@ class RateController extends Controller
     public function store(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'company_id'      => 'required',
 			'country_id'      => 'required',
 			'title'           => 'required',
-			'value'           => 'required',
+			'value'           => 'numeric|required',
 			'currency_id'     => 'required',
 			'workplace'       => 'required',
 			'project_role_id' => 'required',
@@ -86,7 +87,9 @@ class RateController extends Controller
 			'seniority_id'    => 'required'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('POST', 'rates', $data);
 
@@ -115,16 +118,19 @@ class RateController extends Controller
     public function update(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'country_id'  => 'required',
 			'title'       => 'required',
-			'value'       => 'required',
+			'value'       => 'numeric|required',
 			'currency_id' => 'required',
 			'office_id' => 'required',
 			'workplace'   => 'required'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('PATCH', 'rates/'.$data['id'], $data);
 

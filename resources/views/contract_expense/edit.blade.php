@@ -60,7 +60,7 @@
 				<div class="md-input-wrapper">
 					<select name="frequency" id="frequency" required data-md-selectize>
 						<option value="">{{ __('contracts.frequency') }}...</option>
-						<option value="anualy" {{ ( $contractExpense->frequency == 'monthly') ? 'selected' : '' }}>{{ __('contracts.anualy') }}</option>
+						<option value="anualy" {{ ( $contractExpense->frequency == 'anualy') ? 'selected' : '' }}>{{ __('contracts.anualy') }}</option>
 						<option value="semester" {{ ( $contractExpense->frequency == 'semester') ? 'selected' : '' }}>{{ __('contracts.semester') }}</option>
 						<option value="quarterly" {{ ( $contractExpense->frequency == 'quarterly') ? 'selected' : '' }}>{{ __('contracts.quarterly') }}</option>
 						<option value="bimonthly" {{ ( $contractExpense->frequency == 'bimonthly') ? 'selected' : '' }}>{{ __('contracts.bimonthly') }}</option>

@@ -1,0 +1,47 @@
+<template>
+        <v-bottom-navigation
+            :value="activeBtn"
+            color="primary"
+            horizontal
+            absolute
+            :scroll-off-screen="true"
+        >
+            <v-btn to="INBOX">
+                <span>Inbox</span>
+                <v-icon>mdi-email</v-icon>
+            </v-btn>
+
+            <v-btn to="Sent">
+                <span>Enviados</span>
+                <v-icon>mdi-email-receive</v-icon>
+            </v-btn>
+
+            <v-btn to="Trash">
+                <span>Eliminados</span>
+                <v-icon>mdi-email-minus</v-icon>
+            </v-btn>
+
+            <v-btn to="Junk">
+                <span>Spam</span>
+                <v-icon>mdi-email-search</v-icon>
+            </v-btn>
+
+        </v-bottom-navigation>
+
+</template>
+<script>
+    export default {
+        data () {
+            return {
+                folderResponse: null,
+                activeBtn: null,
+            }
+        },
+        mounted() {
+            axios
+                .get(window.hostKey+'/api/folders?'+'username='+window.clientKey+'&'+'secret='+window.secretKey)
+                .then(response => (this.folderResponse = response.data))
+        }
+    }
+</script>
+

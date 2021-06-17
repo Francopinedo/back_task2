@@ -11,7 +11,7 @@ class ContractResourceController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit', 'deletecontrol']);
     }
 
     /**
@@ -50,11 +50,17 @@ class ContractResourceController extends Controller
     public function store(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'contract_id'     => 'required',
 			'project_role_id' => 'required',
 			'seniority_id'    => 'required',
-			'rate'            => 'required',
+			'rate'            => 
+
+
+
+
+'numeric|required',
 
 		//	'rate_id'            => 'required',
 			'currency_id'     => 'required',
@@ -66,7 +72,9 @@ class ContractResourceController extends Controller
             'load'            => 'required|numeric|max:100'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('POST', 'contract_resources', $data);
 
@@ -127,7 +135,8 @@ class ContractResourceController extends Controller
     public function update(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'project_role_id' => 'required',
 			'seniority_id'    => 'required',
 			'currency_id'     => 'required',
@@ -135,13 +144,20 @@ class ContractResourceController extends Controller
             'city_id'     => 'required',
 			'country_id'     => 'required',
 			'office_id'     => 'required',
-			'rate'     => 'required',
+			'rate'     => 
+
+
+
+
+'numeric|required',
 			'workplace'       => 'required',
 			'qty'             => 'required',
 			'load'            => 'required|numeric|max:100'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('PATCH', 'contract_resources/'.$data['id'], $data);
 

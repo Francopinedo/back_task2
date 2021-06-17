@@ -1,0 +1,27 @@
+<?php
+return [
+	'providers'       => 'Providers',
+	'add_new'         => 'ADD NEW',
+	'update'          => 'UPDATE',
+	'id'              => 'ID',
+	'name'            => 'Name',
+	'address'         => 'Address',
+	'country'         => 'Country',
+	'city'            => 'City',
+	'email_1'         => 'Email 1',
+	'email_2'         => 'Email 2',
+	'email_3'         => 'Email 3',
+	'phone_1'         => 'Phone 1',
+	'phone_2'         => 'Phone 2',
+	'phone_3'         => 'Phone 3',
+	'billing_name'    => 'Billing Name: Name to be used in Billing',
+	'billing_address' => 'Billing Addresss: Address to be used in Billing',
+	'tax_number'      => 'Tax Number',
+	'bank_name'       => 'Bank Name',
+	'account_number'  => 'Account Number',
+	'swiftcode'       => 'Swift Code:  WorldWide (up to 11 characters)',
+	'aba'             => 'ABA: USA ONLY (up to 9 digits)',
+	'currency'        => 'Currency: Billing Currency',
+	'industry'        => 'Industry: Industry the Provider Belong To',
+	'logo_path'       => 'Logo'
+];

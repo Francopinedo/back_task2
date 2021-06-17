@@ -11,7 +11,7 @@ class ContractServiceController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit', 'deletecontrol']);
     }
 
     /**
@@ -39,16 +39,19 @@ class ContractServiceController extends Controller
     public function store(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'contract_id' => 'required',
-			'cost'        => 'required',
+			'cost'        => 'numeric|required',
 			'frequency'        => 'required',
 			'detail'        => 'required',
-			'amount'        => 'required',
+			'amount'        => 'numeric|required',
 			'currency_id' => 'required'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('POST', 'contract_services', $data);
 
@@ -95,15 +98,18 @@ class ContractServiceController extends Controller
     public function update(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
-			'cost'        => 'required',
-			'amount'        => 'required',
+    	$validator =Validator::make($request->all(), [
+
+			'cost'        => 'numeric|required',
+			'amount'        => 'numeric|required',
 			'frequency'        => 'required',
 			'detail'        => 'required',
 			'currency_id' => 'required'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('PATCH', 'contract_services/'.$data['id'], $data);
 

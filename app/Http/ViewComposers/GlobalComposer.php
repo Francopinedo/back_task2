@@ -21,6 +21,7 @@ class GlobalComposer {
     	if (Auth::check()) {
 			$client = new GuzzleHttpClient();
 			$params['http_errors'] = false;
+			$params['timeout'] = 300;
 
 			$url = env('API_PATH').'favorites/fromUser/'.Auth::id();
 

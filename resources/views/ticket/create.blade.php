@@ -1,23 +1,22 @@
 <style>
 
     #create_div.switcher_active {
-        width: 600px;
+        width: 70%;
     }
 
-    .uk-width-medium-1-2 {
-        padding: 5px
-    }
+   
 </style>
+ <form role="form" method="POST" action="{{ url('tickets') }}" id="data-form"
+              data-redirect-on-success="{{ url('tasks/'.$task->id.'/tickets') }}">
 <div class="uk-grid" data-uk-grid-margin>
-    <div class="uk-width-1-1">
+  
 
         <div class="uk-alert uk-alert-danger hide_when_empty" data-uk-alert="" id="status_code-error"></div>
 
-        <form role="form" method="POST" action="{{ url('tickets') }}" id="data-form"
-              data-redirect-on-success="{{ url('tasks/'.$task->id.'/tickets') }}">
+    
             {{ csrf_field() }}
             <input type="hidden" name="task_id" value="{{ $task->id }}">
-            <div class="uk-width-medium-1-2 uk-row-first">
+            <li class="uk-width-medium-1-3 uk-row-first">
 
                 <div class="md-input-wrapper">
                     <label>{{ __('tickets.description') }}</label>
@@ -79,7 +78,8 @@
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required due_date-error"></span></div>
                 <label>{{ __('tickets.requester') }}</label>
-                <div class="md-input-wrapper">
+				          
+						  <div class="md-input-wrapper">
 
                     <select name="requester_name" data-md-selectize>
                         <option value="">{{ __('tickets.requester') }}</option>
@@ -104,7 +104,14 @@
                     </select>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required priority-error"></span></div>
-                <label>{{ __('tickets.severity') }}</label>
+                
+				   </li>
+
+            <li class="uk-width-medium-1-3 uk-row-first">
+
+
+   
+				<label>{{ __('tickets.severity') }}</label>
                 <div class="md-input-wrapper">
 
                     <select name="severity" id="severity">
@@ -131,10 +138,7 @@
                     </select>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required probability-error"></span></div>
-            </div>
-
-            <div class="uk-width-medium-1-2 uk-row-first">
-
+        
 
                 <label>{{ __('tickets.impact') }}</label>
                 <div class="md-input-wrapper">
@@ -160,8 +164,7 @@
                     <input type="text" class="md-input" name="release" required><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required release-error"></span></div>
-
-                <div class="md-input-wrapper">
+				<div class="md-input-wrapper">
                     <label>{{ __('tickets.estimated_hours') }}</label>
                     <input type="number" class="md-input" name="estimated_hours"  value="{{isset($task->estimated_hours)?$task->estimated_hours:''}}"  required><span
                             class="md-input-bar"></span>
@@ -183,6 +186,12 @@
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required story_points-error"></span></div>
 
+			</li>
+
+            <li class="uk-width-medium-1-3 uk-row-first">
+
+
+              
                 <div class="md-input-wrapper">
                     <label>{{ __('tasks.approval_date') }}</label>
                     <input class="md-input" type="text" id="approval_date" name="approval_date"
@@ -206,7 +215,7 @@
 
                 <div class="md-input-wrapper">
                     <label>{{ __('tickets.acceptance_criteria') }}</label>
-                    <input type="text" class="md-input" name="acceptance_criteria" required><span
+                    <textarea class="md-input" name="acceptance_criteria" required></textarea><span
                             class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required acceptance_criteria-error"></span>
@@ -214,28 +223,30 @@
 
                 <div class="md-input-wrapper">
                     <label>{{ __('tickets.testing_name') }}</label>
-                    <input type="text" class="md-input" name="testing_name" required><span class="md-input-bar"></span>
+                    <textarea class="md-input" name="testing_name" required></textarea><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required testing_name-error"></span></div>
 
                 <div class="md-input-wrapper">
                     <label>{{ __('tickets.done_name') }}</label>
-                    <input type="text" class="md-input" name="done_name" required><span class="md-input-bar"></span>
+                    <textarea class="md-input" name="done_name" required></textarea><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required done_name-error"></span></div>
 
                 <div class="md-input-wrapper">
                     <label>{{ __('tickets.label') }}</label>
-                    <input type="text" class="md-input" name="label" required><span class="md-input-bar"></span>
+                    <textarea class="md-input" name="label" required></textarea><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required label-error"></span></div>
 
                 <div class="md-input-wrapper">
                     <label>{{ __('tickets.comment') }}</label>
-                    <input type="text" class="md-input" name="comment" required><span class="md-input-bar"></span>
+					<textarea  class="md-input" name="comment" required></textarea><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required comment-error"></span></div>
-                <label>{{ __('tickets.owner') }}</label>
+              
+				
+				  <label>{{ __('tickets.owner') }}</label>
                 <div class="md-input-wrapper">
                     <select name="owner_id" data-md-selectize>
                         <option value="">{{ __('tickets.owner') }}</option>
@@ -245,21 +256,31 @@
                     </select>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required owner_id-error"></span></div>
-            </div>
-            <div class="uk-width-medium-1-1 uk-pading-left">
+
+   		<div class="md-input-wrapper">
+                    <label>{{ __('tickets.contingency_plan') }}</label>
+                    <textarea laceholder="just fill in Risk Type Tickets" class="md-input" name="contingency_plan" ></textarea><span class="md-input-bar"></span>
+                </div>
+                <div class="parsley-errors-list filled"><span class="parsley-required contingency_plan-error"></span></div>
+              
+            </li>
+			
+			
+			
+            <li class="uk-width-medium-1-1 uk-pading-left">
                 <div class="uk-margin-medium-top">
                     <a class="md-btn md-btn-primary md-btn-wave-light md-btn-block waves-effect waves-button waves-light"
                        href="#" id="add-btn">{{ __('cities.add_new') }}</a>
                     <a class="md-btn md-btn-flat md-btn-wave md-btn-block waves-effect waves-button" href="#"
                        id="cancel-btn">{{ __('general.cancel') }}</a>
                 </div>
-            </div>
+            </li>
 
 
-        </form>
-    </div>
+       
+  
 </div>
-
+ </form>
     <script src="{{ asset('js/ticket.js') }}"></script>
     <script>
         $(document).ready(function () {

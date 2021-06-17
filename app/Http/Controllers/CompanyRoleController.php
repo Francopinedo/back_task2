@@ -11,7 +11,7 @@ class CompanyRoleController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit']);
     }
 
     /**
@@ -55,11 +55,14 @@ class CompanyRoleController extends Controller
     public function store(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'title'      => 'required'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('POST', 'company_roles', $data);
 
@@ -85,11 +88,14 @@ class CompanyRoleController extends Controller
     public function update(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'title'      => 'required'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('PATCH', 'company_roles/'.$data['id'], $data);
 
@@ -140,4 +146,58 @@ class CompanyRoleController extends Controller
 
     	return redirect()->action('CompanyRoleController@index');
     }
+
+
+  public function import()
+    {
+
+        return response()->json([
+            'view' => view('company_role/import')->render()
+        ]);
+    }
+
+  public function do_import(Request $request)
+    {
+
+        $array = array();
+        try {
+            $validator =Validator::make($request->all(), [
+
+                'file' => 'required'
+            ]);
+
+            $file = $request->file('file');
+
+            $array = procces_import($file);
+
+            //var_dump($array);
+
+    		$company =array();
+            $item = array();
+            $company = $this->getFromApi('GET', 'companies/fromUser/' . Auth::id());
+
+            $item['company_id'] = $company->id;
+         	$item['added_by'] = Auth::id();
+
+            foreach ($array as $value) {
+                //var_dump($city);
+                //  var_dump($industry);
+                if (isset($city[0]) && isset($country[0])) {
+
+                    $item['title'] = $value[0];
+
+                    $this->apiCall('POST', 'company_roles', $item);
+                }
+                
+            }
+        } catch (FileException $exception) {
+
+            return response()->json(array('success' => false, 'message' => 'Error uplading file'));
+        }
+
+        return response()->json(array('success' => true));
+    }
+
+
+
 }

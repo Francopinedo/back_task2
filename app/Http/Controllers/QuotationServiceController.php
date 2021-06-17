@@ -11,7 +11,7 @@ class QuotationServiceController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit']);
     }
 
     /**
@@ -39,15 +39,18 @@ class QuotationServiceController extends Controller
     public function store(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'quotation_id' => 'required',
-			'cost'        => 'required',
-			'amount'        => 'required',
+			'cost'        => 'numeric|required',
+			'amount'        => 'numeric|required',
 			'detail'        => 'required',
 			'currency_id' => 'required'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('POST', 'quotation_services', $data);
 
@@ -97,14 +100,17 @@ class QuotationServiceController extends Controller
     public function update(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
-			 'cost'        => 'required',
-			'amount'        => 'required',
+    	$validator =Validator::make($request->all(), [
+
+			 'cost'        => 'numeric|required',
+			'amount'        => 'numeric|required',
 			'detail'        => 'required',
 			 'currency_id' => 'required'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('PATCH', 'quotation_services/'.$data['id'], $data);
 

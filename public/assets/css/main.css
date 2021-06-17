@@ -18,6 +18,62 @@
 /* 1. altair variables/mixins ======================== */
 /* 2. UIkit custom styles ============================ */
 /* animations */
+
+
+/*Custom Material DEsign */
+
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url(../icons/material-design-icons/MaterialIcons-Regular.eot); /* For IE6-8 */
+  src: local('Material Icons'),
+    local('MaterialIcons-Regular'),
+    url(../icons/material-design-icons/MaterialIcons-Regular.woff2) format('woff2'),
+    url(../icons/material-design-icons/MaterialIcons-Regular.woff) format('woff'),
+    url(../icons/material-design-icons/MaterialIcons-Regular.ttf) format('truetype');
+}
+
+
+@font-face {
+  font-family: 'FontAwesome';
+  src: url(../../bower_components/font-awesome/fonts/fontawesome-webfont.eot);
+    src: local('FontAwesome'),
+    url(../../bower_components/font-awesome/fonts/fontawesome-webfont.woff) format('woff'),
+    url(../../bower_components/font-awesome/fonts/fontawesome-webfont.woff2) format('woff2'),
+    url(../../bower_components/font-awesome/fonts/fontawesome-webfont.ttf) format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* raleway-regular - latin */
+@font-face {
+  font-family: 'Raleway';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/raleway-v14-latin/raleway-v14-latin-regular.eot'); /* IE9 Compat Modes */
+  src: local('Raleway'), local('Raleway-Regular'),
+       url('../fonts/raleway-v14-latin/raleway-v14-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+       url('../fonts/raleway-v14-latin/raleway-v14-latin-regular.woff') format('woff'), /* Modern Browsers */
+       url('../fonts/raleway-v14-latin/raleway-v14-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+}
+
+/*----------------------------------------*/
+/* Roboto - latin */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/Roboto/Roboto-Regular-webfont.eot'); /* IE9 Compat Modes */
+  src: local('Roboto'), local('Roboto'),
+       url('../fonts/Roboto/Roboto-Regular-webfont.woff2') format('woff2'), /* Super Modern Browsers */
+       url('../fonts/Roboto/Roboto-Regular-webfont.woff') format('woff'), /* Modern Browsers */
+       url('../fonts/Roboto/Roboto-Regular-webfont.ttf') format('truetype'), /* Safari, Android, iOS */
+}
+
+ 
+
+
 [class^="uk-animation-"] {
   -webkit-animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -610,7 +666,7 @@
 .uk-table tfoot th {
   font-style: normal;
   font-weight: 400;
-  color: #727272;
+  color: #424242;;
   font-size: 14px;
 }
 .uk-table td {
@@ -4120,6 +4176,7 @@ body > .content-preloader.preloader-active {
 }
 .md-bg-red-500 {
   background-color: #f44336 !important;
+
 }
 .md-color-red-600 {
   color: #e53935 !important;
@@ -11020,6 +11077,7 @@ div.kineticjs-content {
 }
 #header_main .uk-navbar .uk-navbar-nav {
   position: relative;
+  right: 3%;
 }
 #header_main .uk-navbar .uk-navbar-nav > li {
   position: static;
@@ -11034,6 +11092,11 @@ div.kineticjs-content {
   height: 48px;
   z-index: auto;
   cursor: pointer;
+}
+@media only screen and (min-width: 1024px) {
+.uk-navbar-nav .user_actions > li{
+  font-size: 12px;
+}
 }
 @media only screen and (max-width: 767px) {
   #header_main .uk-navbar .uk-navbar-nav > li > a {
@@ -11101,7 +11164,7 @@ div.kineticjs-content {
 }
 #header_main .user_actions a.user_action_image {
   position: relative;
-  line-height: 48px !important;
+ /* line-height: 48px !important;*/
 }
 #header_main .user_actions .user_action_icon {
   display: block;
@@ -11126,6 +11189,8 @@ div.kineticjs-content {
   line-height: 14px;
   border-radius: 2px;
 }
+
+
 #header_main .sSwitch {
   cursor: pointer;
   margin: 12px 0 0;
@@ -11301,7 +11366,7 @@ div.kineticjs-content {
 .main_logo_top {
   float: left;
   line-height: 48px;
-  min-width: 240px;
+  min-width: 200px;
   display: block;
 }
 @media only screen and (max-width: 767px) {
@@ -13832,10 +13897,18 @@ address p + p {
 #header_main .uk-navbar .uk-navbar-nav > li#project_selection {
   margin: 0 30px;
 }
-#header_main .uk-navbar .uk-navbar-nav > li#project_selection a {
-  color: #2196f3;
+
+#header_main .uk-navbar .uk-navbar-nav .app_theme_default > li#project_selection a {
+  color: #444!important;
+  padding: 2px 10px;
+
+}
+#header_main .uk-navbar .uk-navbar-nav .app_theme_dark > li#project_selection a {
+  color: #f9f9f9!important;
   padding: 2px 10px;
 }
+
+
 /*FIX para Sidebar*/
 .sidebar_mini .menu_title {
   display: none;
@@ -13859,7 +13932,7 @@ address p + p {
 }
 .second_level li,
 .second_level a {
-  color: #777!important;
+  color: #000!important;
 }
 /*FIX para el menu de kendo*/
 .menu_section_alternative #kUI_menu {
@@ -14103,6 +14176,7 @@ div[class^="new_department_div_"],
 
 .uk-table tbody td{
   font-size: 13px!important;
+color:#424242!important;
 
 }
 
@@ -14115,4 +14189,233 @@ table {table-layout: fixed;}
   width: 215px!important;
 }
 
-.uk-width-medium-1-2{float:left}
+.uk-width-medium-1-2{float:left;list-style: none;}
+.uk-width-medium-1-1{list-style: none;}
+
+
+.md-bg-red-500-notes {
+  border-top-color: #f44336 !important;
+border-top-width: 10px !important;
+border-top-style: solid !important;
+}
+.md-bg-yellow-500-notes {
+  border-top-color: #ffeb3b !important;
+border-top-width: 10px !important;
+border-top-style: solid !important;
+}
+.md-bg-green-500-notes {
+  border-top-color: #4caf50 !important;
+border-top-width: 10px !important;
+border-top-style: solid !important;
+}
+
+.md-bg-white-500-notes {
+  border-top-color: #fff !important;
+border-top-width: 10px !important;
+border-top-style: solid !important;
+}
+
+#contract_working_hours
+{
+font: 400 15px / 18px "Roboto", sans-serif !important;
+}
+
+
+@media screen and (min-width:800px)
+{
+  .uk-navbar-nav > li#name{
+      font-size: 13px;
+  }
+}
+.app_theme_h #header_main .uk-navbar .uk-navbar-nav > li#name {
+  margin: 12px 30px;
+color:#fff;
+}
+
+.app_theme_d .k-link{
+color:#fff;
+}
+
+.app_theme_a .k-link{
+color:#fff;
+}
+
+.app_theme_b .k-link{
+color:#fff;
+}
+
+.app_theme_c .k-link{
+color:#fff;
+}
+.app_theme_d .k-link{
+color:#fff;
+}
+
+.app_theme_e .k-link{
+color:#fff;
+}
+.app_theme_f .k-link{
+color:#fff;
+}
+.app_theme_g .k-link{
+color:#fff;
+}
+.app_theme_h .k-link{
+color:#fff;
+}
+
+.app_theme_dark .k-link>span#text{
+color:#000;
+}
+.app_theme_dark .k-link .fa{
+color:#ddd;
+}
+.app_theme_i .k-link .fa{
+color:#fff;
+}
+
+.app_theme_b #header_main .uk-navbar .uk-navbar-nav > li#name {
+  margin: 12px 30px;
+color:#fff;
+}
+
+.app_theme_a #header_main .uk-navbar .uk-navbar-nav > li#name {
+  margin: 12px 30px;
+color:#fff;
+}
+
+
+.app_theme_default .menu_section_alternative .k-item .k-state-default > span.k-link {
+color:#000;
+}
+.app_theme_a .menu_section_alternative .k-item .k-state-default > span.k-link {
+color:#000;
+}
+.app_theme_b .menu_section_alternative .k-item .k-state-default > span.k-link {
+color:#000;
+}
+.app_theme_c .menu_section_alternative .k-item .k-state-default > span.k-link {
+color:#000;
+}
+.app_theme_d .menu_section_alternative .k-item .k-state-default > span.k-link {
+color:#000;
+}
+.app_theme_e .menu_section_alternative .k-item .k-state-default > span.k-link {
+color:#000;
+}
+
+.app_theme_f .menu_section_alternative .k-item .k-state-default > span.k-link {
+color:#000;
+}
+
+.app_theme_g .menu_section_alternative .k-item .k-state-default > span.k-link {
+color:#000;
+}
+
+.app_theme_h .menu_section_alternative .k-item .k-state-default > span.k-link {
+color:#000;
+}
+
+.app_theme_i .menu_section_alternative .k-item .k-state-default > span.k-link {
+color:#000;
+}
+
+
+
+
+.app_theme_c #header_main .uk-navbar .uk-navbar-nav > li#name {
+  margin: 12px 30px;
+color:#fff;
+}.app_theme_d #header_main .uk-navbar .uk-navbar-nav > li#name {
+  margin: 12px 30px;
+color:#fff;
+}
+.app_theme_e #header_main .uk-navbar .uk-navbar-nav > li#name {
+  margin: 12px 30px;
+color:#fff;
+}
+.app_theme_f #header_main .uk-navbar .uk-navbar-nav > li#name {
+  margin: 12px 30px;
+color:#fff;
+}
+.app_theme_g #header_main .uk-navbar .uk-navbar-nav > li#name {
+  margin: 12px 30px;
+color:#fff;
+}
+.app_theme_dark #header_main .uk-navbar .uk-navbar-nav > li#name {
+   margin: 12px 30px;
+color:#f9f9f9;
+}
+.app_theme_i #header_main .uk-navbar .uk-navbar-nav > li#name {
+   margin: 12px 30px;
+color:#f9f9f9;
+}
+
+#projectname
+{
+color:#fff;
+ margin: 12px 30px;
+}
+
+.app_theme_a .table-actions > i{
+  color:#AAA;
+}
+
+.app_theme_dark .taskEditRow td >a>i{
+  color:#666;
+}
+.app_theme_dark .taskEditRow.rowSelected td >a>i{
+  color:#666;
+}
+.app_theme_a .taskEditRow.rowSelected td >a>i{
+  color:#666;
+}
+.app_theme_b .taskEditRow.rowSelected td >a>i{
+  color:#666;
+}
+.app_theme_c .taskEditRow.rowSelected td >a>i{
+  color:#666;
+}
+.app_theme_d .taskEditRow.rowSelected td >a>i{
+  color:#666;
+}
+.app_theme_e .taskEditRow.rowSelected td >a>i{
+  color:#666;
+}
+.app_theme_f .taskEditRow.rowSelected td >a>i{
+  color:#666;
+}
+.app_theme_g .taskEditRow.rowSelected td >a>i{
+  color:#666;
+}
+.app_theme_h .taskEditRow.rowSelected td >a>i{
+  color:#666;
+}
+.app_theme_i .taskEditRow.rowSelected td >a>i{
+  color:#666;
+}
+
+
+.app_theme_b .table-actions > i{
+  color:#AAA;
+}
+.app_theme_c .table-actions > i{
+  color:#AAA;
+}
+.app_theme_d .table-actions > i{
+  color:#AAA;
+}
+.app_theme_e .table-actions > i{
+  color:#AAA;
+}
+.app_theme_f .table-actions > i{
+  color:#AAA;
+}
+.app_theme_g .table-actions > i{
+  color:#AAA;
+}
+.app_theme_h .table-actions > i{
+  color:#AAA;
+}.app_theme_i .table-actions > i{
+  color:#AAA;
+}

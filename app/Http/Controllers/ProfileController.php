@@ -18,7 +18,7 @@ class ProfileController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit']);
     }
 
     /**
@@ -28,19 +28,26 @@ class ProfileController extends Controller
     {
         $user = User::find(Auth::id());
         $company = $this->getFromApi('GET', 'companies/fromUser/' . Auth::id());
-        $res = $this->apiCall('GET', 'cities?company_id=' . $company->id);
+	if(!empty($company)){
+        $res = $this->apiCall('GET', 'cities?company_id=' .$company->id);
+	}else{
+	$res = $this->apiCall('GET', 'cities');
+	}
         $cities = json_decode($res->getBody()->__toString())->data;
         $file='';
         if(Storage::disk('public')->has('users/profile/'.$user->id."/".$user->profile_image_path)){
-            $file = Storage::disk('public')->url('users/profile/'.$user->id."/".$user->profile_image_path);
+            $file = Storage::disk('public')->url('app/public/users/profile/'.$user->id."/".$user->profile_image_path);
 
-        }
-
+        }  
+        
+        $res = $this->apiCall('GET', 'languages?company_id=' . $company->id);
+        $languages = json_decode($res->getBody()->__toString())->data;
 
         return view('profile/edit', [
             'cities' => $cities,
+            'languages' => $languages,
             'user' => $user,
-            'file' => $file,
+            'file' => $user->profile_image_path,//$file,
         ]);
     }
 
@@ -53,11 +60,14 @@ class ProfileController extends Controller
         $company = $this->getFromApi('GET', 'companies/fromUser/' . Auth::id());
         $res = $this->apiCall('GET', 'cities?company_id=' . $company->id);
         $cities = json_decode($res->getBody()->__toString())->data;
-        $file = Storage::disk('public')->get('/users/profile/'.$user->id."/".$user->profile_image_path);
+        $file = Storage::disk('public')->get('app/public/users/profile/'.$user->id."/".$user->profile_image_path);
 
+        $file = Storage::disk('public')->get('app/public/users/profile/'.$user->id."/".$user->profile_image_path);
+        $res = $this->apiCall('GET', 'languages?company_id=' . $company->id);
+        $languages = json_decode($res->getBody()->__toString())->data;
         return view('profile/edit', [
             'cities' => $cities,
-            'file' => $file,
+            'file' => $user->profile_image_path,//$file,
             'user' => $user
         ]);
     }
@@ -68,17 +78,31 @@ class ProfileController extends Controller
      */
     public function update(Request $request)
     {
+  	$user = User::find(Auth::id());
+       
+        
 
         $file = $request->file('profile_image_path');
 
         // validacion del formulario
-        $this->validate($request, [
+        $validator =Validator::make($request->all(), [
+
             'name' => 'required',
-            'email' => 'required'
+            'email' => 'required|email'
         ]);
 
-        $data = $request->all();
-        $data['profile_image_path'] =$file!=null ? $file->getClientOriginalName() : '';
+        if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
+
+	   if(isset($data['tooltip']) && $data['tooltip']=='0' )
+           {
+            $data['tooltip']='1';
+           }else{
+            $data['tooltip']='0';
+           }
+//return $data;
+        $data['profile_image_path'] =($file!=null || $file!='') ? $file->getClientOriginalName() : $user->profile_image_path;
         $res = $this->apiCall('PATCH', 'users/' . $data['id'], $data);
 
         // validacion de la respuesta del api
@@ -91,12 +115,14 @@ class ProfileController extends Controller
         } else {
 
 
-            $destinationPath = "app/public/users/profile/" . $data['id'];
+            $destinationPath = "assets/img/users/profile/" . $data['id'].'/';
             // echo $file->getClientOriginalName();
-            if($file!=null) {
-                $file->move(storage_path($destinationPath), $file->getClientOriginalName());
+	
+            if($file!=null || $file!='') {
+                $file->move(($destinationPath), $file->getClientOriginalName());
 
             }
+
             session()->flash('message', __('general.updated'));
             session()->flash('alert-class', 'success');
         }
@@ -112,18 +138,25 @@ class ProfileController extends Controller
             $file = $request->file('profile_image_path');
 
             // validacion del formulario
-            $this->validate($request, [
+            $validator =Validator::make($request->all(), [
+
                 'profile_image_path' => 'required',
             ]);
 
-            $data = $request->all();
+            if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
             $data['profile_image_path'] = !isNull($file) ? $file->getClientOriginalName() : '';
             //$res = $this->apiCall('PATCH', 'users/' . $id, $data);
 
 
-            $destinationPath = "app/public/users/profile/" . $id;
+            $destinationPath = "assets/img/users/profile/" . $id.'/';
             // echo $file->getClientOriginalName();
-            $file->move(storage_path($destinationPath), $file->getClientOriginalName());
+ 	if($file!=null || $file!='') {
+                $file->move(($destinationPath), $file->getClientOriginalName());
+
+            }
+
 
 
         } catch (FileException $exception) {

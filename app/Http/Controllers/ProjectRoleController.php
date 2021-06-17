@@ -11,7 +11,7 @@ class ProjectRoleController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit']);
     }
 
     /**
@@ -49,11 +49,14 @@ class ProjectRoleController extends Controller
     public function store(Request $request)
     {
         // validacion del formulario
-        $this->validate($request, [
+        $validator =Validator::make($request->all(), [
+
             'title' => 'required'
         ]);
 
-        $data = $request->all();
+        if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
         $res = $this->apiCall('POST', 'project_roles', $data);
 
@@ -76,11 +79,14 @@ class ProjectRoleController extends Controller
     public function update(Request $request)
     {
         // validacion del formulario
-        $this->validate($request, [
+        $validator =Validator::make($request->all(), [
+
             'title' => 'required'
         ]);
 
-        $data = $request->all();
+        if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
         $res = $this->apiCall('PATCH', 'project_roles/' . $data['id'], $data);
 
@@ -128,174 +134,52 @@ class ProjectRoleController extends Controller
 
     public function import()
     {
-
-        $company = $this->getFromApi('GET', 'companies/fromUser/' . Auth::id());
-
-        $cities = $this->getFromApi('GET', 'cities');
-
-        return response()->json([
-            'view' => view('project_role/import', [
-
-                'company' => $company,
-                'cities' => $cities
-            ])->render()
+    return response()->json([
+            'view' => view('project_role/import')->render()
         ]);
     }
 
     public function do_import(Request $request)
     {
-
         $company = $this->getFromApi('GET', 'companies/fromUser/' . Auth::id());
         $array = array();
         try {
-            $this->validate($request, [
+            $validator =Validator::make($request->all(), [
+
                 'file' => 'required'
             ]);
 
             $file = $request->file('file');
 
             $array = procces_import($file);
-
-
+            $item = array();
             foreach ($array as $value) {
-
                 if (isset($value[0])) {
-                    $item = array();
-
 
                     $item['title'] = $value[0];
                     $item['company_id'] = $company->id;
 
-                    $this->apiCall('POST', 'project_roles', $item);
+        $res =   $this->apiCall('POST', 'project_roles', $item);
+    if (!empty(json_decode($res->getBody()->__toString(), TRUE)['error']))
+        {
+            $jsonRes = json_decode($res->getBody()->__toString(), TRUE)['error'];
+             return response()->json(array('success' => false, 'message' => 'Error with format file, some rows not import'));
+        }
 
                 }
             }
-        } catch (FileException $exception) {
 
-            return response()->json(array('success' => false, 'message' => 'Error uplading file'));
-        }
+       } catch (Exception $exception) {
 
-        return response()->json(array('success' => true));
+          return response()->json(array('success' => false, 'message' => 'Error with format file'));
+       }
+
+            session()->flash('message', __('general.added'));
+            session()->flash('alert-class', 'success');
+        return response()->json(array('success' => true));    
+
     }
 
 
 
-
-    /**
-     * Form para crear template de studios
-     */
-    // public function create()
-    // {
-    // 	return view('studio_template/create');
-    // }
-
-    /**
-     * Form para editar template de studio
-     * @param  int $id ID
-     */
-    // public function edit($id){
-    // 	$studioTemplate = StudioTemplate::find($id);
-
-    // 	return response()->json([
-    // 		'view' => view('studio_template/edit', ['studioTemplate' => $studioTemplate] )->render(),
-    // 	]);
-    // }
-
-    /**
-     * Crear nuevo template de studio
-     */
-    //  public function store(Request $request)
-    //  {
-    //  	// validacion del formulario
-    //  	$this->validate($request, [
-    // 'title'     => 'required'
-    //   ]);
-
-    //  	$data = $request->all();
-
-    //  	$res = $this->apiCall('POST', 'seniorities_roles', $data);
-
-
-    //  	// validacion de la respuesta del api
-    //  	if (!empty(json_decode($res->getBody()->__toString(), TRUE)['error']))
-    //  	{
-    //   	$jsonRes = json_decode($res->getBody()->__toString(), TRUE)['error'];
-    //   	Validator::make($jsonRes,
-    //   		['status_code' => [Rule::in(['201', '200'])]],
-    //   		['in' => __('api_errors.seniorities_roles_store')]
-    //   	)->validate();
-    //  	}
-    //  	else
-    //  	{
-    //  		session()->flash('message', __('general.added'));
-    // session()->flash('alert-class', 'success');
-    //  	}
-
-    //  	return response()->json();
-    //  }
-
-    /**
-     * Actualizo idioma
-     */
-    //  public function update(Request $request)
-    //  {
-    //  	// validacion del formulario
-    //  	$this->validate($request, [
-    // 'title'     => 'required'
-    //   ]);
-
-    //  	$data = $request->all();
-
-    //  	$res = $this->apiCall('PATCH', 'seniorities_roles/'.$data['id'], $data);
-
-    //  	// validacion de la respuesta del api
-    //  	if (!empty(json_decode($res->getBody()->__toString(), TRUE)['error']))
-    //  	{
-    //   	$jsonRes = json_decode($res->getBody()->__toString(), TRUE)['error'];
-    //   	Validator::make($jsonRes,
-    //   		['status_code' => [Rule::in(['201', '200'])]],
-    //   		['in' => __('api_errors.seniorities_roles_store')]
-    //   	)->validate();
-    //  	}
-    //  	else
-    //  	{
-    //  		session()->flash('message', __('general.updated'));
-    // session()->flash('alert-class', 'success');
-    //  	}
-
-    //  	return response()->json();
-    //  }
-
-    /**
-     * Elimina una seniority
-     * @param  int $id ID
-     */
-    //  public function delete($id)
-    //  {
-    //  	$res = $this->apiCall('GET', 'project_roles/'.$id);
-    //  	$projectRole = json_decode($res->getBody()->__toString(), TRUE);
-
-    //  	$res = $this->apiCall('DELETE', 'project_roles/'.$id);
-
-    //  	// validacion de la respuesta del api
-    //  	if (!empty(json_decode($res->getBody()->__toString(), TRUE)['error']))
-    //  	{
-    //   	session()->flash('message', __('api_errors.delete'));
-    // session()->flash('alert-class', 'danger');
-
-    //   	$jsonRes = json_decode($res->getBody()->__toString(), TRUE)['error'];
-    //   	Validator::make($jsonRes,
-    //   		['status_code' => [Rule::in(['201', '200'])]],
-    //   		['in' => __('api_errors.delete')]
-    //   	)->validate();
-
-    //  	}
-    //  	else
-    //  	{
-    //  		session()->flash('message', __('general.deleted'));
-    // session()->flash('alert-class', 'success');
-    //  	}
-
-    //  	return redirect('companies/'.$projectRole['data']['company_id'].'/preferences');
-    //  }
 }

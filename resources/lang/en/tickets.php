@@ -1,5 +1,5 @@
 <?php
-return [	
+return [
 	'tickets'             	=> 'Tickets',
 	'add_new'             	=> 'ADD NEW',
 	'update'              	=> 'UPDATE',
@@ -11,12 +11,13 @@ return [
 	'type_2'              	=> 'Bug',
 	'type_3'              	=> 'Risk',
 	'type_4'              	=> 'Epic',
+	'type_5'              	=> 'Scope Change',
 	'status_1'            	=> 'To Do',
 	'status_2'            	=> 'Waiting',
 	'status_3'            	=> 'In Progress',
 	'testing_name'        	=> 'Testing Name',
 	'done_name'           	=> 'Done Name',
-	'status_4'            	=> 'Cancelled',
+	'status_4'            	=> 'Canceled',
 	'status_5'            	=> 'Rescheduled',
 	'status_6'            	=> 'Resolved',
 	'status'              	=> 'Status',
@@ -55,12 +56,16 @@ return [
 	'approval_date'       	=> 'Approval Date',
 	'approver_name'       	=> 'Approver Name',
 	'acceptance_criteria' 	=> 'Acceptance Criteria',
-	'testing_criteria'    	=> 'Testing Criteria',
+	'testing_criteria'    	=> 'Testing Criteria"',
 	'done_criteria'       	=> 'Done Criteria',
 	'label'               	=> 'Label',
 	'comment'             	=> 'Comment',
 	'owner'               	=> 'Owner',
-	'ticket_id'       		=> 'Ticket ID',
-	'progress'				=> 'Progress',
-	'estimated_progress'	=> 'Estimated Progress'
+	'ticket_id'      		=> 'Ticket ID',
+	'sprint_id'    		    => 'Sprint ID',
+	'progress'		        => 'Real Progress',
+	'estimated_progress'	=> 'Estimated Progress',
+	'contingency_plan'	    => 'Contingency Plan',
+	'title_project'			=> 'Tickets report for task:',
+	'tickets_test'			=> 'Editing tickets for Sprint:'
 ];

@@ -11,7 +11,7 @@ class StakeholderController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit']);
     }
 
     /**
@@ -34,7 +34,8 @@ class StakeholderController extends Controller
     public function store(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'influence'    => 'required',
 			'impacted'     => 'required',
 			'impact'       => 'required',
@@ -42,7 +43,9 @@ class StakeholderController extends Controller
 			'contact_id'   => 'required'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('POST', 'stakeholders', $data);
 
@@ -89,14 +92,17 @@ class StakeholderController extends Controller
     public function update(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'influence'    => 'required',
 			'impacted'     => 'required',
 			'impact'       => 'required',
 			'expectations' => 'required'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('PATCH', 'stakeholders/'.$data['id'], $data);
 

@@ -3,7 +3,7 @@
 
 		<div class="uk-alert uk-alert-danger hide_when_empty" data-uk-alert="" id="status_code-error"></div>
 
-    	<form role="form" method="POST" action="{{ url('project_services') }}" id="data-form-ajax_create" data-redirect-on-success="{{ url('project_board/rows') }}">
+    	<form role="form" method="POST" action="{{ url('project_services') }}" id="data-form-ajax_create" data-redirect-on-success="{{ url('project_board/project_rows') }}">
     	    {{ csrf_field() }}
     	    <input type="hidden" name="project_id" value="{{ $project->id }}">
     		<div class="uk-width-medium-1-1 uk-row-first">

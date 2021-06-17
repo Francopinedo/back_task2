@@ -1,12 +1,21 @@
+<style>
+
+    #edit_div.switcher_active {
+        width: 40%;
+    }
+
+</style> 
+    <form role="form" method="POST" action="{{ url('agendas/update') }}" id="data-form-edit" data-redirect-on-success="{{ url('agendas') }}">
+            {{ csrf_field() }}
+            <input type="hidden" name="id" value="{{ $agenda->id }}">
+
 <div class="uk-grid" data-uk-grid-margin>
-    <div class="uk-width-1-1">
+            <li class="uk-width-medium-1-1 uk-row-first">
+        <div class="uk-alert uk-alert-danger hide_when_empty status_code-error" data-uk-alert=""></div>
+</li>
 
-		<div class="uk-alert uk-alert-danger hide_when_empty status_code-error" data-uk-alert=""></div>
-
-    	<form role="form" method="POST" action="{{ url('agendas/update') }}" id="data-form-edit" data-redirect-on-success="{{ url('agendas') }}">
-    	    {{ csrf_field() }}
-    	    <input type="hidden" name="id" value="{{ $agenda->id }}">
-    		<div class="uk-width-medium-1-1 uk-row-first">
+	   
+    		<li class="uk-width-medium-1-2 uk-row-first">
 
                 <div class="md-input-wrapper md-input-filled md-input-select">
     				<label>{{ __('agendas.project') }}</label>
@@ -37,17 +46,14 @@
     			</div>
     			<div class="parsley-errors-list filled"><span class="parsley-required knowledge_area-error"></span></div>
 
-                <div class="md-input-wrapper md-input-filled">
-                	<label>{{ __('agendas.item_number') }}</label>
-                	<input type="number" class="md-input" name="item_number" value="{{ $agenda->item_number }}" required><span class="md-input-bar"></span>
-                </div>
-                <div class="parsley-errors-list filled"><span class="parsley-required item_number-error"></span></div>
-
+                
                 <div class="md-input-wrapper md-input-filled">
                 	<label>{{ __('agendas.description') }}</label>
                 	<input type="text" class="md-input" name="description" value="{{ $agenda->description }}" required><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required description-error"></span></div>
+</li>
+            <li class="uk-width-medium-1-2 uk-row-first">
 
                 <div class="md-input-wrapper md-input-filled">
                     <label for="uk_dp_1">{{ __('agendas.start') }}</label>
@@ -87,18 +93,35 @@
     			</div>
     			<div class="parsley-errors-list filled"><span class="parsley-required owner_id-error"></span></div>
 
-                <div class="md-input-wrapper md-input-filled">
+
+                <div class="md-input-wrapper md-input-select">
+                    <label>{{ __('requirements.priority') }}</label>
+                    <select name="owner_id" data-md-selectize>
+                        <option value="0">{{ __('requirements.priority') }}...</option>
+                       
+                            <option {{$agenda->priority==1?'selected':''}} value="1">{{ __('requirements.priority_1')}}</option>
+                            <option {{$agenda->priority==2?'selected':''}}  value="2">{{ __('requirements.priority_2')}}</option>
+                            <option {{$agenda->priority==3?'selected':''}}  value="3">{{ __('requirements.priority_3')}}</option>
+                       
+                    </select>
+                </div>
+                <div class="parsley-errors-list filled"><span class="parsley-required priority-error"></span></div>
+
+
+               <div class="md-input-wrapper md-input-filled">
                 	<label>{{ __('agendas.detail') }}</label>
-                	<input type="text" class="md-input" name="detail" value="{{ $agenda->detail }}" required><span class="md-input-bar"></span>
+                 <textarea cols="30" rows="4" name="detail" class="md-input autosized" style="overflow-x: hidden; word-wrap: break-word; height: 180px;" title="{{ __('agendas.detail') }}">{{ $agenda->detail }}</textarea>
+			<span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required detail-error"></span></div>
-
+</li>       
+        <li class="uk-width-medium-1-1 uk-row-first">
 				<div class="uk-margin-medium-top">
                     <a class="md-btn md-btn-primary md-btn-wave-light md-btn-block waves-effect waves-button waves-light" href="#" id="update-btn">{{ __('agendas.update') }}</a>
                     <a class="md-btn md-btn-flat md-btn-wave md-btn-block waves-effect waves-button cancel-edit-btn" href="#">{{ __('general.cancel') }}</a>
                 </div>
 
-            </div>
+            </li>
 
     	</form>
     </div>

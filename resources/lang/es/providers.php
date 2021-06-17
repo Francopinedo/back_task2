@@ -1,0 +1,28 @@
+<?php
+return [
+	'providers'       => 'Proveedores',
+	'add_new'         => 'Añadir Nuevo',
+	'update'          => 'Actualizar',
+	'id'              => 'ID',
+	'name'            => 'Nombre',
+	'address'         => 'Direccion',
+	'country'         => 'Pais',
+	'code'			  => 'Codigo',
+	'city'            => 'Ciudad',
+	'email_1'         => 'Correo Electronico #1',
+	'email_2'         => 'Correo Electronico #2',
+	'email_3'         => 'Correo Electronico #3',
+	'phone_1'         => 'Telefono #1',
+	'phone_2'         => 'Telefono #2',
+	'phone_3'         => 'Telefono #3',
+	'billing_name'    => 'Nombre de Facturacion',
+	'billing_address' => 'Direccion',
+	'tax_number'      => 'Numero de Impuesto',
+	'bank_name'       => 'Nombre del Banco',
+	'account_number'  => 'Numero de Cuenta',
+	'swiftcode'       => 'Codigo Swift',
+	'aba'             => 'ABA',
+	'currency'        => 'Moneda',
+	'industry'        => 'Industria',
+	'logo_path'       => 'Logo'
+];

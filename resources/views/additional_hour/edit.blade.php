@@ -116,7 +116,7 @@
 
                 <div class="md-input-wrapper md-input-filled">
                     <label>{{ __('contracts.rate') }}</label>
-                    <input type="text"  class="md-input" name="rate" id="rate2" value="{{ $additionalHour->rate }}" required><span class="md-input-bar"></span>
+                    <input type="text"  class="md-input" name="rate" id="rate2" value="{{ $additionalHour->rate }}" readonly><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required rate-error"></span></div>
 
@@ -138,6 +138,12 @@
 </div>
 <script src="{{ asset('js/contracts.js') }}"></script>
 <script type="text/javascript">
+    $('.cancel-edit-btn').on('click', function(e){
+        e.preventDefault();
+        $('#edit_div_toggle').hide();
+        $('#edit_div').removeClass('switcher_active');
+    });
+
     tableActions.initEditForm();
     contracts.initResources();
 

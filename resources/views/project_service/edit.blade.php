@@ -3,7 +3,7 @@
 
 		<div class="uk-alert uk-alert-danger hide_when_empty status_code-error" data-uk-alert=""></div>
 
-    	<form role="form" method="POST" action="{{ url('project_services/update') }}" id="data-form-edit" data-redirect-on-success="{{ url('project_board/rows') }}">
+    	<form role="form" method="POST" action="{{ url('project_services/update') }}" id="data-form-edit" data-redirect-on-success="{{ url('project_board/project_rows') }}">
     	    {{ csrf_field() }}
     	    <input type="hidden" name="id" value="{{ $projectService->id }}">
     		<div class="uk-width-medium-1-1 uk-row-first">
@@ -63,7 +63,7 @@
 				<div class="md-input-wrapper">
 					<select name="frequency" id="frequency" required data-md-selectize>
 						<option value="">{{ __('contracts.frequency') }}...</option>
-						<option value="anualy" {{ ( $projectService->frequency == 'monthly') ? 'selected' : '' }}>{{ __('contracts.anualy') }}</option>
+						<option value="anualy" {{ ( $projectService->frequency == 'anualy') ? 'selected' : '' }}>{{ __('contracts.anualy') }}</option>
 						<option value="semester" {{ ( $projectService->frequency == 'semester') ? 'selected' : '' }}>{{ __('contracts.semester') }}</option>
 						<option value="quarterly" {{ ( $projectService->frequency == 'quarterly') ? 'selected' : '' }}>{{ __('contracts.quarterly') }}</option>
 						<option value="bimonthly" {{ ( $projectService->frequency == 'bimonthly') ? 'selected' : '' }}>{{ __('contracts.bimonthly') }}</option>

@@ -11,7 +11,7 @@ function procces_import($file)
     $file_o = fopen($file_n, "r");
 
     $i = 0;
-    while (($data = fgetcsv($file_o, 200, ";")) !== FALSE) {
+    while (($data = fgetcsv($file_o, 0, ";")) !== FALSE) {
 
 
        /* if ($i == 0) {
@@ -37,7 +37,7 @@ function procces_import($file)
 
                 $j++;
             //}
-
+             //   $data_final = array_shift($data);
             foreach ($data as $datum){
 
                 $datoinsert[] = $datum;

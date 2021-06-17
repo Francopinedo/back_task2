@@ -61,10 +61,10 @@
                     data: null,
                     render: function (data, type, row) {
                         return '' +
-                            '<a href="/tickets/' + row.id + '/history" class="table-actions"><i class="fa fa-list" aria-hidden="true"></i></a>' +
-                            '<a href="/tickets/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
-                            '<a href="/tickets/' + row.id + '/files" class="table-actions edit-btn"><i class="fa fa-paperclip" aria-hidden="true"></i></a>' +
-                            '<a href="/tickets/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+                            '<a title="{{__('general.list')}}" href="/tickets/' + row.id + '/history" class="table-actions"><i class="fa fa-list" aria-hidden="true"></i></a>' +
+                            '<a title="{{__('general.edit')}}" href="/tickets/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
+                            '<a title="{{__('general.file')}}" href="/tickets/' + row.id + '/files" class="table-actions edit-btn"><i class="fa fa-paperclip" aria-hidden="true"></i></a>' +
+                            '<a title="{{__('general.delete')}}" href="/tickets/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
                     }
                 }, {
                     targets: 3,
@@ -79,6 +79,8 @@
                             return '{{ __('tickets.type_3') }}';
                         if (data == 4)
                             return '{{ __('tickets.type_4') }}';
+                         if (data == 5)
+                            return '{{ __('tickets.type_5') }}';
                     }
                 },
                     {
@@ -203,7 +205,7 @@
             <div class="uk-grid" data-uk-grid-margin>
                 <div class="uk-width-1-1">
 
-                    <h3>Editing tickets for task: {{$task->name}}</h3>
+                    <h3>{{__('tickets.tickets_test')}} {{$task->name}}</h3>
 
                     @if(session()->has('message'))
                         <div class="uk-alert uk-alert-{{ session('alert-class', 'close') }}" data-uk-alert>
@@ -223,24 +225,24 @@
                         <table id="tickets-table" class="uk-table" cellspacing="0" width="100%">
                             <thead>
                             <tr>
-                                <th>{{ __('tickets.id') }}</th>
-                                <th>{{ __('tickets.ticket_id') }}</th>
-                                <th>{{ __('tickets.description') }}</th>
-                                <th>{{ __('tickets.type') }}</th>
-                                <th>{{ __('tickets.assignee') }}</th>
-                                <th>{{ __('tickets.status') }}</th>
-                                <th>{{ __('tickets.group') }}</th>
-                                <th>{{ __('tickets.sprint') }}</th>
-                                <th>{{ __('tickets.due_date') }}</th>
-                                <th>{{ __('tickets.requester') }}</th>
+                                <th title="{{ __('tickets_tooltip.id')}}">{{ __('tickets.id') }}</th>
+                                <th title="{{ __('tickets_tooltip.ticket_id')}}">{{ __('tickets.ticket_id') }}</th>
+                                <th title="{{ __('tickets_tooltip.description')}}">{{ __('tickets.description') }}</th>
+                                <th title="{{ __('tickets_tooltip.type')}}">{{ __('tickets.type') }}</th>
+                                <th title="{{ __('tickets_tooltip.assignee')}}">{{ __('tickets.assignee') }}</th>
+                                <th title="{{ __('tickets_tooltip.status')}}">{{ __('tickets.status') }}</th>
+                                <th title="{{ __('tickets_tooltip.group')}}">{{ __('tickets.group') }}</th>
+                                <th title="{{ __('tickets_tooltip.sprint')}}">{{ __('tickets.sprint') }}</th>
+                                <th title="{{ __('tickets_tooltip.due_date')}}">{{ __('tickets.due_date') }}</th>
+                                <th title="{{ __('tickets_tooltip.requester')}}">{{ __('tickets.requester') }}</th>
 
-                                <th>{{ __('tickets.priority') }}</th>
-                                <th>{{ __('tickets.severity') }}</th>
-                                <th>{{ __('tickets.impact') }}</th>
-                                <th>{{ __('tickets.probability') }}</th>
-                                <th>{{ __('tickets.owner') }}</th>
-                                <th>{{ __('tickets.estimated_hours') }}</th>
-                                <th>{{ __('tickets.burned_hours') }}</th>
+                                <th title="{{ __('tickets_tooltip.priority')}}">{{ __('tickets.priority') }}</th>
+                                <th title="{{ __('tickets_tooltip.severity')}}">{{ __('tickets.severity') }}</th>
+                                <th title="{{ __('tickets_tooltip.impact')}}">{{ __('tickets.impact') }}</th>
+                                <th title="{{ __('tickets_tooltip.probability')}}">{{ __('tickets.probability') }}</th>
+                                <th title="{{ __('tickets_tooltip.owner')}}">{{ __('tickets.owner') }}</th>
+                                <th title="{{ __('tickets_tooltip.estimated_hours')}}">{{ __('tickets.estimated_hours') }}</th>
+                                <th title="{{ __('tickets_tooltip.burned_hours')}}">{{ __('tickets.burned_hours') }}</th>
                                 <th>{{ __('general.actions') }}</th>
                             </tr>
                             </thead>
@@ -250,7 +252,7 @@
                             <div class="uk-width-medium-1-3" id="datatables-pagination"></div>
                             <div class="uk-width-medium-1-3">
                                 <a class="md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light"
-                                   href="#" id="add-new">{{ __('tickets.add_new') }}</a>
+                                   href="#" id="add-new" title="{{ __('tickets_tooltip.add_new')}}">{{ __('tickets.add_new') }}</a>
                             </div>
                         </div>
                     @endif

@@ -11,7 +11,7 @@ class OfficeController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit']);
     }
 
     /**
@@ -58,16 +58,21 @@ class OfficeController extends Controller
     public function store(Request $request)
     {
         // validacion del formulario
-        $this->validate($request, [
+    	$validator =Validator::make($request->all(), [
             'title' => 'required',
             'company_id' => 'required',
             'city_id' => 'required',
             'workinghours_from' => 'required',
             'workinghours_to' => 'required',
-            'hours_by_day' => 'required'
+            'hours_by_day' => 'required',
+		'effective_workinghours' => 'required',
         ]);
-
-        $data = $request->all();
+if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  }
+        if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
         $res = $this->apiCall('POST', 'offices', $data);
 
@@ -106,7 +111,8 @@ class OfficeController extends Controller
         $company = $this->getFromApi('GET', 'companies/fromUser/' . Auth::id());
         $array = array();
         try {
-            $this->validate($request, [
+            $validator =Validator::make($request->all(), [
+
                 'file' => 'required'
             ]);
 
@@ -120,7 +126,7 @@ class OfficeController extends Controller
                     $item = array();
 
 
-                    $city = $this->getFromApi('GET', 'cities/?name=' . $value[1].'&company_id='.$company->id);
+                    $city = $this->getFromApi('GET', 'cities?name=' . $value[1].'&company_id='.$company->id);
 
 
                   //  var_dump($city);
@@ -132,6 +138,7 @@ class OfficeController extends Controller
                         $item['workinghours_from'] = $value[2];
                         $item['workinghours_to'] = $value[3];
                         $item['hours_by_day'] = $value[4];
+			 $item['effective_workinghours'] = $value[5];
 
 
                         $this->apiCall('POST', 'offices', $item);
@@ -153,16 +160,22 @@ class OfficeController extends Controller
     public function update(Request $request)
     {
         // validacion del formulario
-        $this->validate($request, [
+    	$validator =Validator::make($request->all(), [
             'title' => 'required',
             'company_id' => 'required',
             'city_id' => 'required',
             'workinghours_from' => 'required',
             'workinghours_to' => 'required',
-            'hours_by_day' => 'required'
-        ]);
+            'hours_by_day' => 'required',
+	'effective_workinghours' => 'required',
 
-        $data = $request->all();
+        ]);
+if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  }
+        if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
         $res = $this->apiCall('PATCH', 'offices/' . $data['id'], $data);
 

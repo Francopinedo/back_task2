@@ -71,8 +71,8 @@
                     render: function (data, type, row) {
                         if (row.emited == '0') {
                             return '' +
-                                '<a href="/invoice_resources/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
-                                '<a href="/invoice_resources/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+                                '<a title="{{__('general.edit')}}" href="/invoice_resources/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
+                                '<a title="{{__('general.delete')}}" href="/invoice_resources/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
                         } else {
                             return '';
                         }
@@ -216,8 +216,8 @@
                         render: function (data, type, row) {
                             if (row.emited == '0') {
                                 return '' +
-                                    '<a href="/invoice_expenses/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
-                                    '<a href="/invoice_expenses/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+                                    '<a title="{{__('general.edit')}}" href="/invoice_expenses/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
+                                    '<a title="{{__('general.delete')}}" href="/invoice_expenses/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
                             } else {
                                 return '';
                             }
@@ -309,8 +309,8 @@
                         render: function (data, type, row) {
                             if (row.emited == '0') {
                                 return '' +
-                                    '<a href="/invoice_services/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
-                                    '<a href="/invoice_services/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+                                    '<a title="{{__('general.edit')}}" href="/invoice_services/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
+                                    '<a title="{{__('general.delete')}}" href="/invoice_services/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
                             } else {
                                 return '';
                             }
@@ -355,8 +355,8 @@
                         render: function (data, type, row) {
                             if (row.emited == '0') {
                                 return '' +
-                                    '<a href="/invoice_materials/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
-                                    '<a href="/invoice_materials/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+                                    '<a title="{{__('general.edit')}}" href="/invoice_materials/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
+                                    '<a title="{{__('general.delete')}}" href="/invoice_materials/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
                             } else {
                                 return '';
                             }
@@ -520,8 +520,8 @@
                         render: function (data, type, row) {
                             if (row.emited == '0') {
                                 return '' +
-                                    '<a href="/invoice_discounts/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
-                                    '<a href="/invoice_discounts/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+                                    '<a title="{{__('general.edit')}}" href="/invoice_discounts/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
+                                    '<a title="{{__('general.delete')}}" href="/invoice_discounts/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
                             } else {
                                 return '';
                             }
@@ -637,8 +637,8 @@
                         render: function (data, type, row) {
                             if (row.emited == '0') {
                                 return '' +
-                                    '<a href="/invoice_taxes/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
-                                    '<a href="/invoice_taxes/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+                                    '<a title="{{__('general.edit')}}" href="/invoice_taxes/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
+                                    '<a title="{{__('general.delete')}}" href="/invoice_taxes/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
                             } else {
                                 return '';
                             }
@@ -646,6 +646,102 @@
                     }],
                     initComplete: function (settings, json) {
                         tableActions.initEdit();
+                        debit();
+                        // tableActions.initAjaxCreate();
+                        // tableActions.initDelete('{{ __('general.confirm') }}');
+                    }
+                });
+            });
+        }
+
+////////////////////////////////////////7
+
+        function debit(){
+            $(function () {
+                $('#invoice_debit_creditP-table').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    bPaginate: false,
+                    ajax: '{{ env('API_PATH') }}invoice_debit_credit/datatables?invoice_id={{ $invoice_id }}&signs=+',
+                    dom: '<"top">rt<"bottom"lp><"clear">',
+                    language: {
+                        paginate: {
+                            previous: "<<",
+                            next: ">>"
+                        }
+                    },
+                    columns: [
+                        {data: 'id', name: 'id', visible: false},
+                        {data: 'detail', name: 'detail'},
+                        {data: 'amount', name: 'amount'},
+                        {data: 'currency_name', name: 'currency_name'},
+                        {data: 'actions', name: 'actions'}
+                    ],
+                    columnDefs: [{
+                        targets: -1,
+                        data: null,
+                        render: function (data, type, row) {
+                            if (row.emited == '0') {
+                                return '' +
+                                    '<a title="{{__('general.edit')}}" href="/invoice_debit_credit/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
+                                    '<a title="{{__('general.delete')}}" href="/invoice_debit_credit/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+                            } else {
+                                return '';
+                            }
+                        }
+                    }],
+                    "footerCallback": function (row, data, start, end, display) {
+                        var api = this.api();
+
+                        var i = 0;
+                        api.columns().every(function () {
+                            if (i == 2) {
+                                var sum = this
+                                    .data()
+                                    .reduce(function (a, b) {
+
+
+                                        var x = parseFloat(a) || 0;
+
+                                        if (isNaN(x)) {
+                                            x = 0;
+                                        }
+                                        //   console.log(x);
+                                        // console.log(b);
+                                        if (b != null) {
+
+
+                                            var y = parseFloat(b) || 0;
+
+
+                                            if (isNaN(y)) {
+                                                y = 0;
+                                            }
+                                            //  console.log(y);
+
+
+                                            return parseFloat(x) + parseFloat(y);
+                                        }
+                                    }, 0);
+
+
+                                if (sum != undefined) {
+                                    if(i==2) {
+                                        subtotal = sum + subtotal;
+                                    }
+                                    $(this.footer()).html(sum.toLocaleString('de-DE', {maximumFractionDigits: 2}));
+                                }
+
+                            }
+                            i++;
+                        });
+
+
+                    },
+
+                    initComplete: function (settings, json) {
+                        tableActions.initEdit();
+                        credit();
                         // tableActions.initAjaxCreate();
                         // tableActions.initDelete('{{ __('general.confirm') }}');
                     }
@@ -654,6 +750,101 @@
         }
 
 
+
+
+        function credit(){
+            $(function () {
+                $('#invoice_debit_creditM-table').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    bPaginate: false,
+                    ajax: '{{ env('API_PATH') }}invoice_debit_credit/datatables?invoice_id={{ $invoice_id }}&signs=-',
+                    dom: '<"top">rt<"bottom"lp><"clear">',
+                    language: {
+                        paginate: {
+                            previous: "<<",
+                            next: ">>"
+                        }
+                    },
+                    columns: [
+                        {data: 'id', name: 'id', visible: false},
+                        {data: 'detail', name: 'detail'},
+                        {data: 'amount', name: 'amount'},
+                        {data: 'currency_name', name: 'currency_name'},
+                        {data: 'actions', name: 'actions'}
+                    ],
+                    columnDefs: [{
+                        targets: -1,
+                        data: null,
+                        render: function (data, type, row) {
+                            if (row.emited == '0') {
+                                return '' +
+                                    '<a title="{{__('general.edit')}}" href="/invoice_debit_credit/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
+                                    '<a title="{{__('general.delete')}}" href="/invoice_debit_credit/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+                            } else {
+                                return '';
+                            }
+                        }
+                    }],
+                    "footerCallback": function (row, data, start, end, display) {
+                        var api = this.api();
+
+                        var i = 0;
+                        api.columns().every(function () {
+                            if (i == 2) {
+                                var sum = this
+                                    .data()
+                                    .reduce(function (a, b) {
+
+
+                                        var x = parseFloat(a) || 0;
+
+                                        if (isNaN(x)) {
+                                            x = 0;
+                                        }
+                                        //   console.log(x);
+                                        // console.log(b);
+                                        if (b != null) {
+
+
+                                            var y = parseFloat(b) || 0;
+
+
+                                            if (isNaN(y)) {
+                                                y = 0;
+                                            }
+                                            //  console.log(y);
+
+
+                                            return parseFloat(x) + parseFloat(y);
+                                        }
+                                    }, 0);
+
+
+                                if (sum != undefined) {
+                                    if(i==2) {
+                                        subtotal = sum - subtotal;
+                                    }
+                                    $(this.footer()).html(sum.toLocaleString('de-DE', {maximumFractionDigits: 2}));
+                                }
+
+                            }
+                            i++;
+                        });
+
+
+                    },
+
+                    initComplete: function (settings, json) {
+                        tableActions.initEdit();
+                        //credit();
+                        // tableActions.initAjaxCreate();
+                        // tableActions.initDelete('{{ __('general.confirm') }}');
+                    }
+                });
+            });
+        }
+//////////////////////////////////////////////7
         $(document).ready(function () {
             tableActions.initAjaxCreate();
             tableActions.initDelete('{{ __('general.confirm') }}');
@@ -698,7 +889,7 @@
     @endif
 
     @if(session()->has('project_id') && $invoice->emited==1)
-        <a class="md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light" id="confirm"
+        <a class="md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light" id="confirm" target="_blank"
            data-invoice_id="{{ $invoice_id }}" href="../../invoices/pdf/{{ $invoice_id }}">{{ __('invoices.pdf') }}</a>
     @endif
 
@@ -737,19 +928,19 @@
                         <table id="invoice_resources-table" class="uk-table" cellspacing="0" width="100%">
                             <thead>
                             <tr>
-                                <th>{{ __('invoices.id') }}</th>
-                                <th>{{ __('invoices.user') }}</th>
-                                <th>{{ __('invoices.project_role') }}</th>
-                                <th>{{ __('invoices.seniority') }}</th>
-                                <th>{{ __('invoices.currency') }}</th>
-                                <th>{{ __('invoices.workplace') }}</th>
-                                <th>{{ __('invoices.load') }}</th>
-                                <th>{{ __('invoices.rate') }}</th>
-                                <th>{{ __('invoices.hours') }}</th>
-                                <th>{{ __('invoices.total') }}</th>
-                                <th>{{ __('invoices.type') }}</th>
-                                <th>{{ __('invoices.comments') }}</th>
-                                <th class="noprint">{{ __('general.actions') }}</th>
+                                <th title="{{__('invoices_tooltip.id')}}">{{ __('invoices.id') }}</th>
+                                <th title="{{__('invoices_tooltip.user')}}">{{ __('invoices.user') }}</th>
+                                <th title="{{__('invoices_tooltip.project_role')}}">{{ __('invoices.project_role') }}</th>
+                                <th title="{{__('invoices_tooltip.seniority')}}">{{ __('invoices.seniority') }}</th>
+                                <th title="{{__('invoices_tooltip.currency')}}">{{ __('invoices.currency') }}</th>
+                                <th title="{{__('invoices_tooltip.workplace')}}">{{ __('invoices.workplace') }}</th>
+                                <th title="{{__('invoices_tooltip.load')}}">{{ __('invoices.load') }}</th>
+                                <th title="{{__('invoices_tooltip.rate')}}">{{ __('invoices.rate') }}</th>
+                                <th title="{{__('invoices_tooltip.hours')}}">{{ __('invoices.hours') }}</th>
+                                <th title="{{__('invoices_tooltip.total')}}">{{ __('invoices.total') }}</th>
+                                <th title="{{__('invoices_tooltip.type')}}">{{ __('invoices.type') }}</th>
+                                <th title="{{__('invoices_tooltip.comments')}}">{{ __('invoices.comments') }}</th>
+                                <th title="{{__('general.actions')}}" class="noprint">{{ __('general.actions') }}</th>
                             </tr>
                             </thead>
 
@@ -790,11 +981,11 @@
                         <table id="invoice_expenses-table" class="uk-table" cellspacing="0" width="100%">
                             <thead>
                             <tr>
-                                <th>{{ __('invoice.id') }}</th>
-                                <th>{{ __('invoices.detail') }}</th>
-                                <th>{{ __('invoices.amount') }}</th>
-                                <th> {{ __('invoices.currency') }}</th>
-                                <th class="noprint">{{ __('general.actions') }}</th>
+                                <th title="{{__('invoices_tooltip.id')}}">{{ __('invoices.id') }}</th>
+                                <th title="{{__('invoices_tooltip.detail')}}">{{ __('invoices.detail') }}</th>
+                                <th title="{{__('invoices_tooltip.amount')}}">{{ __('invoices.amount') }}</th>
+                                <th title="{{__('invoices_tooltip.currency')}}"> {{ __('invoices.currency') }}</th>
+                                <th title="{{__('general.actions')}}" class="noprint">{{ __('general.actions') }}</th>
                             </tr>
                             </thead>
                             <tfoot>
@@ -825,11 +1016,11 @@
                         <table id="invoice_services-table" class="uk-table" cellspacing="0" width="100%">
                             <thead>
                             <tr>
-                                <th>{{ __('invoice.id') }}</th>
-                                <th>{{ __('invoices.detail') }}</th>
-                                <th>{{ __('invoices.amount') }}</th>
-                                <th>{{ __('invoices.currency') }}</th>
-                                <th class="noprint">{{ __('general.actions') }}</th>
+                                <th title="{{__('invoices_tooltip.id')}}">{{ __('invoices.id') }}</th>
+                                <th title="{{__('invoices_tooltip.detail')}}">{{ __('invoices.detail') }}</th>
+                                <th title="{{__('invoices_tooltip.amount')}}">{{ __('invoices.amount') }}</th>
+                                <th title="{{__('invoices_tooltip.currency')}}"> {{ __('invoices.currency') }}</th>
+                                <th title="{{__('general.actions')}}" class="noprint">{{ __('general.actions') }}</th>
                             </tr>
                             </thead>
 
@@ -863,11 +1054,11 @@
                         <table id="invoice_materials-table" class="uk-table" cellspacing="0" width="100%">
                             <thead>
                             <tr>
-                                <th>{{ __('invoice.id') }}</th>
-                                <th>{{ __('invoices.detail') }}</th>
-                                <th>{{ __('invoices.amount') }}</th>
-                                <th>{{ __('invoices.currency') }}</th>
-                                <th class="noprint">{{ __('general.actions') }}</th>
+                                <th title="{{__('invoices_tooltip.id')}}">{{ __('invoices.id') }}</th>
+                                <th title="{{__('invoices_tooltip.detail')}}">{{ __('invoices.detail') }}</th>
+                                <th title="{{__('invoices_tooltip.amount')}}">{{ __('invoices.amount') }}</th>
+                                <th title="{{__('invoices_tooltip.currency')}}"> {{ __('invoices.currency') }}</th>
+                                <th title="{{__('general.actions')}}" class="noprint">{{ __('general.actions') }}</th>
                             </tr>
                             </thead>
                             <tfoot>
@@ -898,12 +1089,12 @@
                         <table id="invoice_discounts-table" class="uk-table" cellspacing="0" width="100%">
                             <thead>
                             <tr>
-                                <th>{{ __('invoice.id') }}</th>
-                                <th>{{ __('invoices.name') }}</th>
-                                <th>{{ __('invoices.amount') }}</th>
-                                <th>{{ __('invoices.percentage') }}</th>
-                                <th>{{ __('invoices.currency') }}</th>
-                                <th>{{ __('general.actions') }}</th>
+                                <th title="{{__('invoices_tooltip.id')}}">{{ __('invoice.id') }}</th>
+                                <th title="{{__('invoices_tooltip.name')}}">{{ __('invoices.name') }}</th>
+                                <th title="{{__('invoices_tooltip.amount')}}">{{ __('invoices.amount') }}</th>
+                                <th title="{{__('invoices_tooltip.percentage')}}">{{ __('invoices.percentage') }}</th>
+                                <th title="{{__('invoices_tooltip.currency')}}">{{ __('invoices.currency') }}</th>
+                                <th title="{{__('general.actions')}}">{{ __('general.actions') }}</th>
                             </tr>
                             </thead>
 
@@ -937,12 +1128,12 @@
                         <table id="invoice_taxes-table" class="uk-table" cellspacing="0" width="100%">
                             <thead>
                             <tr>
-                                <th>{{ __('invoice.id') }}</th>
-                                <th>{{ __('invoices.name') }}</th>
-                                <th>{{ __('invoices.amount') }}</th>
-                                <th>{{ __('invoices.percentage') }}</th>
-                                <th>{{ __('invoices.currency') }}</th>
-                                <th>{{ __('general.actions') }}</th>
+                                <th title="{{__('invoices_tooltip.id')}}">{{ __('invoice.id') }}</th>
+                                <th title="{{__('invoices_tooltip.name')}}">{{ __('invoices.name') }}</th>
+                                <th title="{{__('invoices_tooltip.amount')}}">{{ __('invoices.amount') }}</th>
+                                <th title="{{__('invoices_tooltip.percentage')}}">{{ __('invoices.percentage') }}</th>
+                                <th title="{{__('invoices_tooltip.currency')}}">{{ __('invoices.currency') }}</th>
+                                <th title="{{__('general.actions')}}">{{ __('general.actions') }}</th>
                             </tr>
                             </thead>
 
@@ -967,6 +1158,79 @@
         </div>
 
 
+ <div class="md-card">
+            <div class="md-card-content">
+                <div class="uk-grid" data-uk-grid-margin>
+                    <div class="uk-width-1-1">
+
+                        <h4 class="heading_a uk-margin-bottom">{{ __('invoices.debits') }}</h4>
+                        <table id="invoice_debit_creditP-table" class="uk-table" cellspacing="0" width="100%">
+                            <thead>
+                            <tr>
+                                <th title="{{__('invoices_tooltip.id')}}">{{ __('invoices.id') }}</th>
+                                <th title="{{__('invoices_tooltip.detail')}}">{{ __('invoices.detail') }}</th>
+                                <th title="{{__('invoices_tooltip.amount')}}">{{ __('invoices.amount') }}</th>
+                                <th title="{{__('invoices_tooltip.currency')}}"> {{ __('invoices.currency') }}</th>
+                                <th title="{{__('general.actions')}}" class="noprint">{{ __('general.actions') }}</th>
+                            </tr>
+                            </thead>
+                            <tfoot>
+                            <tr>
+                                <th>
+
+                                </th>
+                                <th>{{ __('invoices.total') }}</th>
+                                <th></th>
+                                <th>{{ $currency->name }}</th>
+
+                                <th class="noprint"></th>
+
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+ <div class="md-card">
+            <div class="md-card-content">
+                <div class="uk-grid" data-uk-grid-margin>
+                    <div class="uk-width-1-1">
+
+                        <h4 class="heading_a uk-margin-bottom">{{ __('invoices.credits') }}</h4>
+                        <table id="invoice_debit_creditM-table" class="uk-table" cellspacing="0" width="100%">
+                            <thead>
+                            <tr>
+                                <th title="{{__('invoices_tooltip.id')}}">{{ __('invoices.id') }}</th>
+                                <th title="{{__('invoices_tooltip.detail')}}">{{ __('invoices.detail') }}</th>
+                                <th title="{{__('invoices_tooltip.amount')}}">{{ __('invoices.amount') }}</th>
+                                <th title="{{__('invoices_tooltip.currency')}}"> {{ __('invoices.currency') }}</th>
+                                <th title="{{__('general.actions')}}" class="noprint">{{ __('general.actions') }}</th>
+                            </tr>
+                            </thead>
+                            <tfoot>
+                            <tr>
+                                <th>
+
+                                </th>
+                                <th>{{ __('invoices.total') }}</th>
+                                <th></th>
+                                <th>{{ $currency->name }}</th>
+
+                                <th class="noprint"></th>
+
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
         <div class="md-card">
             <div class="md-card-content">
                 <div class="uk-grid" data-uk-grid-margin>
@@ -979,6 +1243,9 @@
                                 <th><h3>{{ __('invoices.total_invoice') }}</h3></th>
                                 <th>
                                     <h3>{{number_format($invoice->total,2,',','.')}}</h3>
+                                </th>
+                                 <th>
+                                    <h3>{{ $currency->name }}</h3>
                                 </th>
                             </tr>
                             </tbody>
@@ -1012,6 +1279,10 @@
                         <a href="{{ url('invoice_taxes/'.$invoice_id.'/create') }}"
                            class="md-color-white ajax_create-btn"><i
                                     class="fa fa-list-ul"></i> {{ __('invoices.new_tax') }}
+                        </a>
+                          <a href="{{ url('invoice_debit_credit/'.$invoice_id.'/create') }}"
+                           class="md-color-white ajax_create-btn"><i
+                                    class="fa fa-list-ul"></i> {{ __('invoices.new_debit_credit') }}
                         </a>
                     </div>
                 </div>

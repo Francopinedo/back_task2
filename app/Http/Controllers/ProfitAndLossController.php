@@ -12,7 +12,7 @@ class ProfitAndLossController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit']);
     }
 
     /**
@@ -97,11 +97,13 @@ class ProfitAndLossController extends Controller
                 $contador++;
                 $data['quarthers'][] = $date->format('M Y');
                 $data['months'][] = $date->format('M Y');
-                $urlparams = '?period_from=' . $value . '&period_to=' . $complete_date_end . '&project_id=' .
-                    $project_id . '&company_id=' . $company_id . '&customer_id=' . $customer_id . '&currency_id=' . $currency_id . '&contract_id=' . $contract_id;
+$urlparams ='?currency_id=' . $currency_id.'&period_from=' . $value . '&period_to=' . $complete_date_end . '&project_id=' .
+$project_id . '&company_id=' . $company_id . '&customer_id=' . $customer_id . '&contract_id=' . $contract_id ;
 
                   // echo $urlparams;
-                $item = $this->getFromApi('GET', 'profit_and_loss/team/' . $urlparams);
+                $item = $this->getFromApi('GET', 'profit_and_loss/team' . $urlparams);
+                //return $item;
+
                 $data['teams'][] = $item;
                 $real_revenue_nf = (isset($item->real_revenue_nf)) ? $item->real_revenue_nf : 0;
                 $real_cost_nf = (isset($item->real_cost_nf)) ? $item->real_cost_nf : 0;
@@ -109,7 +111,7 @@ class ProfitAndLossController extends Controller
                 $total_cost_month = $total_cost_month + $real_cost_nf;
 
 
-                $item = $this->getFromApi('GET', 'profit_and_loss/materials/' . $urlparams);
+                $item = $this->getFromApi('GET', 'profit_and_loss/materials' . $urlparams);
                 $data['materials'][] = $item;
                 $real_revenue_nf = (isset($item->real_revenue_nf)) ? $item->real_revenue_nf : 0;
                 $real_cost_nf = (isset($item->real_cost_nf)) ? $item->real_cost_nf : 0;
@@ -117,7 +119,7 @@ class ProfitAndLossController extends Controller
                 $total_cost_month = $total_cost_month + $real_cost_nf;
 
 
-                $item = $this->getFromApi('GET', 'profit_and_loss/services/' . $urlparams);
+                $item = $this->getFromApi('GET', 'profit_and_loss/services' . $urlparams);
                 $data['services'][] = $item;
 
                 $real_revenue_nf = (isset($item->real_revenue_nf)) ? $item->real_revenue_nf : 0;
@@ -125,7 +127,7 @@ class ProfitAndLossController extends Controller
                 $total_revenue_month = $total_revenue_month + $real_revenue_nf;
                 $total_cost_month = $total_cost_month + $real_cost_nf;
 
-                $item = $this->getFromApi('GET', 'profit_and_loss/expenses/' . $urlparams);
+                $item = $this->getFromApi('GET', 'profit_and_loss/expenses' . $urlparams);
                 $data['expenses'][] = $item;
 
                 $real_revenue_nf = (isset($item->real_revenue_nf)) ? $item->real_revenue_nf : 0;
@@ -135,8 +137,11 @@ class ProfitAndLossController extends Controller
 
 
                 $total_profit_month = $total_revenue_month - $total_cost_month;
+                if($total_cost_month>0){
                 $total_margin_month = $total_cost_month < 0 ? 0 : ($total_profit_month / $total_cost_month) * 100;
-
+                }else{
+                    $total_margin_month =0;
+                }
                 $totalcost=$totalcost+$total_cost_month;
                 $totalrevenue=$totalrevenue+$total_revenue_month;
 

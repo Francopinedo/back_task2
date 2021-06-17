@@ -11,7 +11,7 @@ class ProcurementController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit', 'deletecontrol']);
     }
 
     /**
@@ -38,14 +38,17 @@ class ProcurementController extends Controller
     public function store(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'project_id'       => 'required',
 			'cost_currency_id' => 'required',
-			'cost'             => 'required',
+			'cost'             => 'numeric|required',
 			'description'      => 'required',
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('POST', 'procurements', $data);
 
@@ -97,11 +100,14 @@ class ProcurementController extends Controller
     public function update(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'description'     => 'required'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('PATCH', 'procurements/'.$data['id'], $data);
 
@@ -150,7 +156,7 @@ class ProcurementController extends Controller
 			session()->flash('alert-class', 'success');
     	}
 
-    	return redirect()->action('ProcurementController@index');
+    	return redirect()->back();
     }
 
     /**

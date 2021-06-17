@@ -110,14 +110,19 @@
 
         <tr>
             <td width="60%">
-                <img height="150" src="{{$company->logo_path}}">
+            <img height="150" src="{{base_path() .'/assets/img/companies/'. $company->id .'/'. $company->logo_path}}">
+
+
                 <h3 class="upper red">{{$company->name}}</h3>
                 <h4>{{$company->address}}</h4><br>
 
 
             </td>
             <td>
-                <h1>{{__('contracts.contract')}}</h1> <br><img height="100" src="{{$customer->logo_path}}">
+				              
+
+
+                <h1>{{__('contracts.contract')}}</h1> <br>  <img height="100" src="{{ base_path() .'/assets/img/customers/'. $customer->id .'/'. $customer->logo_path }}">
                 <br>
                 <b> {{$customer->address}}</b><br>
                 {{__('contracts.contract')}}#{{$contract->sow_number}}<br>

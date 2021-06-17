@@ -163,19 +163,19 @@
 
                 <div class="md-input-wrapper md-input-filled">
                 	<label>{{ __('tickets.acceptance_criteria') }}</label>
-                	<input type="text" class="md-input" name="acceptance_criteria" value="{{ $ticket->acceptance_criteria }}" required><span class="md-input-bar"></span>
+                	<texarea  class="md-input" name="acceptance_criteria"  required>{{ $ticket->acceptance_criteria }}</textarea><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required" id="acceptance_criteria-error"></span></div>
 
                 <div class="md-input-wrapper md-input-filled">
                 	<label>{{ __('tickets.testing_criteria') }}</label>
-                	<input type="text" class="md-input" name="testing_criteria" value="{{ $ticket->testing_criteria }}" required><span class="md-input-bar"></span>
+					<texarea  class="md-input" name="testing_criteria"  required>{{ $ticket->testing_criteria }}</textarea><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required" id="testing_criteria-error"></span></div>
 
                 <div class="md-input-wrapper md-input-filled">
                 	<label>{{ __('tickets.done_criteria') }}</label>
-                	<input type="text" class="md-input" name="done_criteria" value="{{ $ticket->done_criteria }}" required><span class="md-input-bar"></span>
+					<texarea  class="md-input" name="done_criteria"  required>{{ $ticket->done_criteria }}</textarea><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required" id="done_criteria-error"></span></div>
 

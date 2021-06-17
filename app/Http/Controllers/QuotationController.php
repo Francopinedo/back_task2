@@ -11,7 +11,7 @@ class QuotationController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit', 'deletecontrol']);
     }
 
     /**
@@ -56,34 +56,43 @@ class QuotationController extends Controller
     /**
      * Genera factura pdf
      */
-    public function pdf($quotation_id)
+    public function pdf($quotation_id,$resources_select,$expenses_select,$services_select,$materials_select)
     {
         $data['company']   = $this->getFromApi('GET', 'companies/fromUser/'.Auth::id());
         $data['quotation']   = $this->getFromApi('GET', 'quotation/'.$quotation_id);
         $data['project']   = $this->getFromApi('GET', 'projects/'.$data['quotation']->project_id);
         $data['contract']   = $this->getFromApi('GET', 'contracts/'.$data['project']->contract_id);
         $data['customer']   = $this->getFromApi('GET', 'customers/'.$data['project']->customer_id);
-        $data['tasks']   = $this->getFromApi('GET', 'tasks/?project_id='.$data['project']->id);
+        $data['tasks']   = $this->getFromApi('GET', 'tasks?project_id='.$data['project']->id);
 
         $data['currency'] = $this->getFromApi('GET', 'currencies/'.$data['quotation']->currency_id);
-        $data['exchange_rates'] = $this->getFromApi('GET', 'exchange_rates/?company_id='. $data['company']->id);
+        $data['exchange_rates'] = $this->getFromApi('GET', 'exchange_rates?company_id='. $data['company']->id);
 
 
-        $data['quotation_resources']   = $this->getFromApi('GET', 'quotation_resources/?quotation_id='.$quotation_id);
-        $data['quotation_services']   = $this->getFromApi('GET', 'quotation_services/?quotation_id='.$quotation_id.'&grouped=1');
-        $data['quotation_materials']   = $this->getFromApi('GET', 'quotation_materials/?quotation_id='.$quotation_id.'&grouped=1');
-        $data['quotation_expenses']   = $this->getFromApi('GET', 'quotation_expenses/?quotation_id='.$quotation_id);
-        $data['quotation_taxes']   = $this->getFromApi('GET', 'quotation_taxes/?quotation_id='.$quotation_id);
-        $data['quotation_discounts']   = $this->getFromApi('GET', 'quotation_discounts/?quotation_id='.$quotation_id);
+        $data['quotation_resources']   = $this->getFromApi('GET', 'quotation_resources?quotation_id='.$quotation_id);
 
+        $data['quotation_services']   = $this->getFromApi('GET', 'quotation_services?quotation_id='.$quotation_id.'&grouped=1');
 
-        $dataupdate=array('emited'=>true);
+        $data['quotation_materials']   = $this->getFromApi('GET', 'quotation_materials?quotation_id='.$quotation_id.'&grouped=1');
+
+        $data['quotation_expenses']   = $this->getFromApi('GET', 'quotation_expenses?quotation_id='.$quotation_id);
+
+        $data['quotation_taxes']   = $this->getFromApi('GET', 'quotation_taxes?quotation_id='.$quotation_id);
+
+        $data['quotation_discounts']   = $this->getFromApi('GET', 'quotation_discounts?quotation_id='.$quotation_id);
+	
+	$data['resources_select']=$resources_select;
+	$data['expenses_select']=$expenses_select;
+	$data['services_select']=$services_select;
+	$data['materials_select']=$materials_select;
+
+	$dataupdate=array('emited'=>true);
 
         $this->apiCall('PATCH', 'quotation/'.$quotation_id, $dataupdate);
 
 
         $pdf = \PDF::loadView('quotation/pdf', $data);
-        //$pdf->setPaper('A4', 'landscape');
+        $pdf->setPaper('A4', 'portrait');
         return $pdf->download('quotation.pdf');
     }
 
@@ -132,7 +141,8 @@ class QuotationController extends Controller
     public function store(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'project_id'  => 'required',
 			'from'        => 'required',
 			'to'          => 'required',
@@ -141,7 +151,9 @@ class QuotationController extends Controller
 			'contact_id'  => 'required'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
 
         $data['emited']=false;
@@ -179,14 +191,17 @@ class QuotationController extends Controller
     public function update(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'from'        => 'required',
 			'to'          => 'required',
 			'due_date'          => 'required',
 			'currency_id' => 'required'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('PATCH', 'quotation/'.$data['id'], $data);
 
@@ -236,6 +251,6 @@ class QuotationController extends Controller
 			session()->flash('alert-class', 'success');
     	}
 
-    	return redirect()->action('QuotationController@index');
+    	return redirect()->back();
     }
 }

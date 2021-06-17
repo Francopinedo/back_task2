@@ -1,14 +1,14 @@
-@extends('layouts.app')
+@extends('layouts.app', ['favoriteTitle' => __('sidebar.KPIS_Report_Time'), 'favoriteUrl' => url(Request::path())])
 <link rel="stylesheet" href="{{asset('bower_components/chartist/dist/chartist.css')}}"/>
 <link rel="stylesheet" href="{{asset('slick-master/slick/slick.css')}}"/>
 <link rel="stylesheet" href="{{asset('slick-master/slick/slick-theme.css')}}"/>
 <style>
     .slick-slide {
-        height: 400px;
+        height: 500px;
     }
 
     .slick-slide img {
-        height: 400px;
+        height: 500px;
     }
 
     .pd-2 {
@@ -18,7 +18,13 @@
     .uk-width-1-3 {
         float: left
     }
-
+     .ct-label
+     {
+        font-size: 9px;
+     }
+ .ct-label.ct-horizontal{
+    white-space: nowrap;
+ }
     .ct-label.ct-horizontal.ct-end {
         color: white;
     }
@@ -174,64 +180,50 @@
                     @foreach ($categories as $category)
 
                         <div class="uk-width-1-1">
+                    @if(array_search($category->id, array_column($kpis, 'category'))!== false)
                             <div class="uk-alert uk-alert-info" data-uk-alert>
-                                <a href="#" class="uk-alert-close uk-close"></a>
+                                <a href="#" class="uk-alert"></a>
                                 {{ $category->name}}
                             </div>
+                         @endif
                             <div data-slick='{"slidesToShow": 3, "slidesToScroll": 3}' class="slick">
                                 @foreach ($kpis as $kpi)
-                                    @if($kpi->category==$category->id && $kpi->show=='1')
-
-                                        <?php
-
-                                        switch ($kpi->kpi) {
-                                        case "EV or BCWP":
-                                        ?>
+                                    @if($kpi->category==$category->id && $kpi->showkpi=='1')
+					    @if($kpi->kpi=="EV or BCWP")
+                                       
                                         <div class="pd-2">
                                             <h3>{{$kpi->kpi}}</h3><h5> {{$kpi->nombre}}: {{$kpi->description}}</h5>
                                             <div id="chart-ev" class="ct-chart ct-perfect-fourth"></div>
                                         </div>
-                                        <?php
-                                        break;
-                                        case 'AC or ACWP':
-                                        ?>
+                                        @endif
+                                         @if($kpi->kpi=='AC or ACWP')
+
                                         <div class="pd-2">
                                             <h3>{{$kpi->kpi}}</h3><h5> {{$kpi->nombre}}: {{$kpi->description}}</h5>
                                             <div id="chart-ac" class="ct-chart ct-perfect-fourth"></div>
                                         </div>
-                                        <?php
-                                        break;
-
-                                        case 'PV or BCWS':
-                                        ?>
+                                        @endif
+					    @if($kpi->kpi=='PV or BCWS')
                                         <div class="pd-2">
                                             <h3>{{$kpi->kpi}}</h3><h5> {{$kpi->nombre}}: {{$kpi->description}}</h5>
                                             <div id="chart-pv" class="ct-chart ct-perfect-fourth"></div>
                                         </div>
-                                        <?php
-                                        break;
-                                        case 'CPI':
-                                        ?>
+                                        @endif
+                                         @if($kpi->kpi=='CPI')
                                         <div class="pd-2">
                                             <h3>{{$kpi->kpi}}</h3><h5>{{$kpi->nombre}}: {{$kpi->description}}</h5>
                                             <div id="chart-cpi" class="ct-chart ct-perfect-fourth"></div>
                                         </div>
-                                        <?php
-                                        break;
+                                      @endif
+                                         @if($kpi->kpi=='SPI')
 
-
-                                        case 'SPI':
-                                        ?>
                                         <div class="pd-2">
                                             <h3>{{$kpi->kpi}}</h3><h5>{{$kpi->nombre}}: {{$kpi->description}}</h5>
                                             <div id="chart-spi" class="ct-chart ct-perfect-fourth"></div>
                                         </div>
-                                        <?php
-                                        break;
+                                                                             @endif
+                                         @if($kpi->kpi=='EAC')
 
-
-                                        case 'EAC':
-                                        ?>
                                         <div class="pd-2">
                                             <h3>{{$kpi->kpi}} (CASE 1)</h3><h5> {{$kpi->nombre}}: (you suppose your
                                                 future perfomance will be the same than the actual one: PV/CPI. In the
@@ -259,12 +251,9 @@
                                                 USD.-</h5>
                                             <div id="chart-eac4" class="ct-chart ct-perfect-fourth"></div>
                                         </div>
+                                        @endif
+                                         @if($kpi->kpi=='VAC')
 
-                                        <?php
-                                        break;
-
-                                        case 'VAC':
-                                        ?>
                                         <div class="pd-2">
                                             <h3>{{$kpi->kpi}} (EAC CASE 1)</h3><h5>{{$kpi->nombre}}
                                                 : {{$kpi->description}}</h5>
@@ -285,163 +274,129 @@
                                                 : {{$kpi->description}}</h5>
                                             <div id="chart-vac4" class="ct-chart ct-perfect-fourth"></div>
                                         </div>
+                                        @endif
+                                         @if($kpi->kpi=='SV')
 
-                                        <?php
-                                        break;
-
-
-                                        case 'SV':
-                                        ?>
                                         <div class="pd-2">
                                             <h3>{{$kpi->kpi}}</h3><h5> {{$kpi->nombre}}: {{$kpi->description}}</h5>
                                             <div id="chart-sv" class="ct-chart ct-perfect-fourth"></div>
                                         </div>
-                                        <?php
-                                        break;
+                                                                               @endif
+                                         @if($kpi->kpi=='MFN')
 
-                                        case 'MFN':
-                                        ?>
                                         <div class="pd-2">
                                             <h3>{{$kpi->kpi}}</h3><h5>{{$kpi->nombre}}: {{$kpi->description}}</h5>
                                             <div id="chart-mfn" class="ct-chart ct-perfect-fourth"></div>
                                         </div>
-                                        <?php
-                                        break;
+                                                                              @endif
+                                         @if($kpi->kpi=='FNSL')
 
-                                        case 'FNSL':
-                                        ?>
                                         <div class="pd-2">
                                             <h3>{{$kpi->kpi}}</h3><h5>{{$kpi->nombre}}:{{$kpi->description}}</h5>
                                             <div id="chart-fnsl" class="ct-chart ct-perfect-fourth"></div>
                                         </div>
-                                        <?php
-                                        break;
+                                                                              @endif
+                                         @if($kpi->kpi=='ROI')
 
-                                        case 'ROI':
-                                        ?>
                                         <div class="pd-2">
                                             <h3>{{$kpi->kpi}}</h3><h5>{{$kpi->nombre}}: {{$kpi->description}}</h5>
                                             <div id="chart-roi" class="ct-chart ct-perfect-fourth"></div>
                                         </div>
-                                        <?php
-                                        break;
+                                                                               @endif
+                                         @if($kpi->kpi=='RRR')
 
-                                        case 'RRR':
-                                        ?>
                                         <div class="pd-2">
                                             <h3>{{$kpi->kpi}}</h3><h5>{{$kpi->nombre}}: {{$kpi->description}}</h5>
                                             <div id="chart-rrr" class="ct-chart ct-perfect-fourth"></div>
                                         </div>
-                                        <?php
-                                        break;
-
+                                        @endif
+                                         @if($kpi->kpi=='Activities')
+                                      
+  <?php
                                         //PENDIENTE, HAY QUE HACER UN TICKET O TASK ISTORY QUE ALMACENE ESO
-                                        case 'Activities':
                                         ?>
                                         <div class="pd-2">
                                             <h3>{{$kpi->kpi}}</h3><h5>{{$kpi->nombre}}: {{$kpi->description}}</h5>
                                             <div id="chart-Activities" class="ct-chart ct-perfect-fourth"></div>
                                         </div>
-                                        <?php
-                                        break;
-
-
-                                        case 'Milestones':
-                                        ?>
+@endif
+                                         @if($kpi->kpi=='Milestones')
+                                       
                                         <div class="pd-2">
                                             <h3>{{$kpi->kpi}}</h3><h5>{{$kpi->nombre}}: {{$kpi->description}}</h5>
                                             <div id="chart-Milestones" class="ct-chart ct-perfect-fourth"></div>
                                         </div>
-                                        <?php
-                                        break;
+@endif
+                                         @if($kpi->kpi=='Reviews')
 
-                                        //PENDIENTE, QUE SON REVIEWS?
-                                        case 'Reviews':
-                                        ?>
+                                       
                                         <div class="pd-2">
                                             <h3>{{$kpi->kpi}}</h3><h5>{{$kpi->nombre}}: {{$kpi->description}}</h5>
                                             <div id="chart-Reviews" class="ct-chart ct-perfect-fourth"></div>
                                         </div>
+@endif
+                                         @if($kpi->kpi=='Commitments')
+
                                         <?php
-                                        break;
+
 
                                         //PENDIENTE, QUE SON Commitments?
-                                        case 'Commitments':
+
                                         ?>
                                         <div class="pd-2">
                                             <h3>{{$kpi->kpi}}</h3><h5>{{$kpi->nombre}}: {{$kpi->description}}</h5>
                                             <div id="chart-Commitments" class="ct-chart ct-perfect-fourth"></div>
                                         </div>
-                                        <?php
-                                        break;
+					@endif
+                                         @if($kpi->kpi=='Overdue Tasks')
 
+                                        <?php
                                         //de donde saco el status?
-                                        case 'Overdue Tasks':
                                         ?>
                                         <div class="pd-2">
                                             <h3>{{$kpi->kpi}}</h3><h5>{{$kpi->nombre}}: {{$kpi->description}}</h5>
                                             <div id="chart-OverdueTasks" class="ct-chart ct-perfect-fourth"></div>
                                         </div>
-                                        <?php
-                                        break;
+                           					@endif
+                                         @if($kpi->kpi=='Task Completed')
 
-
-                                        case 'Task Completed':
-                                        ?>
-                                        <div class="pd-2">
+                                              <div class="pd-2">
                                             <h3>{{$kpi->kpi}}</h3><h5>{{$kpi->nombre}}: {{$kpi->description}}</h5>
                                             <div id="chart-TaskCompleted" class="ct-chart ct-perfect-fourth"></div>
                                         </div>
-                                        <?php
-                                        break;
-
-                                        case 'Planned Hours':
-                                        ?>
+                     					@endif
+                                         @if($kpi->kpi=='Planned Hours')
                                         <div class="pd-2">
                                             <h3>{{$kpi->kpi}}</h3><h5>{{$kpi->nombre}}: {{$kpi->description}}</h5>
                                             <div id="chart-PlannedHours" class="ct-chart ct-perfect-fourth"></div>
                                         </div>
+			@endif
+                                         @if($kpi->kpi=='Completed Projects')
                                         <?php
-                                        break;
-
-
                                         //PENDIENTE, NO SE QUE TIPO DE GRAFICO VA
-                                        case 'Completed Projects':
                                         ?>
                                         <div class="pd-2">
                                             <h3>{{$kpi->kpi}}</h3><h5>{{$kpi->nombre}}: {{$kpi->description}}</h5>
                                             <div id="chart-CompletedProjects" class="ct-chart ct-perfect-fourth"></div>
                                         </div>
+@endif
+                                         @if($kpi->kpi=='Cancelled Projects')
                                         <?php
-                                        break;
-
+ 
 
                                         //PENDIENTE, NO SE QUE TIPO DE GRAFICO VA
-                                        case 'Cancelled Projects':
                                         ?>
                                         <div class="pd-2">
                                             <h3>{{$kpi->kpi}}</h3><h5>{{$kpi->nombre}}: {{$kpi->description}}</h5>
                                             <div id="chart-CancelledProjects" class="ct-chart ct-perfect-fourth"></div>
                                         </div>
-                                        <?php
-                                        break;
-
-                                        case 'Response Times':
-                                        ?>
+					@endif
+                                         @if($kpi->kpi=='Response Times')
                                         <div class="pd-2">
                                             <h3>{{$kpi->kpi}}</h3><h5>{{$kpi->nombre}}: {{$kpi->description}}</h5>
                                             <div id="chart-ResponseTimes" class="ct-chart ct-perfect-fourth"></div>
                                         </div>
-                                        <?php
-                                        break;
-
-
-
-                                        }
-
-
-                                        ?>
-
+ @endif
 
                                     @endif
 
@@ -466,6 +421,6 @@
     <script src="{{asset('flot-master/jquery.flot.js')}}"></script>
     <script src="{{asset('js/kpis.js')}}"></script>
 
-    <script>Kpis.init('<?php echo e(env('API_PATH')); ?>', '<?php echo e(env('APP_URL')); ?>');</script>
+    <script>Kpis.init('<?php echo e(env('API_PATH')); ?>', '<?php echo e(env('APP_URL')); ?>','{{ $category_kpi }}');</script>
 
 @endsection

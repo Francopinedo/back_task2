@@ -13,7 +13,7 @@ class HolidayController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit']);
     }
 
     /**
@@ -57,12 +57,15 @@ class HolidayController extends Controller
     public function store(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'date'       => 'required',
 			'country_id' => 'required'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('POST', 'holidays', $data);
 
@@ -91,12 +94,15 @@ class HolidayController extends Controller
     public function update(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'date'     => 'required',
 			'country_id' => 'required'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('PATCH', 'holidays/'.$data['id'], $data);
 
@@ -146,5 +152,38 @@ class HolidayController extends Controller
     	}
 
     	return redirect()->action('HolidayController@index');
+    }
+
+     public function reload(Request $request)
+    {
+
+     
+
+      $company = $this->getFromApi('GET', 'companies/fromUser/' . Auth::id());
+
+   $data = $request->all();
+   $data['company_id'] = $company->id;
+    $res = $this->apiCall('POST', 'holidays/reload',$data);
+
+        // validacion de la respuesta del api
+        if (!empty(json_decode($res->getBody()->__toString(), TRUE)['error']))
+        {
+            session()->flash('message', __('api_errors.delete'));
+            session()->flash('alert-class', 'danger');
+
+            $jsonRes = json_decode($res->getBody()->__toString(), TRUE)['error'];
+            Validator::make($jsonRes,
+                ['status_code' => [Rule::in(['201', '200'])]],
+                ['in' => __('api_errors.delete')]
+            )->validate();
+
+        }else
+        {
+            session()->flash('message', __('general.reloaded'));
+            session()->flash('alert-class', 'success');
+        }
+
+        return response()->json(array('success' => true));   
+
     }
 }

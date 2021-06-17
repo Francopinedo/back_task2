@@ -13,8 +13,8 @@
 	        ];
 
 		var actions = [
-			            { pre: '<a href="/workgroups/', post: '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' },
-			            { pre: '<a href="/workgroups/', post: '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>' }
+			            { pre: '<a title={{__('general.edit')}} href="/workgroups/', post: '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' },
+			            { pre: '<a title={{__('general.delete')}} href="/workgroups/', post: '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>' }
 			        ];
         var extra_buttons = [{
             text: 'IMPORT',
@@ -76,9 +76,9 @@
                 	<table id="workgroups-table" class="uk-table" cellspacing="0" width="100%">
                 	    <thead>
                 	        <tr>
-                	        	<th>{{ __('workgroups.id') }}</th>
-                	        	<th>{{ __('workgroups.title') }}</th>
-                	        	<th>{{ __('general.actions') }}</th>
+                	        	<th title="{{ __('workgroups_tooltip.id')}}">{{ __('workgroups.id') }}</th>
+                	        	<th title="{{ __('workgroups_tooltip.title')}}">{{ __('workgroups.title') }}</th>
+                	        	<th title="{{ __('general.actions') }}">{{ __('general.actions') }}</th>
                 	        </tr>
                 	    </thead>
                 	</table>
@@ -86,7 +86,7 @@
                 		<div class="uk-width-medium-1-3" id="datatables-length"></div>
                 		<div class="uk-width-medium-1-3" id="datatables-pagination"></div>
                 		<div class="uk-width-medium-1-3">
-                			<a class="md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light" href="#" id="add-new">{{ __('workgroups.add_new') }}</a>
+                			<a class="md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light" href="#" id="add-new" title="{{ __('workgroups_tooltip.add_new')}}">{{ __('workgroups.add_new') }}</a>
                 		</div>
                 	</div>
                 </div>

@@ -1,4 +1,4 @@
-@extends('layouts.app', ['favoriteTitle' => __('tasks.tasks'), 'favoriteUrl' => 'tasks'])
+@extends('layouts.app', ['favoriteTitle' => __('tasks.tasks'), 'favoriteUrl' => url(Request::path())])
 @if(!session()->has('project_id'))
 @section('content')
     <div class="md-card">
@@ -27,13 +27,13 @@
     <script type="text/javascript">
         var holidaysForGantt = '{{ $holidaysForGantt }}';
 
-        var vsunIsHoly = '{{ in_array(0, $project->holy_days)?true:false }}';
-        var vmonIsHoly = '{{ in_array(1, $project->holy_days)?true:false }}';
-        var vtueIsHoly = '{{ in_array(2, $project->holy_days)?true:false }}';
-        var vwedIsHoly = '{{ in_array(3, $project->holy_days)?true:false }}';
-        var vthuIsHoly = '{{ in_array(4, $project->holy_days)?true:false }}';
-        var vfriIsHoly = '{{ in_array(5, $project->holy_days)?true:false }}';
-        var vsatIsHoly = '{{ in_array(6, $project->holy_days)?true:false }}';
+        var vsunIsHoly = '{{ !empty($project->holy_days)? in_array(0, $project->holy_days)?true:false:false }}';
+        var vmonIsHoly = '{{ !empty($project->holy_days)? in_array(1, $project->holy_days)?true:false:false }}';
+        var vtueIsHoly = '{{ !empty($project->holy_days)? in_array(2, $project->holy_days)?true:false:false }}';
+        var vwedIsHoly = '{{ !empty($project->holy_days)? in_array(3, $project->holy_days)?true:false:false }}';
+        var vthuIsHoly = '{{ !empty($project->holy_days)? in_array(4, $project->holy_days)?true:false:false }}';
+        var vfriIsHoly = '{{ !empty($project->holy_days)? in_array(5, $project->holy_days)?true:false:false }}';
+        var vsatIsHoly = '{{ !empty($project->holy_days)? in_array(6, $project->holy_days)?true:false:false }}';
         var vmillisInWorkingDay = '{{ isset($project->hours_by_day)&&!empty($project->hours_by_day * 3600000)?$project->hours_by_day:8*3600000 }}';
     </script>
 
@@ -115,7 +115,7 @@
 	      <span class="ganttButtonSeparator requireCanWrite requireCanAdd"></span>
 	      <button onclick="$('#workSpace').trigger('addAboveCurrentTask.gantt');return false;"  data-toggle="tooltip" class="button textual icon requireCanWrite requireCanAdd" title="insert above"><i class="fa fa-chevron-up fa-2x" aria-hidden="true"></i></button>
 	      <button onclick="$('#workSpace').trigger('addBelowCurrentTask.gantt');return false;"  data-toggle="tooltip" class="button textual icon requireCanWrite requireCanAdd" title="insert below"><i class="fa fa-chevron-down fa-2x" aria-hidden="true"></i></button>
-	      <button id="add-new" style="float: none;"  data-toggle="tooltip" class="button textual icon requireCanWrite requireCanAdd" title="insert box"><i class="fa fa-plus fa-2x" aria-hidden="true"></i></button>
+	      <button id="add-new" style="float: none;"  data-toggle="tooltip" class="button textual icon requireCanWrite requireCanAdd" title="Add Task (END)"><i class="fa fa-plus fa-2x" aria-hidden="true"></i></button>
 	      <span class="ganttButtonSeparator requireCanWrite requireCanInOutdent"></span>
 	      <button onclick="$('#workSpace').trigger('outdentCurrentTask.gantt');return false;"  data-toggle="tooltip" class="button textual icon requireCanWrite requireCanInOutdent" title="un-indent task"><i class="fa fa-outdent fa-2x" aria-hidden="true"></i></button>
 	      <button onclick="$('#workSpace').trigger('indentCurrentTask.gantt');return false;"  data-toggle="tooltip" class="button textual icon requireCanWrite requireCanInOutdent" title="indent task"><i class="fa fa-indent fa-2x" aria-hidden="true"></i></button>
@@ -125,10 +125,10 @@
 
 
 	         <span class="ganttButtonSeparator requireCanWrite requireCanDelete"></span>
-      <button onclick="$('#workSpace').trigger('deleteFocused.gantt');return false;" data-toggle="tooltip" class="button textual icon delete requireCanWrite" title="Elimina"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></button>
+      <button onclick="$('#workSpace').trigger('deleteFocused.gantt');return false;" data-toggle="tooltip" class="button textual icon delete requireCanWrite" title="Delete"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></button>
 
 	      <span class="ganttButtonSeparator requireCanAddIssue"></span>
-	      <button onclick="$('#workSpace').trigger('addIssue.gantt');return false;"  data-toggle="tooltip" class="button textual icon requireCanAddIssue" title="add issue / todo"><span class="teamworkIcon">i</span></button>
+	      <button onclick="$('#workSpace').trigger('addIssue.gantt');return false;"  data-toggle="tooltip" class="button textual icon requireCanAddIssue" title="add issue / ToDO"><span class="teamworkIcon">i</span></button>
 
 	      <span class="ganttButtonSeparator"></span>
 	      <button onclick="$('#workSpace').trigger('expandAll.gantt');return false;"  data-toggle="tooltip" class="button textual icon " title="EXPAND_ALL"><i class="fa fa-expand fa-2x" aria-hidden="true"></i></button>
@@ -145,16 +145,29 @@
 	      <button onclick="ge.splitter.resize(.1);return false;"  data-toggle="tooltip" title="Left"  class="button textual icon" ><i class="fa fa-long-arrow-left fa-2x" aria-hidden="true"></i></button>
 	      <button onclick="ge.splitter.resize(50);return false;"  data-toggle="tooltip"  title="Split" class="button textual icon" ><i class="fa fa-arrows-h fa-2x" aria-hidden="true"></i></button>
 	      <button onclick="ge.splitter.resize(100);return false;"  data-toggle="tooltip" title="Right" class="button textual icon"><i class="fa fa-long-arrow-right fa-2x" aria-hidden="true"></i></button>
+ <span class="ganttButtonSeparator requireCanSeeCriticalPath"></span>
+	     <button  id="btn_whatif"  onclick="tasks.addwhatif(true); "  data-toggle="tooltip" class="button textual icon " title="What If"><i class="fa fa-arrows-alt fa-2x" aria-hidden="true"></i></button>
 
-	      &nbsp; &nbsp; &nbsp; &nbsp;
+ <span class="ganttButtonSeparator requireCanSeeCriticalPath"></span>
+	     <button  id="btn_quotation"  onclick="tasks.addQuotation(true); "  data-toggle="tooltip" class="button textual icon " title="Quotation"><i class="fa fa-archive fa-2x" aria-hidden="true"></i></button>
 
-	       <button  id="btn_quotation"  onclick="tasks.addQuotation(true); "  style="float: right;" class="md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light requireWrite" title="{{ __('tasks.quotation') }}">{{ __('tasks.quotation') }}</button>
+<span class="ganttButtonSeparator requireCanSeeCriticalPath"></span>
+	     <button  id="btn_export"  onclick="tasks.getExport(true); "  data-toggle="tooltip" class="button textual icon " title="Export to Excel"><i class="fa fa-external-link fa-2x" aria-hidden="true"></i></button>
+
+<span class="ganttButtonSeparator requireCanSeeCriticalPath"></span>
+	     <button  id="btn_import"  onclick="tasks.getImport(true); "  data-toggle="tooltip" class="button textual icon " title="Import from Excel"><i class="fa fa-file-excel-o fa-2x" aria-hidden="true"></i></button>
 
 
+<span class="ganttButtonSeparator requireCanSeeCriticalPath"></span>
 
-	    <button id="btn_save" onclick="tasks.showLoading(true); " style="float: right;" class="md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light requireWrite" title="{{ __('tasks.save') }}">{{ __('tasks.save') }}</button>
+	       <button  id="btn_save"  onclick="tasks.showLoading(true); " data-toggle="tooltip" class="button textual icon " title="Save"><i class="fa fa-save fa-2x" aria-hidden="true"></i></button>
 
-	    </div></div>
+ <span class="ganttButtonSeparator requireCanSeeCriticalPath"></span>
+
+	       <button  id="btn_exit"  onclick="tasks.exitTasks(true); " data-toggle="tooltip" class="button textual icon " title="Exit"><i class="fa fa-sign-out fa-2x" aria-hidden="true"></i></button>
+
+
+    </div></div>
 	  --></div>
 
         <div class="__template__" type="TASKSEDITHEAD"><!--

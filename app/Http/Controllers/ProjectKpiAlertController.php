@@ -11,7 +11,7 @@ class ProjectKpiAlertController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit', 'deletecontrol']);
     }
 
     /**
@@ -20,15 +20,21 @@ class ProjectKpiAlertController extends Controller
     public function store(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'kpi_id'       => 'required',
 			'project_id'   => 'required',
 			'red_alert'    => 'required',
 			'yellow_alert' => 'required',
-			'green_alert'  => 'required'
+			'green_alert'  => 'required',
+			'percent_red_alert'    => 'required',
+			'percent_yellow_alert' => 'required',
+			'percent_green_alert'  => 'required'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('POST', 'project_kpi_alerts', $data);
 
@@ -58,10 +64,11 @@ class ProjectKpiAlertController extends Controller
     	$projectKpiAlert = $this->getFromApi('GET', 'project_kpi_alerts/'.$id);
 
     	$company = $this->getFromApi('GET', 'companies/fromUser/'.Auth::id());
-    	$kpis = $this->getFromApi('GET', 'kpis?company_id='.$company->id);
+    	$kpis = $this->getFromApi('GET', 'kpis/'.$projectKpiAlert->kpi_id);
 
     	return response()->json([
     		'view' => view('project_kpi_alert/edit', [
+                'project_id' => $id,
 				'projectKpiAlert'   => $projectKpiAlert,
 				'company'   => $company,
 				'kpis' => $kpis
@@ -75,14 +82,20 @@ class ProjectKpiAlertController extends Controller
     public function update(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'id'           => 'required',
 			'red_alert'    => 'required',
 			'yellow_alert' => 'required',
-			'green_alert'  => 'required'
+			'green_alert'  => 'required',
+			'percent_red_alert'    => 'required',
+			'percent_yellow_alert' => 'required',
+			'percent_green_alert'  => 'required'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
     	$res = $this->apiCall('PATCH', 'project_kpi_alerts/'.$data['id'], $data);
 

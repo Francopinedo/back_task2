@@ -119,7 +119,7 @@
         </ul>
     </div>
     <div class="uk-width-large-1-2">
-    	<h2 class="heading_c uk-margin-small-bottom">Details</h2>
+    	<h2 class="heading_c uk-margin-small-bottom">{{__('users.detail')}}</h2>
         <ul class="md-list md-list-addon">
             <li>
                 <div class="md-list-addon-element">
@@ -127,7 +127,7 @@
                 </div>
                 <div class="md-list-content">
                     <span class="md-list-heading">Bianka Turner</span>
-                    <span class="uk-text-small uk-text-muted">Assignee</span>
+                    <span class="uk-text-small uk-text-muted">{{__('users.assigned')}}</span>
                 </div>
             </li>
             <li>
@@ -136,7 +136,7 @@
                 </div>
                 <div class="md-list-content">
                     <span class="md-list-heading">14 Jun 2015</span>
-                    <span class="uk-text-small uk-text-muted">Created</span>
+                    <span class="uk-text-small uk-text-muted">{{__('users.created')}}</span>
                 </div>
             </li>
             <li>
@@ -145,8 +145,25 @@
                 </div>
                 <div class="md-list-content">
                     <span class="md-list-heading">18 Jun 2015</span>
-                    <span class="uk-text-small uk-text-muted">Updated</span>
+                    <span class="uk-text-small uk-text-muted">{{__('users.updated')}}</span>
                 </div>
+</li>
+            <li>
+<div class="md-list-addon-element">
+                    <i class="md-list-addon-icon material-icons"></i>
+                </div>
+                    <span class="md-list-heading">Logo</span>
+			<div class="md-list-content thumbnail">
+
+                                        @if (empty($customer->logo_path) || $customer->logo_path=='')
+                                            <img alt="logo" id="logo_path"
+                                                 src="{{ URL::to('/') }}/assets/img/avatardefault.png">
+
+                                        @else
+                                            <img src="{{ URL::to('/') .'/assets/img/customers/'. $customer->id .'/'. $customer->logo_path }}"
+                                                 alt="" >
+                                        @endif
+                                    </div>
             </li>
         </ul>
     </div>

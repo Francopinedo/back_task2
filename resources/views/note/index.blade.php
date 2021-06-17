@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app', ['favoriteTitle' => __('notes.notes'), 'favoriteUrl' => url(Request::path())])
 
 @section('scripts')
 	<script>
@@ -12,22 +12,7 @@
 @section('section_title', __('notes.notes'))
 
 @section('content')
-	@if(!session()->has('project_id'))
-		<div class="md-card">
-	        <div class="md-card-content">
-	            <div class="uk-grid" data-uk-grid-margin>
-	                <div class="uk-width-1-1">
-						<div class="uk-alert uk-alert-danger" data-uk-alert>
-				            <a href="#" class="uk-alert-close uk-close"></a>
-				            {{ __('projects.you_need_a_project') }}
-				        </div>
-				    </div>
-				</div>
-			</div>
-		</div>
-	@endif
-
-	@if(session()->has('project_id'))
+	@if(Auth::id())
 		<div class="uk-width-medium-1-3 uk-push-1-3">
 			<div class="md-card">
 		        <div class="md-card-content">
@@ -54,19 +39,19 @@
 									<div class="uk-width-medium-1-1">
 		                                <span class="icheck-inline">
 		                                    <input type="radio" name="color" name="white" value="white" data-md-icheck checked/>
-		                                    <label class="inline-label">{{ __('notes.white') }}</label>
+		                                    <label class="inline-label md-bg-white-500-notes" style="padding: 5px;">{{ __('notes.white') }}</label>
 		                                </span>
 		                                <span class="icheck-inline">
 		                                    <input type="radio" name="color" name="green" value="green" data-md-icheck />
-		                                    <label class="inline-label md-bg-green-100" style="padding: 5px;">{{ __('notes.green') }}</label>
+		                                    <label class="inline-label md-bg-green-500-notes" style="padding: 5px;">{{ __('notes.green') }}</label>
 		                                </span>
 		                                <span class="icheck-inline">
 		                                    <input type="radio" name="color" name="yellow" value="yellow" data-md-icheck />
-		                                    <label class="inline-label md-bg-yellow-100" style="padding: 5px;">{{ __('notes.yellow') }}</label>
+		                                    <label class="inline-label md-bg-yellow-500-notes" style="padding: 5px;">{{ __('notes.yellow') }}</label>
 		                                </span>
 		                                <span class="icheck-inline">
 		                                    <input type="radio" name="color" name="red" value="red" data-md-icheck />
-		                                    <label class="inline-label md-bg-red-100" style="padding: 5px;">{{ __('notes.red') }}</label>
+		                                    <label class="inline-label md-bg-red-500-notes" style="padding: 5px;">{{ __('notes.red') }}</label>
 		                                </span>
 		                            </div>
 		        	            </div>
@@ -84,10 +69,10 @@
 		<div class="uk-grid">
 		@foreach ($notes as $note)
 			<div class="uk-width-1-3 uk-margin-large-top">
-				<div class="md-card md-bg-{{ $note->color }}-100">
+				<div class="md-card md-bg-{{ $note->color }}-500-notes">
 	                <div class="uk-position-absolute uk-position-top-right uk-margin-small-right uk-margin-small-top">
-	                    <a href="/notes/{{ $note->id }}/edit" class="edit-btn" title="{{ __('notes.edit') }}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-	                    <a href="/notes/{{ $note->id }}/delete" class="delete-btn" title="{{ __('notes.delete') }}"><i class="fa fa-times" aria-hidden="true"></i></a>
+	                    <a title="{{__('general.edit')}}" href="/notes/{{ $note->id }}/edit" class="edit-btn" title="{{ __('notes.edit') }}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+	                    <a title="{{__('general.delete')}}" href="/notes/{{ $note->id }}/delete" class="delete-btn" title="{{ __('notes.delete') }}"><i class="fa fa-times" aria-hidden="true"></i></a>
 	                </div>
 	                <div class="md-card-content">
 	                    <h2 class="heading_b uk-margin-large-right">{{ $note->title }}</h2>

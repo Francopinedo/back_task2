@@ -9,12 +9,13 @@ use Illuminate\Support\Facades\Storage;
 use League\Flysystem\Exception;
 use Validator;
 use ZipArchive;
+use Carbon\Carbon;
 
 class RepositoryBackupController extends Controller
 {
     public function __construct()
     {
-        /*$this->middleware('auth');*/
+        /*$this->middleware(['auth','systemaudit']);*/
     }
 
     /**
@@ -24,7 +25,7 @@ class RepositoryBackupController extends Controller
     {
 
         $company = $this->getFromApi('GET', 'companies/fromUser/' . Auth::id());
-        $customers = $this->getFromApi('GET', 'customers/?company_id=' . $company->id);
+        $customers = $this->getFromApi('GET', 'customers?company_id=' . $company->id);
 
         $params = [
             'customers' => $customers,
@@ -38,13 +39,15 @@ class RepositoryBackupController extends Controller
     public
     function download(Request $request)
     {
+        $now = Carbon::now(); // Para manipular Hora y Fecha
+        $project = $this->getFromApi('GET', 'projects/' . $request->project);
+        $customer = $this->getFromApi('GET', 'customers/'.$request->customer);
+
+        $destinationPath = "app/public/repository/" . $customer->name . "/" . $project->name;
 
 
-        $destinationPath = "app/public/repository/" . $request->customer . "/" . $request->project;
-
-
-        if ($exists = Storage::disk('repository')->exists($request->customer . "/" . $request->project . "/backup.zip")) {     // archive is now downloadable ...
-            return response()->download(storage_path($destinationPath . "/backup.zip"))->deleteFileAfterSend(true);
+        if ($exists = Storage::disk('repository')->exists($customer->name . "/" . $project->name . "/".$customer->name."_".$project->name."_".$now->toDateString()."_".$now->toTimeString()."_repository.zip")) {     // archive is now downloadable ...
+            return response()->download(storage_path($destinationPath . "/".$customer->name."_".$project->name."_".$now->toDateString()."_".$now->toTimeString()."_repository.zip"))->deleteFileAfterSend(true);
 
 
         } else {
@@ -102,27 +105,31 @@ class RepositoryBackupController extends Controller
     public
     function validate_download(Request $request)
     {
-        $this->validate($request, [
+        $validator =Validator::make($request->all(), [
+
             'customer' => 'required',
             'project' => 'required',
 
         ]);
 
+        $now = Carbon::now(); // Para manipular Hora y Fecha
+        $project = $this->getFromApi('GET', 'projects/' . $request->project);
+        $customer = $this->getFromApi('GET', 'customers/'.$request->customer);
 
-        $destinationPath = "app/public/repository/" . $request->customer . "/" . $request->project;
+
+        $destinationPath = "app/public/repository/" . $customer->name . "/" . $project->name;
 
 
-        if (Storage::disk('repository')->has($request->customer . "/" . $request->project)) {
+        if (Storage::disk('repository')->has($customer->name . "/" . $project->name)) {
 
 
             // create a list of files that should be added to the archive.
             $directories = File::directories(storage_path($destinationPath));
 
 
-            //var_dump($directories);
-
+         
             // define the name of the archive and create a new ZipArchive instance.
-            $archiveFile = storage_path($destinationPath . "/backup.zip");
+            $archiveFile = storage_path($destinationPath . "/".$customer->name . "_".$project->name."_".$now->toDateString()."_".$now->toTimeString()."_repository.zip");
             $archive = new ZipArchive();
             // echo $destinationPath;
 
@@ -131,7 +138,7 @@ class RepositoryBackupController extends Controller
                 //$archive->addEmptyDir('test');
                 // loop trough all the files and add them to the archive.
                 $destination = $str = str_replace('\\', '/', $destinationPath);
-                $archiveFile =  $this->addFolderToZip(storage_path($destination), $archive, 'backup/');
+                $archiveFile =  $this->addFolderToZip(storage_path($destination), $archive, $customer->name.'_'.$project->name."_".$now->toDateString()."_".$now->toTimeString().'_repository/');
                 /*
                 $archive->addEmptyDir('backup');
                 foreach ($directories as $directory) {
@@ -169,7 +176,7 @@ class RepositoryBackupController extends Controller
 
                 //var_dump($archive);
                 // close the archive.
-                if ($archive->close() && Storage::disk('repository')->exists($request->customer . "/" . $request->project . "/backup.zip")) { // && Storage::disk('repository')->exists($archiveFile)
+                if ($archive->close() && Storage::disk('repository')->exists($customer->name . "/" . $project->name . "/".$customer->name.'_'.$project->name."_".$now->toDateString()."_".$now->toTimeString()."_repository.zip")) { // && Storage::disk('repository')->exists($archiveFile)
                     // archive is now downloadable ...
                     return response()->json(array('success' => ''));
                     //return response()->download($archiveFile, basename($archiveFile))->deleteFileAfterSend(true);
@@ -183,7 +190,7 @@ class RepositoryBackupController extends Controller
                 return response()->json(array('error' => 'zip file could not be created: ' . $archive->getStatusString()));
             }
         } else {
-            return response()->json(array('error' => 'Reposotory not found'));
+            return response()->json(array('error' => 'Repository not found / Empty repository'));
         }
 
 
@@ -213,7 +220,8 @@ class RepositoryBackupController extends Controller
     function store(Request $request)
     {
         // validacion del formulario
-        /*$this->validate($request, [
+        /*$validator =Validator::make($request->all(), [
+
             'title'             => 'required',
             'company_id'        => 'required',
             'city_id'           => 'required',
@@ -222,7 +230,9 @@ class RepositoryBackupController extends Controller
             'hours_by_day'      => 'required'
         ]);
 
-        $data = $request->all();
+        if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
         $res = $this->apiCall('POST', 'offices', $data);
 
@@ -252,7 +262,8 @@ class RepositoryBackupController extends Controller
     function update(Request $request)
     {
         // validacion del formulario
-        /* $this->validate($request, [
+        /* $validator =Validator::make($request->all(), [
+
              'title'             => 'required',
              'company_id'        => 'required',
              'city_id'           => 'required',
@@ -261,7 +272,9 @@ class RepositoryBackupController extends Controller
              'hours_by_day'      => 'required'
          ]);
 
-         $data = $request->all();
+         if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
          $res = $this->apiCall('PATCH', 'offices/'.$data['id'], $data);
 

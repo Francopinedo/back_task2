@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app', ['favoriteTitle' => __('profit_and_loss.profit_and_loss'), 'favoriteUrl' => url(Request::path())])
 
 @section('scripts')
 
@@ -209,30 +209,30 @@
 
                         <table id="total" cellspacing="12" >
                             <tr>
-                                <td class="bluedark">TOTAL REVENUE REAL: </td>
+                                <td class="bluedark">{{__('profit_and_loss.total_real')}}</td>
                                 <td id="toalrevenuereal" class=""></td>
-                                <td class="bluedark">TOTAL REVENUE PLANED: </td>
+                                <td class="bluedark">{{__('profit_and_loss.total_planed')}}</td>
                                 <td id="toalrevenueplaned" class=""></td>
 
 
                             </tr>
                             <tr>
-                                <td class="bluedark">TOTAL COST REAL: </td>
+                                <td class="bluedark">{{__('profit_and_loss.total_cost_real')}}</td>
                                 <td id="toalcostreal" class=""></td>
-                                <td class="bluedark">TOTAL COST PLANED: </td>
+                                <td class="bluedark">{{__('profit_and_loss.total_cost_planed')}}</td>
                                 <td id="toalcostplaned" class=""></td>
 
 
                             </tr>
 
                             <tr>
-                                <td class="bluedark">TOTAL PROFIT: </td>
+                                <td class="bluedark">{{__('profit_and_loss.total_profit')}}</td>
                                 <td id="totalprofit" class=""></td>
                                 <td class="bluedark"> </td>
                                 <td id="" class=""></td>
                             </tr>
                             <tr>
-                                <td class="bluedark">TOTAL MARGIN %: </td>
+                                <td class="bluedark">{{__('profit_and_loss.total_margin')}}</td>
                                 <td id="totalmargin" class=""></td>
                                 <td class="bluedark"></td>
                                 <td id="" class=""></td>

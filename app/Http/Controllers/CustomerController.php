@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Input;
+
 use Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
@@ -13,7 +16,8 @@ class CustomerController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit', 'deletecontrol']);
+        // $this->middleware('deletecontrol')->only('delete');
     }
 
     /**
@@ -23,8 +27,11 @@ class CustomerController extends Controller
     {
     	$data['cities'] = $this->getFromApi('GET', 'cities');
     	$data['currencies'] = $this->getFromApi('GET', 'currencies');
-    	$data['industries'] = $this->getFromApi('GET', 'industries');
-
+        $data['industries'] = $this->getFromApi('GET', 'industries');
+        
+        $res = $this->apiCall('GET', 'countries');
+        $countries = json_decode($res->getBody()->__toString())->data;
+        $data['countries']=$countries;
     	if (Auth::user()->hasRole('admin'))
     	{
     		$data['customers'] = $this->getFromApi('GET', 'customers?include=industry,city,currency');
@@ -49,9 +56,11 @@ class CustomerController extends Controller
     	$cities = $this->getFromApi('GET', 'cities');
     	$currencies = $this->getFromApi('GET', 'currencies');
     	$industries = $this->getFromApi('GET', 'industries');
-
+        $res = $this->apiCall('GET', 'countries');
+        $countries = json_decode($res->getBody()->__toString())->data;
+        
     	return response()->json([
-    		'view' => view('customer/edit', ['customer' => $customer, 'cities' => $cities, 'currencies' => $currencies, 'industries' => $industries] )->render()
+    		'view' => view('customer/edit', ['countries' => $countries, 'customer' => $customer, 'cities' => $cities, 'currencies' => $currencies, 'industries' => $industries] )->render()
     	]);
     }
 
@@ -60,20 +69,27 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
+
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'name'       => 'required',
-			'company_id' => 'required'
+			'company_id' => 'required',
+             'phone'                 => 'phone:VE,US,AR|nullable',
+            'email'                 => 'email|nullable',
 	    ]);
 
-    	$data = $request->all();
-
+        $file = $request->file('logo_path');
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        } 
+        $data = $request->all();
+        $data['logo_path'] =($file!=null || $file!='') ? $file->getClientOriginalName() : '';
     	$res = $this->apiCall('POST', 'customers', $data);
-
-
-    	// validacion de la respuesta del api
+	 	// validacion de la respuesta del api
     	if (!empty(json_decode($res->getBody()->__toString(), TRUE)['error']))
     	{
+
 	    	$jsonRes = json_decode($res->getBody()->__toString(), TRUE)['error'];
 	    	Validator::make($jsonRes,
 	    		['status_code' => [Rule::in(['201', '200'])]],
@@ -82,6 +98,17 @@ class CustomerController extends Controller
     	}
     	else
     	{
+    	$custo=array();
+    	$custo=json_decode($res->getBody(), true);
+	
+   
+		$destinationPath = "assets/img/customers/" . $custo['data']['id'].'/';
+
+	
+            if($file!=null || $file!='') {
+                $file->move(($destinationPath), $file->getClientOriginalName());
+
+            }
     		session()->flash('message', __('general.added'));
 			session()->flash('alert-class', 'success');
     	}
@@ -94,13 +121,23 @@ class CustomerController extends Controller
      */
     public function update(Request $request)
     {
+	   $customer = Customer::find($request->id);
     	// validacion del formulario
-    	$this->validate($request, [
-			'name'     => 'required'
+    	$validator =Validator::make($request->all(), [
+
+			'name'     => 'required',
+              'phone'                 => 'phone:VE,US,AR|nullable',
+            'email'                 => 'email|nullable',
 	    ]);
 
-    	$data = $request->all();
+        $file = $request->file('logo_path');
 
+    	if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        } 
+        $data = $request->all();
+        //echo var_dump($_FILES);
+        $data['logo_path'] =($file!=null || $file!='') ? $file->getClientOriginalName() : $customer->logo_path;
     	$res = $this->apiCall('PATCH', 'customers/'.$data['id'], $data);
 
     	// validacion de la respuesta del api
@@ -114,6 +151,14 @@ class CustomerController extends Controller
     	}
     	else
     	{
+
+            $destinationPath = "assets/img/customers/" . $request->id.'/';
+
+        if($file!=null || $file!='') {
+                $file->move(($destinationPath), $file->getClientOriginalName());
+
+            }
+
     		session()->flash('message', __('general.updated'));
 			session()->flash('alert-class', 'success');
     	}
@@ -180,11 +225,21 @@ class CustomerController extends Controller
     			unset($customers[$key]);
     		}
     	}
-
-    	return response()->json([
-    		'view' => view('customer/forProjectSelection', ['customers' => $customers] )->render()
+			return response()->json([
+    		'view' => view('customer/forProjectSelection', ['customers' => $customers] )->render(),
+			
     	]);
     }
+	public function forProjectSelectionButton($customer_id)
+    {
+        $customers = $this->getFromApi('GET', 'customers?customer_id=' . $customer_id);
+
+        return response()->json([
+            'view' => view('customer/forProjectSelectionButton', ['customers' => $customers])->render()
+        ]);
+    }
+
+    
 
     public function import()
     {
@@ -207,31 +262,26 @@ class CustomerController extends Controller
         $company = $this->getFromApi('GET', 'companies/fromUser/' . Auth::id());
         $array = array();
         try {
-            $this->validate($request, [
+            $validator =Validator::make($request->all(), [
+
                 'file' => 'required'
             ]);
 
             $file = $request->file('file');
-
             $array = procces_import($file);
 
-
+            $item = array();
+            $item['company_id'] =$company->id;
 
             foreach ($array as $value) {
 
-
                 if (isset($value[2])) {
-                    $item = array();
 
-
-                    $city = $this->getFromApi('GET', 'cities/?name=' . $value[2] . '&company_id=' . $company->id);
-
-
+                    $city = $this->getFromApi('GET', 'cities?name=' . $value[2] . '&company_id=' . $company->id);
 
                     if (isset($city[0])) {
 
                         $item['city_id'] = $city[0]->id;
-                        $item['company_id'] =$company->id;
 
                         $item['name'] = $value[0];
                         $item['address'] = $value[1];
@@ -242,15 +292,47 @@ class CustomerController extends Controller
                         $item['tax_number1'] = $value[7];
                         $item['tax_number2'] = $value[8];
 
-
-
-                        $this->apiCall('POST', 'customers', $item);
-
+                        $res=  $this->apiCall('POST', 'customers', $item);
+                        if (!empty(json_decode($res->getBody()->__toString(), TRUE)['error']))
+                        {
+                            session()->flash('message', 'Error with format file, some rows not import');
+                            session()->flash('alert-class', 'error');
+                            $jsonRes = json_decode($res->getBody()->__toString(), TRUE)['error'];
+                             return response()->json(array('success' => false, 'message' => 'Error with format file, some rows not import'));
+                        }
                     }
                 }
             }
-        } catch (FileException $exception) {
+        } catch (Exception $exception) {
+            session()->flash('message', 'Error with format file');
+            session()->flash('alert-class', 'error');
+            return response()->json(array('success' => false, 'message' => 'Error with format file'));
+       }
+        session()->flash('message', __('general.added'));
+        session()->flash('alert-class', 'success');
+        //return response()->json();
+        return response()->json(array('success' => true));
+    }
 
+
+
+    public function upload(Request $request, $id)
+    {
+        try {
+            var_dump($request);
+            $file = $request->file('logo_path');
+
+            $data = $request->all();
+            $data['logo_path'] = !isNull($file) ? $file->getClientOriginalName() : '';
+            //$res = $this->apiCall('PATCH', 'providers/' . $id, $data);
+
+
+            $destinationPath = "assets/img/customers/" . $id.'/';
+            // echo $file->getClientOriginalName();
+            if($file!=null || $file!='') {
+                $file->move(($destinationPath), $file->getClientOriginalName());
+            }
+        } catch (FileException $exception) {
             return response()->json(array('success' => false, 'message' => 'Error uplading file'));
         }
 

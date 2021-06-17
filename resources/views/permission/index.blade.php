@@ -27,26 +27,24 @@
 </style>
 @section('content')
 
-    <div class="md-card">
-        <div class="md-card-content">
-            <div class="uk-grid uk-grid-divider" data-uk-grid-margin="">
-                @foreach ($companyRoles as $companyRole)
-                    <div class="uk-width-large-1-4 uk-width-medium-1-1 uk-row-first">
-                        <div class="md-list-content">
-                            <span class="md-list-heading">
-                            	<a href="#r{{ $companyRole->id }}">{{ $companyRole->title }}</a>
-                            </span>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    </div>
+<ul class="panel-group" id="accordion">
+
+ <li>
+    
+             @foreach ($companyRoles as $companyRole)
+        <a id="companyrole{{$loop->index }}" data-toggle="collapse" data-parent="#accordion" href="#collapse{{$loop->index }}">
+            <div class="uk-accordion-title companyrole{{$loop->index }}">
+            <h4 class="heading_a uk-margin-bottom">{{ $companyRole->title  }}</h4>
+                </div>
+        </a>
+
+
+    <div id="collapse{{$loop->index }}" class="md-card panel-collapse collapse">
 
     <div class="md-card">
         <div class="md-card-content">
             <div class="uk-grid uk-grid-divider" data-uk-grid-margin>
-                @foreach ($companyRoles as $companyRole)
+             
 
                     <div class="uk-width-medium-1-1">
                         <h5 id="r{{ $companyRole->id }}" class="heading_c uk-margin-bottom uk-margin-top">
@@ -88,7 +86,7 @@
                         <div class="uk-width-medium-3-4">
                             <h5>{{__('permissions.repository_permisions')}}</h5>
                             @foreach ($directories as $directory)
-                                <div class="uk-width-medium-1-2">
+                                <div class="uk-width-medium-1-3">
                                     <label class="inline-label">
 
                                         <h3 style="text-decoration: underline">{{ $directory['nombre'] }}</h3>
@@ -152,7 +150,7 @@
                                         <br>
                                         @foreach ($folder['subfolders'] as $subfolder)
 
-                                            <div class="uk-width-medium-1-2 ml-10">
+                                            <div class="uk-width-medium-1-1 ml-10">
                                                 <label class="inline-label">
 
                                                     {{ $subfolder['nombre'] }}
@@ -188,9 +186,13 @@
                             @endforeach
                         </div>
                     </div>
-                @endforeach
-
+               
             </div>
         </div>
     </div>
+    </div>
+ @endforeach
+
+    </li>
+
 @endsection

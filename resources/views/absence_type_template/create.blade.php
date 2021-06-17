@@ -15,7 +15,7 @@
 
                 <div class="md-input-wrapper">
                 	<label>{{ __('absence_types.days') }}</label>
-                	<input type="text" class="md-input" name="days"><span class="md-input-bar"></span>
+                	<input type="number" class="md-input" name="days"><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required days-error"></span></div>
 
@@ -52,8 +52,36 @@
     </div>
 </div>
 
-<script src="{{ asset('js/absenceType.js') }}"></script>
+
 <script type="text/javascript">
 
-    AbsenceType.init('<?php echo e(env('API_PATH')); ?>', '<?php echo e(env('APP_URL')); ?>');
+    $(function(){
+        
+        $("#country_id").on('change', function () {
+            // console.log('chage....');
+            $.ajax({
+                url: API_PATH + '/cities',
+                type: 'GET',
+                data: {country_id: $(this).val()},
+                dataType: 'json'
+            }).done(function (data) {
+                    var html = '<option value="">Country...</option>';
+
+                    $('#city_id').selectize()[0].selectize.destroy();
+
+                    $.each(data.data, function (i, value) {
+                        // console.log(value);
+                        html += '<option value="' + value.id + '">' + value.name + '</option>';
+                    });
+
+                    $('#city_id').html(html);
+                    $('#city_id').selectize();
+
+
+
+                }
+            );
+        });
+    });
+
 </script>

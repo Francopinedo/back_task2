@@ -13,7 +13,7 @@ class CompanyController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit']);
     }
 
     /**
@@ -53,13 +53,35 @@ class CompanyController extends Controller
      */
     public function update(Request $request)
     {
+
+
     	/*==========================================================
     	=            ACTUALIZO DATOS BASICOS DE COMPANY            =
     	==========================================================*/
     	$companyData = $request->company;
+    		$file = $companyData['logo_path'];
+
+	if ($file!="")
+    	{
+
+    	$company = $this->getFromApi('GET', 'companies/fromUser/'.Auth::id().'?include=industry,city,currency');
+        $companyData['logo_path'] =($file!=null || $file!='') ? $file->getClientOriginalName() : $company->logo_path;
+ 
+			$extension = $file->getClientOriginalExtension();
+		
+		$destinationPath = "assets/img/companies/" . $companyData['id'].'/';
+
+
+ 		if($file!=null || $file!='') {
+                $file->move(($destinationPath), $file->getClientOriginalName());
+
+            }
+
+			//$name = $res->
+		//	Storage::disk('local')->put($file->getFilename().'.'.$extension,  File::get($file));
+	}
 
     	$res = $this->apiCall('PATCH', 'companies/'.$companyData['id'], $companyData);
-
     	// validacion de la respuesta del api
     	if (!empty(json_decode($res->getBody()->__toString(), TRUE)['error']))
     	{
@@ -71,19 +93,12 @@ class CompanyController extends Controller
     	}
     	else
     	{
-    		dd($res);
+    	
     		session()->flash('message', __('general.updated'));
 			session()->flash('alert-class', 'success');
     	}
 
-    	if ($request->hasFile('logo'))
-    	{
-    		$file = Request::file('logo');
-			$extension = $file->getClientOriginalExtension();
-
-			$name = $res->
-			Storage::disk('local')->put($file->getFilename().'.'.$extension,  File::get($file));
-		}
+    	
     	/*=====  End of ACTUALIZO DATOS BASICOS DE COMPANY  ======*/
 
     	return response()->json();

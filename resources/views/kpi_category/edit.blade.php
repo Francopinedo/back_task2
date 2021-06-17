@@ -10,7 +10,7 @@
             <div class="uk-width-medium-1-1 uk-row-first">
 
                 <div class="md-input-wrapper md-input-filled">
-                    <label>{{ __('kpis.nombre') }}</label>
+                    <label>{{ __('kpicategory.nombre') }}</label>
                     <input type="text" class="md-input" name="name" value="{{ $kpis_category->name }}" required><span
                             class="md-input-bar"></span>
                 </div>

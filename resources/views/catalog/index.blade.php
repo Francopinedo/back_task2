@@ -1,12 +1,36 @@
-@extends('layouts.app')
+@extends('layouts.app', ['favoriteTitle' => __('catalog.catalog'), 'favoriteUrl' => url(Request::path())])
 
 @section('section_title', __('catalog.catalog'))
 
+
 @section('content')
-    @include('catalog.form')
+    
+    <!-- 7=Project Manager 10=Program Management 12=Technical Leader 1=Admin -->
+    @if( !Auth::user()->hasRole('7') && !Auth::user()->hasRole('10') && !Auth::user()->hasRole('12') && !Auth::user()->hasRole('1') )
+
+        <!-- Alerta que hay que seleccionar un cliente / proyecto-->
+        @if( !session()->has('project_id') )
+            <div class="uk-alert uk-alert-danger" data-uk-alert>
+                <a href="#" class="uk-alert-close uk-close"></a>
+                {{ __('projects.you_need_a_project') }}
+            </div>
+        @endif
+
+        @if(session()->has('project_id'))
+            @include('catalog.form')
+        @endif
+    @else
+        @include('catalog.form')
+    @endif
+
 @endsection
 
 @section('scripts')
+{{-- <link rel="stylesheet" href="{{ asset('bower_components/bootstrap/dist/css/bootstrap.min.css') }}"> --}}
+
+     {{-- <script   src="{{ asset('bower_components/jquery/dist/jquery.min.js') }}"></script> --}}
+
+{{-- <script src="{{asset('bower_components/parsleyjs/bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script> --}}
 {{--    <script src="/bower_components/parsleyjs/dist/parsley.min.js"></script>--}}
     <!--<script src="{{ asset('js/word_preference.js') }}"></script>-->
     <script>

@@ -11,7 +11,7 @@ class WorkboardController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit']);
     }
 
     /**
@@ -48,7 +48,9 @@ class WorkboardController extends Controller
     	$ticket = $this->getFromApi('GET', 'tickets/'.$id);
 
     	$company = $this->getFromApi('GET', 'companies/fromUser/'.Auth::id());
-    	$users = $this->getFromApi('GET', 'users?company_id='.$company->id);
+    	//$users = $this->getFromApi('GET', 'users?company_id='.$company->id);
+        $users = $this->getFromApi('GET', 'task_resources?task_id=' . $ticket->task_id);
+        $users2 = $this->getFromApi('GET', 'users?company_id=' . $company->id);
         $contacts = $this->getFromApi('GET', 'contacts?company_id='.$company->id);
 
     	return response()->json([
@@ -56,7 +58,8 @@ class WorkboardController extends Controller
 				'ticket' => $ticket,
 				'contacts' => $contacts,
 				'redirect' => 'workboard',
-				'users'       => $users
+				'users'       => $users,
+				'users2'       => $users2
     		] )->render()
     	]);
     }
@@ -67,11 +70,14 @@ class WorkboardController extends Controller
     public function update(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'description'     => 'required'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        } $data = $request->all();
 
     	$res = $this->apiCall('PATCH', 'tickets/'.$data['id'], $data);
 

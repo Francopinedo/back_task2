@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app', ['favoriteTitle' => __('tickets.tickets'), 'favoriteUrl' => url(Request::path())])
 
 @section('scripts')
     <!-- datatables -->
@@ -39,7 +39,7 @@
                     {extend: 'copyHtml5', exportOptions: {columns: ':visible:not(:last-child)'}},
                     {extend: 'excelHtml5', exportOptions: {columns: ':visible:not(:last-child)'}},
                     {extend: 'csvHtml5', exportOptions: {columns: ':visible:not(:last-child)'}},
-                    {extend: 'pdfHtml5', exportOptions: {columns: ':visible:not(:last-child)'}},
+                    {extend: 'pdfHtml5',orientation:'landscape', exportOptions: {columns: ':visible:not(:last-child)'}},
                 ],
                 columns: [
                     {data: 'id', name: 'id', visible: false},
@@ -54,7 +54,16 @@
                     {data: 'progress', name:'progress'},
                     {data: 'created_at', name: 'Created At'},
                 ],
+
                 columnDefs: [
+                {
+                    targets: 1,
+                    data: null,
+                    render: function (data, type, row) {
+
+                            return '<a title="{{__('general.edit')}}" href="/workboard/'+ row['id'] +'/edit" class="table-actions edit-btn">'+data+'</a>';
+                    }
+                },
                 {
                     targets: 4,
                     data: null,
@@ -105,21 +114,25 @@
                         targets: -1,
                         data: null,
                         render: function(data, type, row){
-                            if (data != undefined && row.estimated_hours != undefined && row.progress != undefined) {
+                            if (data != undefined && row.estimated_hours != undefined ) { //&& row.progress != undefined
                             let date_1 = new Date(data);
                             let date_2 = new Date();
                             let day_in_milliseconds = 86400000;
                             let diff_in_days = (date_2 - date_1) / day_in_milliseconds;
                             let result = ((diff_in_days * 8) / row.estimated_hours) * 100;
+				let tprogress = (row.estimated_hours - row.burned_hours/row.estimated_hours)*100;
                             if (result > 100) {
-                                result = 100; 
+                                result = 100;
                             } else if(result < 0){
                                 result = 0;
                             }
                             let color;
-                            if( result < row.progress || (result == 100 && row.progress == 100)){
+
+                            if( result < tprogress || (result == 100 )){ //&& row.progress == 100
+
                                 color = 'green';
-                            }else if (result > row.progress) {
+                            }else if (result > tprogress) {
+
                                 color = 'red';
                             }else{
                                 color = 'yellow';
@@ -168,7 +181,7 @@
             <div class="uk-grid" data-uk-grid-margin>
                 <div class="uk-width-1-1">
 
-                    <h3>Tickets report for task: {{$task->name}}</h3>
+                    <h3>{{__('tickets.title_project')}} : {{$task->name}}</h3>
                     <a href="{{ URL::previous() }}" class="btn btn primary pull-right">Volver</a>
 
                     @if(session()->has('message'))
@@ -189,17 +202,18 @@
                         <table id="tickets-table" class="uk-table" cellspacing="0" width="100%">
                             <thead>
                             <tr>
-                                <th>{{ __('tickets.id') }}</th>
-                                <th>{{ __('tickets.ticket_id') }}</th>
-                                <th>Owner</th>
-                                <th>{{ __('tickets.description') }}</th>
-                                <th>{{ __('tickets.status') }}</th>
-                                <th>{{ __('tickets.due_date') }}</th>
-                                <th>{{ __('tickets.priority') }}</th>
-                                <th>{{ __('tickets.estimated_hours') }}</th>
-                                <th>{{ __('tickets.burned_hours') }}</th>
-                                <th data-class-name="progress">{{ __('tickets.progress') }}</th>
-                                <th data-class-name="progress">{{ __('tickets.estimated_progress') }}</th>
+                                <th title="{{ __('tickets_tooltip.id')}}">{{ __('tickets.id') }}</th>
+                                <th title="{{ __('tickets_tooltip.ticket_id')}}">{{ __('tickets.ticket_id') }}</th>
+
+                                <th title="{{ __('tickets_tooltip.description')}}">{{ __('tickets.description') }}</th>
+                                <th title="{{__('tickets_tooltip.owner')}}">{{__('tickets.owner')}}</th>
+                                <th title="{{ __('tickets_tooltip.status')}}">{{ __('tickets.status') }}</th>
+                                <th title="{{ __('tickets_tooltip.due_date')}}">{{ __('tickets.due_date') }}</th>
+                                <th title="{{ __('tickets_tooltip.priority')}}">{{ __('tickets.priority') }}</th>
+                                <th title="{{ __('tickets_tooltip.estimated_hours')}}">{{ __('tickets.estimated_hours') }}</th>
+                                <th title="{{ __('tickets_tooltip.burned_hours')}}">{{ __('tickets.burned_hours') }}</th>
+                                <th data-class-name="progress" title="{{ __('tickets_tooltip.progress')}}">{{ __('tickets.progress') }}</th>
+                                <th data-class-name="progress" title="{{ __('tickets_tooltip.estimated_progress')}}">{{ __('tickets.estimated_progress') }}</th>
                             </tr>
                             </thead>
                         </table>

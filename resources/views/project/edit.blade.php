@@ -6,20 +6,21 @@
     }
 
     #edit_div.switcher_active {
-        width: 600px;
+        width: 50%;
     }
 </style>
 
-<div class="uk-grid" data-uk-grid-margin>
-    <div class="uk-width-1-1">
-
-        <div class="uk-alert uk-alert-danger hide_when_empty status_code-error" data-uk-alert=""></div>
-
-        <form role="form" method="POST" action="{{ url('projects/update') }}" id="data-form-edit"
+      <form role="form" method="POST" action="{{ url('projects/update') }}" id="data-form-edit"
               data-redirect-on-success="{{ url('projects') }}">
-            {{ csrf_field() }}
+ 
+<div class="uk-grid" data-uk-grid-margin>
+            <li class="uk-width-medium-1-1 uk-row-first">
+        <div class="uk-alert uk-alert-danger hide_when_empty status_code-error" data-uk-alert=""></div>
+            </li>
+
+             {{ csrf_field() }}
             <input type="hidden" name="id" value="{{ $project->id }}">
-            <div class="uk-width-medium-1-1 uk-row-first">
+            <li class="uk-width-medium-1-3 uk-row-first">
                 <div class="md-input-wrapper md-input-filled">
                     <label>{{ __('projects.name') }}</label>
                     <input type="text" class="md-input" name="name" value="{{ $project->name }}" required><span
@@ -94,6 +95,8 @@
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required delivery_manager_id-error"></span>
                 </div>
+</li>
+	            <li class="uk-width-medium-1-3 uk-row-first">
 
                 <div class="md-input-wrapper md-input-filled">
                     <label>{{ __('projects.sow_number') }}</label>
@@ -113,27 +116,27 @@
                     <label>{{ __('projects.status') }}</label>
                     <select name="status" data-md-selectize>
                         <option value="">{{ __('projects.status') }}...</option>
-                        <option value="{{ __('projects.initiating') }}" {{ ($project->status == __('projects.initiating')) ? 'selected' : '' }}>{{ __('projects.initiating') }}
-                            ...
+                        <option value="{{ __('projects.initiating') }}" {{ ($project->status == __('projects.initiating')) ? 'selected' : '' }}>{{ ucfirst(__('projects.initiating')) }}
+                            
                         </option>
-                        <option value="{{ __('projects.planning') }}" {{ ($project->status == __('projects.planning')) ? 'selected' : '' }}>{{ __('projects.planning') }}
-                            ...
+                        <option value="{{ __('projects.planning') }}" {{ ($project->status == __('projects.planning')) ? 'selected' : '' }}>{{ ucfirst(__('projects.planning')) }}
+                            
                         </option>
-                        <option value="{{ __('projects.executing') }}" {{ ($project->status == __('projects.executing')) ? 'selected' : '' }}>{{ __('projects.executing') }}
-                            ...
+                        <option value="{{ __('projects.executing') }}" {{ ($project->status == __('projects.executing')) ? 'selected' : '' }}>{{ ucfirst(__('projects.executing')) }}
+                            
                         </option>
-                        <option value="{{ __('projects.closing') }}" {{ ($project->status == __('projects.closing')) ? 'selected' : '' }}>{{ __('projects.closing') }}
-                            ...
+                        <option value="{{ __('projects.closing') }}" {{ ($project->status == __('projects.closing')) ? 'selected' : '' }}>{{ ucfirst(__('projects.closing')) }}
+                            
                         </option>
-                        <option value="{{ __('projects.waiting') }}" {{ ($project->status == __('projects.waiting')) ? 'selected' : '' }}>{{ __('projects.waiting') }}
-                            ...
+                        <option value="{{ __('projects.waiting') }}" {{ ($project->status == __('projects.waiting')) ? 'selected' : '' }}>{{ ucfirst(__('projects.waiting')) }}
+                            
                         </option>
-                        <option value="{{ __('projects.completed') }}" {{ ($project->status == __('projects.completed')) ? 'selected' : '' }}>{{ __('projects.completed') }}
-                            ...
+                        <option value="{{ __('projects.completed') }}" {{ ($project->status == __('projects.completed')) ? 'selected' : '' }}>{{ ucfirst(__('projects.completed')) }}
+                            
                         </option>
 
-                        <option value="{{ __('projects.cancelled') }}" {{ ($project->status == __('projects.cancelled')) ? 'selected' : '' }}>{{ __('projects.cancelled') }}
-                            ...
+                        <option value="{{ __('projects.cancelled') }}" {{ ($project->status == __('projects.cancelled')) ? 'selected' : '' }}>{{ ucfirst(__('projects.cancelled')) }}
+                            
                         </option>
                     </select>
                 </div>
@@ -173,6 +176,46 @@
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required estimated_revenue-error"></span>
                 </div>
+
+
+
+
+
+ 		<label>{{ __('projects.name_convention') }}</label>
+                <div class="md-input-wrapper md-input-filled ">
+                @if(!empty($project->name_convention))
+
+              <select name="name_convention[]" multiple data-md-selectize>
+                 <option value="CustomerName" {{in_array('CustomerName', $project->name_convention)?'selected':''}}>CustomerName</option>
+                 <option value="ProjectName" {{in_array('ProjectName', $project->name_convention)?'selected':''}}>ProjectName</option>
+                 <option value="ArtifactName" {{in_array('ArtifactName', $project->name_convention)?'selected':''}}>ArtifactName</option>
+                 <option value="YYYYMMDDHHMMSS" {{in_array('YYYYMMDDHHMMSS', $project->name_convention)?'selected':''}}>YYYYMMDDHHMMSS</option>
+                  <option value="VersionNumber" {{in_array('VersionNumber', $project->name_convention)?'selected':''}}>VersionNumber</option>
+              </select>
+
+                       @else
+                         <select name="name_convention[]" multiple data-md-selectize>
+                        <option value="CustomerName">CustomerName</option>
+                        <option value="ProjectName">ProjectName</option>
+                        <option value="ArtifactName">ArtifactName</option>
+                        <option value="YYYYMMDDHHMMSS">YYYYMMDDHHMMSS</option>
+                        <option value="VersionNumber">VersionNumber</option>
+                      
+                    </select>
+
+                        @endif
+
+
+
+                </div>
+                <div class="parsley-errors-list filled"><span class="parsley-required name_convention-error"></span></div>
+
+
+
+
+
+</li>
+	            <li class="uk-width-medium-1-3 uk-row-first">
 
                 <div class="md-input-wrapper md-input-filled">
                     <label>{{ __('projects.estimated_cost') }}</label>
@@ -234,6 +277,7 @@
 
                 <label>{{ __('projects.week_holy_days') }}</label>
                 <div class="md-input-wrapper md-input-filled ">
+                    @if(!empty($project->holy_days))
                     <select name="holy_days[]" multiple data-md-selectize>
                         <option value="0" {{in_array(0, $project->holy_days)?'selected':''}}>Sunday</option>
                         <option value="1" {{in_array(1, $project->holy_days)?'selected':''}}>Monday</option>
@@ -244,6 +288,18 @@
                         <option value="6" {{in_array(6, $project->holy_days)?'selected':''}}>Saturday</option>
 
                     </select>
+                    @else
+                     <select name="holy_days[]" multiple data-md-selectize>
+                        <option value="0">Sunday</option>
+                        <option value="1">Monday</option>
+                        <option value="2">Tuesday</option>
+                        <option value="3">Wednesday</option>
+                        <option value="4">Thursday</option>
+                        <option value="5">Friday</option>
+                        <option value="6">Saturday</option>
+
+                    </select>
+                    @endif
 
                 </div>
                 <div class="parsley-errors-list filled"><span
@@ -261,7 +317,15 @@
                         @endforeach
                     </select>
                 </div>
+ 
+
+
+
                 <div class="parsley-errors-list filled"><span class="parsley-required department_id-error"></span></div>
+
+
+		</li>
+	            <li class="uk-width-medium-1-1 uk-row-first">
 
                 <div class="uk-margin-medium-top">
                     <a class="md-btn md-btn-primary md-btn-wave-light md-btn-block waves-effect waves-button waves-light"
@@ -272,10 +336,9 @@
 
             </div>
 
-        </form>
-    </div>
+       
 </div>
-
+ </form>
 <script type="text/javascript">
     $('.cancel-edit-btn').on('click', function (e) {
         e.preventDefault();

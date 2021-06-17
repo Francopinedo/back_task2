@@ -4,5 +4,5 @@ return [
 	'add_new'       => 'ADD NEW',
 	'update'        => 'UPDATE',
 	'id'            => 'ID',
-	'title'         => 'Title'
+	'title'         => 'Title:'
 ];

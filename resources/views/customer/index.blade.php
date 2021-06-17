@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app', ['favoriteTitle' => __('customers.customers'), 'favoriteUrl' => 'customers'])
 
 @section('scripts')
     <script src="/js/customers_page.js"></script>
@@ -60,8 +60,9 @@
                                 <ul class="uk-nav">
                                     <li><a href="/customers/{{ $customer->id }}/edit"
                                            class="table-actions edit-btn">{{ __('general.edit') }}</a></li>
-                                    <li><a href="/customers/{{ $customer->id }}/delete"
-                                           class="delete-btn">{{ __('general.delete') }}</a></li>
+                                    @if(Auth::user()->hasPermission('delete.users'))
+                                        <li><a href="/customers/{{ $customer->id }}/delete" class="delete-btn">{{ __('general.delete') }}</a></li>
+                                    @endif
                                 </ul>
                             </div>
                         </div>
@@ -72,7 +73,16 @@
                                     <span class="sub-heading"><i class="fa fa-building-o" aria-hidden="true"></i>&nbsp;&nbsp;{{ $customer->industry->data->name }}</span>
                                 @endif
                             </h3>
+ <div class="md-card-head-text uk-text-center">
+  				@if (empty($customer->logo_path) || $customer->logo_path=='')
+                                          
+
+                                        @else
+                                            <img style="width:100px" src="{{ URL::to('/') .'/assets/img/customers/'. $customer->id .'/'. $customer->logo_path }}"
+                                                 alt="logo" id="logo_path" >
+                                        @endif
                         </div>
+ </div>
                     </div>
                     <div class="md-card-content">
                         <ul class="md-list">
@@ -150,7 +160,7 @@
 
 @if (!Auth::user()->hasRole('admin'))
 @section('create_div')
-    @component('customer/create', ['cities' => $cities, 'currencies' => $currencies, 'industries' => $industries, 'company' => $company])
+    @component('customer/create', ['cities' => $cities,'countries' => $countries,  'currencies' => $currencies, 'industries' => $industries, 'company' => $company])
 
     @endcomponent
 @endsection

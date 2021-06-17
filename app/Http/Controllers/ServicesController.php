@@ -11,7 +11,7 @@ class ServicesController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit', 'deletecontrol']);
     }
 
     /**
@@ -54,14 +54,17 @@ class ServicesController extends Controller
     public function store(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'detail'      => 'required',
-			'amount'      => 'required',
+			'amount'        => 'numeric|required',
 			'company_id'  => 'required',
 			'currency_id' => 'required'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        } $data = $request->all();
 
     	$res = $this->apiCall('POST', 'services', $data);
 
@@ -90,13 +93,16 @@ class ServicesController extends Controller
     public function update(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'detail'      => 'required',
-			'amount'      => 'required',
+			'amount'        => 'numeric|required',
 			'currency_id' => 'required'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        } $data = $request->all();
 
     	$res = $this->apiCall('PATCH', 'services/'.$data['id'], $data);
 
@@ -169,7 +175,8 @@ class ServicesController extends Controller
         $company = $this->getFromApi('GET', 'companies/fromUser/' . Auth::id());
         $array = array();
         try {
-            $this->validate($request, [
+            $validator =Validator::make($request->all(), [
+
                 'file' => 'required'
             ]);
 
@@ -177,36 +184,24 @@ class ServicesController extends Controller
 
             $array = procces_import($file);
 
-
+            $item = array();
+            $item['company_id'] =$company->id;
 
             foreach ($array as $value) {
 
-
                 if (isset($value[1])) {
-                    $item = array();
 
-
-
-                    $curency_amount = $this->getFromApi('GET', 'currencies/?code=' . $value[4] . '&company_id=' . $company->id);
-                    $curency_cost = $this->getFromApi('GET', 'currencies/?code=' . $value[5] . '&company_id=' . $company->id);
-
-
-
+                    $curency_amount = $this->getFromApi('GET', 'currencies?code=' . $value[4] . '&company_id=' . $company->id);
+                    $curency_cost = $this->getFromApi('GET', 'currencies?code=' . $value[5] . '&company_id=' . $company->id);
 
                     if (isset($curency_amount[0]) && isset($curency_cost[0])) {
 
-                        $item['company_id'] =$company->id;
-
                         $item['reimbursable'] = $value[0];
                         $item['detail'] = $value[1];
-
                         $item['amount'] = $value[2];
                         $item['cost'] = $value[3];
                         $item['cost_currency_id'] =$curency_cost[0]->id;
                         $item['currency_id'] = $curency_amount[0]->id;
-
-
-
 
                         $this->apiCall('POST', 'services', $item);
 

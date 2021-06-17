@@ -69,7 +69,7 @@
     				</select>
     			</div>
     			<div class="parsley-errors-list filled"><span class="parsley-required industry_id-error"></span></div>
-
+			<br><br><br>
     			<div class="md-input-wrapper md-input-filled">
                 	<label>{{ __('contacts.email') }}</label>
                 	<input type="email" class="md-input" name="email" value="{{ $contact->email }}" required><span class="md-input-bar"></span>
@@ -77,7 +77,7 @@
                 <div class="parsley-errors-list filled"><span class="parsley-required email-error"></span></div>
 
                 <div class="md-input-wrapper md-input-filled">
-                	<label>{{ __('contacts.phone') }}</label>
+                	<label>{{ __('contacts.phone') }}</label><br>
                 	<input type="text" class="md-input" name="phone" value="{{ $contact->phone }}" required><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required phone-error"></span></div>

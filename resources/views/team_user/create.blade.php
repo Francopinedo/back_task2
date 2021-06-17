@@ -1,13 +1,23 @@
+<style>
+
+
+
+    #create_div.switcher_active {
+        width: 40%;
+    }
+
+</style>
+<form role="form" method="POST" action="{{ url('team_users') }}" id="data-form" data-redirect-on-success="{{ url($url) }}">
+     
 <div class="uk-grid" data-uk-grid-margin>
-    <div class="uk-width-1-1">
 
+    		<li class="uk-width-medium-1-1 uk-row-first">
 		<div class="uk-alert uk-alert-danger hide_when_empty" data-uk-alert="" id="status_code-error"></div>
-
-    	<form role="form" method="POST" action="{{ url('team_users') }}" id="data-form" data-redirect-on-success="{{ url('team_users') }}"
-              data-redirect-on-success="{{ url('team_users') }}">
-            <input type="hidden" name="company_id" value="{{ $company->id }}">
+</li>
+    	       <input type="hidden" name="company_id" value="{{ $company->id }}">
     	    {{ csrf_field() }}
-    		<div class="uk-width-medium-1-1 uk-row-first">
+			</li>
+    		<li class="uk-width-medium-1-2 uk-row-first">
 
     			<div class="md-input-wrapper md-input-select">
     				<label>{{ __('team_users.project') }}</label>
@@ -40,7 +50,9 @@
                     <label>{{ __('rates.city') }}</label>
                     <select name="city_id" id="city_id" data-md-selectize>
                         <option value="">{{ __('rates.city') }}...</option>
-
+                        @foreach($cities as $citie)
+                            <option value="{{ $citie->id }}">{{ $citie->name }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required city_id-error"></span></div>
@@ -49,7 +61,9 @@
                     <label>{{ __('rates.office') }}</label>
                     <select name="office_id"  id="office_id"  required data-md-selectize>
                         <option value="">{{ __('rates.office') }}...</option>
-
+                        @foreach($offices as $office)
+                            <option value="{{ $office->id }}">{{ $office->name }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required office_id-error"></span></div>
@@ -97,6 +111,8 @@
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required seniority_id-error"></span>
                 </div>
+				</li>
+    		<li class="uk-width-medium-1-2 uk-row-first">
 
 
                 <div class="md-input-wrapper md-input-filled md-input-select">
@@ -147,32 +163,32 @@
 				<div class="parsley-errors-list filled"><span class="parsley-required working_hours-error"></span></div>
 
 
-				<div class="md-input-wrapper md-input-select">
-					<label>{{ __('team_users.load') }}</label>
-					<input name="load" required id="load" class="md-input"
-						   value="">
+		
+  <div class="md-input-wrapper md-input-select">
+                <label>{{ __('users.rate') }}</label>
+                <br/>
+                <input required name="rate" id="rate" class="md-input" readonly>
 
-				</div>
-				<div class="parsley-errors-list filled"><span class="parsley-required load-error"></span></div>
-
-
-
+            </div>
+            <div class="parsley-errors-list filled"><span class="parsley-required rate-error"></span></div>
 
 
+		</li>
+    		<li class="uk-width-medium-1-1 uk-row-first">
 
 				<div class="uk-margin-medium-top">
                     <a class="md-btn md-btn-primary md-btn-wave-light md-btn-block waves-effect waves-button waves-light" href="#" id="add-btn">{{ __('team_users.add_new') }}</a>
                     <a class="md-btn md-btn-flat md-btn-wave md-btn-block waves-effect waves-button" href="#" id="cancel-btn">{{ __('general.cancel') }}</a>
                 </div>
 
-            </div>
+            </li>
 
     	</form>
-    </div>
 </div>
 
 <script src="{{ asset('js/team_users.js') }}"></script>
 <script type="text/javascript">
-
-    TeamUsers.init('<?php echo e(env('API_PATH')); ?>', '<?php echo e(env('APP_URL')); ?>');
+    $(function(){
+        TeamUsers.init('<?php echo e(env('API_PATH')); ?>', '<?php echo e(env('APP_URL')); ?>');
+    });
 </script>

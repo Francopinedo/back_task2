@@ -67,7 +67,7 @@
                     <i class="fa fa-money fa-2x" aria-hidden="true"></i>
                 </div>
                 <div class="md-list-content">
-                    <span class="md-list-heading">{{ $company->tax_number }}</span>
+                    <span class="md-list-heading">{{ $company->tax_number1 }}</span>
                     <span class="uk-text-small uk-text-muted">{{ __('companies.tax_number') }}</span>
                 </div>
             </li>

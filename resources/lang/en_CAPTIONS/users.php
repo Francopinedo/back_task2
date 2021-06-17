@@ -1,0 +1,31 @@
+<?php
+
+return [
+	'add_new'                    => 'ADD NEW USER',
+	'id'                         => 'ID',
+	'name'                       => 'Name',
+	'password'                   => 'Password',
+	'admin_password'             => 'Admin Password',
+	'email'                      => 'Email',
+	'users'                      => 'Users',
+	'admin_users'                => 'Admin Users',
+	'update'                     => 'UPDATE',
+	'address'                    => 'Address',
+	'office_phone'               => 'Office Phone',
+	'home_phone'                 => 'Home Phone',
+	'cell_phone'                 => 'Cell Phone',
+	'city'                       => 'City',
+	'country'                    => 'Country',
+	'office'                     => 'Office',
+	'contact_info'               => 'Contact Info',
+	'company_role'               => 'Company Role',
+	'project_role'               => 'Project Role',
+	'permission_role'            => 'Permission Role',
+	'seniority'                  => 'Seniority (based on your Industry Standards)',
+	'hours_by_day'               => 'Hours: How many working hours can be available?',
+	'workplace'                  => 'Workplace: On-Site (local), Off-Site (Customer Office or Others)',
+	'rate'                       => 'Rate: How much will we charge for this Resource?',
+	'you_need_to_add_workgroups' => 'You need to add workgroups to be able to add users',
+	'workgroup'                  => 'Workgroup: (based on your Industry Standards (ie.Software: Frontend, Backend etc))',
+	'confirm_delete'             => 'Are you sure you want to delete this users? This will delete all the records dependant of this users.'
+];

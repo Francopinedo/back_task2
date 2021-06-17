@@ -26,9 +26,10 @@ class Controller extends BaseController
     	$client = new GuzzleHttpClient();
     	$params = ['form_params' => $params];
     	$params['http_errors'] = false;
-
-    	return $client->request($verb, env('API_PATH').$route, $params);
-    }
+        $res=$client->request($verb, env('API_PATH').$route, $params);
+    	
+        return $res;
+        }
 
     public function getFromApi($verb, $route, $params = [])
     {
@@ -39,5 +40,14 @@ class Controller extends BaseController
     	$res = $client->request($verb, env('API_PATH').$route, $params);
 
     	return isset(json_decode($res->getBody()->__toString())->data)?json_decode($res->getBody()->__toString())->data:array();
+    }
+     public function iredmailApiCall($verb, $route, $params = [])
+    {
+        $client = new GuzzleHttpClient(['verify' => false]);
+        $params = ['form_params' => $params];
+        $params['http_errors'] = false;
+        $res=$client->request($verb, env('IREDMAIL_API_HOST').$route, $params);
+
+        return $res;
     }
 }

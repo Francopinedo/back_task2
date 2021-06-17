@@ -25,6 +25,20 @@
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required currency_id-error"></span></div>
 
+		<div class="md-input-wrapper">
+                	<label>{{ __('exchange_rates.quotation_url') }}</label>
+                	<input type="text" class="md-input" name="quotation_url"><span class="md-input-bar"></span>
+                </div>
+                <div class="parsley-errors-list filled"><span class="parsley-required quotation_url-error"></span></div>
+
+
+ 		<div class="md-input-wrapper">
+                	<label>{{ __('exchange_rates.quotation_date') }}</label>
+                	<input type="text" class="md-input" name="quotation_date" data-uk-datepicker="{format:'YYYY-MM-DD'}"><span class="md-input-bar"></span>
+                </div>
+                <div class="parsley-errors-list filled"><span class="parsley-required quotation_date-error"></span></div>
+
+
 				<div class="uk-margin-medium-top">
                     <a class="md-btn md-btn-primary md-btn-wave-light md-btn-block waves-effect waves-button waves-light" href="#" id="add-btn">{{ __('exchange_rates.add_new') }}</a>
                     <a class="md-btn md-btn-flat md-btn-wave md-btn-block waves-effect waves-button" href="#" id="cancel-btn">{{ __('general.cancel') }}</a>

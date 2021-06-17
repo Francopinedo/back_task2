@@ -7,41 +7,55 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Validator;
+use PhpOffice\PhpWord\IOFactory;
+use ZipArchive;
+use DomDocument;
+use Redirect;
 
 class CatalogController extends Controller
 {
     public function __construct()
     {
-        /*$this->middleware('auth');*/
+        /*$this->middleware(['auth','systemaudit']);*/
     }
 
     /**
      * Muestra listado
      */
-    public function index()
+    public function index($parameter='', $lang='', $type='', $directory='')
     {
-        $metavariables = $this->getFromApi('GET', 'metavariables');
-        $idiomas = $this->getFromApi('GET', 'languages');
+        if (!Auth::guest())
+        {
+            $metavariables = $this->getFromApi('GET', 'metavariables');
+            $idiomas = $this->getFromApi('GET', 'languages');
 
 
-        $params =[
-            'directories'    => array(),
-            'metavariables' => $metavariables,
-            'idiomas'       => $idiomas,
-        ];
+            $params =[
+                'directories'    => array(),
+                'metavariables' => $metavariables,
+                'idiomas'       => $idiomas,
+                'type'       => $type=='delete' || $type=='download' || $type=='view'?'':$type,
+                'lang'       => $lang,
+                'dir'       => $directory,
+            ];
 
-        return view('catalog/index' , $params);
+            return view('catalog/index' , $params);
+        }
+        else
+        {
+            return Redirect::to('/');
+        }
     }
 
 
     /**
      * Muestra listado
      */
-    public function show($lang, $directory)
-    {
+     public function show($lang_system, $type, $directory)
+         {
 
-        $documentos =Storage::disk('catalog')->files(strtolower($lang)."/".$directory);
-
+         $documentos =Storage::disk('catalog')->files($lang_system."/".$type."/".$directory);
+         
         $params =[
 
             'documentos'    => $documentos,
@@ -61,7 +75,7 @@ class CatalogController extends Controller
         /*dd($request->all());*/
         $variables = $request->all();
         $extension = $request->extension? $request->extension : 'docx';
-        $idioma = $request->lenguage? $request->lenguage : 'EN';
+        $idioma = $request->language? $request->language : 'EN';
         $directorio_menu = $request->directory;//Initiating, Planning, Executing, Monitoring & Control, Closing
         $nameDocument = $request->document;
         $archivo = storage_path("app/doc/manual/$idioma/$directorio_menu/$nameDocument.docx");
@@ -151,20 +165,52 @@ class CatalogController extends Controller
 
     }
 
+    public function download(Request $request)
+    {
 
-    public function download($lang, $directory, $file){
 
+        $destinationPath = "app/public/catalog/" . $request->file;
+        $pathArr = explode(DIRECTORY_SEPARATOR, $destinationPath);
+        $filename = end($pathArr);
+        // echo $destinationPath;
+        if ($exists = Storage::disk('catalog')->exists($request->file)) {
 
-        if($exists = Storage::disk('catalog')->exists(strtolower($lang)."/".$directory."/".$file)){
-
-            return response()->download(storage_path("app/public/catalog/".strtolower($lang)."/".$directory."/".$file, 'test'));
-        }else{
-           // echo 'archivo no existe';
+            $destinationPath = "app/public/catalog/" . $request->file;
+            if ($exists = Storage::disk('catalog')->exists($request->file)) {
+                return response()->download(storage_path($destinationPath));
+            } else {
+                //  echo 'archivo no existe';
+            }
+            // In case of failure return empty string
+            return "";
         }
+   }
 
+    public function getHTML($lang, $directory, $file)
+    {
+        //Obtenemos nombre de archivo
+        $file = explode('.',$file);
+        //Obtenemos html de tabla html_docs
+        $html = \App\HtmlDoc::where('lang',$lang)->where('name',$file[0])->first();
+        
+        return json_encode($html);
     }
 
-
+    public function delete(Request $request)
+    {
+        $destinationPath = "app/public/catalog/" . $request->file;
+        // echo $destinationPath;
+        if ($exists = Storage::disk('catalog')->exists($request->file)) {
+            Storage::disk('catalog')->delete($request->file);
+           return response()->json(array('success' => true));
+        } else {
+           return response()->json(array('success' => false));
+        }
+              
+        //     session()->flash('message', __('general.deleted'));
+        //     session()->flash('alert-class', 'success');
+        // return Redirect::to('/catalog');
+    }
 
     /**
      * Crear nuevo
@@ -172,7 +218,8 @@ class CatalogController extends Controller
     public function store(Request $request)
     {
         // validacion del formulario
-        /*$this->validate($request, [
+        /*$validator =Validator::make($request->all(), [
+
             'title'             => 'required',
             'company_id'        => 'required',
             'city_id'           => 'required',
@@ -181,7 +228,9 @@ class CatalogController extends Controller
             'hours_by_day'      => 'required'
         ]);
 
-        $data = $request->all();
+        if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
         $res = $this->apiCall('POST', 'offices', $data);
 
@@ -210,7 +259,8 @@ class CatalogController extends Controller
     public function update(Request $request)
     {
         // validacion del formulario
-        /* $this->validate($request, [
+        /* $validator =Validator::make($request->all(), [
+
              'title'             => 'required',
              'company_id'        => 'required',
              'city_id'           => 'required',
@@ -219,7 +269,9 @@ class CatalogController extends Controller
              'hours_by_day'      => 'required'
          ]);
 
-         $data = $request->all();
+         if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
          $res = $this->apiCall('PATCH', 'offices/'.$data['id'], $data);
 
@@ -241,34 +293,45 @@ class CatalogController extends Controller
          return response()->json();*/
     }
 
-    /**
-     * Elimina
-     * @param  int $id ID
-     */
-    public function delete($id)
+ 
+
+
+
+   public function uploadFile(Request $request)
     {
-        /* $res = $this->apiCall('DELETE', 'offices/'.$id);
+        try {
+            $file = $request->file('document');
+            $directory = $request->directory;
+            $option =$request->dataType=="1"? "nontagged" :"tagged" ;
 
-         // validacion de la respuesta del api
-         if (!empty(json_decode($res->getBody()->__toString(), TRUE)['error']))
-         {
-             session()->flash('message', __('api_errors.delete'));
-             session()->flash('alert-class', 'danger');
+            $validator =Validator::make($request->all(), [
 
-             $jsonRes = json_decode($res->getBody()->__toString(), TRUE)['error'];
-             Validator::make($jsonRes,
-                 ['status_code' => [Rule::in(['201', '200'])]],
-                 ['in' => __('api_errors.delete')]
-             )->validate();
+        		'language' => 'required',                
+        		'directory' => 'required',
+                'document' => 'required'
+            ]);
 
-         }
-         else
-         {
-             session()->flash('message', __('general.deleted'));
-             session()->flash('alert-class', 'success');
-         }
+            $destinationPath = "app/public/catalog/".$request->language. "/" . $option . "/" . $request->directory;
+            
+            // foreach ($files as $file) {
+                // echo $file->getClientOriginalName();
 
-         return redirect()->action('OfficeController@index');*/
+				$namefinal=  $file->getClientOriginalName();
+
+
+			///////////////////////
+
+                $file->move(storage_path($destinationPath), $namefinal);
+	
+            // }
+
+
+        } catch (FileException $exception) {
+
+            return response()->json(array('success' => false, 'message' => 'Error uplading file'));
+        }
+
+        return response()->json(array('success' => true));
     }
 
 

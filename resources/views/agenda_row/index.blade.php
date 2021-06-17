@@ -47,8 +47,8 @@
 	            data: null,
 	            render: function (data, type, row) {
                     return '' +
-	            		'<a href="/activities_history/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
-	            		'<a href="/activities_history/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+	            		'<a title="{{__('general.delete')}}" href="/activities_history/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>'+
+	            		'<a title="{{__('general.edit')}}" href="/activities_history/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>';
                 }
 	        } ],
 	        initComplete: function(settings, json) {
@@ -86,12 +86,12 @@
                 	<table id="activities_history-table" class="uk-table" cellspacing="0" width="100%">
                 	    <thead>
                 	        <tr>
-                	        	<th>{{ __('activities_history.id') }}</th>
-                	        	<th>{{ __('activities_history.date') }}</th>
-                	        	<th>{{ __('activities_history.description') }}</th>
-                	        	<th>{{ __('activities_history.follower') }}</th>
-                	        	<th>{{ __('activities_history.due') }}</th>
-                	        	<th>{{ __('general.actions') }}</th>
+                	        	<th title="{{__('activities_history_tooltip.id')}}">{{ __('activities_history.id') }}</th>
+                	        	<th title="{{__('activities_history_tooltip.date')}}">{{ __('activities_history.date') }}</th>
+                	        	<th title="{{__('activities_history_tooltip.description')}}">{{ __('activities_history.description') }}</th>
+                	        	<th title="{{__('activities_history_tooltip.follower')}}">{{ __('activities_history.follower') }}</th>
+                	        	<th title="{{__('activities_history_tooltip.due')}}">{{ __('activities_history.due') }}</th>
+                	        	<th title="{{__('general.actions')}}">{{ __('general.actions') }}</th>
                 	        </tr>
                 	    </thead>
                 	</table>

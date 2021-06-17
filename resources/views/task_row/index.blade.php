@@ -253,25 +253,25 @@
                         </div>
                     @endif
 
-                    <h4 class="heading_a uk-margin-bottom">{{ __('tasks.resources') }}</h4>
+                    <h4 class="heading_a uk-margin-bottom" title="{{ __('tasks_tooltip.resources')}}">{{ __('tasks.resources') }}</h4>
                     <table id="task_resources-table" class="uk-table" cellspacing="0" width="100%">
                         <thead>
                         <tr>
                             <th>{{ __('task_resources.id') }}</th>
 
-                            {{-- <th>{{ __('tasks.project_role') }}</th>
-                            <th>{{ __('tasks.seniority') }}</th>
+                            {{-- <th title="{{ __('tasks_tooltip.project_role')}}">{{ __('tasks.project_role') }}</th>
+                            <th title="{{ __('tasks_tooltip.seniority')}}">{{ __('tasks.seniority') }}</th>
 
-                            <th>{{ __('tasks.currency') }}</th>
-                            <th>{{ __('tasks.load') }}</th>
-                            <th>{{ __('tasks.workplace') }}</th>
-                            <th>{{ __('tasks.comments') }}</th> --}}
-                            <th>{{ __('tasks.user') }}</th>
-                            <th>{{ __('tasks.role') }}</th>
-                            <th>{{ __('tasks.seniority') }}</th>
-                            <th>{{ __('tasks.hours') }}</th>
-                            <th>{{ __('tasks.rate') }}</th>
-                            <th>{{ __('tasks.currency') }}</th>
+                            <th title="{{ __('tasks_tooltip.currency')}}">{{ __('tasks.currency') }}</th>
+                            <th title="{{ __('tasks_tooltip.load')}}">{{ __('tasks.load') }}</th>
+                            <th title="{{ __('tasks_tooltip.workplace')}}">{{ __('tasks.workplace') }}</th>
+                            <th title="{{ __('tasks_tooltip.comments')}}">{{ __('tasks.comments') }}</th> --}}
+                            <th title="{{ __('tasks_tooltip.user')}}">{{ __('tasks.user') }}</th>
+                            <th title="{{ __('tasks_tooltip.role')}}">{{ __('tasks.role') }}</th>
+                            <th title="{{ __('tasks_tooltip.seniority')}}">{{ __('tasks.seniority') }}</th>
+                            <th title="{{ __('tasks_tooltip.hours')}}">{{ __('tasks.hours') }}</th>
+                            <th title="{{ __('tasks_tooltip.rate')}}">{{ __('tasks.rate') }}</th>
+                            <th title="{{ __('tasks_tooltip.currency')}}">{{ __('tasks.currency') }}</th>
                             <th>{{ __('general.actions') }}</th>
                         </tr>
                         </thead>
@@ -286,15 +286,15 @@
             <div class="uk-grid" data-uk-grid-margin>
                 <div class="uk-width-1-1">
 
-					<h4 class="heading_a uk-margin-bottom">{{ __('tasks.expenses') }}</h4>
+					<h4 class="heading_a uk-margin-bottom" title="{{ __('tasks_tooltip.expenses')}}">{{ __('tasks.expenses') }}</h4>
                 	<table id="task_expenses-table" class="uk-table" cellspacing="0" width="100%">
                 	    <thead>
                 	        <tr>
                 	        	<th>{{ __('task.id') }}</th>
-                	        	<th>{{ __('tasks.detail') }}</th>
-                	        	<th>{{ __('tasks.reimbursable') }}</th>
-                	        	<th>{{ __('tasks.cost') }}</th>
-                	        	<th>{{ __('tasks.currency') }}</th>
+                	        	<th title="{{ __('tasks_tooltip.detail')}}">{{ __('tasks.detail') }}</th>
+                	        	<th title="{{ __('tasks_tooltip.reimbursable')}}">{{ __('tasks.reimbursable') }}</th>
+                	        	<th title="{{ __('tasks_tooltip.cost')}}">{{ __('tasks.cost') }}</th>
+                	        	<th title="{{ __('tasks_tooltip.currency')}}">{{ __('tasks.currency') }}</th>
                 	        	<th>{{ __('general.actions') }}</th>
                 	        </tr>
                 	    </thead>
@@ -309,17 +309,17 @@
             <div class="uk-grid" data-uk-grid-margin>
                 <div class="uk-width-1-1">
 
-                    <h4 class="heading_a uk-margin-bottom">{{ __('tasks.services') }}</h4>
+                    <h4 class="heading_a uk-margin-bottom" title="{{ __('tasks_tooltip.services')}}">{{ __('tasks.services') }}</h4>
                     <table id="task_services-table" class="uk-table" cellspacing="0" width="100%">
                         <thead>
                         <tr>
                             <th>{{ __('task.id') }}</th>
-                            <th>{{ __('tasks.detail') }}</th>
-                            <th>{{ __('tasks.reimbursable') }}</th>
-                            <th>{{ __('tasks.cost') }}</th>
-                            <th>{{ __('tasks.quantity') }}</th>
-                            <th>{{ __('tasks.amount') }}</th>
-                            <th>{{ __('tasks.currency') }}</th>
+                            <th title="{{ __('tasks_tooltip.detail')}}">{{ __('tasks.detail') }}</th>
+                            <th title="{{ __('tasks_tooltip.reimbursable')}}">{{ __('tasks.reimbursable') }}</th>
+                            <th title="{{ __('tasks_tooltip.cost')}}">{{ __('tasks.cost') }}</th>
+                            <th title="{{ __('tasks_tooltip.quantity')}}">{{ __('tasks.quantity') }}</th>
+                            <th title="{{ __('tasks_tooltip.amount')}}">{{ __('tasks.amount') }}</th>
+                            <th title="{{ __('tasks_tooltip.currency')}}">{{ __('tasks.currency') }}</th>
                             <th>{{ __('general.actions') }}</th>
                         </tr>
                         </thead>
@@ -334,17 +334,17 @@
             <div class="uk-grid" data-uk-grid-margin>
                 <div class="uk-width-1-1">
 
-                    <h4 class="heading_a uk-margin-bottom">{{ __('tasks.materials') }}</h4>
+                    <h4 class="heading_a uk-margin-bottom" title="{{ __('tasks_tooltip.materials')}}">{{ __('tasks.materials') }}</h4>
                     <table id="task_materials-table" class="uk-table" cellspacing="0" width="100%">
                         <thead>
                         <tr>
                             <th>{{ __('task.id') }}</th>
-                            <th>{{ __('tasks.detail') }}</th>
-                            <th>{{ __('tasks.reimbursable') }}</th>
-                            <th>{{ __('tasks.cost') }}</th>
-                            <th>{{ __('tasks.quantity') }}</th>
-                            <th>{{ __('tasks.amount') }}</th>
-                            <th>{{ __('tasks.currency') }}</th>
+                            <th title="{{ __('tasks_tooltip.detail')}}">{{ __('tasks.detail') }}</th>
+                            <th title="{{ __('tasks_tooltip.reimbursable')}}">{{ __('tasks.reimbursable') }}</th>
+                            <th title="{{ __('tasks_tooltip.cost')}}">{{ __('tasks.cost') }}</th>
+                            <th title="{{ __('tasks_tooltip.quantity')}}">{{ __('tasks.quantity') }}</th>
+                            <th title="{{ __('tasks_tooltip.amount')}}">{{ __('tasks.amount') }}</th>
+                            <th title="{{ __('tasks_tooltip.currency')}}">{{ __('tasks.currency') }}</th>
                             <th>{{ __('general.actions') }}</th>
                         </tr>
                         </thead>
@@ -359,17 +359,17 @@
             <div class="uk-grid" data-uk-grid-margin>
                 <div class="uk-width-1-1">
 
-                    <h4 class="heading_a uk-margin-bottom">{{ __('tasks.expenses') }}</h4>
+                    <h4 class="heading_a uk-margin-bottom" title="{{ __('tasks_tooltip.')}}">{{ __('tasks.expenses') }}</h4>
                     <table id="task_expenses-table" class="uk-table" cellspacing="0" width="100%">
                         <thead>
                         <tr>
                             <th>{{ __('task.id') }}</th>
-                            <th>{{ __('tasks.detail') }}</th>
-                            <th>{{ __('tasks.reimbursable') }}</th>
-                            <th>{{ __('tasks.cost') }}</th>
-                            <th>{{ __('tasks.quantity') }}</th>
-                            <th>{{ __('tasks.amount') }}</th>
-                            <th>{{ __('tasks.currency') }}</th>
+                            <th title="{{ __('tasks_tooltip.detail')}}">{{ __('tasks.detail') }}</th>
+                            <th title="{{ __('tasks_tooltip.reimbursable')}}">{{ __('tasks.reimbursable') }}</th>
+                            <th title="{{ __('tasks_tooltip.cost')}}">{{ __('tasks.cost') }}</th>
+                            <th title="{{ __('tasks_tooltip.quantity')}}">{{ __('tasks.quantity') }}</th>
+                            <th title="{{ __('tasks_tooltip.amount')}}">{{ __('tasks.amount') }}</th>
+                            <th title="{{ __('tasks_tooltip.currency')}}">{{ __('tasks.currency') }}</th>
                             <th>{{ __('general.actions') }}</th>
                         </tr>
                         </thead>

@@ -1,7 +1,36 @@
-@extends('layouts.app')
+@extends('layouts.login')
 
 @section('content')
-<div class="container">
+
+
+<div class="md-card" id="login_card">
+            <div class="md-card-content large-padding" id="login_form">
+                <div class="login_heading">
+                     <img src="{{URL::asset('/assets/img/logo_mono.png')}}" alt="TaskControl" class="logo_login">
+                </div>
+                <form class="form-horizontal" role="form" method="POST" action="{{ route('password.email') }}">
+                {{ csrf_field() }}
+                <div class="uk-form-row">
+                        <label for="email">{{ __('login.email') }}</label>
+                        <input class="md-input" type="email" id="email" name="email" value="{{ old('email') }}" required autofocus />
+
+                        @if ($errors->has('email'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('email') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+
+                    <div class="uk-margin-medium-top">
+                                <button type="submit" class="md-btn md-btn-primary md-btn-block md-btn-large">
+                                    Send Password Reset Link
+                                </button>
+                            </div>
+                       
+                </form>
+            </div>
+ </div>
+<!-- <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
@@ -42,5 +71,5 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 @endsection

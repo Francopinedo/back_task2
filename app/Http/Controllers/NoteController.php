@@ -11,7 +11,7 @@ class NoteController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit']);
     }
 
     /**
@@ -19,7 +19,8 @@ class NoteController extends Controller
      */
     public function index()
     {
-    	$notes = $this->getFromApi('GET', 'notes?project_id='.session('project_id'));
+
+    	$notes = $this->getFromApi('GET', 'notes?user_id='.Auth::id());
 
         return view('note/index', [
 			'notes' => $notes
@@ -46,16 +47,18 @@ class NoteController extends Controller
     public function store(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'title'             => 'required',
 			'description'       => 'required',
 			'color'             => 'required'
 	    ]);
 
-    	$data = $request->all();
-
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
+$data['user_id']=Auth::id();
     	$res = $this->apiCall('POST', 'notes', $data);
-
 
     	// validacion de la respuesta del api
     	if (!empty(json_decode($res->getBody()->__toString(), TRUE)['error']))
@@ -81,14 +84,17 @@ class NoteController extends Controller
     public function update(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'title'             => 'required',
 			'description'       => 'required',
 			'color'             => 'required'
 	    ]);
 
-    	$data = $request->all();
-
+    	if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
+$data['user_id']=Auth::id();
     	$res = $this->apiCall('PATCH', 'notes/'.$data['id'], $data);
 
     	// validacion de la respuesta del api

@@ -4,7 +4,7 @@
         <div class="uk-alert uk-alert-danger hide_when_empty" data-uk-alert="" id="status_code-error"></div>
 
         <form role="form" method="POST" action="{{ url('replacements') }}" id="data-form"
-              data-redirect-on-success="{{ url('replacements') }}">
+              data-redirect-on-success="{{ $url }}">
             {{ csrf_field() }}
             <input type="hidden" name="project_id" value="{{ session('project_id') }}">
             <div class="uk-width-medium-1-1 uk-row-first">

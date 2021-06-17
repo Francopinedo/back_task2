@@ -11,7 +11,7 @@ class AbsenceController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit', 'deletecontrol']);
     }
 
     /**
@@ -48,7 +48,7 @@ class AbsenceController extends Controller
         $absenceType = $this->getFromApi('GET', 'absence_types/' . $absence->absence_type_id);
         $absenceTypes = $this->getFromApi('GET', 'absence_types?city_id=' . $absenceType->city_id . '&company_id=' . $company->id);
 
-        $cities = $this->getFromApi('GET', 'cities/?company_id=' . $company->id . '&country_id=' . $absenceType->country_id);
+        $cities = $this->getFromApi('GET', 'cities?company_id=' . $company->id . '&country_id=' . $absenceType->country_id);
         return response()->json([
             'view' => view('absence/edit', [
                 'absence' => $absence,
@@ -68,7 +68,7 @@ class AbsenceController extends Controller
     public function store(Request $request)
     {
         // validacion del formulario
-        $this->validate($request, [
+    	$validator =Validator::make($request->all(), [
             'from' => 'required',
             'to' => 'required',
             'absence_type_id' => 'required',
@@ -76,7 +76,9 @@ class AbsenceController extends Controller
             'project_id' => 'required'
         ]);
 
-        $data = $request->all();
+        if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
         $res = $this->apiCall('POST', 'absences', $data);
 
@@ -101,14 +103,16 @@ class AbsenceController extends Controller
     public function update(Request $request)
     {
         // validacion del formulario
-        $this->validate($request, [
+    	$validator =Validator::make($request->all(), [
             'from' => 'required',
             'to' => 'required',
             'absence_type_id' => 'required',
             'user_id' => 'required'
         ]);
 
-        $data = $request->all();
+        if ($validator->fails()) {
+    return response()->json($validator->errors(), 422);
+  } $data = $request->all();
 
         $res = $this->apiCall('PATCH', 'absences/' . $data['id'], $data);
 

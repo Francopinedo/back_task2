@@ -1,4 +1,4 @@
-@extends('layouts.app', ['favoriteTitle' => __('requirements.requirements'), 'favoriteUrl' => 'requirements'])
+@extends('layouts.app', ['favoriteTitle' => __('requirements.requirements'), 'favoriteUrl' => url(Request::path())])
 
 @section('scripts')
 	@include('datatables.basic')
@@ -14,7 +14,18 @@
 	            { data: 'status_comment', name: 'status_comment', visible: false },
 	            { data: 'due_date', name: 'due_date', visible: false },
 	            { data: 'owner_name', name: 'owner_name' },
-	            { data: 'priority', name: 'priority' },
+	           // { data: 'priority', name: 'priority' },
+			         {data: 'priority', name: 'priority',
+		 render: function (data, type, row) {
+                        if (row.priority == '1') {
+			return 'Low';
+			}if (row.priority == '2') {
+			return 'Medium';}
+			 if (row.priority == '3') {
+			return 'High';}
+			}
+
+			},
 	            { data: 'business_value', name: 'business_value' },
 	            { data: 'requester_name', name: 'requester_name' },
 	            { data: 'requester_email', name: 'requester_email' },
@@ -26,8 +37,10 @@
 	        ];
 
 		var actions = [
-			            { pre: '<a href="/requirements/', post: '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' },
-			            { pre: '<a href="/requirements/', post: '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>' }
+			            { pre: '<a title="{{__('general.edit')}}" href="/requirements/', post: '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' },
+                        <?php if (Auth::user()->hasPermission('delete.users')) { ?>
+	                       { pre: '<a title="{{__('general.delete')}}" href="/requirements/', post: '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>' }
+                        <?php } ?>
 			        ];
 
 		DtablesUtil(tableName, columns, actions, urlParams);
@@ -63,22 +76,22 @@
                 	<table id="requirements-table" class="uk-table" cellspacing="0" width="100%">
                 	    <thead>
                 	        <tr>
-                	        	<th>{{ __('requirements.id') }}</th>
-                	        	<th>{{ __('requirements.description') }}</th>
-                	        	<th>{{ __('requirements.type') }}</th>
-                	        	<th>{{ __('requirements.date') }}</th>
-                	        	<th>{{ __('requirements.status_comment') }}</th>
-                	        	<th>{{ __('requirements.due_date') }}</th>
-                	        	<th>{{ __('requirements.owner') }}</th>
-                	        	<th>{{ __('requirements.priority') }}</th>
-                	        	<th>{{ __('requirements.business_value') }}</th>
-                	        	<th>{{ __('requirements.requester_name') }}</th>
-                	        	<th>{{ __('requirements.requester_email') }}</th>
-                	        	<th>{{ __('requirements.requester_type') }}</th>
-                	        	<th>{{ __('requirements.approval_date') }}</th>
-                	        	<th>{{ __('requirements.approver_name') }}</th>
-                	        	<th>{{ __('requirements.comment') }}</th>
-                	        	<th>{{ __('general.actions') }}</th>
+                	        	<th title="{{ __('requirements_tooltip.id')}}">{{ __('requirements.id') }}</th>
+                	        	<th title="{{ __('requirements_tooltip.description')}}">{{ __('requirements.description') }}</th>
+                	        	<th title="{{ __('requirements_tooltip.type')}}">{{ __('requirements.type') }}</th>
+                	        	<th title="{{ __('requirements_tooltip.date')}}">{{ __('requirements.date') }}</th>
+                	        	<th title="{{ __('requirements_tooltip.status_comment')}}">{{ __('requirements.status_comment') }}</th>
+                	        	<th title="{{ __('requirements_tooltip.due_date')}}">{{ __('requirements.due_date') }}</th>
+                	        	<th title="{{ __('requirements_tooltip.owner')}}">{{ __('requirements.owner') }}</th>
+                	        	<th title="{{ __('requirements_tooltip.priority')}}">{{ __('requirements.priority') }}</th>
+                	        	<th title="{{ __('requirements_tooltip.business_value')}}">{{ __('requirements.business_value') }}</th>
+                	        	<th title="{{ __('requirements_tooltip.requester_name')}}">{{ __('requirements.requester_name') }}</th>
+                	        	<th title="{{ __('requirements_tooltip.requester_email')}}">{{ __('requirements.requester_email') }}</th>
+                	        	<th title="{{ __('requirements_tooltip.requester_type')}}">{{ __('requirements.requester_type') }}</th>
+                	        	<th title="{{ __('requirements_tooltip.approval_date')}}">{{ __('requirements.approval_date') }}</th>
+                	        	<th title="{{ __('requirements_tooltip.approver_name')}}">{{ __('requirements.approver_name') }}</th>
+                	        	<th title="{{ __('requirements_tooltip.comment')}}">{{ __('requirements.comment') }}</th>
+                	        	<th title="{{ __('general.actions') }}">{{ __('general.actions') }}</th>
                 	        </tr>
                 	    </thead>
                 	</table>
@@ -86,7 +99,7 @@
                 		<div class="uk-width-medium-1-3" id="datatables-length"></div>
                 		<div class="uk-width-medium-1-3" id="datatables-pagination"></div>
                 		<div class="uk-width-medium-1-3">
-                			<a class="md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light" href="#" id="add-new">{{ __('requirements.add_new') }}</a>
+                			<a class="md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light" href="#" id="add-new" title="{{ __('requirements_tooltip.add_new')}}">{{ __('requirements.add_new') }}</a>
                 		</div>
                 	</div>
                 	@endif
@@ -98,7 +111,8 @@
 
 @section('create_div')
 	@component('requirement/create', [
-					'users' => $users
+					'users' => $users,
+					'url' => Request::path()
 				]
 			)
 

@@ -1,13 +1,20 @@
-<div class="uk-grid" data-uk-grid-margin>
-    <div class="uk-width-1-1">
+<style>
 
-		<div class="uk-alert uk-alert-danger hide_when_empty status_code-error" data-uk-alert=""></div>
+    #edit_div.switcher_active {
+        width: 50%;
+    }
 
+</style>   
     	<form role="form" method="POST" action="{{ url('requirements/update') }}" id="data-form-edit" data-redirect-on-success="{{ url('requirements') }}">
+
+ <div class="uk-grid" data-uk-grid-margin>
+    		<li class="uk-width-medium-1-1 uk-row-first">
+		<div class="uk-alert uk-alert-danger hide_when_empty status_code-error" data-uk-alert=""></div>
+</li>
     	    {{ csrf_field() }}
 
 			<input type="hidden" name="id" value="{{ $requirement->id }}">
-    		<div class="uk-width-medium-1-1 uk-row-first">
+    		<li class="uk-width-medium-1-2 uk-row-first">
 
                 <div class="md-input-wrapper md-input-filled">
                 	<label>{{ __('requirements.description') }}</label>
@@ -62,6 +69,8 @@
                 	</select>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required priority-error"></span></div>
+</li>
+	<li class="uk-width-medium-1-2 uk-row-first">
 
                 <div class="md-input-wrapper md-input-filled md-input-select">
                 	<label>{{ __('requirements.business_value') }}</label>
@@ -117,17 +126,18 @@
                 	<input type="text" class="md-input" name="comment" value="{{ $requirement->comment }}" required><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required comment-error"></span></div>
+</li>
+	<li class="uk-width-medium-1-1 uk-row-first">
 
 				<div class="uk-margin-medium-top">
                     <a class="md-btn md-btn-primary md-btn-wave-light md-btn-block waves-effect waves-button waves-light" href="#" id="update-btn">{{ __('requirements.update') }}</a>
                     <a class="md-btn md-btn-flat md-btn-wave md-btn-block waves-effect waves-button cancel-edit-btn" href="#">{{ __('general.cancel') }}</a>
                 </div>
 
-            </div>
+            </li>
 
-    	</form>
-    </div>
 </div>
+    	</form>
 
 <script type="text/javascript">
 	$('.cancel-edit-btn').on('click', function(e){

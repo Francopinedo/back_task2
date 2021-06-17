@@ -13,7 +13,7 @@ class AdminCompanyController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','systemaudit']);
     }
 
     /**
@@ -51,7 +51,8 @@ class AdminCompanyController extends Controller
     {
         $company = $this->getFromApi('GET', 'companies/'.$request->id.'?include=industry,city,currency');
 
-        $cities = $this->getFromApi('GET', 'cities?company_id='.$company->id);
+        // $cities = $this->getFromApi('GET', 'cities?company_id='.$company->id);
+        $cities = $this->getFromApi('GET', 'cities');
         $currencies = $this->getFromApi('GET', 'currencies');
         $industries = $this->getFromApi('GET', 'industries');
 
@@ -72,33 +73,58 @@ class AdminCompanyController extends Controller
      */
     public function store(Request $request)
     {
-    	// validacion del formulario
-    	$this->validate($request, [
-			'name'       => 'required'
-	    ]);
+        // validacion del formulario
+        $validator =Validator::make($request->all(), [
 
-    	$data = $request->all();
+            'name'       => 'required'
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+        $data = $request->all() + ['roomName' => 'General'];
 
-    	$res = $this->apiCall('POST', 'companies', $data);
 
+        //call taskcontrol-api for the creation of company and domain
+        $apiRoutes = ["companies","irmdomain","irmmailadm","rcadmin","admin","rcgeneralchannel"];
+        foreach ($apiRoutes as $route)
+        {
+            $res = $this->apiCall('POST', $route, $data);
+            // validacion de la respuesta del api
+            if (!empty(json_decode($res->getBody()->__toString(), TRUE)['error']))
+            {
+                $jsonRes = json_decode($res->getBody()->__toString(), TRUE)['error'];
+                Validator::make($jsonRes,
+                    ['status_code' => [Rule::in(['201', '200'])]],
+                    ['in' => __('api_errors.company_store')]
+                )->validate();
+            }
+        };
 
-    	// validacion de la respuesta del api
-    	if (!empty(json_decode($res->getBody()->__toString(), TRUE)['error']))
-    	{
-	    	$jsonRes = json_decode($res->getBody()->__toString(), TRUE)['error'];
-	    	Validator::make($jsonRes,
-	    		['status_code' => [Rule::in(['201', '200'])]],
-	    		['in' => __('api_errors.company_store')]
-	    	)->validate();
-    	}
-    	else
-    	{
-    		session()->flash('message', __('general.added'));
-			session()->flash('alert-class', 'success');
-    	}
+        //call iredmail-api for the creation of domain on mailserver
 
-    	return response()->json();
+        if(env('IREDMAIL_API_HOST'))
+        {
+            $irmApiRoutes = ['domain','admin_mailbox','rcadmin'];
+            foreach($irmApiRoutes as  $route)
+            {
+                $res = $this->iredmailApiCall('POST', $route, $data);
+                if (!empty(json_decode($res->getBody()->__toString(), TRUE)['error']))
+                {
+                    $jsonRes = json_decode($res->getBody()->__toString(), TRUE)['error'];
+                    Validator::make($jsonRes,
+                        ['status_code' => [Rule::in(['201', '200'])]],
+                        ['in' => __('api_errors.company_store')]
+                    )->validate();
+                }
+            }
+        }
+
+        session()->flash('message', __('general.added'));
+        session()->flash('alert-class', 'success');
+
+        return response()->json();
     }
+
 
     /**
      * Actualizo
@@ -106,11 +132,14 @@ class AdminCompanyController extends Controller
     public function update(Request $request)
     {
     	// validacion del formulario
-    	$this->validate($request, [
+    	$validator =Validator::make($request->all(), [
+
 			'name'     => 'required'
 	    ]);
 
-    	$data = $request->all();
+    	if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        } $data = $request->all();
 
     	$res = $this->apiCall('PATCH', 'companies/'.$data['id'], $data);
 

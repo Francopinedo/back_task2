@@ -1,6 +1,6 @@
 <?php
 return [
-	'services'        => 'Services',
+'services'        => 'Services',
 	'add_new'         => 'ADD NEW',
 	'update'          => 'UPDATE',
 	'id'              => 'ID',
@@ -12,4 +12,5 @@ return [
 	'currency'        => 'Currency',
 	'reimbursable'    => 'Reimbursable',
 	'no_reimbursable' => 'No Reimbursable',
+
 ];

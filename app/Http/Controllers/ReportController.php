@@ -25,18 +25,35 @@ class ReportController extends Controller
             $start = explode('-', $task->start_date);
             $diff = Carbon::create($start[0],$start[1],$start[2])->diffInDays();
             $result = (($diff * 8) / $task->estimated_hours) * 100;
+            $real_prog = ($task->burned_hours/$task->estimated_hours)*100;
+            $task->progress =$real_prog;
+
             if ($result > 100) {
                 $result = 100;
             } else if($result < 0){
                 $result = 0;
             }
-            if($result < $task->progress or ($result == 100 and $task->progress == 100)){
+            if($result < $task->progress || ($result == 100 and $task->progress == 100)){
                 $task->color = 'green';
             }else if($result > $task->progress){
                 $task->color = 'red';
             }else{
                 $task->color = 'yellow';
             }
+
+             if ($real_prog > 100) {
+                $real_prog = 100;
+            } else if($real_prog < 0){
+                $real_prog = 0;
+            }
+            if($real_prog < $task->progress || ($result == 100 and $task->progress == 100)){
+                $task->color = 'green';
+            }else if($result > $task->progress){
+                $task->color = 'red';
+            }else{
+                $task->color = 'yellow';
+            }
+            $task->real_progress = $real_prog;
 
             $task->estimated_progress = $result;
 
@@ -49,9 +66,75 @@ class ReportController extends Controller
             'project'       => $project,
         );
 
+
         return view('reports.tasks.index', [
             'response' => $response
         ]);
+    }
+
+    public function pdf()
+    {
+        $company        = $this->getFromApi('GET', 'companies/fromUser/'.Auth::id().'?include=city');
+        $project        = $this->getFromApi('GET', 'projects/'.session('project_id'));
+        $users          = $this->getFromApi('GET', 'users?company_id='.$company->id);
+        $requirements   = $this->getFromApi('GET', 'requirements?project_id='.session('project_id'));
+        $tasks          = $this->getFromApi('GET', 'tasks?project_id='.session('project_id'));
+
+        foreach ($tasks as $index => $task) {
+            $start = explode('-', $task->start_date);
+            $diff = Carbon::create($start[0],$start[1],$start[2])->diffInDays();
+            $result = (($diff * 8) / $task->estimated_hours) * 100;
+            $real_prog = ($task->burned_hours/$task->estimated_hours)*100;
+            $task->progress =$real_prog;
+
+            if ($result > 100) {
+                $result = 100;
+            } else if($result < 0){
+                $result = 0;
+            }
+            if($result < $task->progress || ($result == 100 and $task->progress == 100)){
+                $task->color = 'green';
+            }else if($result > $task->progress){
+                $task->color = 'red';
+            }else{
+                $task->color = 'yellow';
+            }
+
+             if ($real_prog > 100) {
+                $real_prog = 100;
+            } else if($real_prog < 0){
+                $real_prog = 0;
+            }
+            if($real_prog < $task->progress || ($result == 100 and $task->progress == 100)){
+                $task->color = 'green';
+            }else if($result > $task->progress){
+                $task->color = 'red';
+            }else{
+                $task->color = 'yellow';
+            }
+            $task->real_progress = $real_prog;
+
+            $task->estimated_progress = $result;
+
+        }
+        $response = (object) array(
+            'users'         => $users,
+            'tasks'         => $tasks,
+            'requirements'  => $requirements,
+            'project'       => $project,
+        );
+      
+        $data['company'] = $company;
+        $data['customer'] = $this->getFromApi('GET', 'customers/' . session('customer_id'));
+        $data['project'] = $this->getFromApi('GET', 'projects/' . session('project_id'));
+
+ 
+        $data['response']=$response;
+
+        $pdf = \PDF::loadView('reports.tasks.pdf', $data);
+        $pdf->setPaper('A4', 'landscape');
+        return $pdf->download('task_report.pdf');
+        //return view('reports.tasks.pdf', $data);
     }
 
     /**

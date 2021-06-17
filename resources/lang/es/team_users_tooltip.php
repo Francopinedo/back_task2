@@ -1,0 +1,20 @@
+<?php
+return [
+	'team_users'    => 'Miembros',
+	'add_new'       => 'Añadir Nuevo',
+	'update'        => 'UPDATE',
+	'id'            => 'ID',
+	'project'       => 'Proyecto',
+	'user'          => 'Usuario',
+	'load'          => 'Carga: (ej. 100% (8 hours), 50% (4 hours) etc.)',
+	'working_hours' => 'Horas Trabajables: Cuantas horas laborales por dia tiene este recurso disponible?',
+	'from'          => 'Fecha Desde',
+	'to'            => 'Fecha Hasta',
+	'rate'          => 'Cargo',
+	'country'          => 'Pais',
+	'city'          => 'Ciudad',
+	'permission_role'          => 'Permisos de Rol',
+	'project_role'          => 'Rol de Proyecto',
+	'seniority'          => 'seniority',
+	'workplace'          => 'Lugar de Trabajo',
+];

@@ -67,8 +67,11 @@
                     data: null,
                     render: function (data, type, row) {
                         return '' +
-                            '<a href="/contract_resources/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
-                            '<a href="/contract_resources/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+                            '<a title="{{__('general.edit')}}" href="/contract_resources/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' 
+                            <?php if (Auth::user()->hasPermission('delete.users')) { ?> +
+                                '<a title="{{__('general.delete')}}" href="/contract_resources/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>'
+                            <?php } ?>;
+
                     }
                 }],
 
@@ -170,8 +173,10 @@
                     data: null,
                     render: function (data, type, row) {
                         return '' +
-                            '<a href="/contract_expenses/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
-                            '<a href="/contract_expenses/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+                            '<a title="{{__('general.edit')}}" href="/contract_expenses/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' 
+                            <?php if (Auth::user()->hasPermission('delete.users')) { ?>+
+                                '<a title="{{__('general.delete')}}" href="/contract_expenses/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>'
+                            <?php } ?>;
                     }
                 }],
                 initComplete: function (settings, json) {
@@ -254,8 +259,10 @@
                     data: null,
                     render: function (data, type, row) {
                         return '' +
-                            '<a href="/contract_services/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
-                            '<a href="/contract_services/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+                            '<a title="{{__('general.edit')}}" href="/contract_services/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' 
+                            <?php if (Auth::user()->hasPermission('delete.users')) { ?> +
+                                '<a title="{{__('general.delete')}}" href="/contract_services/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>'
+                            <?php } ?>;
                     }
                 }],
                 "footerCallback": function (row, data, start, end, display) {
@@ -346,8 +353,10 @@
                     data: null,
                     render: function (data, type, row) {
                         return '' +
-                            '<a href="/contract_materials/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
-                            '<a href="/contract_materials/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+                            '<a title="{{__('general.edit')}}" href="/contract_materials/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' 
+                            <?php if (Auth::user()->hasPermission('delete.users')) { ?> +
+                                '<a title="{{__('general.delete')}}" href="/contract_materials/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>'
+                            <?php } ?>;
                     }
                 }],
 
@@ -407,7 +416,7 @@
 @section('section_title', __('contracts.items'))
 
 @section('content')
-    <a href="/contracts"> <i class="fa fa-arrow-circle-left fa-3x"></i></a>
+    <a title="{{__('general.return')}}" href="/contracts"> <i class="fa fa-arrow-circle-left fa-3x"></i></a>
 
     <br>
     <br>
@@ -430,22 +439,22 @@
                     <table id="contract_resources-table" class="uk-table" cellspacing="0" width="100%">
                         <thead>
                         <tr>
-                            <th>{{ __('contract_resources.id') }}</th>
-                            <th>{{ __('contracts.project_role') }}</th>
-                            <th>{{ __('contracts.seniority') }}</th>
-                            <th>{{ __('contracts.qty') }}</th>
-                            <th>{{ __('contracts.workinghours') }}</th>
-                            <th>{{ __('contracts.rate') }}</th>
-                            <th>{{ __('invoices.total') }}</th>
-                            <th>{{ __('contracts.currency') }}</th>
-                            <th>{{ __('contracts.total_exchanged') }}</th>
-                            <th>{{ __('contracts.load') }}</th>
-                            <th>{{ __('contracts.workplace') }}</th>
-                            <th>{{ __('contracts.country') }}</th>
-                            <th>{{ __('contracts.city') }}</th>
-                            <th>{{ __('contracts.office') }}</th>
-                            <th>{{ __('contracts.comments') }}</th>
-                            <th>{{ __('general.actions') }}</th>
+                            <th title="{{__('contracts_resources.id.')}}">{{ __('contract_resources.id') }}</th>
+                            <th title="{{__('contracts_tooltip.project_role')}}">{{ __('contracts.project_role') }}</th>
+                            <th title="{{__('contracts_tooltip.seniority')}}">{{ __('contracts.seniority') }}</th>
+                            <th title="{{__('contracts_tooltip.qty')}}">{{ __('contracts.qty') }}</th>
+                            <th title="{{__('contracts_tooltip.workinghours')}}">{{ __('contracts.workinghours') }}</th>
+                            <th title="{{__('contracts_tooltip.rate')}}">{{ __('contracts.rate') }}</th>
+                            <th title="{{__('contracts_tooltip.total')}}">{{ __('contracts.total') }}</th>
+                            <th title="{{__('contracts_tooltip.currency')}}">{{ __('contracts.currency') }}</th>
+                            <th title="{{__('contracts_tooltip.total_exchanged')}}">{{ __('contracts.total_exchanged') }}</th>
+                            <th title="{{__('contracts_tooltip.load')}}">{{ __('contracts.load') }}</th>
+                            <th title="{{__('contracts_tooltip.workplace')}}">{{ __('contracts.workplace') }}</th>
+                            <th title="{{__('contracts_tooltip.country')}}">{{ __('contracts.country') }}</th>
+                            <th title="{{__('contracts_tooltip.city')}}">{{ __('contracts.city') }}</th>
+                            <th title="{{__('contracts_tooltip.office')}}">{{ __('contracts.office') }}</th>
+                            <th title="{{__('contracts_tooltip.comments')}}">{{ __('contracts.comments') }}</th>
+                            <th title="{{__('general.actions')}}">{{ __('general.actions') }}</th>
                         </tr>
                         </thead>
 
@@ -491,16 +500,16 @@
                     <table id="contract_expenses-table" class="uk-table" cellspacing="0" width="100%">
                         <thead>
                         <tr>
-                            <th>{{ __('contract.id') }}</th>
-                            <th>{{ __('contracts.detail') }}</th>
-                            <th>{{ __('contracts.reimbursable') }}</th>
-                            <th>{{ __('contracts.frequency') }}</th>
-                            <th>{{ __('contracts.cost') }}</th>
-                            <th>{{ __('contracts.cost_exchanged') }}</th>
-                            <th>{{ __('contracts.amount') }}</th>
-                            <th>{{ __('contracts.amount_exchanged') }}</th>
-                            <th>{{ __('contracts.currency') }}</th>
-                            <th>{{ __('general.actions') }}</th>
+                            <th title="{{__('contracts_tooltip.id')}}">{{ __('contracts.id') }}</th>
+                            <th title="{{__('contracts_tooltip.detail')}}">{{ __('contracts.detail') }}</th>
+                            <th title="{{__('contracts_tooltip.reimbursable')}}">{{ __('contracts.reimbursable') }}</th>
+                            <th title="{{__('contracts_tooltip.frequency')}}">{{ __('contracts.frequency') }}</th>
+                            <th title="{{__('contracts_tooltip.cost')}}">{{ __('contracts.cost') }}</th>
+                            <th title="{{__('contracts_tooltip.cost_exchanged')}}">{{ __('contracts.cost_exchanged') }}</th>
+                            <th title="{{__('contracts_tooltip.amount')}}">{{ __('contracts.amount') }}</th>
+                            <th title="{{__('contracts_tooltip.amount_exchanged')}}">{{ __('contracts.amount_exchanged') }}</th>
+                            <th title="{{__('contracts_tooltip.currency')}}">{{ __('contracts.currency') }}</th>
+                            <th title="{{__('general.actions')}}">{{ __('general.actions') }}</th>
                         </tr>
                         </thead>
                         <tfoot>
@@ -536,16 +545,16 @@
                     <table id="contract_services-table" class="uk-table" cellspacing="0" width="100%">
                         <thead>
                         <tr>
-                            <th>{{ __('contract.id') }}</th>
-                            <th>{{ __('contracts.detail') }}</th>
-                            <th>{{ __('contracts.reimbursable') }}</th>
-                            <th>{{ __('contracts.frequency') }}</th>
-                            <th>{{ __('contracts.cost') }}</th>
-                            <th>{{ __('contracts.cost_exchanged') }}</th>
-                            <th>{{ __('contracts.amount') }}</th>
-                            <th>{{ __('contracts.amount_exchanged') }}</th>
-                            <th>{{ __('contracts.currency') }}</th>
-                            <th>{{ __('general.actions') }}</th>
+                            <th title="{{__('contracts_tooltip.id')}}">{{ __('contracts.id') }}</th>
+                            <th title="{{__('contracts_tooltip.detail')}}">{{ __('contracts.detail') }}</th>
+                            <th title="{{__('contracts_tooltip.reimbursable')}}">{{ __('contracts.reimbursable') }}</th>
+                            <th title="{{__('contracts_tooltip.frequency')}}">{{ __('contracts.frequency') }}</th>
+                            <th title="{{__('contracts_tooltip.cost')}}">{{ __('contracts.cost') }}</th>
+                            <th title="{{__('contracts_tooltip.cost_exchanged')}}">{{ __('contracts.cost_exchanged') }}</th>
+                            <th title="{{__('contracts_tooltip.amount')}}">{{ __('contracts.amount') }}</th>
+                            <th title="{{__('contracts_tooltip.amount_exchanged')}}">{{ __('contracts.amount_exchanged') }}</th>
+                            <th title="{{__('contracts_tooltip.currency')}}">{{ __('contracts.currency') }}</th>
+                            <th title="{{__('general.actions')}}">{{ __('general.actions') }}</th>
                         </tr>
                         </thead>
                         <tfoot>
@@ -581,16 +590,16 @@
                     <table id="contract_materials-table" class="uk-table" cellspacing="0" width="100%">
                         <thead>
                         <tr>
-                            <th>{{ __('contract.id') }}</th>
-                            <th>{{ __('contracts.detail') }}</th>
-                            <th>{{ __('contracts.reimbursable') }}</th>
-                            <th>{{ __('contracts.frequency') }}</th>
-                            <th>{{ __('contracts.cost_exchanged') }}</th>
-                            <th>{{ __('contracts.cost') }}</th>
-                            <th>{{ __('contracts.amount') }}</th>
-                            <th>{{ __('contracts.amount_exchanged') }}</th>
-                            <th>{{ __('contracts.currency') }}</th>
-                            <th>{{ __('general.actions') }}</th>
+                            <th title="{{__('contracts_tooltip.id')}}">{{ __('contracts.id') }}</th>
+                            <th title="{{__('contracts_tooltip.detail')}}">{{ __('contracts.detail') }}</th>
+                            <th title="{{__('contracts_tooltip.reimbursable')}}">{{ __('contracts.reimbursable') }}</th>
+                            <th title="{{__('contracts_tooltip.frequency')}}">{{ __('contracts.frequency') }}</th>
+                            <th title="{{__('contracts_tooltip.cost')}}">{{ __('contracts.cost') }}</th>
+                            <th title="{{__('contracts_tooltip.cost_exchanged')}}">{{ __('contracts.cost_exchanged') }}</th>
+                            <th title="{{__('contracts_tooltip.amount')}}">{{ __('contracts.amount') }}</th>
+                            <th title="{{__('contracts_tooltip.amount_exchanged')}}">{{ __('contracts.amount_exchanged') }}</th>
+                            <th title="{{__('contracts_tooltip.currency')}}">{{ __('contracts.currency') }}</th>
+                            <th title="{{__('general.actions')}}">{{ __('general.actions') }}</th>
                         </tr>
                         </thead>
                         <tfoot>
