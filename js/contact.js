@@ -19,12 +19,16 @@ var Contact = (function () {
 
 
         events: function () {
+            var country =  "#country_id", city="#city_id";
+            
+            if($("#country_id2").length>0){
+                country = "#country_id2";
+                city = "#city_id2";
+            }
 
+            $(country).selectize();
 
-            // $('#country_id').selectize();
-            // $('#country_id2').selectize();
-
-            $("#country_id, #country_id2").on('change', function () {
+            $(country).on('change', function () {
                 console.log('chage....');
                 $.ajax({
                     url: Contact.API_PATH + '/cities',
@@ -35,21 +39,18 @@ var Contact = (function () {
                     function (data) {
                         var html = '<option value="">City...</option>';
 
-                        if($('#city_id2').length>0){
-                            $('#city_id2').selectize()[0].selectize.destroy();
-                        }
-                        $('#city_id').selectize()[0].selectize.destroy();
+                        // if($('#city_id2').length>0){
+                        //     $('#city_id2').selectize()[0].selectize.destroy();
+                        // }
+                        $(city).selectize()[0].selectize.destroy();
 
                         $.each(data.data, function (i, value) {
                             console.log(value);
                             html += '<option value="' + value.id + '">' + value.name + '</option>';
                         });
 
-                        $('#city_id').html(html);
-                        $('#city_id2').html(html);
-
-                        $('#city_id').selectize();
-                        $('#city_id2').selectize();
+                        $(city).html(html);
+                        $(city).selectize();
                     }
                 );
             });

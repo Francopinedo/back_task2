@@ -112,6 +112,7 @@
 
 <script src="{{ asset('js/contact.js') }}"></script>
 <script type="text/javascript">
-
-    Contact.init('<?php echo e(env('API_PATH')); ?>', '<?php echo e(env('APP_URL')); ?>');
+    $(function(){
+        Contact.init('<?php echo e(env('API_PATH')); ?>', '<?php echo e(env('APP_URL')); ?>');
+    });
 </script>

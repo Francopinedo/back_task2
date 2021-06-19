@@ -22,21 +22,7 @@
                 {data: 'rate', name: 'rate', defaultContent:''},
                  {data: 'load', name: 'load', defaultContent:''},
                 {data: 'actions', name: 'actions'}
-            ] :  [
-                {data: 'id', name: 'id', visible: false},
-                {data: 'project_name', name: 'project_name'},
-                {data: 'user_name', name: 'user_name'},
-                {data: 'hours', name: 'hours'},
-                {data: 'date_from', name: 'date_from'},
-                {data: 'date_to', name: 'date_to'},
-                {data: 'country_name', name: 'country_name', defaultContent:''},
-                {data: 'city_name', name: 'city_name', defaultContent:''},
-                {data: 'seniority', name: 'seniority', defaultContent:''},
-                {data: 'workplace', name: 'workplace', defaultContent:''},
-                {data: 'rate', name: 'rate', defaultContent:''},
-                 {data: 'load', name: 'load', defaultContent:''},
-                {data: 'actions', name: 'actions'}
-            ] ;
+            ];
 
             var actions = [
                 {
@@ -76,7 +62,6 @@
         <div class="md-card-content">
             <div class="uk-grid" data-uk-grid-margin>
                 <div class="uk-width-1-1">
-<div>{{Request::path()}}</div>
                     @if(session()->has('message'))
                         <div class="uk-alert uk-alert-{{ session('alert-class', 'close') }}" data-uk-alert>
                             <a href="#" class="uk-alert-close uk-close"></a>

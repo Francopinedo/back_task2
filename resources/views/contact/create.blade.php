@@ -7,22 +7,27 @@
     	    {{ csrf_field() }}
     	    <input type="hidden" name="company_id" value="{{ $company->id }}">
     		<div class="uk-width-medium-1-1 uk-row-first">
-@if(!session('project_id'))
-    			<div class="md-input-wrapper md-input-select">
-    				<label>{{ __('contacts.project') }}</label>
-    				<select name="project_id" data-md-selectize>
-    				    <option value="">{{ __('contacts.project') }}...</option>
-    				    @foreach ($projects as $project)
-    				        <option value="{{ $project->id }}">{{ $project->name }}</option>
-    				    @endforeach
-    				</select>
-    			</div>
-    			<div class="parsley-errors-list filled"><span class="parsley-required project_id-error"></span></div>
-@else
-            <input type="hidden" name="project_id" value="{{ session('project_id') }}">
-<label>{{ __('contacts.project') }} :{{ session('project_name') }}</label>
-<br>
-@endif
+                @if(!session('project_id'))
+        			<div class="md-input-wrapper md-input-select">
+        				<label>{{ __('contacts.project') }}</label>
+        				<select name="project_id" data-md-selectize>
+        				    <option value="">{{ __('contacts.project') }}...</option>
+        				    @foreach ($projects as $project)
+        				        <option value="{{ $project->id }}">{{ $project->name }}</option>
+        				    @endforeach
+        				</select>
+        			</div>
+        			<div class="parsley-errors-list filled"><span class="parsley-required project_id-error"></span></div>
+                @else
+                    <div class="md-input-wrapper md-input-select">
+                        <label>{{ __('contacts.project') }}</label>
+                        <select name="project_id" data-md-selectize>
+                            <option value="">{{ __('contacts.project') }}...</option>
+                                <option value="{{ session('project_id') }}" selected>{{ session('project_name') }}</option>
+                        </select>
+                    </div>
+                @endif
+
                 <div class="md-input-wrapper">
                 	<label>{{ __('contacts.name') }}</label>
                 	<input type="text" class="md-input" name="name" required><span class="md-input-bar"></span>
@@ -106,6 +111,7 @@
 
 <script src="{{ asset('js/contact.js') }}"></script>
 <script type="text/javascript">
-
-    Contact.init('<?php echo e(env('API_PATH')); ?>', '<?php echo e(env('APP_URL')); ?>');
+    $(function(){
+        Contact.init('<?php echo e(env('API_PATH')); ?>', '<?php echo e(env('APP_URL')); ?>');
+    });
 </script>

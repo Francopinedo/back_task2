@@ -90,14 +90,14 @@
                         </div>
                 	@endif
 
-                	{{-- @if(!session()->has('project_id'))
+                	@if(!session()->has('project_id'))
                 		<div class="uk-alert uk-alert-danger" data-uk-alert>
                             <a href="#" class="uk-alert-close uk-close"></a>
                             {{ __('projects.you_need_a_project') }}
                         </div>
-                	@endif --}}
+                	@endif
 
-					{{-- @if(session()->has('project_id')) --}}
+					@if(session()->has('project_id'))
                 	<table id="contacts-table" class="uk-table" cellspacing="0" width="100%">
                 	    <thead>
                 	        <tr>
@@ -123,7 +123,7 @@
                 			<a class="md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light" href="#" id="add-new" title="{{ __('contacts.add_new') }}">{{ __('contacts.add_new') }}</a>
                 		</div>
                 	</div>
-                	{{-- @endif --}}
+                	@endif
                 </div>
             </div>
         </div>
