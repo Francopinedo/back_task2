@@ -52,19 +52,15 @@ class AbsenceTypeTemplateController extends Controller
     	// validacion del formulario
     	$validator =Validator::make($request->all(), [
 			'title'      => 'required',
-			'days'       => 
-
-
-
-
-'numeric|required',
-			'city_id'       => 'required',
+			'days'       => 'numeric|required|min:1',
+			'city_id'    => 'required',
 			'country_id' => 'required'
 	    ]);
 
     	if ($validator->fails()) {
-    return response()->json($validator->errors(), 422);
-  } $data = $request->all();
+            return response()->json($validator->errors(), 422);
+        } 
+        $data = $request->all();
 
     	$res = $this->apiCall('POST', 'absence_types_template', $data);
 

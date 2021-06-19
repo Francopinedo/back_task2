@@ -23,5 +23,6 @@ return [
 			'task_creation_email'		     => 'Creacion de Tickets desde Correos',
 			'fields_add_feature'		     => 'Funcionalidad de Añadir Campos',
 			'alfred_active'			         => 'Alfred Activado',
-			'field_captions'		         => 'Ayuda de Campos Activada'
+			'field_captions'		         => 'Ayuda de Campos Activada',
+			'set'							 => 'Wiki Activada'
 ];

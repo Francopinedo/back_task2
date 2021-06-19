@@ -113,6 +113,11 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'days' => 'campo dia',
+        'title' => 'titulo',
+        'country_id' => 'pais',
+        'city_id' => 'ciudad',
+    ],
 
 ];

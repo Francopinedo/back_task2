@@ -3,7 +3,7 @@
 
 		<div class="uk-alert uk-alert-danger hide_when_empty" data-uk-alert="" id="status_code-error"></div>
 
-    	<form role="form" method="POST" action="{{ url('cities_template') }}" id="data-form" data-redirect-on-success="{{ url('cities_template') }}">
+    	<form class="uk-form uk-form-stacked" role="form" method="POST" action="{{ url('cities_template') }}" id="data-form" data-redirect-on-success="{{ url('cities_template') }}">
     	    {{ csrf_field() }}
     		<div class="uk-width-medium-1-1 uk-row-first">
                 <div class="md-input-wrapper">
@@ -19,7 +19,7 @@
                 <div class="parsley-errors-list filled"><span class="parsley-required location_name-error"></span></div>
 
                 <div class="md-input-wrapper">
-                	<label>{{ __('cities.timezone') }}</label>
+                	<label>{{ __('cities_tooltip.timezone') }}</label>
                 	<input type="text" class="md-input" name="timezone"><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required timezone-error"></span></div>

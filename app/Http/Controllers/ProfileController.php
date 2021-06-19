@@ -28,19 +28,23 @@ class ProfileController extends Controller
     {
         $user = User::find(Auth::id());
         $company = $this->getFromApi('GET', 'companies/fromUser/' . Auth::id());
-	if(!empty($company)){
-        $res = $this->apiCall('GET', 'cities?company_id=' .$company->id);
-	}else{
-	$res = $this->apiCall('GET', 'cities');
-	}
+        if(!empty($company)){
+            $res = $this->apiCall('GET', 'cities?company_id=' .$company->id);
+	   }else{
+	       $res = $this->apiCall('GET', 'cities');
+	   }
         $cities = json_decode($res->getBody()->__toString())->data;
         $file='';
         if(Storage::disk('public')->has('users/profile/'.$user->id."/".$user->profile_image_path)){
             $file = Storage::disk('public')->url('app/public/users/profile/'.$user->id."/".$user->profile_image_path);
 
         }  
-        
-        $res = $this->apiCall('GET', 'languages?company_id=' . $company->id);
+
+        if(Auth::user()->hasRole('admin')) {
+            $res = $this->apiCall('GET', 'languages');
+        }else{
+            $res = $this->apiCall('GET', 'languages?company_id=' . $company->id);
+        }
         $languages = json_decode($res->getBody()->__toString())->data;
 
         return view('profile/edit', [
@@ -94,8 +98,9 @@ class ProfileController extends Controller
         if ($validator->fails()) {
     return response()->json($validator->errors(), 422);
   } $data = $request->all();
+// dd($request->tooltip);
 
-	   if(isset($data['tooltip']) && $data['tooltip']=='0' )
+	   if(isset($data['tooltip']) && $data['tooltip']!=null )
            {
             $data['tooltip']='1';
            }else{

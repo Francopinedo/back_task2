@@ -166,117 +166,116 @@ var ScopeChangesReport = (function () {
                         { extend: 'pdfHtml5',orientation:'landscape', exportOptions: { columns: ':visible:not(:last-child)' } },
                     ],
                     columns: columns,
-              columnDefs: [
-                {
-                    targets: 3,
-                    data: null,
-                    render: function (data, type, row) {
+                    columnDefs: [
+                        {
+                            targets: 3,
+                            data: null,
+                            render: function (data, type, row) {
 
-                       
-                        if (data == 3)
-                            return 'Risk';
-                       
-                    }
-                },
-                    {
-                        targets: 5,
-                        data: null,
-                        render: function (data, type, row) {
-                            
-                            if (data == 1)
-                                return 'To Do';
-                            if (data == 2)
-                                return 'Waiting';
-                            if (data == 3)
-                                return 'In Progress';
-                            if (data == 4)
-                                return 'Cancelled';
+                           
                             if (data == 5)
-                                return 'Rescheduled';
-                            if (data == 6)
-                                return 'Resolved';
+                                return 'Risk';
+                            }
+                        },
+                        {
+                            targets: 5,
+                            data: null,
+                            render: function (data, type, row) {
+                                
+                                if (data == 1)
+                                    return 'To Do';
+                                if (data == 2)
+                                    return 'Waiting';
+                                if (data == 3)
+                                    return 'In Progress';
+                                if (data == 4)
+                                    return 'Cancelled';
+                                if (data == 5)
+                                    return 'Rescheduled';
+                                if (data == 6)
+                                    return 'Resolved';
+                            }
+                        },
+                        {
+                            targets: 6,
+                            data: null,
+                            render: function (data, type, row) {
+
+                                if (data == 1)
+                                    return 'Sprint';
+                                if (data == 2)
+                                    return 'Backlog';
+
+                            }
+                        },
+                        {
+                            targets: 10,
+                            data: null,
+                            render: function (data, type, row) {
+
+                                if (data == 1)
+                                    return 'Low';
+                                if (data == 2)
+                                    return 'Medium';
+                                if (data == 3)
+                                    return 'High';
+                                if (data == 4)
+                                    return 'High';
+
+                            }
+                        },
+                        {
+                            targets: 11,
+                            data: null,
+                            render: function (data, type, row) {
+                                if (data == 0)
+                                    return 'Default';
+                                if (data == 1)
+                                    return 'Blocker';
+                                if (data == 2)
+                                    return 'Major';
+                                if (data == 3)
+                                    return 'Medium';
+                                if (data == 4)
+                                    return 'Minor';
+                                if (data == 5)
+                                    return 'Trivial';
+
+                            }
+                        },
+                        {
+                            targets: 12,
+                            data: null,
+                            render: function (data, type, row) {
+                                if (data == 0)
+                                    return 'Default';
+                                if (data == 1)
+                                    return 'High';
+                                if (data == 2)
+                                    return 'Medium';
+                                if (data == 3)
+                                    return 'Low';
+
+
+                            }
+                        }, {
+                            targets: 13,
+                            data: null,
+                            render: function (data, type, row) {
+                                if (data == 0)
+                                    return 'Default';
+                                  if (data == 1)
+                                    return 'High';
+                                if (data == 2)
+                                    return 'Medium';
+                                if (data == 3)
+                                    return 'Low';
+
+
+
+                            }
                         }
-                    },
-                    {
-                        targets: 6,
-                        data: null,
-                        render: function (data, type, row) {
-
-                            if (data == 1)
-                                return 'Sprint';
-                            if (data == 2)
-                                return 'Backlog';
-
-                        }
-                    },
-                    {
-                        targets: 10,
-                        data: null,
-                        render: function (data, type, row) {
-
-                            if (data == 1)
-                                return 'Low';
-                            if (data == 2)
-                                return 'Medium';
-                            if (data == 3)
-                                return 'High';
-                            if (data == 4)
-                                return 'High';
-
-                        }
-                    },
-                    {
-                        targets: 11,
-                        data: null,
-                        render: function (data, type, row) {
-                            if (data == 0)
-                                return 'Default';
-                            if (data == 1)
-                                return 'Blocker';
-                            if (data == 2)
-                                return 'Major';
-                            if (data == 3)
-                                return 'Medium';
-                            if (data == 4)
-                                return 'Minor';
-                            if (data == 5)
-                                return 'Trivial';
-
-                        }
-                    },
-                    {
-                        targets: 12,
-                        data: null,
-                        render: function (data, type, row) {
-                            if (data == 0)
-                                return 'Default';
-                            if (data == 1)
-                                return 'High';
-                            if (data == 2)
-                                return 'Medium';
-                            if (data == 3)
-                                return 'Low';
-
-
-                        }
-                    }, {
-                        targets: 13,
-                        data: null,
-                        render: function (data, type, row) {
-                            if (data == 0)
-                                return 'Default';
-                              if (data == 1)
-                                return 'High';
-                            if (data == 2)
-                                return 'Medium';
-                            if (data == 3)
-                                return 'Low';
-
-
-
-                        }
-                    }
-                ],
+                    ],
 
                 });
 

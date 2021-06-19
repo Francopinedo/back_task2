@@ -7,5 +7,5 @@ return [
 	'name'     => 'Name',
 	'location' => 'Location',
 	'country'  => 'Country',
-	'timezone' => 'Timezone (format: UTC+1, GMT-1 etc)'
+	'timezone' => 'Timezone'
 ];

@@ -7,5 +7,5 @@ return [
 	'name'     => 'Nombre',
 	'location' => 'Lugar',
 	'country'  => 'Pais',
-	'timezone' => 'Zona Horaria'
+	'timezone' => 'Zona Horaria (ej. UTC+1, GMT-1)'
 ];

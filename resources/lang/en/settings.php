@@ -28,6 +28,6 @@ return [
 			'knowledge_areas_active'		 => 'Knowlegde Area Menu',
 			'version'		 => 'Version',
 			'max_users'		 => 'Max Users',
-			'set'			=> 'Wikipedia'
+			'set'			=> 'Wiki Activated'
 
 ];

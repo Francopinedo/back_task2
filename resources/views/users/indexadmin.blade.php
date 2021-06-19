@@ -124,6 +124,7 @@
 
 
                 $data['companyRoles'] = $companyRoles;
+                $data['url'] = Request::path();
 
             if (!empty($seniorities))
             {

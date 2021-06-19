@@ -21,7 +21,7 @@
                 <div class="parsley-errors-list filled"><span class="parsley-required location_name-error"></span></div>
 
                 <div class="md-input-wrapper md-input-filled">
-                	<label>{{ __('cities.timezone') }}</label>
+                	<label>{{ __('cities_tooltip.timezone') }}</label>
                 	<input type="text" class="md-input" name="timezone" value="{{ $city->timezone }}"><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required timezone-error"></span></div>
