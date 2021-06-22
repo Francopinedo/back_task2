@@ -215,6 +215,7 @@ var Catalog = (function () {
                                         dataType: 'json',
                                         success: function (json) {
                                             if(json.success==true){
+                                                UIkit.notify(json.message, {status:'success'});
                                                 Catalog.getfilesDirectory(lang_system,type,dir);
                                             }else{
                                                 UIkit.modal.alert('Error');
@@ -289,30 +290,15 @@ var Catalog = (function () {
                 type: 'post',
                 dataType: 'json',
                 done: function (e, data) {
-                    data.context.html('Upload finished.').fadeOut(2000);
+                    if(data.result.success == true){
+                        UIkit.notify(data.result.message, {status:'warning'});
+                        data.context.html('');
+                    } else {
+                        UIkit.notify(data.result.message, {status:'success'});
+                        data.context.html('');
+                    }
 
                     Catalog.getfilesDirectory(Catalog.lang_system,$('#option').val(), $('#directory').val());
-                    // $.ajax({
-                    //     url: Catalog.APP_URL+'/catalog/show/'+Catalog.lang_system+'/nontagged/' + $("#directory").val(),
-                    //     success: function (data) {
-                    //         console.log(data);
-                    //         var html = '';
-
-                    //         jQuery.each(data.documentos, function (i, value) {
-
-                    //             var res = value.split('/');
-
-                    //         html += '  <div class="uk-width-1-2"><a style="font-size: 20px" href="'+Catalog.APP_URL+'/catalog/download/?file=' + value + '">' + res[3] + ' - </a>   ' +
-                    //             '<a href="/catalog/delete/?file=' + value + '" class="md-icon material-icons delete-btn">'
-                    //             + '<i class="fa fa-trash-o" aria-hidden="true"></i> </a>' +
-                    //             '</div>';
-                    //         });
-
-                    //         console.log(html);
-                    //         $("#documents").html(html);
-                    //     }
-                    // })
-
                 }
             });
             

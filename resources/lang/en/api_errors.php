@@ -54,4 +54,5 @@ return [
 	'metavariables_store'			 =>	'An error occurred in the the Metavariable Creation',
 	'metagrids_store'				 => 'An error occurred in the Metagrid Creation',
 	'wiki_store'                  	 => 'An error occurred at Wiki Creation',
+	'error_upload'					 => 'This document is already uploaded, try another file',
 ];

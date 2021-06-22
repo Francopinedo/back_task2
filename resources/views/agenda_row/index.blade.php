@@ -26,7 +26,7 @@
 	    $('#activities_history-table').DataTable({
 	        processing: true,
 	        serverSide: true,
-	        ajax:  '{{ env('API_PATH') }}activities_history/datatables?company_id={{ $agenda->id }}',
+	        ajax:  '{{ env('API_PATH') }}activities_history/datatables?agenda_id={{ $agenda->id }}',
 	        dom: '<"top">rt<"bottom"lp><"clear">',
 	        language: {
 			    paginate: {

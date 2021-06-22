@@ -19,7 +19,7 @@ var tableActions = (function() {
 				$('#edit_div').css('position', 'fixed');
 				$switcher_toggle.show();
 				$('#create_div').addClass('switcher_active');
-				$('#data-form input:visible:enabled:first').focus();
+				// $('#data-form input:visible:enabled:first').focus();
 			});
 
 			$('#cancel-btn').on('click', function(e){

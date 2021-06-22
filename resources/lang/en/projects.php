@@ -105,4 +105,5 @@ return [
 	'completed'               		=> 'completed',
 	'name_convention'               => 'Name Convention',
 	'name_project' 					=> 'Project Name',
+	'select_project'				=> 'Select a project to see the users with an assigned project'
 ];

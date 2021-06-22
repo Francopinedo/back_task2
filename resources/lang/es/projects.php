@@ -104,5 +104,6 @@ return [
 	'amount'                        => 'Monto',
 	'amount_exchanged'              => 'Monto Al Cambio',
 	'cost_exchanged'                => 'Costo Al Cambio',
-	'name_project' => 'Nombre de Proyecto',
+	'name_project' 					=> 'Nombre de Proyecto',
+	'select_project'				=> 'Selecciona un proyecto para ver los usuarios con proyecto asignado'
 ];

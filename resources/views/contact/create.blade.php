@@ -8,7 +8,7 @@
     	    <input type="hidden" name="company_id" value="{{ $company->id }}">
     		<div class="uk-width-medium-1-1 uk-row-first">
                 @if(!session('project_id'))
-        			<div class="md-input-wrapper md-input-select">
+        			<div class="md-input-wrapper md-input-filled md-input-select">
         				<label>{{ __('contacts.project') }}</label>
         				<select name="project_id" data-md-selectize>
         				    <option value="">{{ __('contacts.project') }}...</option>
@@ -19,11 +19,13 @@
         			</div>
         			<div class="parsley-errors-list filled"><span class="parsley-required project_id-error"></span></div>
                 @else
-                    <div class="md-input-wrapper md-input-select">
+                    <div class="md-input-wrapper md-input-filled md-input-select">
                         <label>{{ __('contacts.project') }}</label>
                         <select name="project_id" data-md-selectize>
                             <option value="">{{ __('contacts.project') }}...</option>
-                                <option value="{{ session('project_id') }}" selected>{{ session('project_name') }}</option>
+                            @foreach ($projects as $project)
+                                <option value="{{ $project->id }}" {{ ($project->id == session('project_id'))? 'selected' : '' }}>{{ $project->name }}</option>
+                            @endforeach
                         </select>
                     </div>
                 @endif

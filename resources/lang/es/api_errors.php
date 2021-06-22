@@ -53,4 +53,5 @@ return [
 	'metadocuments_store'			 => 'Ocurrio un error en la Creacion del Metadocumento',
 	'metavariables_store'			 =>	'Ocurrio un error en la Creacion de la Metavariable',
 	'metagrids_store'				 => 'Ocurrio un error en la Creacion del MetaGrid',
+	'error_upload'					 => 'Este documento ya esta cargado, intente con otro archivo',
 ];
