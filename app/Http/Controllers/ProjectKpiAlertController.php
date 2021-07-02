@@ -33,8 +33,9 @@ class ProjectKpiAlertController extends Controller
 	    ]);
 
     	if ($validator->fails()) {
-    return response()->json($validator->errors(), 422);
-  } $data = $request->all();
+    		return response()->json($validator->errors(), 422);
+  		} 
+  		$data = $request->all();
 
     	$res = $this->apiCall('POST', 'project_kpi_alerts', $data);
 
@@ -68,7 +69,7 @@ class ProjectKpiAlertController extends Controller
 
     	return response()->json([
     		'view' => view('project_kpi_alert/edit', [
-                'project_id' => $id,
+                // 'project_id' => $id,
 				'projectKpiAlert'   => $projectKpiAlert,
 				'company'   => $company,
 				'kpis' => $kpis
@@ -94,8 +95,9 @@ class ProjectKpiAlertController extends Controller
 	    ]);
 
     	if ($validator->fails()) {
-    return response()->json($validator->errors(), 422);
-  } $data = $request->all();
+    		return response()->json($validator->errors(), 422);
+  		} 
+  		$data = $request->all();
 
     	$res = $this->apiCall('PATCH', 'project_kpi_alerts/'.$data['id'], $data);
 

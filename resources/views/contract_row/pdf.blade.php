@@ -95,6 +95,24 @@
             padding: 0px;
             line-height: 1px;
         }
+        span.item-title, span.data-contract, li.item, { clear: both; }
+        ul {
+            padding-left: 0px;
+            list-style: none;
+        }
+        ul, li.item{
+            width: 100%;
+        }
+        .item-title{
+            float: left;
+            width: 50%;
+            /*padding-top: auto;
+            padding-bottom: auto;*/
+        }
+        .data-contract{
+            float: right;
+            width: 50%;
+        }
 
         /* class works for table */
         /* table.page-break{
@@ -124,17 +142,39 @@
 
                 <h1>{{__('contracts.contract')}}</h1> <br>  <img height="100" src="{{ base_path() .'/assets/img/customers/'. $customer->id .'/'. $customer->logo_path }}">
                 <br>
-                <b> {{$customer->address}}</b><br>
-                {{__('contracts.contract')}}#{{$contract->sow_number}}<br>
-                {{__('contracts.amendment_number')}}{{$contract->amendment_number}}<br>
-                {{__('invoices.date')}}: {{ date('d-m-Y', strtotime( $contract->date )) }}<br>
+                <b> {{$customer->address}}</b>
+                <ul>
+                    <li class="item">
+                        <span class="item-title">{{__('contracts.contract')}}</span>
+                        <span class="data-contract">#{{$contract->sow_number}}</span>
+                    </li>
+                    <li class="item">
+                        <span class="item-title">{{__('contracts.amendment_number')}}</span>
+                        <span class="data-contract">{{$contract->amendment_number}}</span>
+                    </li>
+                    <li class="item">
+                        <span class="item-title">{{__('invoices.date')}}:</span>
+                        <span class="data-contract">{{ date('d-m-Y', strtotime( $contract->date )) }}</span>
+                    </li>
+                    <li class="item">
+                        <span class="item-title">{{__('invoices.page')}}:</span>
+                        <span class="page data-contract"></span>
+                    </li>
+                    <li class="item">
+                        <span class="item-title">{{__('invoices.for')}}:</span>
+                        <span class="data-contract">{{$contract->service_description}}</span>
+                    </li>
+                    <li class="item">
+                        <span class="item-title">{{__('invoices.period')}}:</span>
+                        <span class="data-contract">{{$contract->start_date}} - {{$contract->finish_date}}</span>
+                    </li>
+                    <li class="item">
+                        <span class="item-title">{{$project->name}}</span>
+                    </li>
+                </ul>
 
-                {{__('invoices.page')}}: <span class="page"></span><br>
 
-                {{__('invoices.for')}}: {{$contract->service_description}}<br>
-                {{__('invoices.period')}}: {{$contract->start_date}} - {{$contract->finish_date}}<br>
 
-                {{$project->name}}<br>
 
             </td>
         </tr>

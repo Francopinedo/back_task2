@@ -106,7 +106,7 @@ class ProjectController extends Controller
             'customer_id' => 'required',
             'start' => 'required',
             'finish' => 'required',
-            // 'status'                        => 'required',
+            'status'                        => 'required',
             // 'financial_deviation_threshold' => 'numeric|required',
             // 'time_deviation_threshold'      => 'numeric|required',
             // 'department_id'                 => 'required',
@@ -161,29 +161,34 @@ class ProjectController extends Controller
         // validacion del formulario
     	$validator =Validator::make($request->all(), [
             'name' => 'required',
-            'hours_by_day' => 'required',
-            // 'sow_number'                    => 'required',
-            // 'identificator'                 => 'required',
-            // 'engagement'                    => 'required',
-            // 'estimated_revenue'             => 'required|numeric|min:0',
-            // 'estimated_cost'                => 'required|numeric|min:0',
-            // 'estimated_margin'              => 'numeric|required',
-            // 'target_margin'                 => 'numeric|required',
             'customer_id' => 'required',
-            // 'status'                        => 'required',
-            // 'financial_deviation_threshold' => 'numeric|required',
-            // 'time_deviation_threshold'      => 'numeric|required',
-            // 'department_id'                 => 'required',
+            'customer_name' => 'required',
+            'start' => 'required',
+            'finish' => 'required',
             'project_manager_id' => 'required',
-          //  'technical_director_id' => 'required',
-          //  'delivery_manager_id' => 'required',
+            'technical_director_id' => 'required',
+            'delivery_manager_id' => 'required',
+            'sow_number'                    => 'required',
+            'identificator'                 => 'required',
+            'status'                        => 'required',
+            'presales_responsable'          => 'required',
+            'technical_estimator'           => 'required',
+            'engagement'                    => 'required',
+            'estimated_revenue'             => 'required|numeric|min:0',
+            'estimated_cost'                => 'required|numeric|min:0',
+            'estimated_margin'              => 'numeric|required',
+            'target_margin'                 => 'numeric|required',
+            'financial_deviation_threshold' => 'required|numeric',
+            'name_convention'               => 'required',
+            'holy_days'                     => 'required',
+            // 'financial_deviation_threshold' => 'numeric|required',
+            'time_deviation_threshold'      => 'numeric|required',
+            'hours_by_day' => 'required',
+            'department_id'                 => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        } 
         $data = $request->all();
 
         $res = $this->apiCall('PATCH', 'projects/' . $data['id'], $data);
@@ -194,7 +199,7 @@ class ProjectController extends Controller
 
             Validator::make($jsonRes,
                 ['status_code' => [Rule::in(['201', '200'])]],
-                ['in' => __('api_errors.project_store')]
+                ['in' => __('api_errors.project')]
             )->validate();
         } else {
             $jsonRes = json_decode($res->getBody()->__toString(), TRUE);
@@ -207,30 +212,6 @@ class ProjectController extends Controller
         }
 
         return response()->json();
-    }
-
-    public function download(Request $request)
-    {
-        // Creando el archivo zip de backup para luego Descargarse
-        $this->validate_download($request->id);
-
-        $now = Carbon::now(); // Para manipular Hora y Fecha
-        $project = $this->getFromApi('GET', 'projects/' . $request->id);
-        $customer = $this->getFromApi('GET', 'customers/'.$project->customer_id);
-
-        $destinationPath = "app/public/repository/" . $customer->name . "/" . $project->name;
-
-
-        if ($exists = Storage::disk('repository')->exists($customer->name . "/" . $project->name . "/".$customer->name."_".$project->name."_".$now->toDateString()."_".$now->toTimeString()."_repository.zip")) {  
-        // archive is now downloadable ...
-            
-            return response()->download(storage_path($destinationPath . "/".$customer->name."_".$project->name."_".$now->toDateString()."_".$now->toTimeString()."_repository.zip"))->deleteFileAfterSend(true);
-                
-            
-        } else {
-
-            return response()->json(array('error' => 'could not close zip file: '));
-        }
     }
 
     // Function to recursively add a directory,
@@ -276,15 +257,15 @@ class ProjectController extends Controller
         return $zipArchive;
     }
 
-    public function validate_download($id)
+    public function validate_download(Request $request)
     {
 
         $now = Carbon::now(); // Para manipular Hora y Fecha
-        $project = $this->getFromApi('GET', 'projects/' . $id);
+        $project = $this->getFromApi('GET', 'projects/' . $request->id);
         $customer = $this->getFromApi('GET', 'customers/'.$project->customer_id);
 
         $destinationPath = "app/public/repository/" . $customer->name . "/" . $project->name;
-
+        $name_file = $customer->name . "_".$project->name."_".$now->toDateString()."_".$now->toTimeString()."_repository.zip";
 
         if (Storage::disk('repository')->has($customer->name . "/" . $project->name)) {
 
@@ -295,7 +276,7 @@ class ProjectController extends Controller
 
          
             // define the name of the archive and create a new ZipArchive instance.
-            $archiveFile = storage_path($destinationPath . "/".$customer->name . "_".$project->name."_".$now->toDateString()."_".$now->toTimeString()."_repository.zip");
+            $archiveFile = storage_path($destinationPath . "/".$name_file);
             $archive = new ZipArchive();
             // echo $destinationPath;
 
@@ -306,10 +287,9 @@ class ProjectController extends Controller
                 $archiveFile =  $this->addFolderToZip(storage_path($destination), $archive, $customer->name.'_'.$project->name."_".$now->toDateString()."_".$now->toTimeString().'_repository/');
                 
                 // close the archive.
-                if ($archive->close() && Storage::disk('repository')->exists($customer->name . "/" . $project->name . "/".$customer->name.'_'.$project->name."_".$now->toDateString()."_".$now->toTimeString()."_repository.zip")) { 
+                if ($archive->close() && Storage::disk('repository')->exists($customer->name."/".$project->name."/".$name_file)) { 
                     // archive is now downloadable ...
-                    return response()->json(array('success' => ''));
-                    //return response()->download($archiveFile, basename($archiveFile))->deleteFileAfterSend(true);
+                    return response()->download(storage_path($destinationPath . "/".$name_file))->deleteFileAfterSend(true);
                 } else {
                     return response()->json(array('error' => 'Empty repository'));
                 }
@@ -346,7 +326,6 @@ class ProjectController extends Controller
 
         } else {  
 
-
             $path = storage_path() . '/app/public/repository/' . $customer->name . "/" . $project->name;
             File::deleteDirectory($path);
 
@@ -355,9 +334,6 @@ class ProjectController extends Controller
             
         }
         
-
-        
-
         return redirect()->back();
     }
 
@@ -406,14 +382,14 @@ class ProjectController extends Controller
         $customer = $this->getFromApi('GET', 'customers/'.$request->customer_id);
 
         $path = storage_path() . '/app/public/repository/' . $customer->name . '/' . $project->name;
-        File::makeDirectory($path, $mode = 0777, true, true);
+        File::makeDirectory($path, $mode = 0777, true, true); // Client - Proyecto
 
         $directories = $this->getFromApi('GET', 'directories');
 
         foreach ($directories as $directory) {
 
             $path = storage_path() . '/app/public/repository/' . $customer->name . '/' . $project->name . '/' . $directory->path;
-            File::makeDirectory($path, $mode = 0777, true, true);
+            File::makeDirectory($path, $mode = 0777, true, true); // EN - ES
 
 
             $folders = $this->getFromApi('GET', 'directories?parent=' . $directory->id);
@@ -423,21 +399,21 @@ class ProjectController extends Controller
                 $path = storage_path() . '/app/public/repository/' . $customer->name . '/' .$project->name . '/'
                     . $directory->path . '/' . $folder->path;
 
-                File::makeDirectory($path, $mode = 0777, true, true);
+                File::makeDirectory($path, $mode = 0777, true, true); // Initial - Inicio
 
                 $subfolders = $this->getFromApi('GET', 'directories?parent=' . $folder->id);
                 // dd($subfolders);
                 foreach ($subfolders as $subfolder) {
                     $path = storage_path() . '/app/public/repository/' . $customer->name . '/' . $project->name . '/'
                         . $directory->path . '/' . $folder->path . '/' . $subfolder->path;
-                    File::makeDirectory($path, $mode = 0777, true, true);
+                    File::makeDirectory($path, $mode = 0777, true, true); // Integration Management - Manejo de Integracion
 
                     $last_level = $this->getFromApi('GET', 'directories?parent='. $subfolder->id);
 
                     foreach ($last_level as $level) {
                         $path = storage_path() . '/app/public/repository/' . $customer->name . '/' . $project->name . '/'
                         . $directory->path . '/' . $folder->path . '/' . $subfolder->path . '/'. $level->path;
-                        File::makeDirectory($path, $mode = 0777, true, true);
+                        File::makeDirectory($path, $mode = 0777, true, true); // Urgent
                     }
                 }
 

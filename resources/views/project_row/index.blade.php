@@ -130,7 +130,7 @@
 @endsection
 
 @section('create_div')
-	@component('project_kpi_alert/create', ['kpis' => $kpis,'project_id'=>$project_id, 'url'=>Request::path()])
+	@component('project_kpi_alert/create', ['kpis' => $kpis,'project_id'=>$project_id, 'url'=>'project/rows/'.$project_id])
 
 	@endcomponent
 @endsection

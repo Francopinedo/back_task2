@@ -13,7 +13,7 @@
 
 
 
-    	<form role="form" method="POST" action="{{ url('sprints') }}" id="data-form" data-redirect-on-success="{{ url('sprints') }}">
+    	<form role="form" method="POST" action="{{ url('sprints') }}" id="data-form" data-redirect-on-success="{{ url($url) }}">
     	
 
 <div class="uk-grid" data-uk-grid-margin>

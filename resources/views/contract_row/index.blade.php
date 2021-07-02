@@ -52,14 +52,14 @@
                     {data: 'hours', name: 'hours'},
                     {data: 'rate', name: 'rate'},
                     {data: 'amount', name: 'amount'},
-                    {data: 'currency_name', name: 'currency_name'},
-                    {data: 'rate_exchage', name: 'rate_exchage'},
+                    {data: 'office_name', name: 'office_name'},
                     {data: 'load', name: 'load'},
                     {data: 'workplace', name: 'workplace'},
                     {data: 'country_name', name: 'country_name'},
                     {data: 'city_name', name: 'city_name'},
-                    {data: 'office_name', name: 'office_name'},
                     {data: 'comments', name: 'comments'},
+                    {data: 'rate_exchage', name: 'rate_exchage'},
+                    {data: 'currency_name', name: 'currency_name'},
                     {data: 'actions', name: 'actions'}
                 ],
                 columnDefs: [{
@@ -82,7 +82,7 @@
                     console.log(data);
                     var i = 0;
                     api.columns().every(function () {
-                        if (i == 8) {
+                        if (i == 13) {
                             console.log(this
                                 .data());
                             var sum = this
@@ -120,7 +120,7 @@
                             if (sum != undefined) {
 
 
-                                if (i == 8) {
+                                if (i == 13) {
 
                                     subtotal = parseFloat(sum) + parseFloat(subtotal);
                                     $("#subtotal").text(subtotal.toLocaleString('de-DE', {maximumFractionDigits: 2}));
@@ -446,14 +446,14 @@
                             <th title="{{__('contracts_tooltip.workinghours')}}">{{ __('contracts.workinghours') }}</th>
                             <th title="{{__('contracts_tooltip.rate')}}">{{ __('contracts.rate') }}</th>
                             <th title="{{__('contracts_tooltip.total')}}">{{ __('contracts.total') }}</th>
-                            <th title="{{__('contracts_tooltip.currency')}}">{{ __('contracts.currency') }}</th>
-                            <th title="{{__('contracts_tooltip.total_exchanged')}}">{{ __('contracts.total_exchanged') }}</th>
+                            <th title="{{__('contracts_tooltip.office')}}">{{ __('contracts.office') }}</th>
                             <th title="{{__('contracts_tooltip.load')}}">{{ __('contracts.load') }}</th>
                             <th title="{{__('contracts_tooltip.workplace')}}">{{ __('contracts.workplace') }}</th>
                             <th title="{{__('contracts_tooltip.country')}}">{{ __('contracts.country') }}</th>
                             <th title="{{__('contracts_tooltip.city')}}">{{ __('contracts.city') }}</th>
-                            <th title="{{__('contracts_tooltip.office')}}">{{ __('contracts.office') }}</th>
                             <th title="{{__('contracts_tooltip.comments')}}">{{ __('contracts.comments') }}</th>
+                            <th title="{{__('contracts_tooltip.total_exchanged')}}">{{ __('contracts.total_exchanged') }}</th>
+                            <th title="{{__('contracts_tooltip.currency')}}">{{ __('contracts.currency') }}</th>
                             <th title="{{__('general.actions')}}">{{ __('general.actions') }}</th>
                         </tr>
                         </thead>
@@ -470,16 +470,16 @@
                             <th></th>
 
                             <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+
+
+                            <th></th>
+                            <th></th>
+                            <th></th>
                             <th>{{ $currency->name }}</th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-
-
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
 
                             <th class="noprint"></th>
 

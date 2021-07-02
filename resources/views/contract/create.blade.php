@@ -36,7 +36,7 @@
 
 
                 <select id="project_id" name="project_id" data-md-selectize>
-                    <option value="">{{ __('contracts.customer') }}...</option>
+                    <option value="">{{ __('contracts.project') }}...</option>
                 </select>
 
 

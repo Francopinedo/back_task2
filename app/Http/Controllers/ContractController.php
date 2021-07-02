@@ -288,26 +288,24 @@ class ContractController extends Controller
       return $zipArchive;
     }
 
-    public function validate_download($id)
+    public function validate_download(Request $request)
     {
 
         $now = Carbon::now(); // Para manipular Hora y Fecha
-        $project = $this->getFromApi('GET', 'projects/' . $id);
-        $customer = $this->getFromApi('GET', 'customers/'.$project->customer_id);
+        $contract = $this->getFromApi('GET', 'contracts/'.$request->id);
+        $project = $this->getFromApi('GET', 'projects/' . $contract->project_id);
+        $customer = $this->getFromApi('GET', 'customers/'.$contract->customer_id);
 
         $destinationPath = "app/public/repository/" . $customer->name . "/" . $project->name;
-
+        $name_file = $customer->name . "_".$project->name."_".$now->toDateString()."_".$now->toTimeString()."_repository.zip";
 
         if (Storage::disk('repository')->has($customer->name . "/" . $project->name)) {
-
 
             // create a list of files that should be added to the archive.
             $directories = File::directories(storage_path($destinationPath));
 
-
-         
             // define the name of the archive and create a new ZipArchive instance.
-            $archiveFile = storage_path($destinationPath . "/".$customer->name . "_".$project->name."_".$now->toDateString()."_".$now->toTimeString()."_repository.zip");
+            $archiveFile = storage_path($destinationPath . "/".$name_file);
             $archive = new ZipArchive();
             // echo $destinationPath;
 
@@ -318,9 +316,9 @@ class ContractController extends Controller
                 $archiveFile =  $this->addFolderToZip(storage_path($destination), $archive, $customer->name.'_'.$project->name."_".$now->toDateString()."_".$now->toTimeString().'_repository/');
                 
                 // close the archive.
-                if ($archive->close() && Storage::disk('repository')->exists($customer->name . "/" . $project->name . "/".$customer->name.'_'.$project->name."_".$now->toDateString()."_".$now->toTimeString()."_repository.zip")) { 
+                if ($archive->close() && Storage::disk('repository')->exists($customer->name . "/" . $project->name . "/".$name_file)) { 
                     // archive is now downloadable ...
-                    return response()->json(array('success' => ''));
+                    return response()->download(storage_path($destinationPath . "/".$name_file))->deleteFileAfterSend(true);
                     //return response()->download($archiveFile, basename($archiveFile))->deleteFileAfterSend(true);
                 } else {
                     return response()->json(array('error' => 'Empty repository'));

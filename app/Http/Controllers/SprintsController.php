@@ -19,16 +19,13 @@ class SprintsController extends Controller
      */
     public function index($project_id)
     {
-    		$company = $this->getFromApi('GET', 'companies/fromUser/'.Auth::id());
-           $project = $this->getFromApi('GET', 'projects/' . $project_id);
-        	$customers = $this->getFromApi('GET', 'customers?include=industry,city,currency&company_id='.$company->id);
-
-    	$time_statuss=array('Not Started Yet','Started','Finish');
-	$task_statuss=array('Not Completed Yet','Pending','Completed');
-
+		$company = $this->getFromApi('GET', 'companies/fromUser/'.Auth::id());
+		$project = $this->getFromApi('GET', 'projects/' . $project_id);
+		$customers = $this->getFromApi('GET', 'customers?include=industry,city,currency&company_id='.$company->id);
+		$time_statuss=array('Not Started Yet','Started','Finish');
+		$task_statuss=array('Not Completed Yet','Pending','Completed');
 
         return view('sprints/index', [
-
 			'project' => $project,
 			'customers' => $customers,
 			'time_statuss'=>$time_statuss,
@@ -44,7 +41,6 @@ class SprintsController extends Controller
     {
     	// validacion del formulario
     	$validator =Validator::make($request->all(), [
-
 			'customer_id' => 'required',
 			'project_id'  => 'required',
 			'start_date'  => 'required',
@@ -52,11 +48,11 @@ class SprintsController extends Controller
 	    ]);
 
     	if ($validator->fails()) {
-    return response()->json($validator->errors(), 422);
-  } $data = $request->all();
+			return response()->json($validator->errors(), 422);
+		} 
+		$data = $request->all();
 
     	$res = $this->apiCall('POST', 'sprints', $data);
-
 
     	// validacion de la respuesta del api
     	if (!empty(json_decode($res->getBody()->__toString(), TRUE)['error']))
@@ -82,25 +78,21 @@ class SprintsController extends Controller
      */
     public function edit($id){
 
+		$sprints = $this->getFromApi('GET', 'sprints/'.$id);
+		$company = $this->getFromApi('GET', 'companies/fromUser/'.Auth::id());
+		$project = $this->getFromApi('GET', 'projects/' . $sprints->project_id);
+		$customers = $this->getFromApi('GET', 'customers?include=industry,city,currency&company_id='.$company->id);
+		$time_statuss=array('Not Started Yet','Started','Finished');
+		$task_statuss=array('Not Completed Yet','Pending','Completed');
 
-	$sprints = $this->getFromApi('GET', 'sprints/'.$id);
-    		$company = $this->getFromApi('GET', 'companies/fromUser/'.Auth::id());
-           $project = $this->getFromApi('GET', 'projects/' . $sprints->project_id);
-        	$customers = $this->getFromApi('GET', 'customers?include=industry,city,currency&company_id='.$company->id);
-	$time_statuss=array('Not Started Yet','Started','Finish');
-	$task_statuss=array('Not Completed Yet','Pending','Completed');
-
-    	
-
-    	return response()->json([
-    		'view' => view('sprints/edit', [
-				'sprints'=>$sprints,	
-				'project' => $project,
+		return response()->json([
+			'view' => view('sprints/edit', [
+			'sprints'=>$sprints,	
+			'project' => $project,
 			'customers' => $customers,
 			'time_statuss'=>$time_statuss,
-			'task_statuss'=>$task_statuss
-    		] )->render()
-    	]);
+			'task_statuss'=>$task_statuss ])->render()
+		]);
     }
 
     /**
@@ -108,7 +100,6 @@ class SprintsController extends Controller
      */
     public function update(Request $request)
     {
-
 
     	// validacion del formulario
     	$validator =Validator::make($request->all(), [
@@ -120,8 +111,9 @@ class SprintsController extends Controller
 	    ]);
 
     	if ($validator->fails()) {
-    return response()->json($validator->errors(), 422);
-  } $data = $request->all();
+    		return response()->json($validator->errors(), 422);
+  		} 
+  		$data = $request->all();
 
     	$res = $this->apiCall('PATCH', 'sprints/'.$data['id'], $data);
 
@@ -172,7 +164,7 @@ class SprintsController extends Controller
 			session()->flash('alert-class', 'success');
     	}
 
-            return redirect('sprints/' . $sprints->project_id . '');
+            return redirect()->back();
     }
 
     /**
