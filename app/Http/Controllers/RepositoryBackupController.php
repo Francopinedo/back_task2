@@ -36,26 +36,6 @@ class RepositoryBackupController extends Controller
     }
 
 
-    public
-    function download(Request $request)
-    {
-        $now = Carbon::now(); // Para manipular Hora y Fecha
-        $project = $this->getFromApi('GET', 'projects/' . $request->project);
-        $customer = $this->getFromApi('GET', 'customers/'.$request->customer);
-
-        $destinationPath = "app/public/repository/" . $customer->name . "/" . $project->name;
-
-
-        if ($exists = Storage::disk('repository')->exists($customer->name . "/" . $project->name . "/".$customer->name."_".$project->name."_".$now->toDateString()."_".$now->toTimeString()."_repository.zip")) {     // archive is now downloadable ...
-            return response()->download(storage_path($destinationPath . "/".$customer->name."_".$project->name."_".$now->toDateString()."_".$now->toTimeString()."_repository.zip"))->deleteFileAfterSend(true);
-
-
-        } else {
-
-            return response()->json(array('error' => 'could not close zip file: '));
-        }
-    }
-
 // Function to recursively add a directory,
 // sub-directories and files to a zip archive
     private function addFolderToZip($dir, $zipArchive, $zipdir = '')
@@ -102,84 +82,43 @@ class RepositoryBackupController extends Controller
         return $zipArchive;
     }
 
-    public
-    function validate_download(Request $request)
+    public function validate_download(Request $request)
     {
         $validator =Validator::make($request->all(), [
-
             'customer' => 'required',
             'project' => 'required',
-
         ]);
 
         $now = Carbon::now(); // Para manipular Hora y Fecha
         $project = $this->getFromApi('GET', 'projects/' . $request->project);
         $customer = $this->getFromApi('GET', 'customers/'.$request->customer);
 
-
         $destinationPath = "app/public/repository/" . $customer->name . "/" . $project->name;
-
+        
+        $file_download = $customer->name . "_".$project->name."_".$now->toDateString()."_".$now->toTimeString()."_repository.zip"; // Nombre del archivo zip
 
         if (Storage::disk('repository')->has($customer->name . "/" . $project->name)) {
 
-
             // create a list of files that should be added to the archive.
             $directories = File::directories(storage_path($destinationPath));
-
-
          
             // define the name of the archive and create a new ZipArchive instance.
-            $archiveFile = storage_path($destinationPath . "/".$customer->name . "_".$project->name."_".$now->toDateString()."_".$now->toTimeString()."_repository.zip");
+            $archiveFile = storage_path($destinationPath . "/".$file_download);
             $archive = new ZipArchive();
             // echo $destinationPath;
-
 
             if ($archive->open($archiveFile, ZipArchive::CREATE | ZipArchive::OVERWRITE)) {
                 //$archive->addEmptyDir('test');
                 // loop trough all the files and add them to the archive.
                 $destination = $str = str_replace('\\', '/', $destinationPath);
                 $archiveFile =  $this->addFolderToZip(storage_path($destination), $archive, $customer->name.'_'.$project->name."_".$now->toDateString()."_".$now->toTimeString().'_repository/');
-                /*
-                $archive->addEmptyDir('backup');
-                foreach ($directories as $directory) {
 
-
-                    $directory = $str = str_replace('\\', '/', $directory);
-                    //   echo $directory;
-                    $folder = explode('/', $directory);
-
-                    $folder = $folder[sizeof($folder) - 1];
-
-                    $directoryadd = 'backup/' . $folder;
-                    $archive->addEmptyDir($directoryadd);
-
-                    $options = array('add_path' => $folder, 'remove_all_path' => TRUE);
-                    $files = File::files($directory);
-                    //var_dump($files);
-                    // $archive->addGlob('*.*', GLOB_BRACE, $options);
-                    foreach ($files as $file) {
-
-                        $file = $str = str_replace('\\', '/', $file);
-                        $filename = explode('/', $file);
-                        $filename = $filename[sizeof($filename) - 1];
-                        //echo $directory."/".$filename;
-                        if ($archive->addFile($directory . "/" . $filename, basename($file))) {
-
-                            // do something here if addFile succeeded, otherwise this statement is unnecessary and can be ignored.
-                            continue;
-                        } else {
-                            throw new Exception("file `{$file}` could not be added to the zip file: " . $archive->getStatusString());
-                        }
-                    }
-                }
-*/
-
-                //var_dump($archive);
                 // close the archive.
-                if ($archive->close() && Storage::disk('repository')->exists($customer->name . "/" . $project->name . "/".$customer->name.'_'.$project->name."_".$now->toDateString()."_".$now->toTimeString()."_repository.zip")) { // && Storage::disk('repository')->exists($archiveFile)
+                if ($archive->close() && $name = Storage::disk('repository')->exists($customer->name . "/" . $project->name . "/".$file_download)) { // && Storage::disk('repository')->exists($archiveFile)
                     // archive is now downloadable ...
-                    return response()->json(array('success' => ''));
-                    //return response()->download($archiveFile, basename($archiveFile))->deleteFileAfterSend(true);
+                    if ($exists = Storage::disk('repository')->exists($customer->name . "/" . $project->name . "/".$file_download)) {     // archive is now downloadable ...
+                        return response()->download(storage_path($destinationPath . "/".$file_download))->deleteFileAfterSend(true);
+                    }
 
                 } else {
 
@@ -196,8 +135,7 @@ class RepositoryBackupController extends Controller
 
     }
 
-    public
-    function delete(Request $request)
+    public function delete(Request $request)
     {
 
 

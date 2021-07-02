@@ -10,7 +10,7 @@
         <div class="uk-grid" data-uk-grid-margin="">
             <div class="uk-width-medium-1-1 uk-row-first">
 
-                <form id="data-form-ajax_create" action="{{ url('repository_backup/download') }}"
+                <form id="data-form-ajax_create" action="{{ url('repository_backup/validate_download') }}"
                       method="post">
                     {{ csrf_field() }}
                     <div class="uk-form-row">
@@ -80,39 +80,10 @@
 
             var form = $('#data-form-ajax_create');
 
-            $('#ajax_create-btn').click(function () {
-
-
-                if ($("#customer").val() == '') {
-                    $('.customer-error').html('The customer field is required.');
-                }else  if ($("#project").val() == '') {
-                    $('.project-error').html('The project field is required.');
-                }else{
-                    $.ajax({
-                        url:"/repository_backup/validate_download",
-                        data:{
-                            customer:$("#customer").val(),
-                            project:$("#project").val(),
-                            _token:$("input[name=_token]").val()
-                        },
-                        dataType:'json',
-                        type:'post',
-                        success:function (data) {
-                            if(data.error!=undefined){
-                                alert(data.error);
-                            }else{
-                                form.submit();
-                            }
-                        },
-                        error:function () {
-                            alert('error');
-                        }
-                    })
-
-                }
-
+            $('#ajax_create-btn').on('click', function(e){
+                e.preventDefault();
+                form.submit();
             });
-
 
             $("#customer").on('change', function () {
                 $.ajax({
@@ -123,11 +94,9 @@
 
                         var html = '<option value="">Project...</option>';
 
-
                         $('#project').selectize()[0].selectize.destroy();
 
                         $.each(data.data, function (i, value) {
-                            console.log(value);
                             html += '<option value="' + value.id + '">' + value.name + '</option>';
                         });
 

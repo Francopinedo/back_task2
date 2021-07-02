@@ -11151,6 +11151,7 @@ div.kineticjs-content {
   top: 100% !important;
   right: 0 !important;
   left: auto !important;
+  width: auto;
 }
 #header_main .uk-navbar .uk-navbar-nav > li .uk-dropdown .md-list {
   margin-left: -10px;

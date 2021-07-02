@@ -14,19 +14,29 @@
 	            { data: 'status_comment', name: 'status_comment', visible: false },
 	            { data: 'due_date', name: 'due_date', visible: false },
 	            { data: 'owner_name', name: 'owner_name' },
-	           // { data: 'priority', name: 'priority' },
-			         {data: 'priority', name: 'priority',
-		 render: function (data, type, row) {
+	           	{data: 'priority', name: 'priority',
+		 			render: function (data, type, row) {
                         if (row.priority == '1') {
-			return 'Low';
-			}if (row.priority == '2') {
-			return 'Medium';}
-			 if (row.priority == '3') {
-			return 'High';}
-			}
+							return 'Low';
+						}if (row.priority == '2') {
+							return 'Medium';
+						}if (row.priority == '3') {
+							return 'High';
+						}
+					}
 
-			},
-	            { data: 'business_value', name: 'business_value' },
+				},
+	            { data: 'business_value', name: 'business_value',
+	            	render: function (data, type, row) {
+                        if (row.business_value == '1') {
+							return 'Low';
+						}if (row.business_value == '2') {
+							return 'Medium';
+						}if (row.business_value == '3') {
+							return 'High';
+						}
+					}
+	            },
 	            { data: 'requester_name', name: 'requester_name' },
 	            { data: 'requester_email', name: 'requester_email' },
 	            { data: 'requester_type', name: 'requester_type' },

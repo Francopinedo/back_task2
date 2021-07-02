@@ -47,19 +47,18 @@ class ContactController extends Controller {
   		if ($request->has('project_id'))
   		{
   			$query->where('project_id', $request->project_id);
-if ($request->has('user_id'))
-  		{
-  			$query->orwhere('contacts.user_id', $request->user_id);
+
   		}
 
-  		}else{
-  			$query->whereNull('project_id');
-if ($request->has('user_id'))
+      if ($request->has('user_id'))
   		{
   			$query->where('contacts.user_id', $request->user_id);
   		}
 
-		}
+      if ($request->has('company_id'))
+      {
+         $query->where('contacts.company_id', $request->company_id);
+      }
 
 		
   		$contacts = $query->get();

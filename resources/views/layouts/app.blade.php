@@ -1490,7 +1490,7 @@
                                         <a href="{{ url('main-menu/process_group/repository_backup') }}">{{ __('sidebar.repository_backup') }}</a>
                                     </li>
                                     
-                                    @if(\App\Settings::find(1)->set=='1')
+                                    @if(\App\Settings::find(1)->wiki_enabled=='1')
                                         <li data-uk-tooltip="{pos:'top-left'}" title="{{ Auth::user()->tooltip==0 ? '' :__('wiki_tooltip.wiki') }}" class="{{ (Request::is('wiki') ? 'select_active' : '') }} data-title">
                                             <a href="{{ url('wiki') }}">{{ __('sidebar.wiki') }}</a>
                                         </li>

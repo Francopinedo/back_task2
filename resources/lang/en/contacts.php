@@ -14,4 +14,5 @@ return [
 	'email'      => 'E-mail',
 	'phone'      => 'Phone',
 	'comments'   => 'Comments',
+	'disabled'	 => 'Select a project to activate this field',
 ];

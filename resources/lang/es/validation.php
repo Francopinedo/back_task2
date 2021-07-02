@@ -118,6 +118,7 @@ return [
         'title' => 'titulo',
         'country_id' => 'pais',
         'city_id' => 'ciudad',
+        'phone'     => 'Telefono',
     ],
 
 ];

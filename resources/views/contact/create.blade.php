@@ -10,7 +10,7 @@
                 @if(!session('project_id'))
         			<div class="md-input-wrapper md-input-filled md-input-select">
         				<label>{{ __('contacts.project') }}</label>
-        				<select name="project_id" data-md-selectize>
+        				<select title="{{(is_null(session('project_id'))) ? __('contacts.disabled'):''}}" name="project_id" data-md-selectize disabled="">
         				    <option value="">{{ __('contacts.project') }}...</option>
         				    @foreach ($projects as $project)
         				        <option value="{{ $project->id }}">{{ $project->name }}</option>

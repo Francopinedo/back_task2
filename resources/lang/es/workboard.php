@@ -35,5 +35,5 @@ return [
 	          'comment'         => 'Comentario',
 	            'owner'         => 'Dueño',
 	    'ticket_detail'         => 'Detalles del Ticket',
- 	 'tickets_by_phase'         => 'Tickets Por Fase'
+ 	 'tickets_by_phase'         => 'Tickets por Hitos'
 ];

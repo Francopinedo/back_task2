@@ -25,8 +25,8 @@
                 <div class="md-input-wrapper md-input-filled md-input-select">
                 	<label>{{ __('requirements.type') }}</label>
                 	<select name="type" data-md-selectize>
-                	    <option value="project" {{ ($requirement->type = 'project') ? 'selected' : '' }}>{{ __('requirements.type_project') }}...</option>
-                	    <option value="product" {{ ($requirement->type = 'product') ? 'selected' : '' }}>{{ __('requirements.type_product') }}...</option>
+                	    <option value="project" {{ ($requirement->type == 'project') ? 'selected' : '' }}>{{ __('requirements.type_project') }}...</option>
+                	    <option value="product" {{ ($requirement->type == 'product') ? 'selected' : '' }}>{{ __('requirements.type_product') }}...</option>
                 	</select>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required type-error"></span></div>
@@ -63,9 +63,9 @@
                 <div class="md-input-wrapper md-input-filled md-input-select">
                 	<label>{{ __('requirements.priority') }}</label>
                 	<select name="priority" data-md-selectize>
-                	    <option value="1" {{ ($requirement->priority = '1') ? 'selected' : '' }}>{{ __('requirements.priority_1') }}...</option>
-                	    <option value="2" {{ ($requirement->priority = '2') ? 'selected' : '' }}>{{ __('requirements.priority_2') }}...</option>
-                	    <option value="3" {{ ($requirement->priority = '3') ? 'selected' : '' }}>{{ __('requirements.priority_3') }}...</option>
+                	    <option value="1" {{ ($requirement->priority == '1') ? 'selected' : '' }}>{{ __('requirements.priority_1') }}...</option>
+                	    <option value="2" {{ ($requirement->priority == '2') ? 'selected' : '' }}>{{ __('requirements.priority_2') }}...</option>
+                	    <option value="3" {{ ($requirement->priority == '3') ? 'selected' : '' }}>{{ __('requirements.priority_3') }}...</option>
                 	</select>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required priority-error"></span></div>
@@ -75,9 +75,9 @@
                 <div class="md-input-wrapper md-input-filled md-input-select">
                 	<label>{{ __('requirements.business_value') }}</label>
                 	<select name="business_value" data-md-selectize>
-                	    <option value="1" {{ ($requirement->business_value = '1') ? 'selected' : '' }}>{{ __('requirements.business_value_1') }}...</option>
-                	    <option value="2" {{ ($requirement->business_value = '2') ? 'selected' : '' }}>{{ __('requirements.business_value_2') }}...</option>
-                	    <option value="3" {{ ($requirement->business_value = '3') ? 'selected' : '' }}>{{ __('requirements.business_value_3') }}...</option>
+                	    <option value="1" {{ ($requirement->business_value == '1') ? 'selected' : '' }}>{{ __('requirements.business_value_1') }}...</option>
+                	    <option value="2" {{ ($requirement->business_value == '2') ? 'selected' : '' }}>{{ __('requirements.business_value_2') }}...</option>
+                	    <option value="3" {{ ($requirement->business_value == '3') ? 'selected' : '' }}>{{ __('requirements.business_value_3') }}...</option>
                 	</select>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required business_value-error"></span></div>

@@ -36,7 +36,7 @@ return [
 	'reason' 		=> 'Why are you deleting this element / data ?',
 	'reason_action'		=> 'Detail the reason for taking this action',
 	'description'		=> 'The description is very short',
-	'accept'		=> 'To accept',
+	'accept'		=> 'Accept',
 	'message'		=> 'A repository will be downloaded to your computer to back up the information',
 	'continue'	=> 'Continue',
 	'leave'		=> 'Leave',

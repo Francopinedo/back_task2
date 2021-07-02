@@ -35,5 +35,5 @@ return [
 	          'comment'         => 'Comment',
 	            'owner'         => 'Owner',
 	    'ticket_detail'         => 'Ticket Detail',
- 	 'tickets_by_phase'         => 'Tickets by Phases'
+ 	 'tickets_by_phase'         => 'Tickets By Milestones'
 ];

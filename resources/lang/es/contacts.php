@@ -14,4 +14,5 @@ return [
 	'email'      => 'Correo Electronico',
 	'phone'      => 'Telefono de Contacto',
 	'comments'   => 'Comentarios',
+	'disabled'   => 'Selecciona un proyecto para activar este campo',
 ];

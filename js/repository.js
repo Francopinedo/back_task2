@@ -67,7 +67,7 @@ var Repository = (function () {
                         var lenght = Object.keys(res).length;
 
                         var document = res[lenght - 1];
-                        html += '  <div class="uk-width-1-2"><a style="font-size: 20px" href="repository/download/?file=' + value + '">' + document + ' - </a>   ' +
+                        html += '  <div class="uk-width-1-2"><a style="font-size: 20px" href="'+Repository.APP_URL+'/repository/download/?file=' + value + '">' + document + ' - </a>   ' +
                             '<a href="/repository/delete/?file=' + value + '" class="md-icon material-icons delete-btn">'
                             + '<i class="fa fa-trash-o" aria-hidden="true"></i> </a>' +
                             '</div>';
@@ -91,7 +91,8 @@ var Repository = (function () {
                                 dataType: 'json',
                                 success: function (json) {
                                     if(json.success==true){
-                                        Repository.searchDocuments(directory_name);
+                                        UIkit.notify(json.message, {status:'success'});
+                                        Repository.useDirectory(customer,project,lang_system,process_group,knowledge_area,dir);
                                     }else{
                                         UIkit.modal.alert('Error');
                                     }
@@ -137,7 +138,7 @@ var Repository = (function () {
                         var lenght = Object.keys(res).length;
 
                         var document = res[lenght - 1];
-                        html += '  <div class="uk-width-1-2"><a style="font-size: 20px" href="repository/download/?file=' + value + '">' + document + ' - </a>   ' +
+                        html += '  <div class="uk-width-1-2"><a style="font-size: 20px" href="'+Repository.APP_URL+'/repository/download/?file=' + value + '">' + document + ' - </a>   ' +
                             '<a href="/repository/delete/?file=' + value + '" class="md-icon material-icons delete-btn">'
                             + '<i class="fa fa-trash-o" aria-hidden="true"></i> </a>' +
                             '</div>';
@@ -161,6 +162,7 @@ var Repository = (function () {
                                 dataType: 'json',
                                 success: function (json) {
                                     if(json.success==true){
+                                        UIkit.notify(json.message, {status:'success'});
                                         Repository.searchDocuments(directory_name);
                                     }else{
                                         UIkit.modal.alert('Error');
@@ -194,14 +196,18 @@ var Repository = (function () {
         },
 
         events: function () {
-            
-
             $('#fileupload').fileupload({
                 url: '/repository/uploadfile',
                 type: 'post',
                 dataType: 'json',
                 done: function (e, data) {
-                    data.context.html('Upload finished.').fadeOut(2000);
+                    if(data.result.success == true){
+                        UIkit.notify(data.result.message, {status:'warning'});
+                        data.context.html('');
+                    } else {
+                        UIkit.notify(data.result.message, {status:'success'});
+                        data.context.html('');
+                    }
 
                     Repository.searchDocuments($("#directory").val());
                 }

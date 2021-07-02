@@ -232,16 +232,14 @@ var tableActions = (function() {
 	    	        dataType: 'json',
 	    	        success : function ( json )
 	    	        {
-                        console.log('success');
 
-
-                        if (form.data('redirect-on-success').indexOf("rows") >= 0){
-                        	var url = form.data('redirect-on-success')+'/'+json.id;
-                        	console.log(url);
-                             window.location.replace(url)
-                        }else{
+                        // if (form.data('redirect-on-success').indexOf("rows") >= 0){
+                        // 	var url = form.data('redirect-on-success')+'/'+json.id;
+                        // 	console.log(json);
+                        //      window.location.replace(url)
+                        // }else{
                             window.location.replace(form.data('redirect-on-success'));
-						}
+						// }
 
 	    	            // Do something like redirect them to the dashboard...
 	    	          //  window.location.replace(form.data('redirect-on-success'));
