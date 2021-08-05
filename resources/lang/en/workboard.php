@@ -1,6 +1,6 @@
 <?php
 return [
-		'workboard'             => 'Tickets',
+		'workboard'             => 'Ticket Panel',
   	           'update'         => 'UPDATE',
 	               'id'         => 'ID',
 	       'no_tickets'         => 'No tickets here',

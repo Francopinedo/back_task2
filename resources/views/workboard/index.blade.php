@@ -147,7 +147,7 @@
 								    			<td>{{ $ticket->estimated_hours }}</td>
 								    			<td>{{ $ticket->burned_hours }}</td>
 								    			<td>
-		@if (Auth::id() == $ticket->owner_id or Auth::user()->workgroup_id == $ticket->workgroup_id or \App\Role::find(\App\RoleUser::where('user_id',Auth::user()->id)->first()->role_id)->slug>=3)
+													@if (Auth::id() == $ticket->owner_id or Auth::user()->workgroup_id == $ticket->workgroup_id or \App\Role::find(\App\RoleUser::where('user_id',Auth::user()->id)->first()->role_id)->slug>=3)
 		    					            			<a title="{{__('general.edit')}}" href="/workboard/{{$ticket->id}}/edit" data-id="{{ $ticket->id }}" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>
 		    					            			@endif
 								    			</td>

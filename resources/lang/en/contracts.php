@@ -62,4 +62,5 @@ return [
 	'anualy'        => 'Anualy',
 	'semester'        => 'Semester',
 	'file'			=> 'Download pdf',
+	'type_project'	=> 'Type Project',
 ];

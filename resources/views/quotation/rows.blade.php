@@ -98,7 +98,7 @@
 
                     var i = 0;
                     api.columns().every(function () {
-                        if (i > 7 && i < 10) {
+                        if (i > 6 && i < 10) {
                             var sum = this
                                 .data()
                                 .reduce(function (a, b) {

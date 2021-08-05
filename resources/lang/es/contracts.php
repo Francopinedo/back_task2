@@ -63,5 +63,6 @@ return [
 	'anualy'              => 'Anual',
 	'semester'            => 'Semestral',
 	'add_new'			  => 'Añadir Nuevo',
-	'file'			  => 'Descargar en pdf'
+	'file'			  => 'Descargar en pdf',
+	'type_project'		=> 'Tipo de Proyecto',
 ];

@@ -62,4 +62,5 @@ return [
 	'weekly'              => 'Weekly',
 	'anualy'              => 'Yearly',
 	'semester'            => 'Semester',
+	'type_project'		  => 'Project Type Name',
 ];

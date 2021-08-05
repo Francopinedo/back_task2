@@ -98,7 +98,6 @@ class AgendaController extends Controller {
     	}
 
     	$data = $request->all();
-      $data['item_number']=Agenda::where('knowledge_area','=',$data['knowledge_area'])->count()+1;
         $agenda = Agenda::create($data);
 
         if ($agenda)
@@ -197,7 +196,6 @@ class AgendaController extends Controller {
     	{
     		return $this->response->error('No envio ningun parametro para actualizar', 452);
     	}
-      $data['item_number']=Agenda::where('knowledge_area','=',$data['knowledge_area'])->count()+1;
 
         $agenda->update($data);
 

@@ -69,7 +69,7 @@ class AgendaController extends Controller
             return response()->json($validator->errors(), 422);
         }
         $data = $request->all();
-
+        $data['item_number'] = $this->generarCodigo(4);
         $res = $this->apiCall('POST', 'agendas', $data);
 
         // validacion de la respuesta del api
@@ -148,6 +148,7 @@ class AgendaController extends Controller
             return response()->json($validator->errors(), 422);
         }
         $data = $request->all();
+        $data['item_number'] = $this->generarCodigo(5);
 
         $res = $this->apiCall('PATCH', 'agendas/' . $data['id'], $data);
 
@@ -192,4 +193,13 @@ class AgendaController extends Controller
 
         return redirect()->action('AgendaController@index');
     }
+
+    public function generarCodigo($long) {
+        $key = '';
+        $pattern = '1234567890abcdefg';
+        $max = strlen($pattern)-1;
+        for($i=0;$i < $long;$i++) $key .= $pattern{mt_rand(0,$max)};
+        return $key;
+    } 
 }
+

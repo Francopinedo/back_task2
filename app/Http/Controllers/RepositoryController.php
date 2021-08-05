@@ -187,8 +187,13 @@ class RepositoryController extends Controller
 
     			///////////////////////
 
-                $file->move(storage_path($destinationPath), $namefinal);
-                $versionfile++;
+                if ($exists = Storage::disk('repository')->exists($customer->name. "/" . $project->name . "/" . $request->language."/".$request->process_group."/"."/".$request->knowledge_area."/".$directory."/".$namefinal)) {
+                    return response()->json(array('success' => true, 'message' => __('api_errors.error_upload')));
+                } else {
+                    $file->move(storage_path($destinationPath), $namefinal);
+                    $versionfile++;
+                    return response()->json(array('success' => false, 'message' => __('general.added')));
+                }
             // }
 
 
@@ -578,7 +583,7 @@ class RepositoryController extends Controller
         // echo $destinationPath;
         if ($exists = Storage::disk('repository')->exists($request->file)) {
             Storage::disk('repository')->delete($request->file);
-            return response()->json(array('success' => true));
+            return response()->json(array('success' => true, 'message'=> __('general.deleted')));
         } else {
             return response()->json(array('success' => false));
         }

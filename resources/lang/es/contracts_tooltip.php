@@ -62,5 +62,6 @@ return [
 	'weekly'              => 'Semanal',
 	'anualy'              => 'Anual',
 	'semester'            => 'Semestral',
-	'add_new'			  => 'Añadir Nuevo'
+	'add_new'			  => 'Añadir Nuevo',
+	'type_project'		  => 'Nombre del tipo de proyecto'
 ];

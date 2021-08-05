@@ -54,7 +54,7 @@ class DeleteControl
             
             // Se tomaran los datos de proyecto y contrato y se asignaran en respectivas variables
             // project_status, project_finish, contracth_finish_date
-            if($method == 'download' || $method == 'delete') {
+            if($method == 'delete' || $method == 'validate_download') {
                 
                 // Datos de la tabla que esta siendo eliminado
                 $url_tabla = env('API_PATH').$name_table.'/'.$request->id;
@@ -102,11 +102,11 @@ class DeleteControl
             }
 
             // Validando si el contrato o proyecto esten activos
-            if ($method == 'delete') { // Cualquier item que esta siendo eliminado
+            if ($method == 'delete' || $method == 'validate_download') { // Cualquier item que esta siendo eliminado
                 
                 // Si se trata de eliminar un sprints
                 if ($Controlador == 'sprints') {
-                    if ($datos['task_status'] != 'Completed' && $datos['time_status'] != 'Finished' ) {
+                    if ($datos['task_status'] != 'Completed' || $datos['time_status'] != 'Finished' ) {
                         session()->flash('message', __('general.deleted_item'));
                         session()->flash('alert-class', 'danger');
                         
@@ -121,23 +121,17 @@ class DeleteControl
                         return redirect()->back();
                     }
                 } else {
-                    if ($project_status != 'Closing' && $project_finish >= $now->toDateString() || $contract_finish_date >= $now->toDateString()){
+                    if(!empty($project_status) && !empty($project_finish) && !empty($contract_finish_date)){
+                        if ($project_status != 'Closing' || $project_finish >= $now->toDateString() || $contract_finish_date >= $now->toDateString()){
 
-                        session()->flash('message', __('general.deleted_item'));
-                        session()->flash('alert-class', 'danger');
-                        
-                        return redirect()->back();
+                            session()->flash('message', __('general.deleted_item'));
+                            session()->flash('alert-class', 'danger');
+                            
+                            return redirect()->back();
+                        }
                     }
                 }
 
-            }else if($method == 'download') { // Exclusivamente solo si es Proyecto o Contrado que se esta eliminando antes se activa el metodo download
-                
-                if ($contract_finish_date >= $now->toDateString() || $project_status != 'Closing' && $project_finish >= $now->toDateString()) {
-                    session()->flash('message', __('general.delete_project_contract'));
-                    session()->flash('alert-class', 'danger');
-                    return redirect()->back();
-                }
-                
             }
         }
         
