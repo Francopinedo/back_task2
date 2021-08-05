@@ -14,6 +14,7 @@ class ContractTransformer extends TransformerAbstract
 			'id'                  => $contract->id,
 			'customer_id'         => $contract->customer_id,
 			'project_id'          => $contract->project_id,
+			'type_project'		  => $contract->type_project,
 			'sow_number'          => $contract->sow_number,
 			'amendment_number'    => $contract->amendment_number,
 			'date'                => $contract->date,

@@ -11,6 +11,7 @@ class Contract extends Model {
 	protected $fillable = array(
 		'customer_id',
 		'project_id',
+		'type_project',
 		'sow_number',
 		'amendment_number',
 		'date', 'start_date', 'finish_date',

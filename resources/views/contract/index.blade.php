@@ -10,6 +10,7 @@
                 {data: 'id', name: 'id', visible: false},
                 {data: 'customer_name', name: 'customer_name'},
                 {data: 'project_name', name: 'project_name'},
+                {data: 'type_project', name: 'type_project'},
                 {data: 'sow_number', name: 'sow_number'},
                 {data: 'start_date', name: 'start_date'},
                 {data: 'finish_date', name: 'finish_date'},
@@ -91,6 +92,7 @@
                                 <th title="{{ __('contracts_tooltip.id')}}">{{ __('contracts.id') }}</th>
                                 <th title="{{ __('contracts_tooltip.customer')}}">{{ __('contracts.customer') }}</th>
                                 <th title="{{ __('contracts_tooltip.project')}}">{{ __('contracts.project') }}</th>
+                                <th title="{{ __('contracts_tooltip.type_project') }}">{{ __('contracts.type_project') }}</th>
                                 <th title="{{ __('contracts_tooltip.sow_number')}}">{{ __('contracts.sow_number') }}</th>
                                 <th title="{{ __('contracts_tooltip.start_date')}}">{{ __('contracts.start_date') }}</th>
                                 <th title="{{ __('contracts_tooltip.finish_date')}}">{{ __('contracts.finish_date') }}</th>

@@ -55,6 +55,12 @@
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required currency_id-error"></span></div>
 
+                <div class="md-input-wrapper">
+                    <label>{{ __('contracts.type_project') }}</label>
+                    <input type="text" class="md-input" name="type_project"><span class="md-input-bar"></span>
+                </div>
+                <div class="parsley-errors-list filled"><span class="parsley-required type_project-error"></span></div>
+
 
                 <div class="md-input-wrapper">
                 	<label>{{ __('contracts.sow_number') }}</label>

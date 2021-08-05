@@ -87,6 +87,7 @@ class ContractController extends Controller
 
             'customer_id' => 'required',
             'currency_id' => 'required',
+            'type_project' => 'required',
             'sow_number' => 'required',
             'date' => 'required',
             'start_date' => 'required',
@@ -181,6 +182,7 @@ class ContractController extends Controller
 
             'customer_id' => 'required',
             'sow_number' => 'required',
+            'type_project'      => 'required',
             'currency_id' => 'required',
             'date' => 'required',
             'start_date' => 'required',

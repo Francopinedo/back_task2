@@ -30,6 +30,7 @@ class ContractController extends Controller {
 	 *   		"id": "int",
 	 *   		"company_id": "int"
      *  		"project_id": "int",
+     *      "type_project": "string",
      *  		"sow_number": "string",
      *  		"amendment_number": "string",
      *  		"date": "date",
@@ -70,6 +71,7 @@ class ContractController extends Controller {
 	 * @Request({
 	 *      	"company_id": "int"
      *  		"project_id": "int",
+     *      "type_project": "string",
      *  		"sow_number": "string",
      *  		"amendment_number": "string",
      *  		"date": "date",
@@ -85,6 +87,7 @@ class ContractController extends Controller {
 	 *   		"id": "int",
      *  		"company_id": "int"
      *  		"project_id": "int",
+     *      "type_project": "string",
      *  		"sow_number": "string",
      *  		"amendment_number": "string",
      *  		"date": "date",
@@ -132,6 +135,7 @@ class ContractController extends Controller {
 	 *   		"id": "int",
      *  		"company_id": "int"
      *  		"project_id": "int",
+     *      'type_project': "string",
      *  		"sow_number": "string",
      *  		"amendment_number": "string",
      *  		"date": "date",
@@ -162,6 +166,7 @@ class ContractController extends Controller {
 	 *      	"name": "string",
      *  		"company_id": "int"
      *  		"project_id": "int",
+     *      "type_project": "string",
      *  		"sow_number": "string",
      *  		"amendment_number": "string",
      *  		"date": "date",
@@ -177,6 +182,7 @@ class ContractController extends Controller {
 	 *   		"id": "int",
      *  		"company_id": "int"
      *  		"project_id": "int",
+     *      "type_project": "string",
      *  		"sow_number": "string",
      *  		"amendment_number": "string",
      *  		"date": "date",
@@ -263,6 +269,7 @@ class ContractController extends Controller {
                     	'contracts.id',
                     	'contracts.customer_id',
                     	'contracts.project_id',
+                     'contracts.type_project',
                     	'contracts.sow_number',
                     	'contracts.amendment_number',
                     	'contracts.date',
