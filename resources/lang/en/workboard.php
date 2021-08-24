@@ -35,5 +35,8 @@ return [
 	          'comment'         => 'Comment',
 	            'owner'         => 'Owner',
 	    'ticket_detail'         => 'Ticket Detail',
- 	 'tickets_by_phase'         => 'Tickets By Milestones'
+ 	 'tickets_by_phase'         => 'Tickets By ',
+ 	 'grouping_for' 			=> 'Grouped by',
+ 	 'grouping' 				=> 'No values were found in the release, phase, version, label and sprint fields',
+ 	 'grouping_field'			=> 'Select a grouping field'
 ];

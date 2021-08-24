@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Sprints;
 
 use DB;
-use Illuminate\Http\Request;
 use Log;
-use Transformers\SprintsTransformer;
+use App\Models\Sprints;
+use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
+use Transformers\SprintsTransformer;
 
 /**
  * Modulo de Sprints
@@ -222,6 +222,29 @@ class SprintsController extends Controller
         }
 
         return $this->response->noContent();
+    }
+
+    /**
+     * Sprint
+     *
+     * @Get("sprints/sprint")
+     * @Transaction({
+     *      @Response(200, body={
+     *        "id": "int"
+     *    })
+     * })
+     */
+    public function sprint(Request $request)
+    {
+        $query = Sprints::select('short_name', 'id');
+
+        if ($request->has('project_id')) {
+            $query->where('project_id', $request->project_id);
+        }
+
+        $sprints = $query->get();
+
+        return ['data' => $sprints];   
     }
 
     /**

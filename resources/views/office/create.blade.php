@@ -1,3 +1,13 @@
+<style>
+    .uk-autocomplete {
+        padding-bottom: 15px;
+        padding-top: 15px;
+    }
+    #effective {
+        padding-top: 25px;
+        padding-bottom: 15px;
+    }
+</style>
 <div class="uk-grid" data-uk-grid-margin>
     <div class="uk-width-1-1">
 
@@ -45,7 +55,7 @@
 
                 <div class="md-input-wrapper">
                 	<label>{{ __('offices_tooltip.effective_workinghours') }}</label>
-                	<input type="number" min="0" max="24" class="md-input" name="effective_workinghours"><span class="md-input-bar"></span>
+                	<input type="number" min="0" max="24" id="effective" class="md-input" name="effective_workinghours"><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required effective_workinghours-error"></span></div>
 

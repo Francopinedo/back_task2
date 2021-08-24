@@ -5,9 +5,9 @@
     }
 
 </style>
-  	<form role="form" method="POST" action="{{ url('admin_companies/update') }}" id="data-form-edit" data-redirect-on-success="{{ url('admin_companies') }}">
+<form role="form" method="POST" action="{{ url('admin_companies/update') }}" id="data-form-edit" data-redirect-on-success="{{ url('admin_companies') }}">
  
-<div class="uk-grid" data-uk-grid-margin>
+    <div class="uk-grid" data-uk-grid-margin>
 
 		<div class="uk-alert uk-alert-danger hide_when_empty status_code-error" data-uk-alert=""></div>
 
@@ -113,17 +113,17 @@
                 <div class="parsley-errors-list filled"><span class="parsley-required industry_id-error"></span></div>
 
             </li>
-			    		<li class="uk-width-medium-1-1 uk-row-first">
+			<li class="uk-width-medium-1-1 uk-row-first">
 						
 				<div class="uk-margin-medium-top">
                     <a class="md-btn md-btn-primary md-btn-wave-light md-btn-block waves-effect waves-button waves-light" href="#" id="update-btn">{{ __('companies.update') }}</a>
                     <a class="md-btn md-btn-flat md-btn-wave md-btn-block waves-effect waves-button cancel-edit-btn" href="#">{{ __('general.cancel') }}</a>
                 </div>
 
-</li>
+            </li>
 
-</div>
-    	</form>
+    </div>
+</form>
 
 <script type="text/javascript">
 	$('.cancel-edit-btn').on('click', function(e){

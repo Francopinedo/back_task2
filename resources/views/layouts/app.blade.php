@@ -141,7 +141,7 @@
                     </div>
                 </div>
 
-                <div class="uk-modal" id="modal_project_selection">
+                {{-- <div class="uk-modal" id="modal_project_selection">
                     <div class="uk-modal-dialog">
                         <button type="button" class="uk-modal-close uk-close"></button>
                         <select id="optionsProjectSelection" class="md-input" data-csrf="{{ csrf_token() }}">
@@ -153,7 +153,7 @@
 
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
                 <div class="uk-modal" id="modal_project_selection">
                     <div class="uk-modal-dialog">
@@ -736,7 +736,7 @@
                 @endif
             
                 @if (Auth::user()->hasPermission('view.catalog'))
-                    <li data-uk-tooltip="{pos:'top-left'}" title="{{Auth::user()->tooltip==0 ? '' : __('sidebar.catalog') }}" class="{{ (Route::is('catalog') ? 'active' : '') }} title-tooltip k-item k-state-default">
+                    <li data-uk-tooltip="{pos:'top-left'}" title="{{Auth::user()->tooltip==0 ? '' : __('sidebar.catalog') }}" class="{{ (Request::is('catalog') ? 'active' : '') }} title-tooltip k-item k-state-default">
                         <a href="{{ url('catalog') }}" class="k-link">
                             <i class="fa fa-list-alt fa-15" aria-hidden="true"></i>
                             <span class="menu_title">{{ __('sidebar.catalog') }}</span>
@@ -799,8 +799,8 @@
                                     @endif
 
                                     @if (Auth::user()->hasPermission('view.contracts'))
-                                        <li data-uk-tooltip="{pos:'top-left'}" title="{{ Auth::user()->tooltip==0 ? '' :__('sidebar_tooltip.Contracts_ka') }}" class="title-knowledge {{ (Request::is('main-menu/knowledge_area/integration_management/contracts') ? 'select_active' : '') }}">
-                                            <a href="{{ url('main-menu/knowledge_area/integration_management/contracts') }}">{{ __('sidebar.contracts') }}</a>
+                                        <li data-uk-tooltip="{pos:'top-left'}" title="{{ Auth::user()->tooltip==0 ? '' :__('sidebar_tooltip.Contracts_ka') }}" class="title-knowledge {{ (Request::is('contracts') ? 'select_active' : '') }}">
+                                            <a href="{{ url('contracts') }}">{{ __('sidebar.contracts') }}</a>
                                         </li>
                                     @endif
 
@@ -878,8 +878,8 @@
 
                                     @if(session('project_id'))
                                        @if (Auth::user()->hasPermission('view.projects'))
-                                            <li data-uk-tooltip="{pos:'top-left'}" title="{{ Auth::user()->tooltip==0 ? '' :__('sidebar_tooltip.Sprints_ka') }}" class="title-knowledge {{ (Request::is('sprints/'.session('project_id').'/time_management') ? 'select_active' : '') }}">
-                                                <a href="{{ url('sprints')}}/{{session('project_id')}}/time_management">{{ __('sidebar.sprints') }}</a>
+                                            <li data-uk-tooltip="{pos:'top-left'}" title="{{ Auth::user()->tooltip==0 ? '' :__('sidebar_tooltip.Sprints_ka') }}" class="title-knowledge {{ (Request::is('sprints/'.session('project_id')) ? 'select_active' : '') }}">
+                                                <a href="{{ url('sprints')}}/{{session('project_id')}}">{{ __('sidebar.sprints') }}</a>
                                             </li>
                                         @endif
                                     @else
@@ -903,8 +903,8 @@
                                     @endif
 
                                     @if (Auth::user()->hasPermission('view.kpis'))
-                                        <li data-uk-tooltip="{pos:'top-left'}" title="{{ Auth::user()->tooltip==0 ? '' :__('sidebar_tooltip.KPIS_Report_Time_ka') }}" class="title-knowledge {{ (Request::is('main-menu/knowledge_area/time_management/kpis_functions') ? 'select_active' : '') }}">
-                                            <a href="{{ url('main-menu/knowledge_area/time_management/kpis_functions') }}">{{ __('sidebar.KPIS_Report_Time') }}</a>
+                                        <li data-uk-tooltip="{pos:'top-left'}" title="{{ Auth::user()->tooltip==0 ? '' :__('sidebar_tooltip.KPIS_Report_Time_ka') }}" class="title-knowledge {{ (Request::is('kpis_functions/2') ? 'select_active' : '') }}">
+                                            <a href="{{ url('kpis_functions/2') }}">{{ __('sidebar.KPIS_Report_Time') }}</a>
                                         </li>
                                     @endif
                                 </ul>
@@ -961,8 +961,8 @@
                                     @endif
 
                                     @if (Auth::user()->hasPermission('view.kpis'))
-                                        <li data-uk-tooltip="{pos:'top-left'}" title="{{ Auth::user()->tooltip==0 ? '' :__('sidebar_tooltip.KPIS_Report_Time_ka') }}" class="{{ (Request::is('main-menu/knowledge_area/cost_management/kpis_functions') ? 'select_active' : '') }} title-knowledge">
-                                            <a href="{{ url('main-menu/knowledge_area/cost_management/kpis_functions') }}">{{ __('sidebar.kpis') }}</a>
+                                        <li data-uk-tooltip="{pos:'top-left'}" title="{{ Auth::user()->tooltip==0 ? '' :__('sidebar_tooltip.KPIS_Report_Time_ka') }}" class="{{ (Request::is('kpis_functions/1') ? 'select_active' : '') }} title-knowledge">
+                                            <a href="{{ url('kpis_functions/1') }}">{{ __('sidebar.kpis') }}</a>
                                         </li>
                                     @endif
                                 </ul>
@@ -989,8 +989,8 @@
                                     @endif
 
                                     @if (Auth::user()->hasPermission('view.kpis'))
-                                        <li data-uk-tooltip="{pos:'top-left'}" title="{{ Auth::user()->tooltip==0 ? '' :__('sidebar_tooltip.KPIS_Report_QM') }}" class="{{ (Request::is('main-menu/knowledge_area/quality_management/kpis_functions') ? 'select_active' : '') }} title-knowledge">
-                                            <a href="{{ url('main-menu/knowledge_area/quality_management/kpis_functions') }}">{{ __('sidebar.kpis') }}</a>
+                                        <li data-uk-tooltip="{pos:'top-left'}" title="{{ Auth::user()->tooltip==0 ? '' :__('sidebar_tooltip.KPIS_Report_QM') }}" class="{{ (Request::is('kpis_functions') ? '' : '') }} title-knowledge">
+                                            <a href="{{ url('kpis_functions') }}">{{ __('sidebar.kpis') }}</a>
                                         </li>
                                     @endif
                                 </ul>
@@ -1041,14 +1041,14 @@
                                     @endif
 
                                     @if (Auth::user()->hasPermission('view.additionalhours'))
-                                        <li data-uk-tooltip="{pos:'top-left'}" title="{{ Auth::user()->tooltip==0 ? '' : __('sidebar_tooltip.Additionals_Hours_ka') }}" class="{{ (Request::is('main-menu/knowledge_area/additional_hours') ? 'select_active' : '') }} title-knowledge">
-                                            <a href="{{ url('main-menu/knowledge_area/additional_hours') }}">{{ __('sidebar.additional_hours') }}</a>
+                                        <li data-uk-tooltip="{pos:'top-left'}" title="{{ Auth::user()->tooltip==0 ? '' : __('sidebar_tooltip.Additionals_Hours_ka') }}" class="{{ (Request::is('knowledge_area/team_management/additional_hours') ? 'select_active' : '') }} title-knowledge">
+                                            <a href="{{ url('knowledge_area/team_management/additional_hours') }}">{{ __('sidebar.additional_hours') }}</a>
                                         </li>
                                     @endif
 
                                     @if (Auth::user()->hasPermission('view.kpis'))
-                                        <li data-uk-tooltip="{pos:'top-left'}" title="{{ Auth::user()->tooltip==0 ? '' : __('sidebar_tooltip.KPIS_Report_RM') }}" class="{{ (Request::is('main-menu/knowledge_area/team_management/kpis_functions') ? 'select_active' : '') }} title-knowledge">
-                                            <a href="{{ url('main-menu/knowledge_area/team_management/kpis_functions') }}">{{ __('sidebar.kpis') }}</a>
+                                        <li data-uk-tooltip="{pos:'top-left'}" title="{{ Auth::user()->tooltip==0 ? '' : __('sidebar_tooltip.KPIS_Report_RM') }}" class="{{ (Request::is('kpis_functions') ? '' : '') }} title-knowledge">
+                                            <a href="{{ url('kpis_functions') }}">{{ __('sidebar.kpis') }}</a>
                                         </li>
                                     @endif
 
@@ -1109,8 +1109,8 @@
                                     @endif
 
                                     @if (Auth::user()->hasPermission('view.kpis'))
-                                        <li data-uk-tooltip="{pos:'top-left'}" title="{{ Auth::user()->tooltip==0 ? '' : __('sidebar_tooltip.KPIS_Report_RIM') }}" class="title-knowledge {{ (Request::is('main-menu/knowledge_area/risk_management/kpis_functions') ? 'select_active' : '') }}">
-                                            <a href="{{ url('main-menu/knowledge_area/risk_management/kpis_functions') }}">{{ __('sidebar.kpis') }}</a>
+                                        <li data-uk-tooltip="{pos:'top-left'}" title="{{ Auth::user()->tooltip==0 ? '' : __('sidebar_tooltip.KPIS_Report_RIM') }}" class="title-knowledge {{ (Request::is('kpis_functions') ? '' : '') }}">
+                                            <a href="{{ url('kpis_functions') }}">{{ __('sidebar.kpis') }}</a>
                                         </li>
                                     @endif
                                 </ul>
@@ -1288,8 +1288,8 @@
 
                                     @if(session('project_id'))
                                         @if (Auth::user()->hasPermission('view.projects'))
-                                            <li data-uk-tooltip="{pos:'top-left'}" title="{{ Auth::user()->tooltip==0 ? '' :__('sidebar_tooltip.Sprints_pg') }}" class="{{ (Request::is('sprints/'.session('project_id').'/planning') ? 'select_active' : '') }} data-title">
-                                                <a href="{{ url('sprints')}}/{{session('project_id')}}/planning">{{ __('sidebar.sprints') }}</a>
+                                            <li data-uk-tooltip="{pos:'top-left'}" title="{{ Auth::user()->tooltip==0 ? '' :__('sidebar_tooltip.Sprints_pg') }}" class="{{ (Request::is('planning/sprints/'.session('project_id')) ? 'select_active' : '') }} data-title">
+                                                <a href="{{ url('planning/sprints')}}/{{session('project_id')}}">{{ __('sidebar.sprints') }}</a>
                                             </li>
                                         @endif
                                     @else
@@ -1353,8 +1353,8 @@
                                     @endif
 
                                     @if (Auth::user()->hasPermission('view.additionalhours'))
-                                        <li data-uk-tooltip="{pos:'top-left'}" title="{{ Auth::user()->tooltip==0 ? '' :__('sidebar_tooltip.Additionals_Hours_pg') }}" class="{{ (Request::is('main-menu/process_group/additional_hours') ? 'select_active' : '') }} data-title">
-                                            <a href="{{ url('main-menu/process_group/additional_hours') }}">{{ __('sidebar.additional_hours') }}</a>
+                                        <li data-uk-tooltip="{pos:'top-left'}" title="{{ Auth::user()->tooltip==0 ? '' :__('sidebar_tooltip.Additionals_Hours_pg') }}" class="{{ (Request::is('process_group/executing/additional_hours') ? 'select_active' : '') }} data-title">
+                                            <a href="{{ url('process_group/executing/additional_hours') }}">{{ __('sidebar.additional_hours') }}</a>
                                         </li>
                                     @endif
 
@@ -1429,8 +1429,8 @@
                                     @endif
 
                                     @if (Auth::user()->hasPermission('view.kpis'))
-                                        <li data-uk-tooltip="{pos:'top-left'}" title ="{{ Auth::user()->tooltip==0 ? '' :__('sidebar_tooltip.KPIS_Report_pg') }}" class="{{ (Request::is('main-menu/process_group/monitoring_control/kpis_functions') ? 'select_active' : '') }} data-title">
-                                            <a href="{{ url('main-menu/process_group/monitoring_control/kpis_functions') }}">{{ __('sidebar.kpis') }}</a>
+                                        <li data-uk-tooltip="{pos:'top-left'}" title ="{{ Auth::user()->tooltip==0 ? '' :__('sidebar_tooltip.KPIS_Report_pg') }}" class="{{ (Request::is('kpis_functions') ? 'select_active' : '') }} data-title">
+                                            <a href="{{ url('kpis_functions') }}">{{ __('sidebar.kpis') }}</a>
                                         </li>
                                     @endif
 
@@ -1474,8 +1474,8 @@
 
                                     @if(session('project_id'))
                                        @if (Auth::user()->hasPermission('view.projects'))
-                                            <li data-uk-tooltip="{pos:'top-left'}" title="{{ Auth::user()->tooltip==0 ? '' :__('sidebar_tooltip.Sprints_pg') }}" class="{{ (Request::is('sprints/'.session('project_id').'/closing') ? 'select_active' : '') }} data-title">
-                                                <a href="{{ url('sprints')}}/{{session('project_id')}}/closing">{{ __('sidebar.sprints') }}</a>
+                                            <li data-uk-tooltip="{pos:'top-left'}" title="{{ Auth::user()->tooltip==0 ? '' :__('sidebar_tooltip.Sprints_pg') }}" class="{{ (Request::is('closing/sprints/'.session('project_id')) ? 'select_active' : '') }} data-title">
+                                                <a href="{{ url('closing/sprints')}}/{{session('project_id')}}">{{ __('sidebar.sprints') }}</a>
                                             </li>
                                         @endif
                                     @else

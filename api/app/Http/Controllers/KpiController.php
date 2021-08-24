@@ -54,8 +54,8 @@ class KpiController extends Controller
         if($request->has('category'))
                     $query->where('category', $request->category);
 
- if($request->has('showdashboard'))
-                    $query->where('showdashboard', $request->showdashboard);
+        if($request->has('showdashboard'))
+            $query->where('showdashboard', $request->showdashboard);
 
 
         $kpis = $query->get();
@@ -310,26 +310,29 @@ class KpiController extends Controller
         $earned_value_data = array();
         $actual_cost_data = array();
         $planed_value_data = array();
-        $contract = Contract::join('customers', 'customers.id', '=', 'contracts.customer_id')->where('contracts.project_id', '=', $project->id)->get(['contracts.*', 'customers.company_id'])->first();
-        $currency = Currency::find($contract->currency_id);
-
-        $tasks = Task::where('project_id', '=', $request->project_id)->orderBy('index', 'asc')->get();
-        $task = $tasks[0];
-
-        $start = explode('-', $task->start_date);
-        $diff = Carbon::create($start[0], $start[1], $start[2])->diffInDays();
-        $result = (($diff * 8) / $task->estimated_hours) * 100;
-        if ($result > 100) {
-            $result = 100;
-        } else if ($result < 0) {
-            $result = 0;
-        }
-
-        $task->estimated_progress = $result;
-        $actual_percent_completed = $task->estimated_progress;
-
         foreach ($period as $dt) {
             $months[] = $dt->format('M');
+
+
+            $contract = Contract::join('customers', 'customers.id', '=', 'contracts.customer_id')
+                ->where('contracts.project_id', '=', $project->id)->get(['contracts.*', 'customers.company_id'])->first();
+            $currency = Currency::find($contract->currency_id);
+
+            $tasks = Task::where('project_id', '=', $request->project_id)->orderBy('index', 'asc')->get();
+            $task = $tasks[0];
+
+            $start = explode('-', $task->start_date);
+            $diff = Carbon::create($start[0], $start[1], $start[2])->diffInDays();
+            $result = (($diff * 8) / $task->estimated_hours) * 100;
+            if ($result > 100) {
+                $result = 100;
+            } else if ($result < 0) {
+                $result = 0;
+            }
+
+            $task->estimated_progress = $result;
+            $actual_percent_completed = $task->estimated_progress;
+
             /**profit and loss**/
             $team = $this->profit_and_loss_team($dt, $contract, $project, $currency);
 

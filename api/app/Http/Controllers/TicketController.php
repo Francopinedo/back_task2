@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Yajra\Datatables\Datatables;
 use DB;
-use Dingo\Api\Routing\Helpers;
 
-use App\Models\Ticket;
 use App\Models\User;
+use App\Models\Ticket;
+use Illuminate\Http\Request;
 use App\Models\TicketHistory;
+use Dingo\Api\Routing\Helpers;
+use Yajra\Datatables\Datatables;
 use Transformers\TicketTransformer;
 
 /**
@@ -92,28 +92,215 @@ class TicketController extends Controller {
   			'users.name AS owner_name', 'users.id AS owner_id',
   			'workgroups.title AS workgroup_title',
   			'workgroups.id AS workgroup_id',
-            'customers.id as customer_id',
-            'projects.id as project_id'
+				'customers.id as customer_id',
+				'projects.id as project_id'
   		);
 
-		$query->join('tasks', 'tasks.id', '=', 'tickets.task_id');
-		$query->join('projects', 'tasks.project_id', '=', 'projects.id');
-		$query->join('customers', 'projects.customer_id', '=', 'customers.id');
-		$query->leftJoin('ticket_histories', 'tickets.id', '=', 'ticket_histories.ticket_id');
-  		$query->leftJoin('users', 'users.id', '=', 'tickets.owner_id');
-  		$query->leftJoin('workgroups', 'workgroups.id', '=', 'users.workgroup_id');
+			$query->join('tasks', 'tasks.id', '=', 'tickets.task_id');
+			$query->join('projects', 'tasks.project_id', '=', 'projects.id');
+			$query->join('customers', 'projects.customer_id', '=', 'customers.id');
+			$query->leftJoin('ticket_histories', 'tickets.id', '=', 'ticket_histories.ticket_id');
+			$query->leftJoin('users', 'users.id', '=', 'tickets.owner_id');
+			$query->leftJoin('workgroups', 'workgroups.id', '=', 'users.workgroup_id');
+			$query->where('tasks.phase', $request->phase);
+			//	$query->where('workgroups.id', $user->workgroup_id);
+			$query->groupBy('tickets.id');
 
-		$query->where('tasks.phase', $request->phase);
-	//	$query->where('workgroups.id', $user->workgroup_id);
+			$tickets = $query->get();
 
-		$query->groupBy('tickets.id');
-
-
-  		$tickets = $query->get();
-
-  		return ['data' => $tickets];
+			return ['data' => $tickets];
   	}
 
+		/**
+		* Obtener por version
+		*
+		* @Get("tickets/by_version{?include}")
+		* @Parameters({
+		 *      @Parameter("include", description="Tablas relacionadas", default=1),
+		 * })
+		* @Transaction({
+		*   	@Response(200, body={
+		*   		"id": "int"
+		*   	})
+		* })
+		*/
+  	public function byVersion(Request $request)
+  	{
+  		if (!$request->has('version') || !$request->has('user_id'))
+  		{
+  			return ['data' => []];
+  		}
+
+  		$user = User::find($request->user_id);
+
+  		$query = Ticket::select(
+  			'tickets.*',
+  			'tasks.description as task_description',
+  			'users.name AS owner_name', 'users.id AS owner_id',
+  			'workgroups.title AS workgroup_title',
+  			'workgroups.id AS workgroup_id',
+				'customers.id as customer_id',
+				'projects.id as project_id'
+  		);
+
+			$query->join('tasks', 'tasks.id', '=', 'tickets.task_id');
+			$query->join('projects', 'tasks.project_id', '=', 'projects.id');
+			$query->join('customers', 'projects.customer_id', '=', 'customers.id');
+			$query->leftJoin('ticket_histories', 'tickets.id', '=', 'ticket_histories.ticket_id');
+			$query->leftJoin('users', 'users.id', '=', 'tickets.owner_id');
+			$query->leftJoin('workgroups', 'workgroups.id', '=', 'users.workgroup_id');
+
+			$query->where('tasks.version', $request->version);
+			//	$query->where('workgroups.id', $user->workgroup_id);
+			$query->groupBy('tickets.id');
+
+			$tickets = $query->get();
+
+			return ['data' => $tickets];
+  	}
+
+  	/**
+	 * Obtener por release
+	 *
+	 * @Get("tickets/by_release{?include}")
+	 * @Parameters({
+ 	 *      @Parameter("include", description="Tablas relacionadas", default=1),
+ 	 * })
+	 * @Transaction({
+	 *   	@Response(200, body={
+	 *   		"id": "int"
+	 *   	})
+	 * })
+	 */
+  	public function byRelease(Request $request)
+  	{
+  		if (!$request->has('release') || !$request->has('user_id'))
+  		{
+  			return ['data' => []];
+  		}
+
+  		$user = User::find($request->user_id);
+
+  		$query = Ticket::select(
+  			'tickets.*',
+  			'tasks.description as task_description',
+  			'users.name AS owner_name', 'users.id AS owner_id',
+  			'workgroups.title AS workgroup_title',
+  			'workgroups.id AS workgroup_id',
+				'customers.id as customer_id',
+				'projects.id as project_id'
+  		);
+
+			$query->join('tasks', 'tasks.id', '=', 'tickets.task_id');
+			$query->join('projects', 'tasks.project_id', '=', 'projects.id');
+			$query->join('customers', 'projects.customer_id', '=', 'customers.id');
+			$query->leftJoin('ticket_histories', 'tickets.id', '=', 'ticket_histories.ticket_id');
+			$query->leftJoin('users', 'users.id', '=', 'tickets.owner_id');
+			$query->leftJoin('workgroups', 'workgroups.id', '=', 'users.workgroup_id');
+
+			$query->where('tasks.release', $request->release);
+			//	$query->where('workgroups.id', $user->workgroup_id);
+			$query->groupBy('tickets.id');
+
+			$tickets = $query->get();
+
+			return ['data' => $tickets];
+  	}
+
+  	/**
+	 * Obtener por label
+	 *
+	 * @Get("tickets/by_label{?include}")
+	 * @Parameters({
+ 	 *      @Parameter("include", description="Tablas relacionadas", default=1),
+ 	 * })
+	 * @Transaction({
+	 *   	@Response(200, body={
+	 *   		"id": "int"
+	 *   	})
+	 * })
+	 */
+  	public function byLabel(Request $request)
+  	{
+  		if (!$request->has('label') || !$request->has('user_id'))
+  		{
+  			return ['data' => []];
+  		}
+
+  		$user = User::find($request->user_id);
+
+  		$query = Ticket::select(
+  			'tickets.*',
+  			'tasks.description as task_description',
+  			'users.name AS owner_name', 'users.id AS owner_id',
+  			'workgroups.title AS workgroup_title',
+  			'workgroups.id AS workgroup_id',
+				'customers.id as customer_id',
+				'projects.id as project_id'
+  		);
+
+			$query->join('tasks', 'tasks.id', '=', 'tickets.task_id');
+			$query->join('projects', 'tasks.project_id', '=', 'projects.id');
+			$query->join('customers', 'projects.customer_id', '=', 'customers.id');
+			$query->leftJoin('ticket_histories', 'tickets.id', '=', 'ticket_histories.ticket_id');
+			$query->leftJoin('users', 'users.id', '=', 'tickets.owner_id');
+			$query->leftJoin('workgroups', 'workgroups.id', '=', 'users.workgroup_id');
+			$query->where('tasks.label', $request->label);
+			//	$query->where('workgroups.id', $user->workgroup_id);
+			$query->groupBy('tickets.id');
+
+			$tickets = $query->get();
+
+			return ['data' => $tickets];
+  	}
+
+  	/**
+	 * Obtener por sprint
+	 *
+	 * @Get("tickets/by_sprint{?include}")
+	 * @Parameters({
+ 	 *      @Parameter("include", description="Tablas relacionadas", default=1),
+ 	 * })
+	 * @Transaction({
+	 *   	@Response(200, body={
+	 *   		"id": "int"
+	 *   	})
+	 * })
+	 */
+  	public function bySprint(Request $request)
+  	{
+  		if (!$request->has('sprint_id') || !$request->has('user_id'))
+  		{
+  			return ['data' => []];
+  		}
+
+  		$user = User::find($request->user_id);
+
+  		$query = Ticket::select(
+  			'tickets.*',
+  			'tasks.description as task_description',
+  			'users.name AS owner_name', 'users.id AS owner_id',
+  			'workgroups.title AS workgroup_title',
+  			'workgroups.id AS workgroup_id',
+				'customers.id as customer_id',
+				'projects.id as project_id'
+  		);
+
+			$query->join('tasks', 'tasks.id', '=', 'tickets.task_id');
+			$query->join('projects', 'tasks.project_id', '=', 'projects.id');
+			$query->join('customers', 'projects.customer_id', '=', 'customers.id');
+			$query->join('sprints', 'sprints.id', '=', 'tickets.sprint_id');
+			$query->leftJoin('ticket_histories', 'tickets.id', '=', 'ticket_histories.ticket_id');
+			$query->leftJoin('users', 'users.id', '=', 'tickets.owner_id');
+			$query->leftJoin('workgroups', 'workgroups.id', '=', 'users.workgroup_id');
+			$query->where('sprints.id', $request->sprint_id);
+			//	$query->where('workgroups.id', $user->workgroup_id);
+			$query->groupBy('tickets.id');
+
+			$tickets = $query->get();
+
+			return ['data' => $tickets];
+  	}
 
 
   	/**
@@ -206,7 +393,6 @@ class TicketController extends Controller {
   	public function update(Request $request, $id)
   	{
   		$ticket = Ticket::find($id);
-
   		if ($ticket == NULL)
   		{
   			return $this->response->error('No existe', 450);
@@ -285,7 +471,6 @@ class TicketController extends Controller {
                     	'tickets.assignee_id',
                     	'tickets.status',
                     	'tickets.group',
-                    	'tickets.sprint',
                     	'tickets.last_updater_id',
                     	'tickets.due_date',
                     	'tickets.requester_name',
@@ -295,8 +480,6 @@ class TicketController extends Controller {
                     	'tickets.severity',
                     	'tickets.probability',
                     	'tickets.impact',
-                    	'tickets.version',
-                    	'tickets.release',
                     	'tickets.estimated_hours',
                     	'tickets.burned_hours',
                     	'tickets.story_points',
@@ -313,12 +496,12 @@ class TicketController extends Controller {
                         DB::raw('CONCAT(projects.customer_id, tasks.project_id, tickets.id) as ticket_id'),
                     	'users.name AS assignee_name'
                     );
-
-        $query->leftJoin('users', 'users.id', '=', 'tickets.assignee_id');
+        $query->leftJoin('task_resources', 'task_resources.id', '=', 'tickets.assignee_id');
         $query->leftJoin('users as owner', 'owner.id', '=', 'tickets.owner_id');
         $query->join('tasks', 'tasks.id', '=', 'tickets.task_id');
         $query->join('projects', 'tasks.project_id', '=', 'projects.id');
         $query->join('customers', 'projects.customer_id', '=', 'customers.id');
+        $query->join('users', 'users.id', '=', 'task_resources.user_id');
 
         if ($request->has('task_id'))
   		{

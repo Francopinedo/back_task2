@@ -13,15 +13,13 @@ var Dashboard = (function () {
             Dashboard.PROJECTID = PROJECTID;
 
             Dashboard.events();
-
-
         },
 
         events: function () {
             // $(".data-attributes span").peity("donut");
 
             $('.slick').slick(
-              { 
+                { 
                 slidesToShow: 3,
                 slidesToScroll: 3,
                 autoplay: false,
@@ -65,385 +63,414 @@ var Dashboard = (function () {
             this.chartTicketsStatsstatus();
             this.chartTicketsStatspriority();
             this.chartTasks();
-this.chartTicketsRiskTotal();
-this.chartTicketsScopeChangeTotal();
-this.chartBugsStatus();
-this.chartRequirements();
-this.chartResourceUtilization();
-this.chartIssues();
-this.percentMissingMilestone();
-this.chartMilestonesTasks();
-this.chartTaskOverdueTotal();
-this.chartTaskCompletedTotal();
-        if(this.PROJECTID=='')
-        {
-            this.chartEvTotal();
+            this.chartTicketsRiskTotal();
+            this.chartTicketsScopeChangeTotal();
+            this.chartBugsStatus();
+            this.chartRequirements();
+            this.chartResourceUtilization();
+            this.chartIssues();
+            this.percentMissingMilestone();
+            this.chartMilestonesTasks();
+            this.chartTaskOverdueTotal();
+            this.chartTaskCompletedTotal();
+            if(this.PROJECTID=='')
+            {
+                this.chartEvTotal();
 
-        
+            }  else{
+                this.chartEvTotalProject();
+                this.chartEv();
+                this.chartAc();
+                this.chartPv();
+                this.chartCapacity();
+                // this.chartOverdueTasks();
+                this.chartPlannedHours();
+                // this.chartTaskCompleted();
 
-        }  else{
-            this.chartEv();
-            this.chartAc();
-            this.chartPv();
-            this.chartCapacity();
-        //    this.chartOverdueTasks();
-            this.chartPlannedHours();
-          //  this.chartTaskCompleted();
+                // this.chartPlannedHours();
 
-            this.chartPlannedHours();
+               // this.chartCompletedProjects();
+               // this.chartCancelledProjects();  
 
-           // this.chartCompletedProjects();
-           // this.chartCancelledProjects();  
-
-
-        }
-    },
+            }
+        },
 
     
-    chartEvTotal: function () {
+        chartEvTotal: function () {
 
-        $.ajax({
-            type: "GET",
-            url: API_PATH + "dashboard/chartEvTotal",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (data) {
-                // $("#chart-ev").append("<div class='uk-alert uk-alert-danger' data-uk-alert style='border-color: #999; border-style: solid;'><h1>"+data.data[0].name+"</h1><br><h1>"+Math.round(data.data[0].data * 100 + Number.EPSILON ) / 100+"</h1></div>"); 
-                // $("#chart-ac").append("<div class='uk-alert uk-alert-success' data-uk-alert style='border-color: #999; border-style: solid;'><h1>"+data.data[1].name+"</h1><br><h1>"+Math.round(data.data[1].data * 100 + Number.EPSILON ) / 100+"</h1></div>"); 
-                // $("#chart-pv").append("<div class='uk-alert uk-alert-success' data-uk-alert style='border-color: #999; border-style: solid;'><h1>"+data.data[2].name+"</h1><br><h1>"+Math.round(data.data[2].data * 100 + Number.EPSILON ) / 100+"</h1></div>"); 
+            $.ajax({
+                type: "GET",
+                url: API_PATH + "dashboard/chartEvTotal",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: {project_id: $("#project_id").val()},
+                success: function (data) {
+                    // $("#chart-ev").append("<div class='uk-alert uk-alert-danger' data-uk-alert style='border-color: #999; border-style: solid;'><h1>"+data.data[0].name+"</h1><br><h1>"+Math.round(data.data[0].data * 100 + Number.EPSILON ) / 100+"</h1></div>"); 
+                    // $("#chart-ac").append("<div class='uk-alert uk-alert-success' data-uk-alert style='border-color: #999; border-style: solid;'><h1>"+data.data[1].name+"</h1><br><h1>"+Math.round(data.data[1].data * 100 + Number.EPSILON ) / 100+"</h1></div>"); 
+                    // $("#chart-pv").append("<div class='uk-alert uk-alert-success' data-uk-alert style='border-color: #999; border-style: solid;'><h1>"+data.data[2].name+"</h1><br><h1>"+Math.round(data.data[2].data * 100 + Number.EPSILON ) / 100+"</h1></div>"); 
 
-                new Chartist.Bar('#chart-ev', {
-                  labels: data.type,
-                  series:data.data
+                  //   new Chartist.Bar('#chart-ev', {
+                  //     labels: data.type,
+                  //     series:data.data
 
-              }, {
-                  scaleMinSpace: 20,
-                  seriesBarDistance: 12,
-                  fullWidth: true,
-                  chartPadding: {
-                      right: 40
-                  },
-                  plugins: [
-                      Chartist.plugins.legend({
+                  // },{
+                  //     scaleMinSpace: 20,
+                  //     seriesBarDistance: 12,
+                  //     fullWidth: true,
+                  //     chartPadding: {
+                  //         right: 40
+                  //     },
+                  //     plugins: [
+                  //         Chartist.plugins.legend({
 
-                      }),
-                      
-                  ]
-              });
-        }
-    });
+                  //         }),
+                          
+                  //     ]
+                  // });
+                    new Chartist.Bar('#chart-ev', {
+                        labels: data.type,
+                        series: data.data
+                    },{
+                        // high: 10000,
+                        // low: -10000, 
+                        distributeSeries: true,
+                    });
+                }
+            });
+        },
 
-    
+        chartEvTotalProject: function() {
+            $.ajax({
+                type: "GET",
+                url: API_PATH + "dashboard/chartEvTotalProject",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: {project_id: $("#project_id").val()},
+                success: function (data) {
+                  
+                    new Chartist.Bar('#chart-ev-total', {
+                        labels: data.type,
+                        series: data.data
+                    },{
+                        // high: 10000,
+                        // low: -10000, 
+                        distributeSeries: true,
+                    });
+                  
+                }
+            });
+        },
 
-    },
-
-   
-
-    chartTaskCompletedTotal: function () {
-        var project = this.PROJECTID==''?'':"?project_id="+this.PROJECTID;
-
-        $.ajax({
-            type: "GET",
-            url: API_PATH + "dashboard/listTasks"+project,
-            contentType: "application/json; charset=utf-8",
-            data: {option:1},
-            dataType: "json",
-            success: function (data) {
-
-             //   $("#chart-chartTaskCompletedTotal").append("<div class='uk-alert uk-alert-success' data-uk-alert style='border-color: #999; border-style: solid;'><h1>% Completed Tasks</h1><br><h1>"+Math.round((data.data / data.total )*100 * 100 + Number.EPSILON ) / 100 +"%</h1></div>"); 
-             var data = {
-                series: data.data,
-                labels: data.type,
-                total:data.total,
-              };
-              var options = {
-                  labelInterpolationFnc: function(name,value) {
-                   var percentage = Math.round(data.series[value].value / data.total * 100) + '%';
-                   return data.labels[value] + ' ' +data.series[value].value +' = '+percentage;
-                     }
-               };
-              var sum = function(a, b) { return a + b };
-
-              var responsiveOptions = [
-                ['screen and (min-width: 350px)', {
-                  chartPadding: 30,
-                  labelOffset: 100,
-                  labelDirection: 'explode'
-                }],
-                ['screen and (min-width: 1024px)', {
-                  labelOffset: 80,
-                  chartPadding: 20
-                }]
-              ];
-
-          new Chartist.Pie('#chart-chartTaskCompletedTotal', data, options);
-
-      
-            },
-
-        });
-    },
-
-
-    chartTaskOverdueTotal: function () {
-        var project = this.PROJECTID==''?'':"?project_id="+this.PROJECTID;
+        chartTaskCompletedTotal: function () {
+            var project = this.PROJECTID==''?'':"?project_id="+this.PROJECTID;
 
             $.ajax({
                 type: "GET",
                 url: API_PATH + "dashboard/listTasks"+project,
                 contentType: "application/json; charset=utf-8",
-                data: {option:2},
+                data: {option:1},
                 dataType: "json",
                 success: function (data) {
-              //  $("#chart-chartOverdueTasksTotal").append("<div class='uk-alert uk-alert-danger' data-uk-alert style='border-color: #999; border-style: solid;'><h1># of Overdue Task</h1><br><h1>"+Math.round(data.data * 100 + Number.EPSILON ) / 100+"</h1></div>"); 
-              var data = {
-                series: data.data,
-                labels: data.type,
-                total:data.total,
-              };
-              var options = {
-                  labelInterpolationFnc: function(name,value) {
-                   var percentage = Math.round(data.series[value].value /  data.total * 100) + '%';
-                   return data.labels[value] + ' ' +data.series[value].value +' = '+percentage;
-                     }
-               };
-              var sum = function(a, b) { return a + b };
 
-              var responsiveOptions = [
-                ['screen and (min-width: 350px)', {
-                  chartPadding: 30,
-                  labelOffset: 100,
-                  labelDirection: 'explode'
-                }],
-                ['screen and (min-width: 1024px)', {
-                  labelOffset: 80,
-                  chartPadding: 20
-                }]
-              ];
-
-          new Chartist.Pie('#chart-chartOverdueTasksTotal', data, options);
-
-        }
-    });
-
-    
-
-    },
-    chartTaskProgressTotal: function () {
-        var project = this.PROJECTID==''?'':"?project_id="+this.PROJECTID;
-
-        $.ajax({
-            type: "GET",
-            url: API_PATH + "dashboard/chartEv"+project,
-            contentType: "application/json; charset=utf-8",
-            data: {option: '3'},
-
-            dataType: "json",
-            success: function (data) {
-                $("#chart-TaskProgressTotal").append("<div class='uk-alert uk-alert-danger' data-uk-alert style='border-color: #999; border-style: solid;'><h1>"+data.data[0].name+"</h1><br><h1>"+Math.round(data.data[0].data * 100 + Number.EPSILON ) / 100+"</h1></div>"); 
-   
-
-        }
-    });
-
-    
-
-    },
-
-    chartTicketsRiskTotal: function () {
-        var project = this.PROJECTID==''?'':"?project_id="+this.PROJECTID;
-
-        $.ajax({
-            type: "GET",
-            url: API_PATH + "dashboard/chartTicketsStatsType"+project,
-            contentType: "application/json; charset=utf-8",
-            data: {type: '3',total: '1'},
-
-            dataType: "json",
-            success: function (data) {
-//                $("#chart-chartTicketsRiskTotal").append("<div class='uk-alert "+data.data[0].className+"' data-uk-alert style='border-color: #999; border-style: solid;'><h1>Total Risks Tickets</h1><br><h1>"+data.data[0].value+"</h1></div>"); 
-  
-              var data = {
-                    series: data.data,
-                    labels: data.type,
-                    total: data.total
-                  };
-                  var options = {
-                      labelInterpolationFnc: function(name,value) {
-                        var percentage = Math.round(data.series[value].value / (data.series[0].value+data.series[1].value) * 100) + '%';
-                        return data.labels[value] + ' ' + data.series[value].value +' = '+percentage;
-                           }
-                     };
-                    var sum = function(a, b) { return a + b };
-
-                    var responsiveOptions = [
-                      ['screen and (min-width: 350px)', {
-                        chartPadding: 30,
-                        labelOffset: 100,
-                        labelDirection: 'explode'
-                      }],
-                      ['screen and (min-width: 1024px)', {
-                        labelOffset: 80,
-                        chartPadding: 20
-                      }]
-                    ];
-
-                new Chartist.Pie('#chart-chartTicketsRiskTotal', data, options);
-
-
-        }
-    });
-
-    
-
-    },
-
-    
-    chartTicketsScopeChangeTotal: function () {
-        var project = this.PROJECTID==''?'':"?project_id="+this.PROJECTID;
-
-        $.ajax({
-            type: "GET",
-            url: API_PATH + "dashboard/chartTicketsStatsType"+project,
-            contentType: "application/json; charset=utf-8",
-            data: {type: '5',total:1},
-
-            dataType: "json",
-            success: function (data) {
-   //             $("#chart-chartTicketsScopeChangeTotal").append("<div class='uk-alert "+data.data[0].className+"' data-uk-alert style='border-color: #999; border-style: solid;'><h1>Total Scope Changes</h1><br><h1>"+data.data[0].value+"</h1></div>"); 
-   
+                    //   $("#chart-chartTaskCompletedTotal").append("<div class='uk-alert uk-alert-success' data-uk-alert style='border-color: #999; border-style: solid;'><h1>% Completed Tasks</h1><br><h1>"+Math.round((data.data / data.total )*100 * 100 + Number.EPSILON ) / 100 +"%</h1></div>"); 
                     var data = {
                     series: data.data,
                     labels: data.type,
-                    total: data.total
-                  };
-                  var options = {
-                      labelInterpolationFnc: function(name,value) {
-                       var percentage = Math.round(data.series[value].value / (data.series[0].value+data.series[1].value) * 100) + '%';
-                       return data.labels[value] + ' ' + data.series[value].value +' = '+percentage;
-                      }
-                     };
+                    legend: data.className,
+                    total:data.total,
+                    };
+                    var options = {
+                        labelInterpolationFnc: function(name,value) {
+                           var percentage = Math.round(data.series[value].value / data.total * 100) + '%';
+                           return data.series[value].value +' = '+percentage;
+                        },
+                        plugins: [Chartist.plugins.legend({
+                          classNames:data.legend,
+                        })]
+                    };
                     var sum = function(a, b) { return a + b };
 
                     var responsiveOptions = [
-                      ['screen and (min-width: 350px)', {
-                        chartPadding: 30,
-                        labelOffset: 100,
-                        labelDirection: 'explode'
-                      }],
-                      ['screen and (min-width: 1024px)', {
-                        labelOffset: 80,
-                        chartPadding: 20
-                      }]
+                        ['screen and (min-width: 350px)', {
+                            chartPadding: 30,
+                            labelOffset: 100,
+                            labelDirection: 'explode'
+                        }],
+                        ['screen and (min-width: 1024px)', {
+                            labelOffset: 80,
+                            chartPadding: 20
+                        }]
                     ];
 
-                new Chartist.Pie('#chart-chartTicketsScopeChangeTotal', data, options);
-        }
-    });
+                    new Chartist.Pie('#chart-chartTaskCompletedTotal', data, options);
+                },
 
-    
+            });
+        },
 
-    },
+        chartTaskOverdueTotal: function () {
+            var project = this.PROJECTID==''?'':"?project_id="+this.PROJECTID;
+
+                $.ajax({
+                    type: "GET",
+                    url: API_PATH + "dashboard/listTasks"+project,
+                    contentType: "application/json; charset=utf-8",
+                    data: {option:2},
+                    dataType: "json",
+                    success: function (data) {
+                  //  $("#chart-chartOverdueTasksTotal").append("<div class='uk-alert uk-alert-danger' data-uk-alert style='border-color: #999; border-style: solid;'><h1># of Overdue Task</h1><br><h1>"+Math.round(data.data * 100 + Number.EPSILON ) / 100+"</h1></div>"); 
+                  var data = {
+                    series: data.data,
+                    labels: data.type,
+                    legend: data.className,
+                    total:data.total,
+                  };
+                  var options = {
+                      labelInterpolationFnc: function(name,value) {
+                       var percentage = Math.round(data.series[value].value /  data.total * 100) + '%';
+                       
+                       return data.series[value].value +' = '+percentage;
+                         },
+                        plugins: [Chartist.plugins.legend({
+                          classNames:data.legend,
+                        })]
+                   };
+                  var sum = function(a, b) { return a + b };
+
+                  var responsiveOptions = [
+                    ['screen and (min-width: 350px)', {
+                      chartPadding: 30,
+                      labelOffset: 100,
+                      labelDirection: 'explode'
+                    }],
+                    ['screen and (min-width: 1024px)', {
+                      labelOffset: 80,
+                      chartPadding: 20
+                    }]
+                  ];
+
+              new Chartist.Pie('#chart-chartOverdueTasksTotal', data, options);
+
+            }
+            });
+        },
+
+        chartTaskProgressTotal: function () {
+            var project = this.PROJECTID==''?'':"?project_id="+this.PROJECTID;
+
+            $.ajax({
+                type: "GET",
+                url: API_PATH + "dashboard/chartEv"+project,
+                contentType: "application/json; charset=utf-8",
+                data: {option: '3'},
+
+                dataType: "json",
+                success: function (data) {
+                    $("#chart-TaskProgressTotal").append("<div class='uk-alert uk-alert-danger' data-uk-alert style='border-color: #999; border-style: solid;'><h1>"+data.data[0].name+"</h1><br><h1>"+Math.round(data.data[0].data * 100 + Number.EPSILON ) / 100+"</h1></div>"); 
+       
+
+            }
+            });
+        },
+
+        chartTicketsRiskTotal: function () {
+            var project = this.PROJECTID==''?'':"?project_id="+this.PROJECTID;
+
+            $.ajax({
+                type: "GET",
+                url: API_PATH + "dashboard/chartTicketsStatsType"+project,
+                contentType: "application/json; charset=utf-8",
+                data: {type: '3',total: '1'},
+
+                dataType: "json",
+                success: function (data) {
+                   // $("#chart-chartTicketsRiskTotal").append("<div class='uk-alert "+data.data[0].className+"' data-uk-alert style='border-color: #999; border-style: solid;'><h1>Total Risks Tickets</h1><br><h1>"+data.data[0].value+"</h1></div>"); 
+      
+                  var data = {
+                        series: data.data,
+                        labels: data.type,
+                        total: data.total
+                      };
+                      var options = {
+                          labelInterpolationFnc: function(name,value) {
+                            var percentage = Math.round(data.series[value].value / (data.series[0].value+data.series[1].value) * 100) + '%';
+                            return data.series[value].value +' = '+percentage;
+                               },
+                                plugins: [Chartist.plugins.legend({
+                                  legendNames:data.labels,
+                                })]
+                         };
+                        var sum = function(a, b) { return a + b };
+
+                        var responsiveOptions = [
+                          ['screen and (min-width: 350px)', {
+                            chartPadding: 30,
+                            labelOffset: 100,
+                            labelDirection: 'explode'
+                          }],
+                          ['screen and (min-width: 1024px)', {
+                            labelOffset: 80,
+                            chartPadding: 20
+                          }]
+                        ];
+
+                    new Chartist.Pie('#chart-chartTicketsRiskTotal', data, options);
 
 
-    chartEv: function () {
+            }
+            });
+        },
 
-        $.ajax({
-            type: "GET",
-            url: API_PATH + "kpis/chartEv",
-            contentType: "application/json; charset=utf-8",
-            data: {project_id: $("#project_id").val()},
-            dataType: "json",
-            success: function (data) {
+        chartTicketsScopeChangeTotal: function () {
+            var project = this.PROJECTID==''?'':"?project_id="+this.PROJECTID;
 
+            $.ajax({
+                type: "GET",
+                url: API_PATH + "dashboard/chartTicketsStatsType"+project,
+                contentType: "application/json; charset=utf-8",
+                data: {type: '5',total:1},
 
-                new Chartist.Bar('#chart-ev', {
-                    labels: data.months,
-                    series:data.data
+                dataType: "json",
+                success: function (data) {
+                   // $("#chart-chartTicketsScopeChangeTotal").append("<div class='uk-alert "+data.data[0].className+"' data-uk-alert style='border-color: #999; border-style: solid;'><h1>Total Scope Changes</h1><br><h1>"+data.data[0].value+"</h1></div>"); 
+       
+                        var data = {
+                        series: data.data,
+                        labels: data.type,
+                        total: data.total
+                      };
+                      var options = {
+                          labelInterpolationFnc: function(name,value) {
+                           var percentage = Math.round(data.series[value].value / (data.series[0].value+data.series[1].value) * 100) + '%';
+                           return data.labels[value] + ' ' + data.series[value].value +' = '+percentage;
+                          },
+                           plugins: [Chartist.plugins.legend({
+                            legendNames:data.labels,
+                            })]
+                         };
+                        var sum = function(a, b) { return a + b };
 
-                }, {
-                    scaleMinSpace: 20,
-                    fullWidth: true,
-                    chartPadding: {
-                        right: 40
-                    },
-                    plugins: [
-                        Chartist.plugins.legend({
+                        var responsiveOptions = [
+                          ['screen and (min-width: 350px)', {
+                            chartPadding: 30,
+                            labelOffset: 100,
+                            labelDirection: 'explode'
+                          }],
+                          ['screen and (min-width: 1024px)', {
+                            labelOffset: 80,
+                            chartPadding: 20
+                          }]
+                        ];
 
-                        })
-                    ]
-                });
-            },
+                    new Chartist.Pie('#chart-chartTicketsScopeChangeTotal', data, options);
+            }
+            });
+        },
 
-        });
+        chartEv: function () {
 
-
-    },
-
-    chartAc: function () {
-        $.ajax({
-            type: "GET",
-            url: API_PATH + "kpis/chartAc",
-            contentType: "application/json; charset=utf-8",
-            data: {project_id: $("#project_id").val()},
-            dataType: "json",
-            success: function (data) {
-
-
-                new Chartist.Bar('#chart-ac', {
-                    labels: data.months,
-                    series:data.data
-
-                }, {
-                    scaleMinSpace: 20,
-                    fullWidth: true,
-                    chartPadding: {
-                        right: 40
-                    },
-                    plugins: [
-                        Chartist.plugins.legend({
-
-                        })
-                    ]
-                });
-            },
-
-        });
-    },
-
-    chartPv: function () {
-        $.ajax({
-            type: "GET",
-            url: API_PATH + "kpis/chartPv",
-            contentType: "application/json; charset=utf-8",
-            data: {project_id: $("#project_id").val()},
-            dataType: "json",
-            success: function (data) {
+            $.ajax({
+                type: "GET",
+                url: API_PATH + "dashboard/chartEv",
+                contentType: "application/json; charset=utf-8",
+                data: {project_id: $("#project_id").val()},
+                dataType: "json",
+                success: function (data) {
 
 
-                new Chartist.Bar('#chart-pv', {
-                    labels: data.months,
-                    series:data.data
+                    new Chartist.Bar('#chart-ev', {
+                        labels: [data.data[0].name],
+                        series:data.data
 
-                }, {
-                    scaleMinSpace: 20,
-                    fullWidth: true,
-                    chartPadding: {
-                        right: 40
-                    },
-                    plugins: [
-                        Chartist.plugins.legend({
+                    }, {
+                        scaleMinSpace: 20,
+                        seriesBarDistance: 12,
+                        fullWidth: true,
+                        chartPadding: {
+                            right: 40
+                        },
+                        plugins: [
+                            Chartist.plugins.legend({
 
-                        })
-                    ]
-                });
-            },
+                            })
+                        ]
+                    });
+                },
 
-        });
-    },
+            });
+        },
+
+        chartAc: function () {
+            $.ajax({
+                type: "GET",
+                url: API_PATH + "dashboard/chartAc",
+                contentType: "application/json; charset=utf-8",
+                data: {project_id: $("#project_id").val()},
+                dataType: "json",
+                success: function (data) {
 
 
- 
+                    new Chartist.Bar('#chart-ac', {
+                        labels: [data.data[0].name],
+                        series:data.data
+
+                    }, {
+                        scaleMinSpace: 20,
+                        fullWidth: true,
+                        chartPadding: {
+                            right: 40
+                        },
+                        plugins: [
+                            Chartist.plugins.legend({
+
+                            })
+                        ]
+                    });
+                },
+
+            });
+        },
+
+        chartPv: function () {
+            $.ajax({
+                type: "GET",
+                url: API_PATH + "dashboard/chartPv",
+                contentType: "application/json; charset=utf-8",
+                data: {project_id: $("#project_id").val()},
+                dataType: "json",
+                success: function (data) {
+
+
+                    new Chartist.Bar('#chart-pv', {
+                        labels: [data.data[0].name],
+                        series:data.data
+
+                    }, {
+                        scaleMinSpace: 20,
+                        fullWidth: true,
+                        chartPadding: {
+                            right: 40
+                        },
+                        plugins: [
+                            Chartist.plugins.legend({
+
+                            })
+                        ]
+                    });
+
+                    // new Chartist.Bar('#chart-pv', {
+                    //   labels: data.type,
+                    //   series: data.data
+                    // },{
+                    //   distributeSeries: true,
+                    // });
+
+
+                },
+
+            });
+        },
+
         chartTasks: function () {
             var project = this.PROJECTID==''?'':"?project_id="+this.PROJECTID;
 
@@ -482,16 +509,15 @@ this.chartTaskCompletedTotal();
                           chartPadding: 20
                         }]
                       ];
-  
+
                   new Chartist.Pie('#chart-chartTasks',data, options);
-  
+
                       
                 },
 
             });
         },
 
- 
         chartOverdueTasks: function () {
             var project = this.PROJECTID==''?'':"?project_id="+this.PROJECTID;
 
@@ -524,8 +550,7 @@ this.chartTaskCompletedTotal();
 
             });
         },
-
-        
+       
         chartTaskCompleted: function () {
             var project = this.PROJECTID==''?'':"?project_id="+this.PROJECTID;
 
@@ -533,7 +558,7 @@ this.chartTaskCompletedTotal();
                 type: "GET",
                 url: API_PATH + "dashboard/chartTaskCompleted"+project,
                 contentType: "application/json; charset=utf-8",
-//                data: {project_id: $("#project_id").val()},
+               // data: {project_id: $("#project_id").val()},
                 dataType: "json",
                 success: function (data) {
 
@@ -558,7 +583,7 @@ this.chartTaskCompletedTotal();
 
             });
         },
-   
+       
         chartPlannedHours: function () {
             var project = this.PROJECTID==''?'':"?project_id="+this.PROJECTID;
 
@@ -570,11 +595,9 @@ this.chartTaskCompletedTotal();
                 dataType: "json",
                 success: function (data) {
 
-
                     new Chartist.Bar('#chart-PlannedHours', {
                         labels: data.months,
                         series:data.data
-
                     }, {
                         scaleMinSpace: 20,
                         fullWidth: true,
@@ -583,7 +606,7 @@ this.chartTaskCompletedTotal();
                         },
                         plugins: [
                             Chartist.plugins.legend({
-
+                                classNames:data.type[0]
                             })
                         ]
                     });
@@ -701,7 +724,6 @@ this.chartTaskCompletedTotal();
             });
         },
 
-
         chartTicketsStatsstatus: function () {
             var project = this.PROJECTID==''?'':"?project_id="+this.PROJECTID;
            $.ajax({
@@ -721,8 +743,11 @@ this.chartTaskCompletedTotal();
                   var options = {
                       labelInterpolationFnc: function(name,value) {
                        var percentage = Math.round(data.series[value].value / data.total * 100) + '%';
-                       return data.labels[value] +' '+data.series[value].value+' = '+percentage;
-                         }
+                       return data.series[value].value+' = '+percentage;
+                         },
+                           plugins: [Chartist.plugins.legend({
+                            legendNames:data.labels,
+                            })]
                    };
                     var sum = function(a, b) { return a + b };
 
@@ -765,8 +790,11 @@ this.chartTaskCompletedTotal();
                   var options = {
                       labelInterpolationFnc: function(name,value) {
                        var percentage = Math.round(data.series[value].value / data.total * 100) + '%';
-                       return data.labels[value] +' '+data.series[value].value+' = '+percentage;
-                         }
+                       return data.series[value].value+' = '+percentage;
+                         },
+                       plugins: [Chartist.plugins.legend({
+                        legendNames:data.labels,
+                        })]
                    };
                     var sum = function(a, b) { return a + b };
 
@@ -790,7 +818,7 @@ this.chartTaskCompletedTotal();
             });
         },
 
-     chartCapacity: function () {
+        chartCapacity: function () {
                     var project = this.PROJECTID==''?'':"?project_id="+this.PROJECTID;
            $.ajax({
                 type: "GET",
@@ -800,24 +828,23 @@ this.chartTaskCompletedTotal();
                 dataType: "json",
                 success: function (data) {
 
-
-                        var data = {
+                    var data = {
                       series: data.data,
                       labels: data.type,
                       total:data.total,
                     };
                     var options = {
                         labelInterpolationFnc: function(name,value) {
-                         var percentage = Math.round(data.series[value].value / data.total * 100) + '%';
-                         return data.series[value].value+' = '+percentage;
-                           },
-                           plugins: [Chartist.plugins.legend({
-                            legendNames:data.labels,
-                            })]
-                     };
+                            var percentage = Math.round(data.series[value].value / data.total * 100) + '%';
+                            return data.series[value].value+' = '+percentage;
+                        },
+                        plugins: [Chartist.plugins.legend({
+
+                        })]
+                    };
                     var sum = function(a, b) { return a + b };
                     var responsiveOptions = [
-                      ['screen and (min-width: 350px)', {
+                      ['screen and (min-width: 640px)', {
                         chartPadding: 30,
                         labelOffset: 100,
                         labelDirection: 'explode'
@@ -829,15 +856,11 @@ this.chartTaskCompletedTotal();
                       }]
                     ];
                     
-
-                new Chartist.Pie('#chart-chartCapacity', data, options);
-
-                    
+                    new Chartist.Pie('#chart-chartCapacity', data, options);
                 },
 
             });
         },
-
 
         chartBugsStatus: function () {
             var project = this.PROJECTID==''?'':"&project_id="+this.PROJECTID;
@@ -845,10 +868,9 @@ this.chartTaskCompletedTotal();
                 type: "GET",
                 url: API_PATH + "dashboard/chartTicketsStatsType?type=2&option=2"+project,
                 contentType: "application/json; charset=utf-8",
-                data: {option: '2'},
+                // data: {option: '2'},
                 dataType: "json",
                 success: function (data) {
-
 
                   var data = {
                     series: data.data,
@@ -858,8 +880,11 @@ this.chartTaskCompletedTotal();
                   var options = {
                       labelInterpolationFnc: function(name,value) {
                        var percentage = Math.round(data.series[value].value / data.total * 100) + '%';
-                       return data.labels[value] + ' ' + data.series[value].value +' = '+percentage;
-                           }
+                       return  data.series[value].value +' = '+percentage;
+                           },
+                           plugins: [Chartist.plugins.legend({
+                            legendNames:data.labels,
+                            })]
                      };
                     var sum = function(a, b) { return a + b };
 
@@ -915,7 +940,6 @@ this.chartTaskCompletedTotal();
             });
         },
 
-        
         chartResourceUtilization: function () {
             var project = this.PROJECTID==''?'':"?project_id="+this.PROJECTID;
            $.ajax({
@@ -965,7 +989,6 @@ this.chartTaskCompletedTotal();
             });
         },
 
-
         chartIssues: function () {
             var project = this.PROJECTID==''?'':"?project_id="+this.PROJECTID;
            $.ajax({
@@ -985,8 +1008,11 @@ this.chartTaskCompletedTotal();
                     var options = {
                         labelInterpolationFnc: function(name,value) {
                          var percentage = Math.round(data.series[value].value / data.total * 100) + '%';
-                         return data.labels[value] + ' ' +data.series[value].value +' = '+percentage;
-                           }
+                         return data.series[value].value +' = '+percentage;
+                           },
+                           plugins: [Chartist.plugins.legend({
+                            legendNames:data.labels,
+                            })]
                      };
                     var sum = function(a, b) { return a + b };
 
@@ -1067,7 +1093,6 @@ this.chartTaskCompletedTotal();
 
             });
         },
-
 
     };
 

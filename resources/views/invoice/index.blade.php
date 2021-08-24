@@ -3,34 +3,6 @@
 @section('scripts')
 	@include('datatables.basic')
 	<script>
-	// $(function() {
-	// 	var tableName = 'invoices';
-	// 	var urlParameters = '?project_id={{ session('project_id') }}';
-	// 	var columns = [
-	//             { data: 'id', name: 'id', visible: true },
-	//             { data: 'number', name: 'number' },
-	//             { data: 'purchase_order', name: 'purchase_order' },
-	//             { data: 'concept', name: 'concept' },
-	//             { data: 'from', name: 'from' },
-	//             { data: 'to', name: 'to' },
-	//             { data: 'contact_name', name: 'contact_name' },
-	//             { data: 'currency_name', name: 'currency_name' },
-	//             { data: 'due_date', name: 'due_date' },
-	//             { data: 'total', name: 'total' },
-	//             { data: 'bill_to', name: 'bill_to' },
-	//             { data: 'remit_to', name: 'remit_to' },
-	//             { data: 'comments', name: 'comments' },
-	//             { data: 'actions', name: 'actions'}
-	//         ];
-
-	// 	var actions = [
-	// 		            { pre: '<a title="{{__('general.owner')}}" href="/invoices/rows/', post: '" class="table-actions"><i class="fa fa-list" aria-hidden="true"></i></a>' },
-	// 		            { pre: '<a title="{{__('general.edit')}}" href="/invoices/', post: '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' },
-	// 		            { pre: '<a title="{{__('general.delete')}}" href="/invoices/', post: '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>' }
-	// 		        ];
-
-	// 	DtablesUtil(tableName, columns, actions, urlParameters);
-	// });
 
 	$(function() {
 		var project = '{{session('project_id')}}';
@@ -70,34 +42,35 @@
 	            { data: 'comments', name: 'comments' },
 	            { data: 'actions', name: 'actions'}
 	        ],
-	        columnDefs: [ {
+	        columnDefs: [{
 	            targets: -1,
 	            data: null,
 	            render: function (data, type, row) {
 					if(row.emited=='0'){
-					return '' 
-+					'<a title="{{__('general.edit')}}" href="/invoices/rows/' + row.id + '" class="table-actions"><i class="fa fa-list" aria-hidden="true"></i></a>' 
+						return '' 
+						+'<a title="{{__('invoices.items')}}" href="/invoices/rows/' + row.id + '" class="table-actions"><i class="fa fa-list" aria-hidden="true"></i></a>' 
 
 						+'<a title="{{__('general.edit')}}" href="/invoices/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>'
-					 +	'<a title="{{__('general.delete')}}" href="/invoices/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
-							}else {
-								return '' +
-								'<a title="{{__('general.edit')}}" href="/invoices/rows/' + row.id + '" class="table-actions"><i class="fa fa-list" aria-hidden="true"></i></a>' ;
-
-		var actions = [
-			            { pre: '<a title="{{__('invoices.items')}}" href="/invoices/rows/', post: '" class="table-actions"><i class="fa fa-list" aria-hidden="true"></i></a>' },
-			            { pre: '<a title="{{__('general.edit')}}" href="/invoices/', post: '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' },
-                        <?php if (Auth::user()->hasPermission('delete.users')) { ?>
-                            { pre: '<a title="{{__('general.delete')}}" href="/invoices/', post: '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>' }
+						<?php if (Auth::user()->hasPermission('delete.users')) { ?>
+					 	+'<a title="{{__('general.delete')}}" href="/invoices/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
                         <?php } ?>
-			        ];
+					}else {
+						return '' 
+						+'<a title="{{__('invoices.items')}}" href="/invoices/rows/' + row.id + '" class="table-actions"><i class="fa fa-list" aria-hidden="true"></i></a>';
+					}
+				}
+			}],
+			initComplete: function(settings, json) {
+			    tableActions.initEdit();
+			    tableActions.initDelete('{{ __('general.confirm') }}');
+			}
+		});
+	});
 
 	$(document).ready(function() {
 		$("#datatables-length").append($(".dataTables_length"));
 		$("#datatables-pagination").append($(".simple_numbers"));
 	});
-
-
 
 	</script>
 @endsection

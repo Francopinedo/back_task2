@@ -15,7 +15,7 @@
 
                 <div class="md-input-wrapper">
                 	<label>{{ __('absence_types.days') }}</label>
-                	<input type="number" class="md-input" name="days"><span class="md-input-bar"></span>
+                	<input type="number" class="md-input" name="days" min="0"><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required days-error"></span></div>
 

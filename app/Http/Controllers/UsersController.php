@@ -102,14 +102,14 @@ class UsersController extends Controller
             $projectRoles = $this->getFromApi('GET', 'project_roles?company_id=' . $company->id);
         } else {
             $company = $this->getFromApi('GET', 'companies/fromUser/' . $user->id);
-            $cities = $this->getFromApi('GET', 'cities?country_id='.$user->country_id);
-            $companyRoles = $this->getFromApi('GET', 'company_roles');
-            $projectRoles = $this->getFromApi('GET', 'project_roles');
+            $cities = $this->getFromApi('GET', 'cities?company_id='.$company->id.'&cities?country_id='.$user->country_id);
+            $companyRoles = $this->getFromApi('GET', 'company_roles?company_id=' . $company->id);
+            $projectRoles = $this->getFromApi('GET', 'project_roles?company_id=' . $company->id);
 
         }
 
         if (is_object($user)) {
-            $offices = $this->getFromApi('GET', 'offices?city_id=' . $user->city_id);
+            $offices = $this->getFromApi('GET', 'offices?company_id='.$company->id.'&offices?city_id=' . $user->city_id);
         } else {
             $offices = array();
         }
@@ -291,17 +291,17 @@ class UsersController extends Controller
             }
         }
 
-        $company = $this->getFromApi('GET', 'companies/'. $request->company_id);
-        $domain = $company->domain->domain;
-        $dataFromTC = $data + ['dom' => $domain];
-        $res = $this->apiCall('POST', 'rcjoingeneralrooms', $dataFromTC);
+        // $company = $this->getFromApi('GET', 'companies/'. $request->company_id);
+        // $domain = $company->domain->domain;
+        // $dataFromTC = $data + ['dom' => $domain];
+        // $res = $this->apiCall('POST', 'rcjoingeneralrooms', $dataFromTC);
 
-        if(env('IREDMAIL_API_HOST'))
-        {
-            //creacion del mail llamando a iredmailapi.
-            $res = $this->iredmailApiCall('POST', 'mailbox', $dataFromTC);
-            $res = $this->iredmailApiCall('POST', 'rcuser', $dataFromTC);
-        }
+        // if(env('IREDMAIL_API_HOST'))
+        // {
+        //     //creacion del mail llamando a iredmailapi.
+        //     $res = $this->iredmailApiCall('POST', 'mailbox', $dataFromTC);
+        //     $res = $this->iredmailApiCall('POST', 'rcuser', $dataFromTC);
+        // }
 
         return response()->json();
     }
@@ -515,8 +515,8 @@ class UsersController extends Controller
                         $item['office_phone'] = $value[4];
                         $item['home_phone'] = $value[5];
                         $item['cell_phone'] = $value[6];
-
                         $item['workplace'] = $value[13];
+                        $item['timezone'] = $value[14];
 
 
 

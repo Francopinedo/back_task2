@@ -15,7 +15,7 @@
 
                 {{ csrf_field() }}
                 <input type="hidden" name="company_id" value="{{ isset($company_id)?$company_id:'' }}">
-                @if (Auth::user()->hasRole('user'))
+                @if (!Auth::user()->hasRole('admin'))
                     <input type="hidden" name="user_id" value="{{ Auth::id() }}">
                 @endif
                 <li class="uk-width-medium-1-2 uk-row-first">
@@ -92,9 +92,11 @@
                         <label>{{ __('users.city') }}</label>
                         <select name="city_id" id="city_id" data-md-selectize>
                             <option value="">{{ __('users.city') }}...</option>
-                            @foreach ($cities as $city)
-                                <option value="{{ $city->id }}">{{ $city->name }}</option>
-                            @endforeach
+                            @if(!empty($cities))
+                                @foreach ($cities as $city)
+                                    <option value="{{ $city->id }}">{{ $city->name }}</option>
+                                @endforeach
+                            @endif
                         </select>
                     </div>
                     <div class="parsley-errors-list filled"><span class="parsley-required city_id-error"></span>
@@ -105,9 +107,11 @@
                         <label>{{ __('users.office') }}</label>
                         <select name="office_id" id="office_id" data-md-selectize>
                             <option value="">{{ __('users.office') }}...</option>
-                            @foreach ($offices as $office)
-                                <option value="{{ $office->id }}">{{ $office->title }}</option>
-                            @endforeach
+                            @if(!empty($offices))
+                                @foreach ($offices as $office)
+                                    <option value="{{ $office->id }}">{{ $office->title }}</option>
+                                @endforeach
+                            @endif
                         </select>
                     </div>
                     <div class="parsley-errors-list filled"><span class="parsley-required office_id-error"></span>

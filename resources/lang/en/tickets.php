@@ -22,8 +22,8 @@ return [
 	'status_6'            	=> 'Resolved',
 	'status'              	=> 'Status',
 	'group'               	=> 'Group',
-	'group_1'             	=> 'Sprint',
-	'group_2'             	=> 'Backlog',
+	'group_1'             	=> 'Backlog',
+	'group_2'             	=> 'Sprint',
 	'sprint'              	=> 'Sprint',
 	'due_date'            	=> 'Due Date',
 	'requester'           	=> 'Requester',
@@ -67,5 +67,6 @@ return [
 	'estimated_progress'	=> 'Estimated Progress',
 	'contingency_plan'	    => 'Contingency Plan',
 	'title_project'			=> 'Tickets report for task:',
-	'tickets_test'			=> 'Editing tickets for Sprint:'
+	'tickets_test'			=> 'Editing tickets for Sprint:',
+	'select_sprint'			=> 'select a sprint'
 ];

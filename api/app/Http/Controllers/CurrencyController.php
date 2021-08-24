@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use DB;
+use App\Currency;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
-
-use App\Currency;
 use Transformers\CurrencyTransformer;
 
 /**
@@ -210,7 +210,12 @@ class CurrencyController extends Controller {
 	 */
   	public function datatables()
   	{
-  		$currencies = Currency::select(['id', 'name', 'code']);
+  		$currencies = DB::table('currencies')
+  			->select(
+  				'currencies.id', 
+  				'currencies.name', 
+  				'currencies.code')
+  			->get();
 
   		return Datatables::of($currencies)->make(true);
   	}

@@ -35,5 +35,8 @@ return [
 	          'comment'         => 'Comentario',
 	            'owner'         => 'Dueño',
 	    'ticket_detail'         => 'Detalles del Ticket',
- 	 'tickets_by_phase'         => 'Tickets por Hitos'
+ 	 'tickets_by_phase'         => 'Tickets por Hitos',
+ 	 'grouping_for'				=> 'Agrupado por',
+ 	 'grouping'					=> 'No se encontro valores en el campo release, phase, version, label y sprint',
+ 	 'grouping_field' 			=> 'Selecciona un campo de agrupamiento',
 ];

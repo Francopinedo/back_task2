@@ -4,13 +4,13 @@
     #edit_div.switcher_active {
         width: 70%;
     }
-
    
 </style>  
- <form role="form" method="POST" action="{{ url('tickets/update') }}" id="data-form-edit"
-              data-redirect-on-success="{{isset($redirect)?$redirect: url('tasks/'.$ticket->task_id.'/tickets') }}">
-               <div class="uk-alert uk-alert-danger hide_when_empty status_code-error" data-uk-alert=""></div>
-<div class="uk-grid" data-uk-grid-margin>
+ <form role="form" method="POST" action="{{ url('tickets/update') }}" id="data-form-edit" data-redirect-on-success="{{isset($redirect)?$redirect: url('tasks/'.$ticket->task_id.'/tickets') }}">
+    <li class="uk-width-medium-1-1 uk-row-first">
+        <div class="uk-alert uk-alert-danger hide_when_empty status_code-error" data-uk-alert=""></div>
+    </li>
+    <div class="uk-grid" data-uk-grid-margin>
     
 
        
@@ -35,6 +35,7 @@
                         <option value="2" {{ ($ticket->type == 2) ? 'selected' : '' }}>{{ __('tickets.type_2') }}</option>
                         <option value="3" {{ ($ticket->type == 3) ? 'selected' : '' }}>{{ __('tickets.type_3') }}</option>
                         <option value="4" {{ ($ticket->type == 4) ? 'selected' : '' }}>{{ __('tickets.type_4') }}</option>
+                        <option value="5" {{ ($ticket->type == 5) ? 'selected' : '' }}>{{ __('tickets.type_5') }}</option>
                     </select>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required type-error"></span></div>
@@ -63,19 +64,30 @@
                 <div class="parsley-errors-list filled"><span class="parsley-required status-error"></span></div>
                 <label>{{ __('tickets.group') }}</label>
                 <div class="md-input-wrapper md-input-filled">
-                    <select name="group" data-md-selectize>
+                    <select name="group" id="group2" data-md-selectize>
                         <option value="1" {{ ($ticket->group == 1) ? 'selected' : '' }}>{{ __('tickets.group_1') }}</option>
                         <option value="2" {{ ($ticket->group == 2) ? 'selected' : '' }}>{{ __('tickets.group_2') }}</option>
                     </select>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required group-error"></span></div>
 
-                <div class="md-input-wrapper md-input-filled">
+                <label id="sprint_label2" style="display: none;">{{ __('tickets.sprint') }}</label>
+                <div id="sprint2" style="display:none;" class="md-input-wrapper">
+                    <label>{{ __('tickets.sprint') }}</label>
+                    <select name="sprint_id" id="sprint_id2" data-md-selectize>
+                        @foreach ($sprints as $sprint)
+                            <option value="{{ ($sprint->id) }}" {{ ($sprint->id == $ticket->sprint_id)?'selected':'' }} >{{ $sprint->short_name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="parsley-errors-list filled"><span class="parsley-required sprint_id-error"></span></div>
+
+                {{-- <div class="md-input-wrapper md-input-filled">
                     <label>{{ __('tickets.sprint') }}</label>
                     <input type="text" class="md-input" name="sprint" value="{{ $ticket->sprint }}" required><span
                             class="md-input-bar"></span>
                 </div>
-                <div class="parsley-errors-list filled"><span class="parsley-required sprint-error"></span></div>
+                <div class="parsley-errors-list filled"><span class="parsley-required sprint-error"></span></div> --}}
 
                 <div class="md-input-wrapper md-input-filled">
                     <label>{{ __('tasks.due_date') }}</label>
@@ -111,7 +123,7 @@
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required priority-error"></span></div>
 				
-				</li>
+			</li>
             <li class="uk-width-medium-1-3 uk-row-first">
 			
                 <label>{{ __('tickets.severity') }}</label>
@@ -155,7 +167,7 @@
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required impact-error"></span></div>
 
-                <div class="md-input-wrapper md-input-filled">
+                {{-- <div class="md-input-wrapper md-input-filled">
                     <label>{{ __('tickets.version') }}</label>
                     <input type="text" class="md-input" name="version" value="{{ $ticket->version }}" required><span
                             class="md-input-bar"></span>
@@ -167,7 +179,7 @@
                     <input type="text" class="md-input" name="release" value="{{ $ticket->release }}" required><span
                             class="md-input-bar"></span>
                 </div>
-                <div class="parsley-errors-list filled"><span class="parsley-required release-error"></span></div>
+                <div class="parsley-errors-list filled"><span class="parsley-required release-error"></span></div> --}}
 
                 <div class="md-input-wrapper md-input-filled">
                     <label>{{ __('tickets.estimated_hours') }}</label>
@@ -296,7 +308,52 @@
         });
 
         $(document).ready(function () {
+            console.log($('#sprint_id2').val());
+            if($('#group2').val() === "2"){
+                
+                $('#sprint2').show();
+                $('#sprint_label2').show();
+                
+            }
+
             Ticket.init();
-        })
+
+
+            $('#group2').selectize();
+            $('#group2').on('change', function(){
+                
+                if($(this).val() == "2"){
+                    $('#sprint2').show();
+                    $('#sprint_label2').show();
+
+                    $.ajax({
+                        url: API_PATH + '/sprints',
+                        type: 'GET',
+                        data: {project_id: {{ session('project_id') }} },
+                        dataType: 'json',
+                    }).done(
+                        function (data) {
+                            var html = '<option value="">{{ __('tickets.select_sprint') }}</option>';
+
+                            $('#sprint_id2').selectize()[0].selectize.destroy();
+
+                            $.each(data.data, function (i, value) {
+                                html += '<option value="' + value.id + '">' + value.long_name + '</option>';
+                            });
+
+                            $('#sprint_id2').html(html);
+                            $('#sprint_id2').selectize();
+                        }
+                    );
+
+                }else{
+                    $('#sprint2').hide();
+                    $('#sprint_label2').hide();
+                }
+
+            });
+
+        });
+
         tableActions.initEditForm();
     </script>

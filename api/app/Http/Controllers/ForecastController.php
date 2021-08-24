@@ -59,7 +59,6 @@ class ForecastController extends Controller
     public function team(Request $request)
     {
 
-
         $request = (object)$request->all();
 
         $contract = Contract::find($request->contract_id);
@@ -123,12 +122,6 @@ class ForecastController extends Controller
         $customer_id = $request->customer_id;
         $project = $request->project_id;
         $contractResourcesResult = array();
-        $begin = new DateTime($request->period_from);
-        $end = new DateTime($request->period_to);
-        $end->setTime(0, 0, 1);
-        $interval = DateInterval::createFromDateString('1 day');
-        $period = new DatePeriod($begin, $interval, $end);
-
         foreach ($data as $contractResource) {
             $totaluser = 0;
             $absents_hours = 0;
@@ -140,6 +133,11 @@ class ForecastController extends Controller
             $array = $contractResource;
 
 
+            $begin = new DateTime($request->period_from);
+            $end = new DateTime($request->period_to);
+            $end->setTime(0, 0, 1);
+            $interval = DateInterval::createFromDateString('1 day');
+            $period = new DatePeriod($begin, $interval, $end);
 
 
            // foreach ($period as $dt) {
@@ -194,13 +192,13 @@ class ForecastController extends Controller
         $total = 0;
         $total_cost = 0;
         $total_real_hours = 0;
-        $invoice_currency_exchange = ExchangeRate::where('currency_id', $request->currency_id)->
-        where('company_id', $request->company_id)->first();
 
         foreach ($contractResourcesResult as $datum) {
 
             $sum = isset($datum->hours_available) ? $datum->hours_available : 0;
             $total_real_hours = $total_real_hours+ $sum;
+            $invoice_currency_exchange = ExchangeRate::where('currency_id', $request->currency_id)->
+            where('company_id', $request->company_id)->first();
             $exchangeresult = exchange($datum, $invoice_currency_exchange);
 
             $rate = $exchangeresult['rate'];
@@ -256,11 +254,11 @@ class ForecastController extends Controller
         $project = Project::find($request->project_id);
         foreach ($data as $datum) {
             $totaluser=0;
-            // $begin = new DateTime($request->period_from);
-            // $end = new DateTime($request->period_to);
-            // $end->setTime(0, 0, 1);
-            // $interval = DateInterval::createFromDateString('1 day');
-            // $period = new DatePeriod($begin, $interval, $end);
+            $begin = new DateTime($request->period_from);
+            $end = new DateTime($request->period_to);
+            $end->setTime(0, 0, 1);
+            $interval = DateInterval::createFromDateString('1 day');
+            $period = new DatePeriod($begin, $interval, $end);
 
             foreach ($period as $dt) {
                 $dow = $dt->format('w');
@@ -274,8 +272,8 @@ class ForecastController extends Controller
 
             $qty = isset($datum->qty) ? $datum->qty : 0;
             // echo $sum;
-            // $invoice_currency_exchange = ExchangeRate::where('currency_id', $request->currency_id)->
-            // where('company_id', $request->company_id)->first();
+            $invoice_currency_exchange = ExchangeRate::where('currency_id', $request->currency_id)->
+            where('company_id', $request->company_id)->first();
             // echo $invoice_currency_exchange;
             $datum->amount = $qty * ($totaluser * $datum->rate);
             $datum->cost = $qty * ($totaluser * $datum->cost);
@@ -486,7 +484,7 @@ class ForecastController extends Controller
 
         $total = 0;
         $total_cost = 0;
-        $monthly = 'monthly';
+        $frequency = 'monthly';
 
 
         $invoice_currency_exchange = ExchangeRate::where('currency_id', $request->currency_id)->
@@ -495,7 +493,7 @@ class ForecastController extends Controller
         foreach ($dataReal as $datum) {
 
             $exchangeresult = exchange($datum, $invoice_currency_exchange);
-            $frequency = isset($datum->frequency) && $datum->frequency != null && $datum->frequency != '' ? $datum->frequency : $monthly;
+            $frequency = isset($datum->frequency) && $datum->frequency != null && $datum->frequency != '' ? $datum->frequency : $frequency;
 
             $days = $datum->days;
             switch ($frequency) {
@@ -554,7 +552,7 @@ class ForecastController extends Controller
 
 
             $exchangeresult = exchange($datum, $invoice_currency_exchange);
-            $frequency = isset($datum->frequency) && $datum->frequency != null && $datum->frequency != '' ? $datum->frequency : $monthly;
+            $frequency = isset($datum->frequency) && $datum->frequency != null && $datum->frequency != '' ? $datum->frequency : $frequency;
 
             $days = $datum->days;
 

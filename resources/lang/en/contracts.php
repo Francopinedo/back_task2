@@ -63,4 +63,5 @@ return [
 	'semester'        => 'Semester',
 	'file'			=> 'Download pdf',
 	'type_project'	=> 'Type Project',
+	'add_a_customer' => 'To operate with this module, a client must exist'
 ];

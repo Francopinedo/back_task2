@@ -56,11 +56,11 @@
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required" id="group-error"></span></div>
 
-                <div class="md-input-wrapper md-input-filled">
+                {{-- <div class="md-input-wrapper md-input-filled">
                 	<label>{{ __('tickets.sprint') }}</label>
                 	<input type="text" class="md-input" name="sprint" value="{{ $ticket->sprint }}" required><span class="md-input-bar"></span>
                 </div>
-                <div class="parsley-errors-list filled"><span class="parsley-required" id="sprint-error"></span></div>
+                <div class="parsley-errors-list filled"><span class="parsley-required" id="sprint-error"></span></div> --}}
 
                 <div class="md-input-wrapper md-input-filled">
                     <label>{{ __('tasks.due_date') }}</label>
@@ -119,7 +119,7 @@
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required" id="impact-error"></span></div>
 
-                <div class="md-input-wrapper md-input-filled">
+                {{-- <div class="md-input-wrapper md-input-filled">
                 	<label>{{ __('tickets.version') }}</label>
                 	<input type="text" class="md-input" name="version" value="{{ $ticket->version }}" required><span class="md-input-bar"></span>
                 </div>
@@ -129,7 +129,7 @@
                 	<label>{{ __('tickets.release') }}</label>
                 	<input type="text" class="md-input" name="release" value="{{ $ticket->release }}" required><span class="md-input-bar"></span>
                 </div>
-                <div class="parsley-errors-list filled"><span class="parsley-required" id="release-error"></span></div>
+                <div class="parsley-errors-list filled"><span class="parsley-required" id="release-error"></span></div> --}}
 
                 <div class="md-input-wrapper md-input-filled">
                 	<label>{{ __('tickets.estimated_hours') }}</label>

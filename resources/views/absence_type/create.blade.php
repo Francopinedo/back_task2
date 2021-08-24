@@ -36,6 +36,9 @@
                     <label>{{ __('users.city') }}</label>
                     <select name="city_id" id="city_id" data-md-selectize>
                         <option value="">{{ __('users.city') }}...</option>
+                        @foreach($cities as $city)
+                            <option value="{{ $city->id }}">{{ $city->name }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required city_id-error"></span>
@@ -55,6 +58,7 @@
 
 <script src="{{ asset('js/absenceType.js') }}"></script>
 <script type="text/javascript">
-
-    AbsenceType.init('<?php echo e(env('API_PATH')); ?>', '<?php echo e(env('APP_URL')); ?>');
+    $(function(){
+        AbsenceType.init('<?php echo e(env('API_PATH')); ?>', '<?php echo e(env('APP_URL')); ?>');
+    });
 </script>

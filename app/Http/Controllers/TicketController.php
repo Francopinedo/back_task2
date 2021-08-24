@@ -25,11 +25,14 @@ class TicketController extends Controller
         $contacts = $this->getFromApi('GET', 'contacts?company_id=' . $company->id);
         $task = $this->getFromApi('GET', 'tasks/' . $task_id);
         $users2 = $this->getFromApi('GET', 'users?company_id=' . $company->id);
+
+        $sprints = array();
         return view('ticket/index', [
             'users' => $users,
             'users2' => $users2,
             'contacts' => $contacts,
             'task' => $task,
+            'sprints' => $sprints,
         ]);
     }
 
@@ -44,7 +47,7 @@ class TicketController extends Controller
         $sprint = $this->getFromApi('GET', 'sprints/' . $sprints_id);
         $users2 = $this->getFromApi('GET', 'users?company_id=' . $company->id);
 
- return view('ticket/index_sprint', [
+        return view('ticket/index_sprint', [
             'users' => $users,
             'users2' => $users2,
             'contacts' => $contacts,
@@ -69,16 +72,16 @@ class TicketController extends Controller
         ]);
 
         if ($validator->fails()) {
-    return response()->json($validator->errors(), 422);
-  } $data = $request->all();
-
+            return response()->json($validator->errors(), 422);
+        } 
+        $data = $request->all();
+        
         $task = $this->getFromApi('GET', 'tasks/' . $data['task_id']);
         $current_resources = $this->getFromApi('GET', 'tickets?task_id=' . $data['task_id']);
         $hours = $request->estimated_hours;
 
-           if ($request->burned_hours<0 || $request->burned_hours > $request->estimated_hours) {
+        if ($request->burned_hours<0 || $request->burned_hours > $request->estimated_hours) {
             //echo $hours;
-
             return response()->json(array('estimated_hours' => array('The burned hours may not be greater than ' . $request->estimated_hours)), 422);
         } else {
             $res = $this->apiCall('POST', 'tickets', $data);
@@ -86,6 +89,7 @@ class TicketController extends Controller
             // validacion de la respuesta del api
             if (!empty(json_decode($res->getBody()->__toString(), TRUE)['error'])) {
                 $jsonRes = json_decode($res->getBody()->__toString(), TRUE)['error'];
+                dd($jsonRes);
                 Validator::make($jsonRes,
                     ['status_code' => [Rule::in(['201', '200'])]],
                     ['in' => __('api_errors.ticket_store')]
@@ -112,13 +116,16 @@ class TicketController extends Controller
         $users = $this->getFromApi('GET', 'task_resources?task_id=' . $ticket->task_id);
         $users2 = $this->getFromApi('GET', 'users?company_id=' . $company->id);
         $contacts = $this->getFromApi('GET', 'contacts?company_id=' . $company->id);
+        $sprints = $this->getFromApi('GET', 'sprints?project_id='.session('project_id').'&id='.$ticket->sprint_id);
+        
         return response()->json([
             'view' => view('ticket/edit', [
                 'ticket' => $ticket,
                 'contacts' => $contacts,
                 'project' => $project,
                 'users' => $users,
-                'users2' => $users2
+                'users2' => $users2,
+                'sprints' => $sprints,
             ])->render()
         ]);
     }
@@ -146,11 +153,8 @@ class TicketController extends Controller
         ]);
     }
 
-    public
-    function download(Request $request)
+    public function download(Request $request)
     {
-
-
         $destinationPath = "app/public/repository/" . $request->file;
         // echo $destinationPath;
         if ($exists = Storage::disk('repository')->exists($request->file)) {
@@ -159,7 +163,6 @@ class TicketController extends Controller
         } else {
             //  echo 'archivo no existe';
         }
-
     }
 
     public function uploadFile(Request $request)
@@ -206,21 +209,18 @@ class TicketController extends Controller
             'estimated_hours' => 'required|numeric|min:0',
           //  'burned_hours' => 'numeric|min:0|max:' . $b_hours,
         ]);
-
         if ($validator->fails()) {
-    return response()->json($validator->errors(), 422);
-  } $data = $request->all();
+            return response()->json($validator->errors(), 422);
+        } $data = $request->all();
 
         $task = $this->getFromApi('GET', 'tasks/' . $data['task_id']);
         $current_resources = $this->getFromApi('GET', 'tickets?task_id=' . $data['task_id']);
         $hours = $request->estimated_hours;
 
-
-
         if ($request->burned_hours<0 || $request->burned_hours > $request->estimated_hours) {
             //echo $hours;
 
-return response()->json(array('estimated_hours' => array('The burned hours may not be greater than ' . $request->estimated_hours)), 422);
+            return response()->json(array('estimated_hours' => array('The burned hours may not be greater than ' . $request->estimated_hours)), 422);
         } else {
             $res = $this->apiCall('PATCH', 'tickets/' . $data['id'], $data);
             // validacion de la respuesta del api

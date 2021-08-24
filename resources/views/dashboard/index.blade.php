@@ -38,6 +38,7 @@
         font-size:12px!important;
         left: 25px;
         position: absolute;
+        width: auto!important;
     }
 
     .ct-legend {
@@ -230,7 +231,7 @@
         display: block;
         position: absolute;
         top: 0;
-        left: -30px;
+        left: 0px;
     }
 </style>
 
@@ -255,36 +256,40 @@
 
                 @if (!Auth::user()->hasRole('admin') )
 
-
-
                     <input type="hidden" id="project_id" value="{{session('project_id')}}">
                     @foreach ($categories as $category)
 
                         <div class="uk-width-1-1" style="margin-top:13px!important">
                        
                         
-                    @if(array_search($category->id, array_column($kpis, 'category'))!== false)
-                            <div class="uk-alert uk-alert-info" data-uk-alert style='font-size:20px;'>
-                                {{ $category->name}}
-                            </div>
-                         @endif
+                            @if(array_search($category->id, array_column($kpis, 'category'))!== false)
+                                <div class="uk-alert uk-alert-info" data-uk-alert style='font-size:20px;'>
+                                    {{ $category->name}}
+                                </div>
+                            @endif
                             <div data-slick='{"slidesToShow": 3, "slidesToScroll": 3}' class="slick">
                                 @foreach ($kpis as $kpi)
                                     @if($kpi->category==$category->id && $kpi->showdashboard=='1')
-                                 @if($kpi->kpi=="EV or BCWP")
-                                       
-                                        <div class="pd-2 border_dashboard">
-                                            <h2>{{$kpi->kpi}}</h2><h5>  {{$kpi->description}}</h5>
-                                            <div id="chart-ev" class="ct-chart ct-perfect-fourth" ></div>
-                                        </div>
+                                        @if(session('project_id'))
+                                            @if($kpi->kpi=="EV or BCWP")
+                                                <div class="pd-2 border_dashboard">
+                                                    <h2>{{$kpi->kpi}}, AC or ACWP, PV or BCWS</h2><h5>  {{$kpi->description}}</h5>
+                                                    <div id="chart-ev-total" class="ct-chart ct-perfect-fourth" ></div>
+                                                </div>
+                                            @endif
+                                        @endif
+                                        @if($kpi->kpi=="EV or BCWP")
+                                            <div class="pd-2 border_dashboard">
+                                                <h2>{{$kpi->kpi}}</h2><h5>  {{$kpi->description}}</h5>
+                                                <div id="chart-ev" class="ct-chart ct-perfect-fourth" ></div>
+                                            </div>
                                         @endif
                                   
-
                                         @if($kpi->kpi=='Total Risk Tickets')
-                                        <div class="pd-2 border_dashboard">
-                                            <h2>{{$kpi->kpi}}</h2><h5>  {{$kpi->description}}</h5>
-                                            <div id="chart-chartTicketsRiskTotal" class="ct-chart ct-perfect-fourth " ></div>
-                                        </div>
+                                            <div class="pd-2 border_dashboard">
+                                                <h2>{{$kpi->kpi}}</h2><h5>  {{$kpi->description}}</h5>
+                                                <div id="chart-chartTicketsRiskTotal" class="ct-chart ct-perfect-fourth " ></div>
+                                            </div>
                                         @endif
 
 
@@ -296,181 +301,173 @@
                                         @endif --}}
 
                                         @if($kpi->kpi=='Total Scope Changes Tickets')
-                                        <div class="pd-2 border_dashboard">
-                                            <h2>{{$kpi->kpi}}</h2><h5>  {{$kpi->description}}</h5>
-                                            <div id="chart-chartTicketsScopeChangeTotal" class="ct-chart  ct-perfect-fourth "></div>
-                                        </div>
+                                            <div class="pd-2 border_dashboard">
+                                                <h2>{{$kpi->kpi}}</h2><h5>  {{$kpi->description}}</h5>
+                                                <div id="chart-chartTicketsScopeChangeTotal" class="ct-chart  ct-perfect-fourth "></div>
+                                            </div>
                                         @endif
                                     
                                         @if($kpi->kpi=='Tickets By Priority')
-                                        <div class="pd-2 border_dashboard">
-                                            <h2>{{$kpi->kpi}}</h2><h5>  {{$kpi->description}}</h5>
-                                            <div id="chart-chartTicketsbyPriority" class="ct-chart ct-perfect-fourth " ></div>
-                                        </div>
+                                            <div class="pd-2 border_dashboard">
+                                                <h2>{{$kpi->kpi}}</h2><h5>  {{$kpi->description}}</h5>
+                                                <div id="chart-chartTicketsbyPriority" class="ct-chart ct-perfect-fourth " ></div>
+                                            </div>
                                         @endif
+
                                         @if($kpi->kpi=='Tickets By Type')
-                                        <div class="pd-2 border_dashboard">
-                                            <h2>{{$kpi->kpi}}</h2><h5>  {{$kpi->description}}</h5>
-                                            <!-- <script> Dashboard.chartTicketsStatstype();</script> -->
-                                            <div id="chart-chartTicketsbyType" class="ct-chart ct-perfect-fourth "></div>
-                                        </div>
+                                            <div class="pd-2 border_dashboard">
+                                                <h2>{{$kpi->kpi}}</h2><h5>  {{$kpi->description}}</h5>
+                                                <!-- <script> Dashboard.chartTicketsStatstype();</script> -->
+                                                <div id="chart-chartTicketsbyType" class="ct-chart ct-perfect-fourth "></div>
+                                            </div>
                                         @endif
+
                                         @if($kpi->kpi=='Tickets By Status')
-                                        <div class="pd-2 border_dashboard">
-                                            <h2>{{$kpi->kpi}}</h2><h5>  {{$kpi->description}}</h5>
-                                            <div id="chart-chartTicketsbyStatus" class="ct-chart ct-perfect-fourth "></div>
-                                        </div>
+                                            <div class="pd-2 border_dashboard">
+                                                <h2>{{$kpi->kpi}}</h2><h5>  {{$kpi->description}}</h5>
+                                                <div id="chart-chartTicketsbyStatus" class="ct-chart ct-perfect-fourth "></div>
+                                            </div>
                                         @endif
+
                                         @if($kpi->kpi=='Tasks by Status')
-                                        <div class="pd-2 border_dashboard">
-                                            <h2>{{$kpi->kpi}}</h2><h5>  {{$kpi->description}}</h5>
-                                            <div id="chart-chartTasks" class="ct-chart  ct-perfect-fourth "></div>
-                                        </div>
+                                            <div class="pd-2 border_dashboard">
+                                                <h2>{{$kpi->kpi}}</h2><h5>  {{$kpi->description}}</h5>
+                                                <div id="chart-chartTasks" class="ct-chart  ct-perfect-fourth "></div>
+                                            </div>
                                         @endif
+
                                         @if($kpi->kpi=='Defects or Bugs by Status')
-                                        <div class="pd-2 border_dashboard">
-                                            <h2>{{$kpi->kpi}}</h2><h5>  {{$kpi->description}}</h5>
-                                            <div id="chart-chartBugsStatus" class="ct-chart  ct-perfect-fourth "></div>
-                                        </div>
+                                            <div class="pd-2 border_dashboard">
+                                                <h2>{{$kpi->kpi}}</h2><h5>  {{$kpi->description}}</h5>
+                                                <div id="chart-chartBugsStatus" class="ct-chart  ct-perfect-fourth "></div>
+                                            </div>
                                         @endif
 
                                         @if($kpi->kpi=='Requirements')
-                                        <div class="pd-2 border_dashboard">
-                                            <h2>{{$kpi->kpi}}</h2><h5>  {{$kpi->description}}</h5>
-                                            <div id="chart-chartRequirements" class="ct-chart  ct-perfect-fourth "></div>
-                                        </div>
+                                            <div class="pd-2 border_dashboard">
+                                                <h2>{{$kpi->kpi}}</h2><h5>  {{$kpi->description}}</h5>
+                                                <div id="chart-chartRequirements" class="ct-chart  ct-perfect-fourth "></div>
+                                            </div>
                                         @endif
 
                                         @if($kpi->kpi=='Issues')
-                                        <div class="pd-2 border_dashboard">
-                                            <h2>{{$kpi->kpi}}</h2><h5>  {{$kpi->description}}</h5>
-                                            <div id="chart-chartIssues" class="ct-chart  ct-perfect-fourth "></div>
-                                        </div>
+                                            <div class="pd-2 border_dashboard">
+                                                <h2>{{$kpi->kpi}}</h2><h5>  {{$kpi->description}}</h5>
+                                                <div id="chart-chartIssues" class="ct-chart  ct-perfect-fourth "></div>
+                                            </div>
                                         @endif
 
                                         @if($kpi->kpi=='Missing Milestones')
-                                        <div class="pd-2 border_dashboard">
-                                            <h2>{{$kpi->kpi}}</h2><h5>  {{$kpi->description}}</h5>
-                                            <div id="chart-percentMissingMilestone" class="ct-chart  ct-perfect-fourth "></div>
-                                        </div>
+                                            <div class="pd-2 border_dashboard">
+                                                <h2>{{$kpi->kpi}}</h2><h5>  {{$kpi->description}}</h5>
+                                                <div id="chart-percentMissingMilestone" class="ct-chart  ct-perfect-fourth "></div>
+                                            </div>
                                         @endif
-
                                         
                                         @if($kpi->kpi=='Risk Schedule')
-                                        <div class="pd-2 border_dashboard">
-                                            <h2>{{$kpi->kpi}}</h2><h5>  {{$kpi->description}}</h5>
-                                            <div id="chart-chartMilestonesTasks" class="ct-chart  ct-perfect-fourth "></div>
-                                        </div>
+                                            <div class="pd-2 border_dashboard">
+                                                <h2>{{$kpi->kpi}}</h2><h5>  {{$kpi->description}}</h5>
+                                                <div id="chart-chartMilestonesTasks" class="ct-chart  ct-perfect-fourth "></div>
+                                            </div>
                                         @endif
 
+                                        @if($kpi->kpi=='Overdue Tasks')
 
-                                            @if($kpi->kpi=='Overdue Tasks')
-
-                                                        <?php
-                                                        //de donde saco el status?
-                                                        ?>
-                                                        <div class="pd-2 border_dashboard">
-                                                            <h2>{{$kpi->kpi}}</h2><h5> {{$kpi->description}}</h5>
-                                                            <div id="chart-chartOverdueTasksTotal" class="ct-chart  ct-perfect-fourth "></div>
-                                                        </div>
-                                        @endif
-                                        @if($kpi->kpi=='Task Completed')
-
-                                                <div class="pd-2 border_dashboard">
+                                            <?php
+                                            //de donde saco el status?
+                                            ?>
+                                            <div class="pd-2 border_dashboard">
                                                 <h2>{{$kpi->kpi}}</h2><h5> {{$kpi->description}}</h5>
-                                                <div id="chart-chartTaskCompletedTotal" class="ct-chart  ct-perfect-fourth "> </div>
-                                                </div>
-                                                @endif
+                                                <div id="chart-chartOverdueTasksTotal" class="ct-chart  ct-perfect-fourth "></div>
+                                            </div>
+                                        @endif
+
+                                        @if($kpi->kpi=='Task Completed')
+                                            <div class="pd-2 border_dashboard">
+                                            <h2>{{$kpi->kpi}}</h2><h5> {{$kpi->description}}</h5>
+                                            <div id="chart-chartTaskCompletedTotal" class="ct-chart  ct-perfect-fourth "> </div>
+                                            </div>
+                                        @endif
                                         @if(!session()->has('project_id') && session('project_id')=='')
 
                                     
-                                      @endif
-                                    @if(session()->has('project_id') && !session('project_id')=='')
-                                        <!-- @if($kpi->kpi=='Overdue Tasks')
-
-                                                            <div class="pd-2 border_dashboard">
-                                                                <h2>{{$kpi->kpi}}</h2><h5> {{$kpi->description}}</h5>
-                                                                <div id="chart-OverdueTasks" class="ct-chart ct-perfect-fourth " ></div>
-                                                            </div>
-                                         @endif -->
-                                        @if($kpi->kpi=='Chart Capacity')
-                                        <div class="pd-2 border_dashboard">
-                                            <h2>{{$kpi->kpi}}</h2><h5>  {{$kpi->description}}</h5>
-                                            <div id="chart-chartCapacity" class="ct-chart ct-perfect-fourth "></div>
-                                        </div>
                                         @endif
-                              <!-- @if($kpi->kpi=='Task Completed')
-
-                                            <div class="pd-2 border_dashboard">
-                                            <h2>{{$kpi->kpi}}</h2><h5> {{$kpi->description}}</h5>
-                                            <div id="chart-TaskCompleted" class="ct-chart ct-perfect-fourth " > </div>
-                                            </div>
-                                            @endif -->
-
+                                        @if(session()->has('project_id') && !session('project_id')=='')
+                                            {{-- @if($kpi->kpi=='Overdue Tasks')
+                                                <div class="pd-2 border_dashboard">
+                                                    <h2>{{$kpi->kpi}}</h2><h5> {{$kpi->description}}</h5>
+                                                    <div id="chart-OverdueTasks" class="ct-chart ct-perfect-fourth " ></div>
+                                                </div>
+                                            @endif  --}}
+                                            @if($kpi->kpi=='Chart Capacity')
+                                                <div class="pd-2 border_dashboard">
+                                                    <h2>{{$kpi->kpi}}</h2><h5>  {{$kpi->description}}</h5>
+                                                    <div id="chart-chartCapacity" class="ct-chart ct-perfect-fourth "></div>
+                                                </div>
+                                            @endif
+                                            <!-- Se comento, que al loguear un proyecto se duplica y sale vacio -->
+                                            {{-- @if($kpi->kpi=='Task Completed')
+                                                <div class="pd-2 border_dashboard">
+                                                <h2>{{$kpi->kpi}}</h2><h5> {{$kpi->description}}</h5>
+                                                <div id="chart-TaskCompleted" class="ct-chart ct-perfect-fourth " > </div>
+                                                </div>
+                                            @endif --}}
                                         @endif
                                       
-                                         @if(session()->has('project_id') && !session('project_id')=='')
+                                        @if(session()->has('project_id') && !session('project_id')=='')
 
-                                         @if($kpi->kpi=='AC or ACWP')
+                                            @if($kpi->kpi=='AC or ACWP')
+                                                <div class="pd-2 border_dashboard">
+                                                    <h2>{{$kpi->kpi}}</h2><h5>  {{$kpi->description}}</h5>
+                                                    <div id="chart-ac" class="ct-chart ct-perfect-fourth" ></div>
+                                                </div>
+                                            @endif
 
-                                        <div class="pd-2 border_dashboard">
-                                            <h2>{{$kpi->kpi}}</h2><h5>  {{$kpi->description}}</h5>
-                                            <div id="chart-ac" class="ct-chart ct-perfect-fourth" ></div>
-                                        </div>
-                                        @endif
-					                @if($kpi->kpi=='PV or BCWS')
-                                        <div class="pd-2 border_dashboard">
-                                            <h2>{{$kpi->kpi}}</h2><h5>  {{$kpi->description}}</h5>
-                                            <div id="chart-pv" class="ct-chart ct-perfect-fourth" ></div>
-                                        </div>
-                                        @endif
+                                            @if($kpi->kpi=='PV or BCWS')
+                                                <div class="pd-2 border_dashboard">
+                                                    <h2>{{$kpi->kpi}}</h2><h5>  {{$kpi->description}}</h5>
+                                                    <div id="chart-pv" class="ct-chart ct-perfect-fourth" ></div>
+                                                </div>
+                                            @endif
 
-                                         @if($kpi->kpi=='Planned Hours')
-                                        <div class="pd-2 border_dashboard">
-                                            <h2>{{$kpi->kpi}}</h2><h5> {{$kpi->description}}</h5>
-                                            <div id="chart-PlannedHours" class="ct-chart  ct-perfect-fourth "></div>
-                                        </div>
-                                        @endif
-
-                                        
+                                            @if($kpi->kpi=='Planned Hours')
+                                                <div class="pd-2 border_dashboard">
+                                                    <h2>{{$kpi->kpi}}</h2><h5> {{$kpi->description}}</h5>
+                                                    <div id="chart-PlannedHours" class="ct-chart  ct-perfect-fourth "></div>
+                                                </div>
+                                            @endif
                                         @endif
 
                                         @if(session()->has('project_id') && !session('project_id')=='')
-                                         @if($kpi->kpi=='Completed Projects')
-                                        <?php
-                                        //PENDIENTE, NO SE QUE TIPO DE GRAFICO VA
-                                        ?>
-                                        <div class="pd-2 border_dashboard">
-                                            <h2>{{$kpi->kpi}}</h2><h5> {{$kpi->description}}</h5>
-                                            <div id="chart-CompletedProjects" class="ct-chart  ct-perfect-fourth "></div>
-                                        </div>
+                                            @if($kpi->kpi=='Completed Projects')
+                                                <?php
+                                                //PENDIENTE, NO SE QUE TIPO DE GRAFICO VA
+                                                ?>
+                                                <div class="pd-2 border_dashboard">
+                                                    <h2>{{$kpi->kpi}}</h2><h5> {{$kpi->description}}</h5>
+                                                    <div id="chart-CompletedProjects" class="ct-chart  ct-perfect-fourth "></div>
+                                                </div>
+                                            @endif
                                         @endif
-                                        @endif
+
                                         @if(session()->has('project_id') && !session('project_id')=='')
-
-                                         @if($kpi->kpi=='Cancelled Projects')
-                                        <?php
- 
-
-                                        //PENDIENTE, NO SE QUE TIPO DE GRAFICO VA
-                                        ?>
-                                        <div class="pd-2 border_dashboard">
-                                            <h2>{{$kpi->kpi}}</h2><h5> {{$kpi->description}}</h5>
-                                            <div id="chart-CancelledProjects" class="ct-chart  ct-perfect-fourth "></div>
-                                        </div>
+                                            @if($kpi->kpi=='Cancelled Projects')
+                                                <?php
+                                                //PENDIENTE, NO SE QUE TIPO DE GRAFICO VA
+                                                ?>
+                                                <div class="pd-2 border_dashboard">
+                                                    <h2>{{$kpi->kpi}}</h2><h5> {{$kpi->description}}</h5>
+                                                    <div id="chart-CancelledProjects" class="ct-chart  ct-perfect-fourth "></div>
+                                                </div>
+                                            @endif
                                         @endif
-                                        @endif
-                                      
-
                                     @endif
 
                                 @endforeach
                             </div>
                         </div>
                     @endforeach
-
-
-            </div>
+                </div>
             @endif
         </div>
     </div>

@@ -40,9 +40,9 @@
                     data: null,
                     render: function (data, type, row) {
                         return '' +
-                            '<a title={{__('general.edit')}} href="/additional_hours/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
+                            '<a title={{__('general.edit')}} href="/additional_hours/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>'
                             <?php if (Auth::user()->hasPermission('delete.users')) { ?>
-                                '<a title={{__('general.delete')}} href="/additional_hours/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+                                +'<a title={{__('general.delete')}} href="/additional_hours/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
                             <?php } ?>
                     }
                 }],
@@ -90,10 +90,10 @@
 
             });
 
-            $(document).ready(function () {
-                tableActions.initAjaxCreate();
-                tableActions.initDelete('{{ __('general.confirm') }}');
-            });
+        });
+        $(document).ready(function () {
+            tableActions.initAjaxCreate();
+            tableActions.initDelete('{{ __('general.confirm') }}');
         });
     </script>
 @endsection

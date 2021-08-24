@@ -15,7 +15,6 @@ class Ticket extends Model {
 							'assignee_id',
 							'status',
 							'group',
-							'sprint',
 							'last_updater_id',
 							'due_date',
 							'requester_name',
@@ -25,16 +24,15 @@ class Ticket extends Model {
 							'severity',
 							'probability',
 							'impact',
-							'version',
-							'release',
+							'milestone',
 							'estimated_hours',
 							'burned_hours',
 							'story_points',
 							'approval_date',
 							'approver_name',
-							'acceptance_criteria',
 							'testing_criteria',
 							'done_criteria',
+							'acceptance_criteria',
 							'label',
 							'comment',
 							'owner_id',
@@ -42,7 +40,12 @@ class Ticket extends Model {
 							'sprint_id'
 						);
 
-public function Sprint()
+	public function User()
+	{
+		return $this->belongsTo('App\User', 'assignee_id');
+	}
+
+	public function Sprint()
 	{
 		return $this->belongsTo('App\Sprints');
 	}

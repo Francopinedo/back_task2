@@ -133,7 +133,7 @@
                                         <th title="{{ __('tickets_tooltip.assignee') }}">{{ __('tickets.assignee') }}</th>
                                         <th title="{{ __('tickets_tooltip.status') }}">{{ __('tickets.status') }}</th>
                                         <th title="{{ __('tickets_tooltip.group') }}">{{ __('tickets.group') }}</th>
-                                        <th title="{{ __('tickets_tooltip.sprint') }}">{{ __('tickets.sprint') }}</th>
+                                        {{-- <th title="{{ __('tickets_tooltip.sprint') }}">{{ __('tickets.sprint') }}</th> --}}
                                         <th title="{{ __('tickets_tooltip.due_date') }}">{{ __('tickets.due_date') }}</th>
                                         <th title="{{ __('tickets_tooltip.requester') }}">{{ __('tickets.requester') }}</th>
 

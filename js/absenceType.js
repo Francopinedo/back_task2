@@ -25,12 +25,16 @@ var AbsenceType = (function () {
 
         events: function () {
 
+            var country =  "#country_id", city="#city_id";
+            
+            if($("#country_id2").length>0){
+                country = "#country_id2";
+                city = "#city_id2";
+            }
 
-            // $('#city_id').selectize();
-            // $('#city_id2').selectize();
+            $(city).selectize();
 
-            $("#country_id2").on('change', function () {
-                console.log('chage....');
+            $(country).on('change', function () {
                 $.ajax({
                     url: AbsenceType.API_PATH + '/cities',
                     type: 'GET',
@@ -38,17 +42,16 @@ var AbsenceType = (function () {
                     dataType: 'json'
                 }).done(
                     function (data) {
-                        var html = '<option value="">Country...</option>';
+                        var html = '<option value="">City...</option>';
 
-                        $('#city_id2').selectize()[0].selectize.destroy();
+                        $(city).selectize()[0].selectize.destroy();
 
                         $.each(data.data, function (i, value) {
-                            console.log(value);
                             html += '<option value="' + value.id + '">' + value.name + '</option>';
                         });
 
-                        $('#city_id2').html(html);
-                        $('#city_id2').selectize();
+                        $(city).html(html);
+                        $(city).selectize();
 
 
 

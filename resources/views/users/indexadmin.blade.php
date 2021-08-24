@@ -5,7 +5,7 @@
     <script>
         $(function () {
             var tableName = 'users';
-            var urlParameters = '?company_id={{ isset($company)?$company->id:'' }}' + '&user_id={{ (!Auth::user()->hasRole("admin"))?"true":"false" }}';
+            var urlParameters = '?company_id={{ isset($company)?$company->id:'' }}' + '&user_id={{ (Auth::user()->hasRole("admin"))?"true":"false" }}';
             var columns = [
                 {data: 'id', name: 'id', visible: false},
                 {data: 'name', name: 'name'},

@@ -84,6 +84,7 @@ return [
     'unique'               => 'El :attribute ya esta siendo usado.',
     'uploaded'             => 'El :attribute fallo al cargar.',
     'url'                  => 'El format de :attribute no es valido.',
+    'phone'                => 'El formato :attribute no es el correcto',
 
     /*
     |--------------------------------------------------------------------------

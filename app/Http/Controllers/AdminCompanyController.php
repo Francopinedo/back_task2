@@ -21,14 +21,16 @@ class AdminCompanyController extends Controller
      */
     public function index()
     {
-    	$res = $this->apiCall('GET', 'cities_template');
-    	//$cities = json_decode($res->getBody()->__toString())->data;
+    	$res = $this->apiCall('GET', 'cities');
+    	// $cities = json_decode($res->getBody()->__toString())->data;
 
     	$res = $this->apiCall('GET', 'currencies');
     	$currencies = json_decode($res->getBody()->__toString())->data;
 
     	$res = $this->apiCall('GET', 'industries');
     	$industries = json_decode($res->getBody()->__toString())->data;
+
+        $countries = $this->getFromApi('GET','countries');
 
     	if (Auth::user()->hasRole('admin'))
     	{
@@ -40,7 +42,8 @@ class AdminCompanyController extends Controller
     	}
 
         return view('admin_company/index', [
-        	//'cities' => $cities,
+        	// 'cities' => $cities,
+            'countries' => $countries,
         	'currencies' => $currencies,
         	'industries' => $industries,
         	'urlDatatables' => $urlDatatables
@@ -51,8 +54,8 @@ class AdminCompanyController extends Controller
     {
         $company = $this->getFromApi('GET', 'companies/'.$request->id.'?include=industry,city,currency');
 
-        // $cities = $this->getFromApi('GET', 'cities?company_id='.$company->id);
-        $cities = $this->getFromApi('GET', 'cities');
+        $cities = $this->getFromApi('GET', 'cities?company_id='.$company->id);
+        // $cities = $this->getFromApi('GET', 'cities');
         $currencies = $this->getFromApi('GET', 'currencies');
         $industries = $this->getFromApi('GET', 'industries');
 
@@ -64,8 +67,6 @@ class AdminCompanyController extends Controller
                 'industries'                => $industries
             ])->render(),
         ]);
-
-
     }
 
     /**
@@ -75,20 +76,43 @@ class AdminCompanyController extends Controller
     {
         // validacion del formulario
         $validator =Validator::make($request->all(), [
-
             'name'       => 'required'
         ]);
+
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
         $data = $request->all() + ['roomName' => 'General'];
 
+        /** Se guarda la ciudad de la compania  */
+        $new_city = [
+            'name' => $data['city_name'],
+            'location_name' => $data['city_name'],
+            'country_id' => $data['country_id'],
+            // 'company_id' => $company->id,
+            'added_by' => 'form'
+        ];
 
+        $res = $this->apiCall('POST', 'cities', $new_city);
+        $city = json_decode($res->getBody()->__toString())->data;
+
+        $data['city_id'] = $city->id; // Se asigna el identificador de la ciudad a la compania
+        
         //call taskcontrol-api for the creation of company and domain
         $apiRoutes = ["companies","irmdomain","irmmailadm","rcadmin","admin","rcgeneralchannel"];
         foreach ($apiRoutes as $route)
         {
-            $res = $this->apiCall('POST', $route, $data);
+            if($route == 'companies')
+            {
+                $res = $this->apiCall('POST', $route, $data);
+                
+                $company = json_decode($res->getBody()->__toString())->data;
+            }
+            else
+            {
+                $res = $this->apiCall('POST', $route, $data);
+            }
+
             // validacion de la respuesta del api
             if (!empty(json_decode($res->getBody()->__toString(), TRUE)['error']))
             {
@@ -98,13 +122,16 @@ class AdminCompanyController extends Controller
                     ['in' => __('api_errors.company_store')]
                 )->validate();
             }
-        };
+        }
+
+        $new_city['company_id'] = $company->id;
+        $res = $this->apiCall('PATCH', 'cities/'.$city->id, $new_city);
 
         //call iredmail-api for the creation of domain on mailserver
 
         if(env('IREDMAIL_API_HOST'))
         {
-            $irmApiRoutes = ['domain','admin_mailbox','rcadmin'];
+            $irmApiRoutes = ['irmdomain','admin_mailbox','rcadmin'];
             foreach($irmApiRoutes as  $route)
             {
                 $res = $this->iredmailApiCall('POST', $route, $data);

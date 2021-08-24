@@ -296,13 +296,13 @@
         </td>
         <td>
             {% if (!i && !o.options.autoUpload) { %}
-                <button title="{{__('catalog.start_upload_tooltip')}}" class="btn btn-primary start" disabled>
+                <button style="display:none;" title="{{__('catalog.start_upload_tooltip')}}" class="btn btn-primary start" disabled>
                     <i class="glyphicon glyphicon-upload"></i>
                     <span>{{__('catalog.start')}}</span>
                 </button>
             {% } %}
             {% if (!i) { %}
-                <button title="{{__('catalog.cancel_upload_tooltip')}}" class="btn btn-warning cancel">
+                <button style="display:none;" title="{{__('catalog.cancel_upload_tooltip')}}" class="btn btn-warning cancel">
                     <i class="glyphicon glyphicon-ban-circle"></i>
                     <span>{{__('catalog.cancel')}}</span>
                 </button>
@@ -384,7 +384,6 @@
 
         Catalog.useDirectory('<?php echo e(strtoupper(app()->getLocale())) ?>', '{{$type}}','{{$dir}}');
 
-        Catalog.useDirectory('<?php echo e(strtoupper(app()->getLocale())) ?>', '{{$type}}','{{$dir}}');
 
 
 

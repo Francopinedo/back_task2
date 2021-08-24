@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use DB;
+use App\Language;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
-
-use App\Language;
 use Transformers\LanguageTransformer;
 
 /**
@@ -186,7 +186,12 @@ class LanguageController extends Controller {
 	 */
   	public function datatables()
   	{
-  		$languages = Language::select(['id', 'name', 'code']);
+  		$languages = DB::table('languages')
+  			->select(
+  				'languages.id', 
+  				'languages.name', 
+  				'languages.code')
+  			->get();
 
   		return Datatables::of($languages)->make(true);
   	}

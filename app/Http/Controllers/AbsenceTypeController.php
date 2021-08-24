@@ -24,7 +24,7 @@ class AbsenceTypeController extends Controller
         $company = $this->getFromApi('GET', 'companies/fromUser/'.Auth::id());
     	$res = $this->apiCall('GET', 'countries');
     	$countries = json_decode($res->getBody()->__toString())->data;
-
+        $cities = $this->getFromApi('GET', 'cities?company_id='.$company->id);
 
         $absence_types = $this->getFromApi('GET', 'absence_types?company_id='.$company->id);
 
@@ -35,6 +35,7 @@ class AbsenceTypeController extends Controller
 
         return view('absence_type/index', [
         	'countries' => $countries,
+            'cities' => $cities,
         	'company' => $company,
         ]);
     }

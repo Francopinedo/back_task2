@@ -17,7 +17,7 @@ class CompanyTransformer extends TransformerAbstract
      * @var array
      */
     protected $availableIncludes = [
-        'industry', 'city', 'currency'
+        'country', 'industry', 'city', 'currency'
     ];
 
     public function transform(Company $company)
@@ -26,6 +26,7 @@ class CompanyTransformer extends TransformerAbstract
             'id' => $company->id,
             'name' => $company->name,
             'address' => $company->address,
+            'country_id' => $company->country_id,
             'city_id' => $company->city_id,
             'email' => $company->email,
             'phone' => $company->phone,

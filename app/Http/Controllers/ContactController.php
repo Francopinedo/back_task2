@@ -53,17 +53,12 @@ class ContactController extends Controller
 			'phone'                 => 'required|phone:VE,US,AR'
 	    ]);
 
-	if ($validator->fails()) {
-    return response()->json($validator->errors(), 422);
-  }
-
-
-
-
-    	if ($validator->fails()) {
-    return response()->json($validator->errors(), 422);
-  } $data = $request->all();
-	$data['user_id']=Auth::id();
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+ 
+        $data = $request->all();
+        $data['user_id']=Auth::id();
     	$res = $this->apiCall('POST', 'contacts', $data);
 
     	// validacion de la respuesta del api

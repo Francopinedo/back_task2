@@ -27,8 +27,8 @@ class CapacityPlanningController extends Controller
         $data['project'] = $this->getFromApi('GET', 'projects/' . session('project_id'));
 
         if (is_object($data['project'])) {
-            $data['contracts'] = $this->getFromApi('GET', 'contracts?project_id' . $data['project']->id);
-            $data['sprints'] = $this->getFromApi('GET', 'sprints?project_id' . $data['project']->id);
+            $data['contracts'] = $this->getFromApi('GET', 'contracts?project_id=' . $data['project']->id);
+            $data['sprints'] = $this->getFromApi('GET', 'sprints?project_id=' . $data['project']->id);
         }
 
         if (isset($data['contracts'])) {

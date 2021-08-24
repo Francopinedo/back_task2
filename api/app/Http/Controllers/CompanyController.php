@@ -31,6 +31,7 @@ class CompanyController extends Controller {
 	 *   		"id": "int",
      *  		"name": "string",
      *  		"address": "string",
+     *          "country_id": "int",
      *  		"city_id": "int",
      *  		"email": "int",
      *  		"phone": "string",
@@ -63,6 +64,7 @@ class CompanyController extends Controller {
 	 * @Request({
      *  		"name": "string",
      *  		"address": "string (opt)",
+     *          "country_id": "int",
      *  		"city_id": "int (opt)",
      *  		"email": "int (opt)",
      *  		"phone": "string (opt)",
@@ -82,6 +84,7 @@ class CompanyController extends Controller {
 	 *   		"id": "int",
      *  		"name": "string",
      *  		"address": "string",
+     *          "country_id": "int",
      *  		"city_id": "int",
      *  		"email": "int",
      *  		"phone": "string",
@@ -136,6 +139,7 @@ class CompanyController extends Controller {
 	 *   		"id": "int",
      *  		"name": "string",
      *  		"address": "string",
+     *          "country_id": "int",
      *  		"city_id": "int",
      *  		"email": "int",
      *  		"phone": "string",
@@ -193,6 +197,7 @@ class CompanyController extends Controller {
 	 * @Request({
      *  		"name": "string",
      *  		"address": "string" (opt),
+     *          "country_id": "int",
      *  		"city_id": "int" (opt),
      *  		"email": "int" (opt),
      *  		"phone": "string" (opt),
@@ -211,6 +216,7 @@ class CompanyController extends Controller {
 	 *   		"id": "int",
      *  		"name": "string",
      *  		"address": "string",
+     *          "country_id": "int",
      *  		"city_id": "int",
      *  		"email": "int",
      *  		"phone": "string",
@@ -298,12 +304,13 @@ class CompanyController extends Controller {
   	{
   		$query = DB::table('companies')
                     ->select(
-                    	'companies.id', 'companies.name', 'companies.address', 'companies.city_id', 'companies.email',
+                    	'companies.id', 'companies.name', 'companies.address', 'companies.country_id', 'companies.city_id', 'companies.email',
                     	'companies.phone', 'companies.billing_name', 'companies.billing_address', 'companies.tax_number1',
                     	'companies.bank_name', 'companies.account_number', 'companies.swiftcode', 'companies.aba',
-                    	'companies.currency_id', 'companies.industry_id', 'industries.name AS industry_name', 'cities.name AS city_name');
+                    	'companies.currency_id', 'companies.industry_id', 'industries.name AS industry_name', 'cities.name AS city_name', 'countries.name AS country_name');
 
         $query->leftJoin('industries', 'industries.id', '=', 'companies.industry_id');
+        $query->leftJoin('countries', 'countries.id', '=', 'companies.country_id');
         $query->leftJoin('cities', 'cities.id', '=', 'companies.city_id');
 
 

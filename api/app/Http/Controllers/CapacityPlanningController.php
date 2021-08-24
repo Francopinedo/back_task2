@@ -93,87 +93,71 @@ class CapacityPlanningController extends Controller {
 
         $query = "
          SELECT 
-           distinct(u.id) as user_id, u.id,u.name , projects.id as project_id        
-           FROM users u
+            distinct(u.id) as user_id, u.id,u.name , projects.id as project_id        
+            FROM users u
             JOIN team_users ON team_users.user_id =u.id 
             JOIN projects ON team_users.project_id =projects.id 
             JOIN cities ON u.city_id =cities.id 
             JOIN countries as ctry ON cities.country_id =ctry.id 
             WHERE
-            customer_id = ?
-            AND team_users.project_id = ?
-           
-      ";
+            customer_id = $customer_id
+            AND team_users.project_id = $project   
+        ";
 
         if(!empty($workgroup_id)){
             $query_params[]=$workgroup_id;
             $query.='  AND u.workgroup_id = ?';
         }
 
+
+
         $data = DB::select($query, $query_params);
 
         $contractResourcesResult = array();
         $contractResourcesResult_sprint = array();
-
-        $begin = new DateTime($from);
-        $end = new DateTime($to);
-        $end->setTime(0, 0, 1);
-        $interval = DateInterval::createFromDateString('1 day');
-        $period = new DatePeriod($begin, $interval, $end);
-
-        if($from_sprint!='' && $to_sprint!='')
-        {
-            $begin_sprints = new DateTime($from_sprint);
-            $end_sprints = new DateTime($to_sprint);
-            $end_sprints->setTime(0, 0, 1);
-            $interval_sprints = DateInterval::createFromDateString('1 day');
-            $period_sprints = new DatePeriod($begin_sprints, $interval_sprints, $end_sprints);
-        }
-        if(($from_sprint!='' && $to_sprint!='') && ($from=='' && $to=='')){
-            $begin_sprint = new DateTime($from_sprint);
-            $end_sprint = new DateTime($to_sprint);
-        }
-        if(($from_sprint=='' && $to_sprint=='') && ($from!='' && $to!='')){
-            $begin = new DateTime($from);
-            $end = new DateTime($to); 
-        }
-        if(($from_sprint!='' && $to_sprint!='') && ($from!='' && $to!='')){
-            $Begin = new DateTime($from);
-            $End = new DateTime($to);
-            $Begin_Sprint = new DateTime($from_sprint);
-            $End_Sprint = new DateTime($to_sprint);
-        }
-        $totaluser = 0;
-        $absents_hours = 0;
-        $hours_available = 0;
-        $holidays_hours = 0;
-        $hours_asigned = 0;
-        $replacements_hours = 0;
-        $efective_capacity = 0;
-
         foreach ($data as $contractResource){
+            $totaluser = 0;
+            $absents_hours = 0;
+            $hours_available = 0;
+            $holidays_hours = 0;
+            $hours_asigned = 0;
+            $replacements_hours = 0;
+            $efective_capacity = 0;
             $array = $contractResource;
+
+            $begin = new DateTime($from);
+            $end = new DateTime($to);
+            $end->setTime(0, 0, 1);
+            $interval = DateInterval::createFromDateString('1 day');
+            $period = new DatePeriod($begin, $interval, $end);
+
+            if($from_sprint!='' && $to_sprint!='')
+            {
+                $begin_sprints = new DateTime($from_sprint);
+                $end_sprints = new DateTime($to_sprint);
+                $end_sprints->setTime(0, 0, 1);
+                $interval_sprints = DateInterval::createFromDateString('1 day');
+                $period_sprints = new DatePeriod($begin_sprints, $interval_sprints, $end_sprints);
+            }
 
             if(($from_sprint!='' && $to_sprint!='') && ($from=='' && $to==''))
             {
 
-                //  foreach ($period_sprint as $dt) {
-                
-                
-                //     $requestSend = array('project' => $contractResource->project_id, 'customer' => $customer_id, 'sprint_to' => $dt->format("Y-m-d"), 'sprint_from' =>
-                //        $dt->format("Y-m-d"),'user_id' => $contractResource->user_id, 'company' => $company);
-                // $begin_sprint = new DateTime($from_sprint);
-                // $end_sprint = new DateTime($to_sprint);
+
+                // foreach ($period_sprint as $dt) {
+                    // $requestSend = array('project' => $contractResource->project_id, 'customer' => $customer_id, 'sprint_to' => $dt->format("Y-m-d"), 'sprint_from' => $dt->format("Y-m-d"),'user_id' => $contractResource->user_id, 'company' => $company);
+                $begin_sprint = new DateTime($from_sprint);
+                $end_sprint = new DateTime($to_sprint);
 
                 $requestSend = array('project' => $contractResource->project_id, 'customer' => $customer_id, 'sprint_to' => $end_sprint->format("Y-m-d"), 'sprint_from' => $begin_sprint->format("Y-m-d"),'user_id' => $contractResource->user_id, 'company' => $company);
 
-                    $requestSend = new \Illuminate\Http\Request($requestSend);
+                $requestSend = new \Illuminate\Http\Request($requestSend);
 
-                    $workingHoursFromApi = app('App\Http\Controllers\WorkingHourController')->calculated($requestSend);
+                $workingHoursFromApi = app('App\Http\Controllers\WorkingHourController')->calculated($requestSend);
 
-                    $workingHoursFromApi = $workingHoursFromApi->getData();
-                    $workingHoursFromApi = $workingHoursFromApi->data;
-                
+                $workingHoursFromApi = $workingHoursFromApi->getData();
+                $workingHoursFromApi = $workingHoursFromApi->data;
+            
                 if(!empty($workingHoursFromApi))
                 {   
                     if (is_numeric($workingHoursFromApi->working_hours) && $workingHoursFromApi->working_hours >= 0) {
@@ -181,12 +165,10 @@ class CapacityPlanningController extends Controller {
                     }
                     if ($workingHoursFromApi->hours_available >= 0) {
                         $hours_available= $hours_available + $workingHoursFromApi->hours_available;
-
                     }
 
                     if ($workingHoursFromApi->efective_capacity >= 0) {
                         $efective_capacity= $efective_capacity + $workingHoursFromApi->efective_capacity;
-
                     }
 
                     if ($workingHoursFromApi->holidays_hours > $workingHoursFromApi->working_hours) {
@@ -196,32 +178,28 @@ class CapacityPlanningController extends Controller {
                     }
 
                     $absents_hours= $absents_hours + $workingHoursFromApi->absents_hours;
-
                     $hours_asigned= $hours_asigned + $workingHoursFromApi->hours_asigned;
                     $replacements_hours= $replacements_hours + $workingHoursFromApi->replacements_hours;
                 }
-              //  }
+            // }
             }
-            
+        
             if(($from_sprint=='' && $to_sprint=='') && ($from!='' && $to!=''))
             {
 
+                // foreach ($period as $dt) {
+                $begin = new DateTime($from);
+                $end = new DateTime($to);
+             
+                $requestSend = array('project' => $contractResource->project_id, 'customer' => $customer_id, 'period_to' => $end->format("Y-m-d"), 'period_from' => $begin->format("Y-m-d"),'user_id' => $contractResource->user_id, 'company' => $company);
 
-                //foreach ($period as $dt) {
-                // $begin = new DateTime($from);
-                // $end = new DateTime($to);
+                $requestSend = new \Illuminate\Http\Request($requestSend);
 
-                 
-                    $requestSend = array('project' => $contractResource->project_id, 'customer' => $customer_id, 'period_to' => $end->format("Y-m-d"), 'period_from' =>
-                        $begin->format("Y-m-d"),'user_id' => $contractResource->user_id, 'company' => $company);
+                $workingHoursFromApi = app('App\Http\Controllers\WorkingHourController')->calculated($requestSend);
 
-                    $requestSend = new \Illuminate\Http\Request($requestSend);
-
-                    $workingHoursFromApi = app('App\Http\Controllers\WorkingHourController')->calculated($requestSend);
-
-                    $workingHoursFromApi = $workingHoursFromApi->getData();
-                    $workingHoursFromApi = $workingHoursFromApi->data;
-                
+                $workingHoursFromApi = $workingHoursFromApi->getData();
+                $workingHoursFromApi = $workingHoursFromApi->data;
+            
                 if(!empty($workingHoursFromApi))
                 {   
                     if (is_numeric($workingHoursFromApi->working_hours) && $workingHoursFromApi->working_hours >= 0) {
@@ -248,40 +226,33 @@ class CapacityPlanningController extends Controller {
                     $hours_asigned= $hours_asigned + $workingHoursFromApi->hours_asigned;
                     $replacements_hours= $replacements_hours + $workingHoursFromApi->replacements_hours;
                 }
-                //}    
+            // }
             }
-            
+
             if(($from_sprint!='' && $to_sprint!='') && ($from!='' && $to!=''))
             {
-
-
                 // foreach ($period as $dt) {
-                
-                //   foreach ($period_sprint as $dt_sprint) {
+                    // foreach ($period_sprint as $dt_sprint) {
+                        // foreach ($period as $dt) {
+                $begin = new DateTime($from);
+                $end = new DateTime($to);
+                $begin_sprint = new DateTime($from_sprint);
+                $end_sprint = new DateTime($to_sprint);
 
-                            //foreach ($period as $dt) {
-                // $begin = new DateTime($from);
-                // $end = new DateTime($to);
-                // $begin_sprint = new DateTime($from_sprint);
-                // $end_sprint = new DateTime($to_sprint);
+             
+               // if(in_array($begin->format("Y-m-d"), (array)$period_sprints)){
+                $requestSend = array('project' => $contractResource->project_id, 'customer' => $customer_id, 'period_to' => $end->format("Y-m-d"), 'period_from' => $begin->format("Y-m-d"),  'sprint_to' => $end_sprint->format("Y-m-d"), 'sprint_from' => $begin_sprint->format("Y-m-d"), 'user_id' => $contractResource->user_id, 'company' => $company);
+                // }else{
+                //     $requestSend = array('project' => $contractResource->project_id, 'customer' => $customer_id, 'period_to' => $dt->format("Y-m-d"), 'period_from' =>
+                //         $dt->format("Y-m-d"),  'user_id' => $contractResource->user_id, 'company' => $company);
+                // }
 
-                 
-                   // if(in_array($begin->format("Y-m-d"), (array)$period_sprints)){
-                    $requestSend = array('project' => $contractResource->project_id, 'customer' => $customer_id, 'period_to' => $End->format("Y-m-d"), 'period_from' =>
-                        $Begin->format("Y-m-d"),  'sprint_to' => $End_Sprint->format("Y-m-d"), 'sprint_from' =>
-                        $Begin_Sprint->format("Y-m-d"), 'user_id' => $contractResource->user_id, 'company' => $company);
-              /*  }else{
-                      $requestSend = array('project' => $contractResource->project_id, 'customer' => $customer_id, 'period_to' => $dt->format("Y-m-d"), 'period_from' =>
-                        $dt->format("Y-m-d"),  'user_id' => $contractResource->user_id, 'company' => $company);
-                }*/
+                $requestSend = new \Illuminate\Http\Request($requestSend);
 
-
-                    $requestSend = new \Illuminate\Http\Request($requestSend);
-
-                    $workingHoursFromApi = app('App\Http\Controllers\WorkingHourController')->calculated($requestSend);
-                    $workingHoursFromApi = $workingHoursFromApi->getData();
-                    $workingHoursFromApi = $workingHoursFromApi->data;
-                
+                $workingHoursFromApi = app('App\Http\Controllers\WorkingHourController')->calculated($requestSend);
+                $workingHoursFromApi = $workingHoursFromApi->getData();
+                $workingHoursFromApi = $workingHoursFromApi->data;
+            
                 if(!empty($workingHoursFromApi))
                 {   
                     if (is_numeric($workingHoursFromApi->working_hours) && $workingHoursFromApi->working_hours >= 0) {
@@ -289,12 +260,10 @@ class CapacityPlanningController extends Controller {
                     }
                     if ($workingHoursFromApi->hours_available >= 0) {
                         $hours_available= $hours_available + $workingHoursFromApi->hours_available;
-
                     }
 
                     if ($workingHoursFromApi->efective_capacity >= 0) {
                         $efective_capacity= $efective_capacity + $workingHoursFromApi->efective_capacity;
-
                     }
 
                     if ($workingHoursFromApi->holidays_hours > $workingHoursFromApi->working_hours) {
@@ -304,12 +273,11 @@ class CapacityPlanningController extends Controller {
                     }
 
                     $absents_hours= $absents_hours + $workingHoursFromApi->absents_hours;
-
                     $hours_asigned= $hours_asigned + $workingHoursFromApi->hours_asigned;
                     $replacements_hours= $replacements_hours + $workingHoursFromApi->replacements_hours;
                 }
-                //}
-                //}
+            // }
+            //}
             }
 
             $array->working_hours= $totaluser;
@@ -323,6 +291,7 @@ class CapacityPlanningController extends Controller {
             array_push($contractResourcesResult, $array);
         }
 
+       
         return Datatables::of($data)->make(true);
         
     }
@@ -334,7 +303,6 @@ class CapacityPlanningController extends Controller {
 
 
         $company = $request['company'];
-
         $from = $request['period_from'];
         $to = $request['period_to'];
         $from_sprint = $request['sprint_from'];
@@ -369,56 +337,56 @@ class CapacityPlanningController extends Controller {
 
         $contractResourcesResult = array();
         $contractResourcesResult_sprint = array();
-        $begin = new DateTime($from);
-        $end = new DateTime($to);
-        $end->setTime(0, 0, 1);
-        $interval = DateInterval::createFromDateString('1 day');
-        $period = new DatePeriod($begin, $interval, $end);
-
-        if($from_sprint!='' && $to_sprint!='')
-        {
-            $begin_sprints = new DateTime($from_sprint);
-            $end_sprints = new DateTime($to_sprint);
-            $end_sprints->setTime(0, 0, 1);
-            $interval_sprints = DateInterval::createFromDateString('1 day');
-            $period_sprints = new DatePeriod($begin_sprints, $interval_sprints, $end_sprints);
-        }
-        if(($from_sprint!='' && $to_sprint!='') && ($from=='' && $to=='')){
-            $begin_sprint = new DateTime($from_sprint);
-            $end_sprint = new DateTime($to_sprint);
-        }
-        if(($from_sprint=='' && $to_sprint=='') && ($from!='' && $to!='')){
-            $begin = new DateTime($from);
-            $end = new DateTime($to);
-        }
-        if(($from_sprint!='' && $to_sprint!='') && ($from!='' && $to!='')){
-            $Begin = new DateTime($from);
-            $End = new DateTime($to);
-            $Begin_Sprint = new DateTime($from_sprint);
-            $End_Sprint = new DateTime($to_sprint);
-        }
-        $totaluser = 0;
-        $absents_hours = 0;
-        $hours_available = 0;
-        $holidays_hours = 0;
-        $hours_asigned = 0;
-        $replacements_hours = 0;
-        $efective_capacity = 0;
-
         foreach ($data as $contractResource){
+            $totaluser = 0;
+            $absents_hours = 0;
+            $hours_available = 0;
+            $holidays_hours = 0;
+            $hours_asigned = 0;
+            $replacements_hours = 0;
+            $efective_capacity = 0;
             $array = $contractResource;
 
-            if(($from_sprint!='' && $to_sprint!='') && ($from=='' && $to==''))
-            {
+            $begin = new DateTime($from);
+            $end = new DateTime($to);
+            $end->setTime(0, 0, 1);
+            $interval = DateInterval::createFromDateString('1 day');
+            $period = new DatePeriod($begin, $interval, $end);
+            
+            
 
-                //  foreach ($period_sprint as $dt) {
-                     
-                //     $requestSend = array('project' => $contractResource->project_id, 'customer' => $customer_id, 'sprint_to' => $dt->format("Y-m-d"), 'sprint_from' =>
-                //        $dt->format("Y-m-d"),'user_id' => $contractResource->user_id, 'company' => $company);
-                // $begin_sprint = new DateTime($from_sprint);
-                // $end_sprint = new DateTime($to_sprint);
+  
+    if($from_sprint!='' && $to_sprint!='')
+        {
+                $begin_sprints = new DateTime($from_sprint);
+                $end_sprints = new DateTime($to_sprint);
+                $end_sprints->setTime(0, 0, 1);
+                $interval_sprints = DateInterval::createFromDateString('1 day');
+                $period_sprints = new DatePeriod($begin_sprints, $interval_sprints, $end_sprints);
 
-                $requestSend = array('project' => $contractResource->project_id, 'customer' => $customer_id, 'sprint_to' => $end_sprint->format("Y-m-d"), 'sprint_from' => $begin_sprint->format("Y-m-d"),'user_id' => $contractResource->user_id, 'company' => $company);
+
+        }
+
+    
+
+
+          /////////////////////////////////////////////////////////////////////7
+
+
+    if(($from_sprint!='' && $to_sprint!='') && ($from=='' && $to==''))
+        {
+
+
+          //  foreach ($period_sprint as $dt) {
+            
+            
+        //     $requestSend = array('project' => $contractResource->project_id, 'customer' => $customer_id, 'sprint_to' => $dt->format("Y-m-d"), 'sprint_from' =>
+            //        $dt->format("Y-m-d"),'user_id' => $contractResource->user_id, 'company' => $company);
+    $begin_sprint = new DateTime($from_sprint);
+    $end_sprint = new DateTime($to_sprint);
+
+     $requestSend = array('project' => $contractResource->project_id, 'customer' => $customer_id, 'sprint_to' => $end_sprint->format("Y-m-d"), 'sprint_from' =>
+                    $begin_sprint->format("Y-m-d"),'user_id' => $contractResource->user_id, 'company' => $company);
 
                 $requestSend = new \Illuminate\Http\Request($requestSend);
 
@@ -426,143 +394,157 @@ class CapacityPlanningController extends Controller {
 
                 $workingHoursFromApi = $workingHoursFromApi->getData();
                 $workingHoursFromApi = $workingHoursFromApi->data;
-                
-                if(!empty($workingHoursFromApi))
-                {   
-                    if (is_numeric($workingHoursFromApi->working_hours) && $workingHoursFromApi->working_hours >= 0) {
-                        $totaluser = $totaluser + $workingHoursFromApi->working_hours;
-                    }
-                    if ($workingHoursFromApi->hours_available >= 0) {
-                        $hours_available= $hours_available + $workingHoursFromApi->hours_available;
-
-                    }
-
-                    if ($workingHoursFromApi->efective_capacity >= 0) {
-                        $efective_capacity= $efective_capacity + $workingHoursFromApi->efective_capacity;
-
-                    }
-
-                    if ($workingHoursFromApi->holidays_hours > $workingHoursFromApi->working_hours) {
-                        $holidays_hours= $holidays_hours + $workingHoursFromApi->working_hours;
-                    }else{
-                        $holidays_hours= $holidays_hours + $workingHoursFromApi->holidays_hours;
-                    }
-
-                    $absents_hours= $absents_hours + $workingHoursFromApi->absents_hours;
-
-                    $hours_asigned= $hours_asigned + $workingHoursFromApi->hours_asigned;
-                    $replacements_hours= $replacements_hours + $workingHoursFromApi->replacements_hours;
-                }
-               // }          
-            }
             
-            if(($from_sprint=='' && $to_sprint=='') && ($from!='' && $to!=''))
-            {
-
-
-                //foreach ($period as $dt) {
-                // $begin = new DateTime($from);
-                // $end = new DateTime($to);
-
-                 
-                    $requestSend = array('project' => $contractResource->project_id, 'customer' => $customer_id, 'period_to' => $end->format("Y-m-d"), 'period_from' => $begin->format("Y-m-d"),'user_id' => $contractResource->user_id, 'company' => $company);
-
-                    $requestSend = new \Illuminate\Http\Request($requestSend);
-
-                    $workingHoursFromApi = app('App\Http\Controllers\WorkingHourController')->calculated($requestSend);
-
-                    $workingHoursFromApi = $workingHoursFromApi->getData();
-                    $workingHoursFromApi = $workingHoursFromApi->data;
-                
-                if(!empty($workingHoursFromApi))
-                {   
-                    if (is_numeric($workingHoursFromApi->working_hours) && $workingHoursFromApi->working_hours >= 0) {
-                        $totaluser = $totaluser + $workingHoursFromApi->working_hours;
-                    }
-                    if ($workingHoursFromApi->hours_available >= 0) {
-                        $hours_available= $hours_available + $workingHoursFromApi->hours_available;
-
-                    }
-
-                    if ($workingHoursFromApi->efective_capacity >= 0) {
-                        $efective_capacity= $efective_capacity + $workingHoursFromApi->efective_capacity;
-
-                    }
-
-                    if ($workingHoursFromApi->holidays_hours > $workingHoursFromApi->working_hours) {
-                        $holidays_hours= $holidays_hours + $workingHoursFromApi->working_hours;
-                    }else{
-                        $holidays_hours= $holidays_hours + $workingHoursFromApi->holidays_hours;
-                    }
-
-                    $absents_hours= $absents_hours + $workingHoursFromApi->absents_hours;
-
-                    $hours_asigned= $hours_asigned + $workingHoursFromApi->hours_asigned;
-                    $replacements_hours= $replacements_hours + $workingHoursFromApi->replacements_hours;
+            if(!empty($workingHoursFromApi))
+        {   
+                if (is_numeric($workingHoursFromApi->working_hours) && $workingHoursFromApi->working_hours >= 0) {
+                    $totaluser = $totaluser + $workingHoursFromApi->working_hours;
                 }
-                //}   
-            }
+                if ($workingHoursFromApi->hours_available >= 0) {
+                    $hours_available= $hours_available + $workingHoursFromApi->hours_available;
+
+                }
+
+                if ($workingHoursFromApi->efective_capacity >= 0) {
+                    $efective_capacity= $efective_capacity + $workingHoursFromApi->efective_capacity;
+
+                }
+
+                if ($workingHoursFromApi->holidays_hours > $workingHoursFromApi->working_hours) {
+                    $holidays_hours= $holidays_hours + $workingHoursFromApi->working_hours;
+                }else{
+                    $holidays_hours= $holidays_hours + $workingHoursFromApi->holidays_hours;
+                }
+
+                $absents_hours= $absents_hours + $workingHoursFromApi->absents_hours;
+
+                $hours_asigned= $hours_asigned + $workingHoursFromApi->hours_asigned;
+                $replacements_hours= $replacements_hours + $workingHoursFromApi->replacements_hours;
+        }
+          //  }
             
-            if(($from_sprint!='' && $to_sprint!='') && ($from!='' && $to!=''))
-            {
+        }
+        
 
 
-               // foreach ($period as $dt) {
-                
-             //   foreach ($period_sprint as $dt_sprint) {
-
-                            //foreach ($period as $dt) {
-                // $begin = new DateTime($from);
-                // $end = new DateTime($to);
-                // $begin_sprint = new DateTime($from_sprint);
-                // $end_sprint = new DateTime($to_sprint);
-
-                   // if(in_array($begin->format("Y-m-d"), (array)$period_sprints)){
-                    $requestSend = array('project' => $contractResource->project_id, 'customer' => $customer_id, 'period_to' => $End->format("Y-m-d"), 'period_from' =>
-                        $Begin->format("Y-m-d"),  'sprint_to' => $End_Sprint->format("Y-m-d"), 'sprint_from' =>
-                        $Begin_Sprint->format("Y-m-d"), 'user_id' => $contractResource->user_id, 'company' => $company);
-              /*  }else{
-                      $requestSend = array('project' => $contractResource->project_id, 'customer' => $customer_id, 'period_to' => $dt->format("Y-m-d"), 'period_from' =>
-                        $dt->format("Y-m-d"),  'user_id' => $contractResource->user_id, 'company' => $company);
-                }*/
+    if(($from_sprint=='' && $to_sprint=='') && ($from!='' && $to!=''))
+        {
 
 
-                    $requestSend = new \Illuminate\Http\Request($requestSend);
+            //foreach ($period as $dt) {
+            $begin = new DateTime($from);
+    $end = new DateTime($to);
 
-                    $workingHoursFromApi = app('App\Http\Controllers\WorkingHourController')->calculated($requestSend);
-                    $workingHoursFromApi = $workingHoursFromApi->getData();
-                    $workingHoursFromApi = $workingHoursFromApi->data;
-                
-                if(!empty($workingHoursFromApi))
-                {   
-                    if (is_numeric($workingHoursFromApi->working_hours) && $workingHoursFromApi->working_hours >= 0) {
-                        $totaluser = $totaluser + $workingHoursFromApi->working_hours;
-                    }
-                    if ($workingHoursFromApi->hours_available >= 0) {
-                        $hours_available= $hours_available + $workingHoursFromApi->hours_available;
+             
+                $requestSend = array('project' => $contractResource->project_id, 'customer' => $customer_id, 'period_to' => $end->format("Y-m-d"), 'period_from' =>
+                    $begin->format("Y-m-d"),'user_id' => $contractResource->user_id, 'company' => $company);
 
-                    }
 
-                    if ($workingHoursFromApi->efective_capacity >= 0) {
-                        $efective_capacity= $efective_capacity + $workingHoursFromApi->efective_capacity;
+                $requestSend = new \Illuminate\Http\Request($requestSend);
 
-                    }
+                $workingHoursFromApi = app('App\Http\Controllers\WorkingHourController')->calculated($requestSend);
 
-                    if ($workingHoursFromApi->holidays_hours > $workingHoursFromApi->working_hours) {
-                        $holidays_hours= $holidays_hours + $workingHoursFromApi->working_hours;
-                    }else{
-                        $holidays_hours= $holidays_hours + $workingHoursFromApi->holidays_hours;
-                    }
-
-                    $absents_hours= $absents_hours + $workingHoursFromApi->absents_hours;
-
-                    $hours_asigned= $hours_asigned + $workingHoursFromApi->hours_asigned;
-                    $replacements_hours= $replacements_hours + $workingHoursFromApi->replacements_hours;
+                $workingHoursFromApi = $workingHoursFromApi->getData();
+                $workingHoursFromApi = $workingHoursFromApi->data;
+            
+            if(!empty($workingHoursFromApi))
+        {   
+                if (is_numeric($workingHoursFromApi->working_hours) && $workingHoursFromApi->working_hours >= 0) {
+                    $totaluser = $totaluser + $workingHoursFromApi->working_hours;
                 }
-                //}
-                //}
-            }
+                if ($workingHoursFromApi->hours_available >= 0) {
+                    $hours_available= $hours_available + $workingHoursFromApi->hours_available;
 
+                }
+
+                if ($workingHoursFromApi->efective_capacity >= 0) {
+                    $efective_capacity= $efective_capacity + $workingHoursFromApi->efective_capacity;
+
+                }
+
+                if ($workingHoursFromApi->holidays_hours > $workingHoursFromApi->working_hours) {
+                    $holidays_hours= $holidays_hours + $workingHoursFromApi->working_hours;
+                }else{
+                    $holidays_hours= $holidays_hours + $workingHoursFromApi->holidays_hours;
+                }
+
+                $absents_hours= $absents_hours + $workingHoursFromApi->absents_hours;
+
+                $hours_asigned= $hours_asigned + $workingHoursFromApi->hours_asigned;
+                $replacements_hours= $replacements_hours + $workingHoursFromApi->replacements_hours;
+        }
+            //}
+            
+        }
+        
+    
+    
+    if(($from_sprint!='' && $to_sprint!='') && ($from!='' && $to!=''))
+        {
+
+
+           // foreach ($period as $dt) {
+            
+         //   foreach ($period_sprint as $dt_sprint) {
+
+                        //foreach ($period as $dt) {
+            $begin = new DateTime($from);
+    $end = new DateTime($to);
+            $begin_sprint = new DateTime($from_sprint);
+    $end_sprint = new DateTime($to_sprint);
+
+             
+
+               // if(in_array($begin->format("Y-m-d"), (array)$period_sprints)){
+                $requestSend = array('project' => $contractResource->project_id, 'customer' => $customer_id, 'period_to' => $end->format("Y-m-d"), 'period_from' =>
+                    $begin->format("Y-m-d"),  'sprint_to' => $end_sprint->format("Y-m-d"), 'sprint_from' =>
+                    $begin_sprint->format("Y-m-d"), 'user_id' => $contractResource->user_id, 'company' => $company);
+          /*  }else{
+                  $requestSend = array('project' => $contractResource->project_id, 'customer' => $customer_id, 'period_to' => $dt->format("Y-m-d"), 'period_from' =>
+                    $dt->format("Y-m-d"),  'user_id' => $contractResource->user_id, 'company' => $company);
+            }*/
+
+
+                $requestSend = new \Illuminate\Http\Request($requestSend);
+
+                $workingHoursFromApi = app('App\Http\Controllers\WorkingHourController')->calculated($requestSend);
+                $workingHoursFromApi = $workingHoursFromApi->getData();
+                $workingHoursFromApi = $workingHoursFromApi->data;
+            
+            if(!empty($workingHoursFromApi))
+        {   
+                if (is_numeric($workingHoursFromApi->working_hours) && $workingHoursFromApi->working_hours >= 0) {
+                    $totaluser = $totaluser + $workingHoursFromApi->working_hours;
+                }
+                if ($workingHoursFromApi->hours_available >= 0) {
+                    $hours_available= $hours_available + $workingHoursFromApi->hours_available;
+
+                }
+
+                if ($workingHoursFromApi->efective_capacity >= 0) {
+                    $efective_capacity= $efective_capacity + $workingHoursFromApi->efective_capacity;
+
+                }
+
+                if ($workingHoursFromApi->holidays_hours > $workingHoursFromApi->working_hours) {
+                    $holidays_hours= $holidays_hours + $workingHoursFromApi->working_hours;
+                }else{
+                    $holidays_hours= $holidays_hours + $workingHoursFromApi->holidays_hours;
+                }
+
+                $absents_hours= $absents_hours + $workingHoursFromApi->absents_hours;
+
+                $hours_asigned= $hours_asigned + $workingHoursFromApi->hours_asigned;
+                $replacements_hours= $replacements_hours + $workingHoursFromApi->replacements_hours;
+        }
+            //}
+            //}
+        }
+
+        ///////////////////////////////////////////////////////////////////////////7
+       
+
+ 
             $array->working_hours= $totaluser;
             $array->absents_hours=$absents_hours;
             $array->replacements_hours= $replacements_hours;
@@ -574,6 +556,7 @@ class CapacityPlanningController extends Controller {
             array_push($contractResourcesResult, $array);
         }
 
+        
         return $data;
     }
 }

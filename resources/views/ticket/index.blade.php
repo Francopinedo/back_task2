@@ -42,7 +42,7 @@
                     {data: 'assignee_name', name: 'assignee_name'},
                     {data: 'status', name: 'status'},
                     {data: 'group', name: 'group'},
-                    {data: 'sprint', name: 'sprint'},
+                    // {data: 'sprint', name: 'sprint'},
                     {data: 'due_date', name: 'due_date'},
                     {data: 'requester_name', name: 'requester_name'},
                     {data: 'priority', name: 'priority'},
@@ -115,7 +115,7 @@
                         }
                     },
                     {
-                        targets: 10,
+                        targets: 9,
                         data: null,
                         render: function (data, type, row) {
 
@@ -131,7 +131,7 @@
                         }
                     },
                     {
-                        targets: 11,
+                        targets: 10,
                         data: null,
                         render: function (data, type, row) {
                             if (data == 0)
@@ -150,7 +150,7 @@
                         }
                     },
                     {
-                        targets: 12,
+                        targets: 11,
                         data: null,
                         render: function (data, type, row) {
                             if (data == 0)
@@ -165,7 +165,7 @@
 
                         }
                     }, {
-                        targets: 13,
+                        targets: 12,
                         data: null,
                         render: function (data, type, row) {
                             if (data == 0)
@@ -232,7 +232,7 @@
                                 <th title="{{ __('tickets_tooltip.assignee')}}">{{ __('tickets.assignee') }}</th>
                                 <th title="{{ __('tickets_tooltip.status')}}">{{ __('tickets.status') }}</th>
                                 <th title="{{ __('tickets_tooltip.group')}}">{{ __('tickets.group') }}</th>
-                                <th title="{{ __('tickets_tooltip.sprint')}}">{{ __('tickets.sprint') }}</th>
+                                {{-- <th title="{{ __('tickets_tooltip.sprint')}}">{{ __('tickets.sprint') }}</th> --}}
                                 <th title="{{ __('tickets_tooltip.due_date')}}">{{ __('tickets.due_date') }}</th>
                                 <th title="{{ __('tickets_tooltip.requester')}}">{{ __('tickets.requester') }}</th>
 
@@ -268,6 +268,7 @@
                     'users2' => $users2,
                     'contacts' => $contacts,
                     'task' => $task,
+                    'sprints' => $sprints,
                 ]
             )
 

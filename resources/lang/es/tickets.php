@@ -66,5 +66,6 @@ return [
 	'estimated_progress'	=> 'Progreso Estimado',
 	'contingency_plan'	    => 'Plan de Contigencia',
 	'title_project' 	    => 'Informe de tickets para la tarea',
-	'tickets_test' 	    	=> 'Editando tickets para Sprint: '
+	'tickets_test' 	    	=> 'Editando tickets para Sprint: ',
+	'select_sprint'			=> 'Selecciona un Sprint',
 ];

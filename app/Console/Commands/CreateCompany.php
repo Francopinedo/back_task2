@@ -63,14 +63,14 @@ class CreateCompany extends Command
         $params = ['form_params' => $params];
 
         $apiRoutes = ["companies", "irmdomain", "irmmailadm", "rcadmin", "admin", "rcgeneralchannel"];
-        $irmApiRoutes = ['domain', 'admin_mailbox', 'rcadmin'];
+        $irmApiRoutes = ['irmdomain', 'admin_mailbox', 'rcadmin'];
         $bar = $this->output->createProgressBar(count($apiRoutes) + count($irmApiRoutes));
         foreach ($apiRoutes as $route) {
             if($route == 'companies')
             {
                 $request = $client->request('POST', env('API_PATH') . $route, $params);
                 $company = json_decode($request->getBody()->__toString())->data;
-                $bar->advance();
+                // $bar->advance();
             }
             else
             {

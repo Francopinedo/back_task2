@@ -91,7 +91,7 @@ class AbsenceTypeTemplateController extends Controller
     	// validacion del formulario
     	$validator =Validator::make($request->all(), [
 			'title'     => 'required',
-			'days'   => 'numeric|required',
+			'days'   => 'numeric|required|min:1',
 			'city_id'   => 'required',
 			'country_id' => 'required'
 	    ]);

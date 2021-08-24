@@ -247,24 +247,24 @@ class WorkingHourController extends Controller
             ->where('teams.project_id', $projectId)
             ->whereNotNull('users.office_id')
             ->get();
-        // reviso si hay un country
-        if (!empty($customer->city_id)) {
-            $city = City::find($customer->city_id);
-            $country = Country::find($city->country_id);
-        }
-
-        // Genero dias basicos del projecto
-        $begin = new DateTime($project->start);
-        $end = new DateTime($project->finish);
-
-        $interval = DateInterval::createFromDateString('1 day');
-        $period = new DatePeriod($begin, $interval, $end);
 
         foreach ($users as $user) {
             $user = User::find($user->id);
             $office = Office::find($user->office_id);
             $hours_by_day = !empty($office->hours_by_day) ? $office->hours_by_day : 8;
 
+            // reviso si hay un country
+            if (!empty($customer->city_id)) {
+                $city = City::find($customer->city_id);
+                $country = Country::find($city->country_id);
+            }
+
+            // Genero dias basicos del projecto
+            $begin = new DateTime($project->start);
+            $end = new DateTime($project->finish);
+
+            $interval = DateInterval::createFromDateString('1 day');
+            $period = new DatePeriod($begin, $interval, $end);
             // /Genero dias basicos del projecto
 
             // reviso si tuvo una ausencias
@@ -276,8 +276,8 @@ class WorkingHourController extends Controller
                 $beginAbsence = new DateTime($absence->from);
                 $endAbsence = new DateTime($absence->to);
 
-                // $intervalAbsence = DateInterval::createFromDateString('1 day');
-                $periodAbsence = new DatePeriod($beginAbsence, $interval, $endAbsence);
+                $intervalAbsence = DateInterval::createFromDateString('1 day');
+                $periodAbsence = new DatePeriod($beginAbsence, $intervalAbsence, $endAbsence);
 
                 foreach ($periodAbsence as $dayAbsence) {
                     $absenceDays[] = $dayAbsence->format('Y-m-d');
@@ -328,7 +328,6 @@ class WorkingHourController extends Controller
 
         $company = $request['company'];
         $user_id = $request['user_id'];
-
         $from = $request['period_from'];
         $to = $request['period_to'];
         $sprint_from = $request['sprint_from'];
@@ -336,89 +335,76 @@ class WorkingHourController extends Controller
         $customer_id = $request['customer'];
         $project = $request['project'];
 
-
         $query_params = [$customer_id, $project];
-	$working_hours_query="";
-	$where_sprints_query="";		
-	if(($from!='' &&  $to!='') && ($sprint_from!='' && $sprint_to!='') )
-	{
-	$working_hours_query="  IFNULL((select sum(hours) from working_hours wh where wh.user_id = u.id and wh.project_id = $project and 
+    	$working_hours_query="";
+    	$where_sprints_query="";		
+    	if(($from!='' &&  $to!='') && ($sprint_from!='' && $sprint_to!='') )
+    	{
+            $working_hours_query="  IFNULL((select sum(hours) from working_hours wh where wh.user_id = u.id and wh.project_id = $project and 
            wh.date BETWEEN CAST('$from' AS DATE) AND CAST('$to' AS DATE) AND 
            wh.date BETWEEN CAST('$sprint_from' AS DATE) AND CAST('$sprint_to' AS DATE)   ),0) as working_hours, ";
-	$where_sprints_query=" JOIN sprints ON sprints.project_id =projects.id ";
-	}
-	if(($from=='' &&  $to=='') && ($sprint_from!='' && $sprint_to!='') )
-	{
-	$working_hours_query="  IFNULL((select sum(hours) from working_hours wh where wh.user_id = u.id and wh.project_id = $project and 
-           wh.date BETWEEN CAST('$sprint_from' AS DATE) AND CAST('$sprint_to' AS DATE)   ),0) as working_hours, ";
-	$where_sprints_query=" JOIN sprints ON sprints.project_id =projects.id ";
-	}
+	       $where_sprints_query=" JOIN sprints ON sprints.project_id =projects.id ";
+        }
+    	if(($from=='' &&  $to=='') && ($sprint_from!='' && $sprint_to!='') )
+    	{
+            $working_hours_query="  IFNULL((select sum(hours) from working_hours wh where wh.user_id = u.id and wh.project_id = $project and wh.date BETWEEN CAST('$sprint_from' AS DATE) AND CAST('$sprint_to' AS DATE)   ),0) as working_hours, ";
+            $where_sprints_query=" JOIN sprints ON sprints.project_id =projects.id ";
+        }
 
-	if(($from!='' &&  $to!='') && ($sprint_from=='' && $sprint_to=='') )
-	{
-	$working_hours_query="  IFNULL((select sum(hours) from working_hours wh where wh.user_id = u.id and wh.project_id = $project and 
-           wh.date BETWEEN CAST('$from' AS DATE) AND CAST('$to' AS DATE) ),0) as working_hours, ";
-	}
+    	if(($from!='' &&  $to!='') && ($sprint_from=='' && $sprint_to=='') )
+    	{
+            $working_hours_query="  IFNULL((select sum(hours) from working_hours wh where wh.user_id = u.id and wh.project_id = $project and wh.date BETWEEN CAST('$from' AS DATE) AND CAST('$to' AS DATE) ),0) as working_hours, ";
+        }
 
-        $query = "
-         SELECT
-           distinct(u.id), u.name, 
-          ".$working_hours_query." 
-          IFNULL((select count(h.id) from holidays h where h.company_id = $company 
-           AND h.date BETWEEN CAST('$from' AS DATE) AND CAST('$to' AS DATE) 
-          and h.country_id=ctry.id ),0) as holidays, 
-          IFNULL((select SUM(hours_by_day) from offices o where o.company_id = $company  and team_users.office_id = o.id ),0) as hours_by_day, 
-          
-          IFNULL((select holidays * hours_by_day),0) as holidays_hours, 
-          
-          (select count(ab.id) from absences ab where ab.user_id=u.id) as absents_number,
-          
-          IFNULL((SELECT SUM((SELECT TIMESTAMPDIFF(DAY ,'$from','$to')+1 FROM absences ab2 WHERE ab.id=ab2.id) )
-           FROM absences ab WHERE ab.user_id=u.id and 
+        $query = "SELECT distinct(u.id), u.name, ".$working_hours_query." IFNULL((select count(h.id) from holidays h where h.company_id =". $company. " AND h.date BETWEEN CAST('$from' AS DATE) AND CAST('$to' AS DATE) and h.country_id=ctry.id ),0) as holidays, IFNULL((select SUM(hours_by_day) from offices o where o.company_id = ". $company ."  and team_users.office_id = o.id ),0) as hours_by_day, 
+
+            IFNULL((select holidays * hours_by_day),0) as holidays_hours, 
+
+            (select count(ab.id) from absences ab where ab.user_id=u.id) as absents_number,
+
+            IFNULL((SELECT SUM((SELECT TIMESTAMPDIFF(DAY ,'$from','$to')+1 FROM absences ab2 WHERE ab.id=ab2.id) )
+            FROM absences ab WHERE ab.user_id=u.id and 
              '$from' BETWEEN CAST(ab.from AS DATE) 
-           AND CAST(ab.to AS DATE) and '$to' BETWEEN CAST(ab.from AS DATE) AND CAST(ab.to AS DATE)
+            AND CAST(ab.to AS DATE) and '$to' BETWEEN CAST(ab.from AS DATE) AND CAST(ab.to AS DATE)
             ),0) as absents,
-            
+
             IFNULL((select absents * hours_by_day),0) as absents_hours, 
-            
+
             IFNULL((SELECT SUM((SELECT TIMESTAMPDIFF(DAY ,'$from','$to')+1 FROM replacements ab2 WHERE ab.id=ab2.id) )
-           FROM replacements ab WHERE ab.user_id=u.id and
-          '$from' BETWEEN CAST(ab.from AS DATE) 
-           AND CAST(ab.to AS DATE) and '$to' BETWEEN CAST(ab.from AS DATE) AND CAST(ab.to AS DATE)
-          ),0) as replacements,          
+            FROM replacements ab WHERE ab.user_id=u.id and
+            '$from' BETWEEN CAST(ab.from AS DATE) 
+            AND CAST(ab.to AS DATE) and '$to' BETWEEN CAST(ab.from AS DATE) AND CAST(ab.to AS DATE)
+            ),0) as replacements,          
           
-           (select replacements * hours_by_day) as replacements_hours, 
+            (select replacements * hours_by_day) as replacements_hours, 
                           
-              
             IFNULL((select  (working_hours ) - ( absents_hours + holidays_hours ) ),0) as hours, 
             IFNULL((select  (working_hours ) - ( absents_hours + holidays_hours + replacements_hours ) ),0) as hours_available, 
         
-           IFNULL((select sum(t2.estimated_hours) - sum(t2.burned_hours) from tickets  t2 join tasks on tasks.id = t2.task_id
-           where t2.assignee_id = u.id   and  tasks.start_date BETWEEN CAST('$from' AS DATE) 
-           AND CAST('$to' AS DATE) and tasks.due_date BETWEEN CAST('$from' AS DATE) AND CAST('$to' AS DATE) ),0) as hours_asigned ,
+            IFNULL((select sum(t2.estimated_hours) - sum(t2.burned_hours) from tickets  t2 join tasks on tasks.id = t2.task_id
+            where t2.assignee_id = u.id   and  tasks.start_date BETWEEN CAST('$from' AS DATE) 
+            AND CAST('$to' AS DATE) and tasks.due_date BETWEEN CAST('$from' AS DATE) AND CAST('$to' AS DATE) ),0) as hours_asigned ,
           
-           IFNULL((select hours_available - hours_asigned ),0) as efective_capacity 
+            IFNULL((select hours_available - hours_asigned ),0) as efective_capacity 
         
-           FROM users u
+            FROM users u
             JOIN team_users ON team_users.user_id =u.id 
-            JOIN projects ON team_users.project_id =projects.id  
-		".$where_sprints_query." 
+            JOIN projects ON team_users.project_id =projects.id ".$where_sprints_query." 
             JOIN cities ON team_users.city_id =cities.id 
             JOIN countries as ctry ON team_users.country_id =ctry.id 
             WHERE
             projects.customer_id = ?
-            and u.id = $user_id
+            and u.id = ". $user_id ."
         
             AND team_users.project_id = ?
-           
-      ";
+        ";
 
-//var_dump($query);
-//var_dump($query_params);
-//die;
+        //var_dump($query);
+        //var_dump($query_params);
+        //die;
         $data = DB::select($query, $query_params);
-//var_dump($data);
-//die;
+        //var_dump($data);
+        //die;
 
         return response()->json(array('data' => isset($data[0])?$data[0]:array()));
     }

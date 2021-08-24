@@ -54,11 +54,11 @@
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required" id="group-error"></span></div>
 
-                <div class="md-input-wrapper">
+                {{-- <div class="md-input-wrapper">
                 	<label>{{ __('tickets.sprint') }}</label>
                 	<input type="text" class="md-input" name="sprint" required><span class="md-input-bar"></span>
                 </div>
-                <div class="parsley-errors-list filled"><span class="parsley-required" id="sprint-error"></span></div>
+                <div class="parsley-errors-list filled"><span class="parsley-required" id="sprint-error"></span></div> --}}
 
                 <div class="md-input-wrapper">
                     <label>{{ __('tasks.due_date') }}</label>
@@ -117,7 +117,7 @@
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required" id="impact-error"></span></div>
 
-                <div class="md-input-wrapper">
+                {{-- <div class="md-input-wrapper">
                 	<label>{{ __('tickets.version') }}</label>
                 	<input type="text" class="md-input" name="version" required><span class="md-input-bar"></span>
                 </div>
@@ -127,7 +127,7 @@
                 	<label>{{ __('tickets.release') }}</label>
                 	<input type="text" class="md-input" name="release" required><span class="md-input-bar"></span>
                 </div>
-                <div class="parsley-errors-list filled"><span class="parsley-required" id="release-error"></span></div>
+                <div class="parsley-errors-list filled"><span class="parsley-required" id="release-error"></span></div> --}}
 
                 <div class="md-input-wrapper">
                 	<label>{{ __('tickets.estimated_hours') }}</label>

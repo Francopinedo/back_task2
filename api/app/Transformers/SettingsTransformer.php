@@ -41,7 +41,6 @@ class SettingsTransformer extends TransformerAbstract
 			'knowledge_areas_active'			 => $settings->knowledge_areas_active,
 						'version'			 => $settings->version,
 									'max_users'			 => $settings->max_users,
-									'set'		=> $settings->set
 
 
         ];

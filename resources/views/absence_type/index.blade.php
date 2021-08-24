@@ -131,7 +131,7 @@
 @endsection
 
 @section('create_div')
-	@component('absence_type/create', ['countries' => $countries, 'company'=>$company])
+	@component('absence_type/create', ['countries' => $countries, 'cities' => $cities, 'company'=>$company])
 
 	@endcomponent
 @endsection

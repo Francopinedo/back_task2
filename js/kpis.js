@@ -57,29 +57,29 @@ var Kpis = (function () {
             this.chartCompletedProjects();
             this.chartCancelledProjects();
            }else{
-                if(Kpis.category=='Cost')
+                if(Kpis.category_kpi=='1') // Cost
                 {
-                this.chartEv();
-                this.chartAc();
-                this.chartPv();
-                this.chartCpi();
-                this.chartSpi();
-                this.chartEac1();
-                this.chartEac2();
-                this.chartEac3();
-                this.chartEac4();
-                this.chartVac1();
-                this.chartVac2();
-                this.chartVac3();
-                this.chartVac4();
-                this.chartSv();
-                this.chartCv();
-                this.chartMfn();
-                this.chartRoi();
-                this.chartRrr();
-                this.chartFnsl();
+                    this.chartEv();
+                    this.chartAc();
+                    this.chartPv();
+                    this.chartCpi();
+                    this.chartSpi();
+                    this.chartEac1();
+                    this.chartEac2();
+                    this.chartEac3();
+                    this.chartEac4();
+                    this.chartVac1();
+                    this.chartVac2();
+                    this.chartVac3();
+                    this.chartVac4();
+                    this.chartSv();
+                    this.chartCv();
+                    this.chartMfn();
+                    this.chartRoi();
+                    this.chartRrr();
+                    this.chartFnsl();
                 }
-                if(Kpis.category=='Schedule')
+                if(Kpis.category_kpi=='2') // Schedule
                 {
                    this.chartActivities();
                     this.chartMilestones();
@@ -92,19 +92,19 @@ var Kpis = (function () {
                     this.chartCompletedProjects();
                     this.chartCancelledProjects();  
                 }
-                if(Kpis.category=='Resources')
+                if(Kpis.category_kpi=='Resources') // Resources
                 {
                  
                 }
-                 if(Kpis.category=='Risk')
+                 if(Kpis.category_kpi=='Risk') // Risk
                 {
                  
                 }
-                 if(Kpis.category=='Quality')
+                 if(Kpis.category_kpi=='Quality') // Quality
                 {
                  
                 }
-                 if(Kpis.category=='Agile')
+                 if(Kpis.category_kpi=='Agile') // Agile
                 {
                  
                 }
@@ -122,12 +122,13 @@ var Kpis = (function () {
                 success: function (data) {
 
 
-                    new Chartist.Line('#chart-ev', {
+                    new Chartist.Bar('#chart-ev', {
                         labels: data.months,
                         series:data.data
 
                     }, {
                         scaleMinSpace: 20,
+                        seriesBarDistance: 12,
                         fullWidth: true,
                         chartPadding: {
                             right: 40
@@ -155,7 +156,7 @@ var Kpis = (function () {
                 success: function (data) {
 
 
-                    new Chartist.Line('#chart-ac', {
+                    new Chartist.Bar('#chart-ac', {
                         labels: data.months,
                         series:data.data
 
@@ -217,7 +218,7 @@ var Kpis = (function () {
                 success: function (data) {
 
 
-                    new Chartist.Line('#chart-cpi', {
+                    new Chartist.Bar('#chart-cpi', {
                         labels: data.months,
                         series:data.data
 
@@ -249,7 +250,7 @@ var Kpis = (function () {
                 success: function (data) {
 
 
-                    new Chartist.Line('#chart-spi', {
+                    new Chartist.Bar('#chart-spi', {
                         labels: data.months,
                         series:data.data
 
@@ -280,7 +281,7 @@ var Kpis = (function () {
                 success: function (data) {
 
 
-                    new Chartist.Line('#chart-eac1', {
+                    new Chartist.Bar('#chart-eac1', {
                         labels: data.months,
                         series:data.data
 
@@ -311,7 +312,7 @@ var Kpis = (function () {
                 success: function (data) {
 
 
-                    new Chartist.Line('#chart-eac2', {
+                    new Chartist.Bar('#chart-eac2', {
                         labels: data.months,
                         series:data.data
 
@@ -342,7 +343,7 @@ var Kpis = (function () {
                 success: function (data) {
 
 
-                    new Chartist.Line('#chart-eac3', {
+                    new Chartist.Bar('#chart-eac3', {
                         labels: data.months,
                         series:data.data
 
@@ -373,7 +374,7 @@ var Kpis = (function () {
                 success: function (data) {
 
 
-                    new Chartist.Line('#chart-eac4', {
+                    new Chartist.Bar('#chart-eac4', {
                         labels: data.months,
                         series:data.data
 
@@ -405,7 +406,7 @@ var Kpis = (function () {
                 success: function (data) {
 
 
-                    new Chartist.Line('#chart-vac1', {
+                    new Chartist.Bar('#chart-vac1', {
                         labels: data.months,
                         series:data.data
 
@@ -529,7 +530,7 @@ var Kpis = (function () {
                 success: function (data) {
 
 
-                    new Chartist.Line('#chart-sv', {
+                    new Chartist.Bar('#chart-sv', {
                         labels: data.months,
                         series:data.data
 
@@ -621,7 +622,7 @@ var Kpis = (function () {
                 success: function (data) {
 
 
-                    new Chartist.Line('#chart-fnsl', {
+                    new Chartist.Bar('#chart-fnsl', {
                         labels: data.months,
                         series:data.data
 
@@ -695,7 +696,7 @@ var Kpis = (function () {
                 success: function (data) {
 
 
-                    new Chartist.Line('#chart-rrr', {
+                    new Chartist.Bar('#chart-rrr', {
                         labels: data.months,
                         series:data.data
 
@@ -755,7 +756,7 @@ var Kpis = (function () {
                 success: function (data) {
 
 
-                    new Chartist.Line('#chart-Milestones', {
+                    new Chartist.Bar('#chart-Milestones', {
                         labels: data.months,
                         series:data.data
 
@@ -847,7 +848,7 @@ var Kpis = (function () {
                 success: function (data) {
 
 
-                    new Chartist.Line('#chart-OverdueTasks', {
+                    new Chartist.Bar('#chart-OverdueTasks', {
                         labels: data.months,
                         series:data.data
 
@@ -878,7 +879,7 @@ var Kpis = (function () {
                 success: function (data) {
 
 
-                    new Chartist.Line('#chart-TaskCompleted', {
+                    new Chartist.Bar('#chart-TaskCompleted', {
                         labels: data.months,
                         series:data.data
 
@@ -908,7 +909,7 @@ var Kpis = (function () {
                 success: function (data) {
 
 
-                    new Chartist.Line('#chart-PlannedHours', {
+                    new Chartist.Bar('#chart-PlannedHours', {
                         labels: data.months,
                         series:data.data
 

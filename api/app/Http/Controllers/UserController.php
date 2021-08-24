@@ -255,7 +255,7 @@ class UserController extends Controller
         //selecciona el rol del usuario en base al id del companyrol
         $role = Role::where('company_role_id',$companyRole->id)->firstOrFail();
         //crea relacion entre el rol y el usuario
-        RoleUser::create(['role_id' => 2, 'user_id' => $user->id]);
+        RoleUser::create(['role_id' => 3, 'user_id' => $user->id]);
         //vincula el mail de iredmail con el usuario
         $adminRules = [1,2,14,13,12,11,10,9,8,7,6,5,4,3,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,34];
 
@@ -445,7 +445,7 @@ class UserController extends Controller
             ->leftjoin('roles', 'role_user.role_id', '=', 'roles.id')
             ->leftjoin('workgroups', 'workgroups.id', '=', 'users.workgroup_id');
 
-        if ($request->has('company_id') && $request->company_id == '') {
+        if ($request->has('company_id') && $request->company_id != '') {
             $query->join('company_users', 'company_users.user_id', '=', 'users.id');
             $query->where('company_users.company_id', $request->company_id);
 

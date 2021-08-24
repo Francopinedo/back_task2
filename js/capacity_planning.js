@@ -14,12 +14,10 @@ var CapacityPlanning = (function () {
          */
         APP_URL: '',
  	APP_PATH: '',
-        API_PATH: '',
-        init: function (API_PATH, APP_URL,APP_PATH) {
-            this.events(API_PATH, APP_URL,APP_PATH);
+        init: function (API_PATH, APP_URL) {
+            this.events(API_PATH, APP_URL);
             CapacityPlanning.APP_URL = APP_URL;
             CapacityPlanning.API_PATH = API_PATH;
-		CapacityPlanning.APP_PATH = APP_PATH;
 
 
         
@@ -98,7 +96,7 @@ var CapacityPlanning = (function () {
 
         },
 
-        events: function (API_PATH) {
+        events: function () {
             $('#customer').on('change', function () {
                 $.ajax({
                     url: CapacityPlanning.API_PATH + '/projects',
@@ -186,7 +184,7 @@ var CapacityPlanning = (function () {
                     'createdRow': function (row, data, dataIndex) {
 
 
-
+console.log(data);
                         CapacityPlanning.Dtables2.totals_availabe = CapacityPlanning.Dtables2.totals_availabe + parseInt(data.hours_available);
                         CapacityPlanning.Dtables2.totals_assigned = CapacityPlanning.Dtables2.totals_assigned + parseInt(data.hours_asigned);
 

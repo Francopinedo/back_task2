@@ -52,12 +52,11 @@ class CustomerController extends Controller
      */
     public function edit($id){
     	$customer = $this->getFromApi('GET', 'customers/'.$id);
-
+        dd($customer);
     	$cities = $this->getFromApi('GET', 'cities');
     	$currencies = $this->getFromApi('GET', 'currencies');
     	$industries = $this->getFromApi('GET', 'industries');
-        $res = $this->apiCall('GET', 'countries');
-        $countries = json_decode($res->getBody()->__toString())->data;
+        $countries = $this->getFromApi('GET', 'countries');
         
     	return response()->json([
     		'view' => view('customer/edit', ['countries' => $countries, 'customer' => $customer, 'cities' => $cities, 'currencies' => $currencies, 'industries' => $industries] )->render()

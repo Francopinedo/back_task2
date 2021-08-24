@@ -56,7 +56,7 @@ class DashboardController extends Controller
         if($request->has('category'))
                     $query->where('category', $request->category);
 
- if($request->has('showdashboard'))
+        if($request->has('showdashboard'))
                     $query->where('showdashboard', $request->showdashboard);
 
 
@@ -130,8 +130,7 @@ class DashboardController extends Controller
      *   	@Response(451, body={"error": {"message": "Error al crear"}})
      * })
      */
-    public
-    function store(Request $request)
+    public function store(Request $request)
     {
         if (!$request->has('category') || !$request->has('company_id')) {
             return $this->response->error('Faltan datos', 450);
@@ -169,8 +168,7 @@ class DashboardController extends Controller
      *    })
      * })
      */
-    public
-    function show($id)
+    public function show($id)
     {
         $Dashboard = Dashboard::findOrFail($id);
 
@@ -202,8 +200,7 @@ class DashboardController extends Controller
      *   	@Response(452, body={"error": {"message": "No envio ningun parametro para actualizar"}})
      * })
      */
-    public
-    function update(Request $request, $id)
+    public function update(Request $request, $id)
     {
         $Dashboard = Dashboard::find($id);
 
@@ -244,8 +241,7 @@ class DashboardController extends Controller
      *   	@Response(450, body={"error": {"message": "No existe"}})
      * })
      */
-    public
-    function destroy($id)
+    public function destroy($id)
     {
         $Dashboard = Dashboard::find($id);
 
@@ -264,8 +260,7 @@ class DashboardController extends Controller
      * Con formato listo para datatables con ajax
      * @Get("Dashboards/datatables")
      */
-    public
-    function datatables(Request $request)
+    public function datatables(Request $request)
     {
         $companyId = ($request->has('company_id')) ? $request->company_id : null;
 
@@ -297,13 +292,11 @@ class DashboardController extends Controller
     {
         $type=array();
         $data = array();
+
         if($request->has('project_id')){
-            
-        
-        $project = Project::find($request->project_id);
-        
-        $begin = new DateTime($project->start);
-        $end = new DateTime($project->finish);
+            $project = Project::find($request->project_id);
+            $begin = new DateTime($project->start);
+            $end = new DateTime($project->finish);
         }else{
             $firstdate =Project::select('start')->min('start');
             $lastdate =Project::select('finish')->max('finish');
@@ -320,19 +313,19 @@ class DashboardController extends Controller
         $actual_cost_data = array();
         $planed_value_data = array();
         $actual_percent_data= array();
-            if(!$request->has('project_id')){
-                $contract = Contract::join('customers', 'customers.id', '=', 'contracts.customer_id')
-                ->get(['contracts.*', 'customers.company_id']);
-                $pv=0;
-                $ac=0;
-                $ev=0;
-                $actual_percent_completed =0;
-                foreach ($contract as $contrac) {
-                        $projet=Project::find($contrac->project_id);
-                        $curren = Currency::find($contrac->currency_id);
-                        $tasks = Task::where('project_id', '=', $contrac->project_id)->orderBy('index', 'asc')->get();
-                        foreach($tasks as $task){
-                        if(isset($task->start_date)){
+        if(!$request->has('project_id')){
+            $contract = Contract::join('customers', 'customers.id', '=', 'contracts.customer_id')
+            ->get(['contracts.*', 'customers.company_id']);
+            $pv=0;
+            $ac=0;
+            $ev=0;
+            $actual_percent_completed =0;
+            foreach ($contract as $contrac) {
+                $projet=Project::find($contrac->project_id);
+                $curren = Currency::find($contrac->currency_id);
+                $tasks = Task::where('project_id', '=', $contrac->project_id)->orderBy('index', 'asc')->get();
+                foreach($tasks as $task){
+                    if(isset($task->start_date)){
                         $diff = Carbon::parse($task->start_date);
                         $diff= $diff->diffInDays();
                         $result = (($diff * 8) / $task->estimated_hours) * 100;
@@ -343,35 +336,32 @@ class DashboardController extends Controller
                         }
                         $task->estimated_progress =$task->estimated_progress + $result/count($tasks);
                         $actual_percent_completed = $task->estimated_progress+ $actual_percent_completed/count($tasks);
-            
+        
                     }else{
-                           // $task->estimated_progress = 0;
-                            $actual_percent_completed = 0;
-                        }
-                        
-                      
-                    }
-            
+                       // $task->estimated_progress = 0;
+                        $actual_percent_completed = 0;
+                    }   
+                }
+        
                 $team = $this->profit_and_loss_team_total($begin,$end, $contrac, $projet, $curren);
-           $services = $this->profit_and_loss_services_total($begin,$end, $contrac, $projet, $curren);
+                $services = $this->profit_and_loss_services_total($begin,$end, $contrac, $projet, $curren);
                 $expenses = $this->profit_and_loss_expenses_total($begin,$end, $contrac, $projet, $curren);
                 $materials = $this->profit_and_loss_materials_total($begin,$end, $contrac, $projet, $curren);
                 $pv =$pv+ $team->planned_revenue_nf + $services->planned_revenue_nf + $expenses->planned_revenue_nf + $materials->planned_revenue_nf;
                 $ac =$ac+ $team->real_cost_nf + $services->real_cost_nf + $expenses->real_cost_nf + $materials->real_cost_nf;
                 $ev =$ev+ $team->real_profit_nf + $services->real_profit_nf + $expenses->real_profit_nf + $materials->real_profit_nf;
-              
-                     
+           
             }
-            $earned_value_data[] = $ev * $actual_percent_completed;
+            $earned_value_data = $ev * $actual_percent_completed;
 
-            $actual_cost_data[] = $ac;
+            $actual_cost_data = $ac;
         
-            $planed_value_data[] = $pv;
+            $planed_value_data = $pv;
 
-            $actual_percent_data[] = $actual_percent_completed;
+            $actual_percent_data = $actual_percent_completed;
 
 
-          //  return $actual_percent_completed;
+            // return $actual_percent_completed;
         }else{
             if($request->has('project_id')){
                 $contract = Contract::join('customers', 'customers.id', '=', 'contracts.customer_id')->where('contracts.project_id', '=', $project->id)->get(['contracts.*', 'customers.company_id'])->first();
@@ -380,7 +370,7 @@ class DashboardController extends Controller
             
             
             if($request->has('project_id')){
-            $tasks = Task::where('project_id', '=', $request->project_id)->orderBy('index', 'asc')->get();
+                $tasks = Task::where('project_id', '=', $request->project_id)->orderBy('index', 'asc')->get();
             }
 
             $task = $tasks[0];
@@ -396,8 +386,8 @@ class DashboardController extends Controller
 
             $task->estimated_progress = $result;
             $actual_percent_completed = $task->estimated_progress;
-        foreach ($period as $dt) {
-            $months[] = $dt->format('M');
+            foreach ($period as $dt) {
+                $months[] = $dt->format('M');
 
                 $team = $this->profit_and_loss_team($dt, $contract, $project, $currency);
 
@@ -407,12 +397,104 @@ class DashboardController extends Controller
                 $pv = $team->planned_revenue_nf + $services->planned_revenue_nf + $expenses->planned_revenue_nf + $materials->planned_revenue_nf;
                 $ac = $team->real_cost_nf + $services->real_cost_nf + $expenses->real_cost_nf + $materials->real_cost_nf;
                 $ev = $team->real_profit_nf + $services->real_profit_nf + $expenses->real_profit_nf + $materials->real_profit_nf;
-         
-            
+                /******************/
+                ///   $ev= $actual_percent_completed*$pv;
+
+                $earned_value_data[] = $ev * $actual_percent_completed;
+
+                $actual_cost_data[] = $ac;
+
+                $planed_value_data[] = $pv;
+                
+                $actual_percent_data[] = $actual_percent_completed;
+            }
+        }
+        array_push($type, 'Earned Value');
+        array_push($type, 'Planned value');
+        array_push($type,'Actual Cost');
+
+        // array_push($type,'Completation Project(s) Percent');
+        // array_push($data, array('name' => 'Planned value', 'data' =>$planed_value_data));
+        // array_push($data, array('name' => 'Earned value', 'data' =>$earned_value_data));
+        // array_push($data,array('name' => 'Actual Cost', 'data' => $actual_cost_data));
+        // array_push($data,array('type' => 'Completation Project(s) Percent', 'data' => $actual_percent_data));
+
+        if($request->has('project_id')){
+            $earned_value = ($earned_value_data[0]) + ($earned_value_data[1]) + ($earned_value_data[2]) + ($earned_value_data[3]);
+            $planed_value = ($planed_value_data[0]) + ($planed_value_data[1]) + ($planed_value_data[2]) + ($planed_value_data[3]);
+            $actual_cost = ($actual_cost_data[0]) + ($actual_cost_data[1]) + ($actual_cost_data[2]) + ($actual_cost_data[3]);
+
+            array_push($data, $planed_value);
+            array_push($data, $earned_value);
+            array_push($data, $actual_cost);
+
+        }else{
+            array_push($data, $planed_value_data);
+            array_push($data, $earned_value_data);
+            array_push($data, $actual_cost_data);
+        }
+
+        return response()->json(array('type' => $type, 'data' => $data));
+    }
+
+    public function chartEvTotalProject(Request $request)
+    {
+        $type=array();
+        $data = array();
+
+        if($request->has('project_id')){
+            $project = Project::find($request->project_id);
+            $begin = new DateTime($project->start);
+            $end = new DateTime($project->finish);
+        }
+
+        $interval = DateInterval::createFromDateString('1 month');
+        $end->setTime(0, 0, 1);
+        $period = new DatePeriod($begin, $interval, $end);
+
+        $months = array();
+       
+        $earned_value_data = array();
+        $actual_cost_data = array();
+        $planed_value_data = array();
+        $actual_percent_data= array();
+        
+        if($request->has('project_id')){
+            $contract = Contract::join('customers', 'customers.id', '=', 'contracts.customer_id')->where('contracts.project_id', '=', $project->id)->get(['contracts.*', 'customers.company_id'])->first();
+            $currency = Currency::find($contract->currency_id);
+        }
+        
+        
+        if($request->has('project_id')){
+            $tasks = Task::where('project_id', '=', $request->project_id)->orderBy('index', 'asc')->get();
+        }
+
+        $task = $tasks[0];
+
+        $start = explode('-', $task->start_date);
+        $diff = Carbon::create($start[0], $start[1], $start[2])->diffInDays();
+        $result = (($diff * 8) / $task->estimated_hours) * 100;
+        if ($result > 100) {
+            $result = 100;
+        } else if ($result < 0) {
+            $result = 0;
+        }
+
+        $task->estimated_progress = $result;
+        $actual_percent_completed = $task->estimated_progress;
+        foreach ($period as $dt) {
+            $months[] = $dt->format('M');
+
+            $team = $this->profit_and_loss_team($dt, $contract, $project, $currency);
+
+            $services = $this->profit_and_loss_services($dt, $contract, $project, $currency);
+            $expenses = $this->profit_and_loss_expenses($dt, $contract, $project, $currency);
+            $materials = $this->profit_and_loss_materials($dt, $contract, $project, $currency);
+            $pv = $team->planned_revenue_nf + $services->planned_revenue_nf + $expenses->planned_revenue_nf + $materials->planned_revenue_nf;
+            $ac = $team->real_cost_nf + $services->real_cost_nf + $expenses->real_cost_nf + $materials->real_cost_nf;
+            $ev = $team->real_profit_nf + $services->real_profit_nf + $expenses->real_profit_nf + $materials->real_profit_nf;
             /******************/
-
             ///   $ev= $actual_percent_completed*$pv;
-
 
             $earned_value_data[] = $ev * $actual_percent_completed;
 
@@ -421,33 +503,41 @@ class DashboardController extends Controller
             $planed_value_data[] = $pv;
             
             $actual_percent_data[] = $actual_percent_completed;
-
         }
-    }
-    array_push($type, 'Planned value');
-    array_push($type, 'Earned value');
-   
-    array_push($type,'Actual Cost');
-    //array_push($type,'Completation Project(s) Percent');
-    array_push($data, array('name' => 'Planned value', 'data' =>$actual_cost_data));
-        array_push($data, array('name' => 'Earned value', 'data' =>$earned_value_data));
-        array_push($data,array('name' => 'Actual Cost', 'data' => $planed_value_data));
-        //array_push($data,array('type' => 'Completation Project(s) Percent', 'data' => $actual_percent_data));
+        
+        array_push($type, 'Planned value');
+        array_push($type,'Actual Cost');
+        array_push($type, 'Earned Value');
+
+        $sumatotal = array();
+        $earned_value = 0;
+        $planed_value = 0;
+        $actual_cost = 0;
+
+        foreach($earned_value_data as $value){
+            $earned_value += $value;
+        }
+        foreach($planed_value_data as $value){
+            $planed_value += $value;
+        }
+        foreach($actual_cost_data as $value){
+            $actual_cost += $value;
+        }
+
+        array_push($data, $planed_value);
+        array_push($data, $actual_cost);
+        array_push($data, $earned_value);
 
         return response()->json(array('type' => $type, 'data' => $data));
-
     }
 
     public function chartEv(Request $request)
     {
         $data = array();
         if($request->has('project_id')){
-            
-        
-        $project = Project::find($request->project_id);
-        
-        $begin = new DateTime($project->start);
-        $end = new DateTime($project->finish);
+            $project = Project::find($request->project_id);
+            $begin = new DateTime($project->start);
+            $end = new DateTime($project->finish);
         }else{
             $firstdate =Project::select('start')->min('start');
             $lastdate =Project::select('finish')->max('finish');
@@ -467,19 +557,19 @@ class DashboardController extends Controller
         $actual_cost_data = array();
         $planed_value_data = array();
         $actual_percent_data= array();
-            if(!$request->has('project_id')){
-                $contract = Contract::join('customers', 'customers.id', '=', 'contracts.customer_id')
-                ->get(['contracts.*', 'customers.company_id']);
-                $pv=0;
-                $ac=0;
-                $ev=0;
-                $actual_percent_completed =0;
-                foreach ($contract as $contrac) {
-                        $projet=Project::find($contrac->project_id);
-                        $curren = Currency::find($contrac->currency_id);
-                        $tasks = Task::where('project_id', '=', $contrac->project_id)->orderBy('index', 'asc')->get();
-                        foreach($tasks as $task){
-                        if(isset($task->start_date)){
+        if(!$request->has('project_id')){
+            $contract = Contract::join('customers', 'customers.id', '=', 'contracts.customer_id')
+            ->get(['contracts.*', 'customers.company_id']);
+            $pv=0;
+            $ac=0;
+            $ev=0;
+            $actual_percent_completed =0;
+            foreach ($contract as $contrac) {
+                $projet=Project::find($contrac->project_id);
+                $curren = Currency::find($contrac->currency_id);
+                $tasks = Task::where('project_id', '=', $contrac->project_id)->orderBy('index', 'asc')->get();
+                foreach($tasks as $task){
+                    if(isset($task->start_date)){
                         $diff = Carbon::parse($task->start_date);
                         $diff= $diff->diffInDays();
                         $result = (($diff * 8) / $task->estimated_hours) * 100;
@@ -492,22 +582,19 @@ class DashboardController extends Controller
                         $actual_percent_completed = $task->estimated_progress+ $actual_percent_completed/count($tasks);
             
                     }else{
-                           // $task->estimated_progress = 0;
-                            $actual_percent_completed = 0;
-                        }
-                        
-                      
+                       // $task->estimated_progress = 0;
+                        $actual_percent_completed = 0;
                     }
-            
+                }
+        
                 $team = $this->profit_and_loss_team_total($begin,$end, $contrac, $projet, $curren);
-           $services = $this->profit_and_loss_services_total($begin,$end, $contrac, $projet, $curren);
+                $services = $this->profit_and_loss_services_total($begin,$end, $contrac, $projet, $curren);
                 $expenses = $this->profit_and_loss_expenses_total($begin,$end, $contrac, $projet, $curren);
                 $materials = $this->profit_and_loss_materials_total($begin,$end, $contrac, $projet, $curren);
                 $pv =$pv+ $team->planned_revenue_nf + $services->planned_revenue_nf + $expenses->planned_revenue_nf + $materials->planned_revenue_nf;
                 $ac =$ac+ $team->real_cost_nf + $services->real_cost_nf + $expenses->real_cost_nf + $materials->real_cost_nf;
                 $ev =$ev+ $team->real_profit_nf + $services->real_profit_nf + $expenses->real_profit_nf + $materials->real_profit_nf;
-              
-                     
+           
             }
             $earned_value_data[] = $ev * $actual_percent_completed;
 
@@ -522,14 +609,12 @@ class DashboardController extends Controller
         }else{
             if($request->has('project_id')){
                
-            $contract = Contract::join('customers', 'customers.id', '=', 'contracts.customer_id')
-            ->where('contracts.project_id', '=', $project->id)->get(['contracts.*', 'customers.company_id'])->first();
-        $currency = Currency::find($contract->currency_id);
+                $contract = Contract::join('customers', 'customers.id', '=', 'contracts.customer_id')->where('contracts.project_id', '=', $project->id)->get(['contracts.*', 'customers.company_id'])->first();
+                $currency = Currency::find($contract->currency_id);
             }
             
-            
             if($request->has('project_id')){
-            $tasks = Task::where('project_id', '=', $request->project_id)->orderBy('index', 'asc')->get();
+                $tasks = Task::where('project_id', '=', $request->project_id)->orderBy('index', 'asc')->get();
             }
 
             $task = $tasks[0];
@@ -545,8 +630,8 @@ class DashboardController extends Controller
 
             $task->estimated_progress = $result;
             $actual_percent_completed = $task->estimated_progress;
-        foreach ($period as $dt) {
-            $months[] = $dt->format('M');
+            foreach ($period as $dt) {
+                $months[] = $dt->format('M');
 
                 $team = $this->profit_and_loss_team($dt, $contract, $project, $currency);
 
@@ -557,33 +642,35 @@ class DashboardController extends Controller
                 $ac = $team->real_cost_nf + $services->real_cost_nf + $expenses->real_cost_nf + $materials->real_cost_nf;
                 $ev = $team->real_profit_nf + $services->real_profit_nf + $expenses->real_profit_nf + $materials->real_profit_nf;
          
-            
-            /******************/
+                /******************/
+                ///   $ev= $actual_percent_completed*$pv;
 
-            ///   $ev= $actual_percent_completed*$pv;
+                $earned_value_data[] = $ev * $actual_percent_completed;
 
+                $actual_cost_data[] = $ac;
 
-            $earned_value_data[] = $ev * $actual_percent_completed;
-
-            $actual_cost_data[] = $ac;
-
-            $planed_value_data[] = $pv;
-            
-            $actual_percent_data[] = $actual_percent_completed;
-
+                $planed_value_data[] = $pv;
+                
+                $actual_percent_data[] = $actual_percent_completed;
+            }
         }
-    }
-        $earned_value['data'] = $earned_value_data;
+        $sumatotal = array();
+        $suma = 0;
+        foreach($earned_value_data as $value){
+            $suma += $value;
+        }
+        array_push($sumatotal, $suma);
+
+        $earned_value['data'] = $sumatotal;
         $actual_cost['data'] = $actual_cost_data;
         $planned_value['data'] = $planed_value_data;
         $actual_percent['data']= $actual_percent_data;
         array_push($data, $earned_value);
-        array_push($data, $actual_cost);
-        array_push($data, $planned_value);
-        array_push($data, $actual_percent);
+        // array_push($data, $actual_cost);
+        // array_push($data, $planned_value);
+        // array_push($data, $actual_percent);
 
         return response()->json(array('months' => $months, 'data' => $data));
-
     }
 
     public function chartAc(Request $request)
@@ -607,7 +694,6 @@ class DashboardController extends Controller
         foreach ($period as $dt) {
             $months[] = $dt->format('M');
 
-
             $indicators = $this->calculateBasicsIndicators($project, $request, $dt);
 
             $ev = $indicators['ev'];
@@ -615,23 +701,26 @@ class DashboardController extends Controller
             $pv = $indicators['pv'];
             $actual_percent_completed = $indicators['actual_percent_completed'];
 
-
             $earned_value_data[] = $ev * $actual_percent_completed;
 
             $actual_cost_data[] = $ac;
 
             $planed_value_data[] = $pv;
-
         }
+        $sumatotal = array();
+        $suma =0;
+        foreach($actual_cost_data as $value){
+            $suma += $value;
+        }
+        array_push($sumatotal, $suma);
         $earned_value['data'] = $earned_value_data;
-        $actual_cost['data'] = $actual_cost_data;
+        $actual_cost['data'] = $sumatotal;
         $planned_value['data'] = $planed_value_data;
         //  array_push($data, $earned_value);
         array_push($data, $actual_cost);
         //array_push($data, $planned_value);
 
         return response()->json(array('months' => $months, 'data' => $data));
-
     }
 
     public function chartPv(Request $request)
@@ -655,7 +744,6 @@ class DashboardController extends Controller
         foreach ($period as $dt) {
             $months[] = $dt->format('M');
 
-
             $indicators = $this->calculateBasicsIndicators($project, $request, $dt);
 
             $ev = $indicators['ev'];
@@ -663,9 +751,7 @@ class DashboardController extends Controller
             $pv = $indicators['pv'];
             $actual_percent_completed = $indicators['actual_percent_completed'];
             /******************/
-
             ///   $ev= $actual_percent_completed*$pv;
-
 
             $earned_value_data[] = $ev * $actual_percent_completed;
 
@@ -674,17 +760,22 @@ class DashboardController extends Controller
             $planed_value_data[] = $pv;
 
         }
+        $sumatotal = array();
+        $suma =0;
+        foreach($planed_value_data as $value){
+            $suma += $value;
+        }
+        array_push($sumatotal, $suma);
+        
         $earned_value['data'] = $earned_value_data;
         $actual_cost['data'] = $actual_cost_data;
-        $planned_value['data'] = $planed_value_data;
+        $planned_value['data'] = $sumatotal;
         //  array_push($data, $earned_value);
         // array_push($data, $actual_cost);
         array_push($data, $planned_value);
 
         return response()->json(array('months' => $months, 'data' => $data));
-
     }
-
 
     public function chartCpi(Request $request)
     {
@@ -739,7 +830,6 @@ class DashboardController extends Controller
         array_push($data, $cpi_value);
 
         return response()->json(array('months' => $months, 'data' => $data));
-
     }
 
     public function chartSpi(Request $request)
@@ -793,7 +883,6 @@ class DashboardController extends Controller
         array_push($data, $cpi_value);
 
         return response()->json(array('months' => $months, 'data' => $data));
-
     }
 
     public function chartEac1(Request $request)
@@ -848,7 +937,6 @@ class DashboardController extends Controller
         array_push($data, $cpi_value);
 
         return response()->json(array('months' => $months, 'data' => $data));
-
     }
 
     public function chartEac2(Request $request)
@@ -904,7 +992,6 @@ class DashboardController extends Controller
         array_push($data, $cpi_value);
 
         return response()->json(array('months' => $months, 'data' => $data));
-
     }
 
     public function chartEac3(Request $request)
@@ -965,7 +1052,6 @@ class DashboardController extends Controller
         array_push($data, $cpi_value);
 
         return response()->json(array('months' => $months, 'data' => $data));
-
     }
 
     public function chartEac4(Request $request)
@@ -1024,7 +1110,6 @@ class DashboardController extends Controller
         return response()->json(array('months' => $months, 'data' => $data));
     }
 
-
     public function chartVac1(Request $request)
     {
 
@@ -1078,9 +1163,7 @@ class DashboardController extends Controller
         array_push($data, $vac_value);
 
         return response()->json(array('months' => $months, 'data' => $data));
-
     }
-
 
     public function chartVac2(Request $request)
     {
@@ -1135,9 +1218,7 @@ class DashboardController extends Controller
         array_push($data, $vac_value);
 
         return response()->json(array('months' => $months, 'data' => $data));
-
     }
-
 
     public function chartVac3(Request $request)
     {
@@ -1197,9 +1278,7 @@ class DashboardController extends Controller
         array_push($data, $vac_value);
 
         return response()->json(array('months' => $months, 'data' => $data));
-
     }
-
 
     public function chartVac4(Request $request)
     {
@@ -1256,9 +1335,7 @@ class DashboardController extends Controller
         array_push($data, $vac_value);
 
         return response()->json(array('months' => $months, 'data' => $data));
-
     }
-
 
     public function chartSv(Request $request)
     {
@@ -1311,7 +1388,6 @@ class DashboardController extends Controller
         array_push($data, $sv_value);
 
         return response()->json(array('months' => $months, 'data' => $data));
-
     }
 
     public function chartCv(Request $request)
@@ -1365,7 +1441,6 @@ class DashboardController extends Controller
         array_push($data, $cv_value);
 
         return response()->json(array('months' => $months, 'data' => $data));
-
     }
 
     public function chartMfn(Request $request)
@@ -1421,7 +1496,6 @@ class DashboardController extends Controller
         array_push($data, $mfn_value);
 
         return response()->json(array('months' => $months, 'data' => $data));
-
     }
 
     public function chartFnsl(Request $request)
@@ -1479,7 +1553,6 @@ class DashboardController extends Controller
         array_push($data, $fnsl_value);
 
         return response()->json(array('months' => $months, 'data' => $data));
-
     }
 
     public function chartRoi(Request $request)
@@ -1534,7 +1607,6 @@ class DashboardController extends Controller
         array_push($data, $roi_value);
 
         return response()->json(array('months' => $months, 'data' => $data));
-
     }
 
     public function chartRrr(Request $request)
@@ -1589,7 +1661,6 @@ class DashboardController extends Controller
         array_push($data, $roi_value);
 
         return response()->json(array('months' => $months, 'data' => $data));
-
     }
 
     function chartActivities(Request $request)
@@ -1601,219 +1672,182 @@ class DashboardController extends Controller
     {
 
     }
-
     ///////////////////////////////////////////////////////////////////////////////////////////////////
-
-function chartcountBugs(Request $request)
-    {
-
-
-             $where="";
-         if ($request->has('project_id') ) {
-            $where=" WHERE projects.id =".  $request->project_id;
-        }
-
-         if ($request->has('begin_date') && $request->has('end_date') ) {
-            if ($request->has('project_id') ) {
-            $where=" WHERE projects.id =".  $request->project_id." AND (tickets.due_date >".  $request->begin_date ." AND tickets.due_date <=".$request->end_date ;
-            }else{
-                $where=" WHERE (tickets.due_date >".  $request->begin_date ." AND tickets.due_date <=".$request->end_date ;
-            }
-            
-        }
-
-       
-
-        $query = "SELECT count(tickets.type) AS tickets_numbers,tickets.type
-
-            FROM tickets
-                     INNER JOIN  users ON users.id=tickets.owner_id
-
-         INNER JOIN   tasks ON tasks.id=tickets.task_id
-          INNER JOIN   projects ON tasks.project_id=projects.id
-          INNER JOIN   customers ON projects.customer_id=customers.id
-           ".$where." group by tickets.type" ;
-            $querytasks = DB::select($query);
-        //    return $querytasks;
-$type=array();
-$data=array();
-foreach ($querytasks as $k=>$query) {
-
-       array_push($data, $query->tickets_numbers);
-              array_push($type, $query->type);
-}
-
-            return response()->json(array('type' => $type,'data' => $data));
- 
-    }
-
-
-     function chartCapacity(Request $request)
+    function chartcountBugs(Request $request)
     {
         $where="";
-      if ($request->has('project_id') ) {
+        if ($request->has('project_id') ) {
             $where=" WHERE projects.id =".  $request->project_id;
         }
 
-         if ($request->has('begin_date') && $request->has('end_date') ) {
+        if ($request->has('begin_date') && $request->has('end_date') ) {
             if ($request->has('project_id') ) {
             $where=" WHERE projects.id =".  $request->project_id." AND (tickets.due_date >".  $request->begin_date ." AND tickets.due_date <=".$request->end_date ;
             }else{
                 $where=" WHERE (tickets.due_date >".  $request->begin_date ." AND tickets.due_date <=".$request->end_date ;
-            }
-            
+            }            
+        }
+
+        $query = "SELECT count(tickets.type) AS tickets_numbers,tickets.type
+            FROM tickets
+            INNER JOIN  users ON users.id=tickets.owner_id
+            INNER JOIN   tasks ON tasks.id=tickets.task_id
+            INNER JOIN   projects ON tasks.project_id=projects.id
+            INNER JOIN   customers ON projects.customer_id=customers.id
+            ".$where." group by tickets.type" ;
+        $querytasks = DB::select($query);
+            // return $querytasks;
+        $type=array();
+        $data=array();
+        foreach ($querytasks as $k=>$query) {
+            array_push($data, $query->tickets_numbers);
+            array_push($type, $query->type);
+        }
+
+        return response()->json(array('type' => $type,'data' => $data));
+    }
+
+    function chartCapacity(Request $request)
+    {
+        $where="";
+        if ($request->has('project_id') ) {
+            $where=" WHERE projects.id =".  $request->project_id;
+        }
+
+        if ($request->has('begin_date') && $request->has('end_date') ) {
+            if ($request->has('project_id') ) {
+            $where=" WHERE projects.id =".  $request->project_id." AND (tickets.due_date >".  $request->begin_date ." AND tickets.due_date <=".$request->end_date ;
+            }else{
+                $where=" WHERE (tickets.due_date >".  $request->begin_date ." AND tickets.due_date <=".$request->end_date ;
+            }    
         }
 
         $query = "SELECT count(users.name) AS tickets_numbers, users.name AS owner_name
             FROM tickets
-                     INNER JOIN  users ON users.id=tickets.owner_id
+            INNER JOIN  users ON users.id=tickets.owner_id
+            INNER JOIN   tasks ON tasks.id=tickets.task_id
+            INNER JOIN   projects ON tasks.project_id=projects.id
+            INNER JOIN   customers ON projects.customer_id=customers.id
+            ".$where." group by users.id" ;
+        $querytasks = DB::select($query);
 
-         INNER JOIN   tasks ON tasks.id=tickets.task_id
-          INNER JOIN   projects ON tasks.project_id=projects.id
-          INNER JOIN   customers ON projects.customer_id=customers.id
-           ".$where." group by users.id" ;
-            $querytasks = DB::select($query);
+        $queryT = "SELECT count(users.name) AS tickets_numbers FROM tickets
+            INNER JOIN  users ON users.id=tickets.owner_id
+            INNER JOIN   tasks ON tasks.id=tickets.task_id
+            INNER JOIN   projects ON tasks.project_id=projects.id
+            INNER JOIN   customers ON projects.customer_id=customers.id
+            ".$where."" ;
+        $querytasksT = DB::select($queryT);
 
-            $queryT = "SELECT count(users.name) AS tickets_numbers FROM tickets
-                     INNER JOIN  users ON users.id=tickets.owner_id
-
-         INNER JOIN   tasks ON tasks.id=tickets.task_id
-          INNER JOIN   projects ON tasks.project_id=projects.id
-          INNER JOIN   customers ON projects.customer_id=customers.id
-           ".$where."" ;
-            $querytasksT = DB::select($queryT);
-
-$type=array();
-$data=array();
-$i=1;
-//return $querytasksT;
+        $type=array();
+        $data=array();
+        $i=1;
+        //return $querytasksT;
  
-$keyMax= array_search(max($querytasks), $querytasks);
-$maxR= $querytasks[$keyMax]->tickets_numbers;
-$keyMax= array_search(max($querytasksT), $querytasksT);
-$totalR= $querytasksT[$keyMax]->tickets_numbers;
-foreach ($querytasks as $k=>$query) {
+        $keyMax= array_search(max($querytasks), $querytasks);
+        $maxR= $querytasks[$keyMax]->tickets_numbers;
+        $keyMax= array_search(max($querytasksT), $querytasksT);
+        $totalR= $querytasksT[$keyMax]->tickets_numbers;
+        foreach ($querytasks as $k=>$query) {
 
-    if($query->tickets_numbers==$maxR) {$class='graphic_alert_green';}
+            if($query->tickets_numbers==$maxR) {$class='graphic_alert_'.intval($i);}
+            if($query->tickets_numbers<$maxR ){$class='graphic_alert_'.intval($i);}
+            array_push($data, array('value'=>$query->tickets_numbers) );
+            array_push($type, $query->owner_name);
+            $i++;
+        }
 
-                    if($query->tickets_numbers<$maxR ){$class='graphic_alert_'.intval($i);}
-
-             array_push($data, array('value'=>$query->tickets_numbers,'className'=>$class) );
-              array_push($type, $query->owner_name);
-              $i++;
-}
-
-            return response()->json(array('type' => $type,'data' => $data,'total'=>$totalR));
-           
-    
+        return response()->json(array('type' => $type,'data' => $data,'total'=>$totalR));
     }
 
     public function percentPlannedvsRealMilestone(Request $request)
     {
         $where="";
-         if ($request->has('project_id') ) {
+        if ($request->has('project_id') ) {
             $where=" WHERE projects.id =".  $request->project_id;
         }
 
          if ($request->has('begin_date') && $request->has('end_date') ) {
             if ($request->has('project_id') ) {
-            $where=" WHERE projects.id =".  $request->project_id." AND (tickets.due_date >".  $request->begin_date ." AND tickets.due_date <=".$request->end_date ;
+                $where=" WHERE projects.id =".  $request->project_id." AND (tickets.due_date >".  $request->begin_date ." AND tickets.due_date <=".$request->end_date ;
             }else{
                 $where=" WHERE (tickets.due_date >".  $request->begin_date ." AND tickets.due_date <=".$request->end_date ;
             }
-            
         }
 
 
         $query = "SELECT AVG(if(DATEDIFF(tickets.due_date,tickets.approval_date)>0,0,1)) as diff_date, tasks.phase
             FROM tickets
-            
-         INNER JOIN   tasks ON tasks.id=tickets.task_id
-          INNER JOIN   projects ON tasks.project_id=projects.id
-          INNER JOIN   customers ON projects.customer_id=customers.id
-        LEFT JOIN  ticket_histories  ON tickets.id=ticket_histories.ticket_id
-         LEFT JOIN  users ON users.id=tickets.owner_id
-         LEFT JOIN  workgroups ON  workgroups.id=users.workgroup_id
-         ".$where."  GROUP By tasks.phase
-                  ORDER BY tasks.phase" ;
-            $querytasks = DB::select($query);
+            INNER JOIN   tasks ON tasks.id=tickets.task_id
+            INNER JOIN   projects ON tasks.project_id=projects.id
+            INNER JOIN   customers ON projects.customer_id=customers.id
+            LEFT JOIN  ticket_histories  ON tickets.id=ticket_histories.ticket_id
+            LEFT JOIN  users ON users.id=tickets.owner_id
+            LEFT JOIN  workgroups ON  workgroups.id=users.workgroup_id
+            ".$where."  GROUP By tasks.phase ORDER BY tasks.phase" ;
+        $querytasks = DB::select($query);
 
-$type=array();
-$data=array();
-foreach ($querytasks as $k=>$query) {
+        $type=array();
+        $data=array();
 
-       array_push($data, $query->diff_date);
-              array_push($type, $query->phase);
-}
+        foreach ($querytasks as $k=>$query) {
+            array_push($data, $query->diff_date);
+            array_push($type, $query->phase);
+        }
 
-            return response()->json(array('type' => $type,'data' => $data));
-
-           
+        return response()->json(array('type' => $type,'data' => $data));   
     }
 
-     public function percentMissingMilestone(Request $request)
+    public function percentMissingMilestone(Request $request)
     {
         $where="";
-         if ($request->has('project_id') ) {
+        if ($request->has('project_id') ) {
             $where=" WHERE projects.id =".  $request->project_id;
         }
 
          if ($request->has('begin_date') && $request->has('end_date') ) {
             if ($request->has('project_id') ) {
-            $where=" WHERE projects.id =".  $request->project_id." AND (tickets.due_date >".  $request->begin_date ." AND tickets.due_date <=".$request->end_date ;
+                $where=" WHERE projects.id =".  $request->project_id." AND (tickets.due_date >".  $request->begin_date ." AND tickets.due_date <=".$request->end_date ;
             }else{
                 $where=" WHERE (tickets.due_date >".  $request->begin_date ." AND tickets.due_date <=".$request->end_date ;
             }
-            
         }
 
-
         $query = "SELECT AVG(if(DATEDIFF(tickets.due_date,date)>0,0,1)) as diff_date, tasks.phase
-
             FROM tickets
-            
-         INNER JOIN   tasks ON tasks.id=tickets.task_id
-          INNER JOIN   projects ON tasks.project_id=projects.id
-          INNER JOIN   customers ON projects.customer_id=customers.id
-        LEFT JOIN  ticket_histories  ON tickets.id=ticket_histories.ticket_id
-         LEFT JOIN  users ON users.id=tickets.owner_id
-         LEFT JOIN  workgroups ON  workgroups.id=users.workgroup_id
-         ".$where."  GROUP By tasks.phase
-                  ORDER BY tasks.phase" ;
-            $querytasks = DB::select($query);
+            INNER JOIN   tasks ON tasks.id=tickets.task_id
+            INNER JOIN   projects ON tasks.project_id=projects.id
+            INNER JOIN   customers ON projects.customer_id=customers.id
+            LEFT JOIN  ticket_histories  ON tickets.id=ticket_histories.ticket_id
+            LEFT JOIN  users ON users.id=tickets.owner_id
+            LEFT JOIN  workgroups ON  workgroups.id=users.workgroup_id
+            ".$where."  GROUP By tasks.phase ORDER BY tasks.phase" ;
+        $querytasks = DB::select($query);
 
- $type=array();
-$data=array();
-foreach ($querytasks as $k=>$query) {
+        $type=array();
+        $data=array();
+        foreach ($querytasks as $k=>$query) {
+            array_push($data, round(floatval($query->diff_date*100),4));
+            array_push($type, $query->phase);
+        }
 
-       array_push($data, round(floatval($query->diff_date*100),4));
-              array_push($type, $query->phase);
-}
-
-            return response()->json(array('type' => $type,'data' => $data));
-
- 
-           
+        return response()->json(array('type' => $type,'data' => $data));   
     }
 
-     public function chartDelivernotTime(Request $request)
+    public function chartDelivernotTime(Request $request)
     {
-
-            
-
         if ($request->has('project_id') ) {
             $project = Project::find($request->project_id);
 
             $tasks=Task::where('project_id',$request->project_id)->where('progress',100)->get();
-
         }else{
              $tasks=Task::where('progress',100)->get();
         }
         $sumtaskDelivernotTime = 0;
 
-                foreach ($tasks as $task) {
+        foreach ($tasks as $task) {
        
-         $tickets=Ticket::where('task_id',$task->id)->where('approval_date','!=','0000-00-00')->get();
+            $tickets=Ticket::where('task_id',$task->id)->where('approval_date','!=','0000-00-00')->get();
             foreach ($tickets as $ticket) {
                // return $ticket;
                 if($ticket->approval_date>$ticket->due_date)
@@ -1821,20 +1855,12 @@ foreach ($querytasks as $k=>$query) {
                     $sumtaskDelivernotTime++;
                 }
             }
-
-
         }
         return response()->json(array('data' => $sumtaskDelivernotTime));
- 
-
     }
-
 
     public function chartRequirements(Request $request)
     {
-
-            
-
         if ($request->has('project_id') ) {
             $Requirement = Requirement::
             select('type','type',\DB::raw('count(id) as count'))
@@ -1848,29 +1874,22 @@ foreach ($querytasks as $k=>$query) {
 
         }
        
-            $data=array();
-            $type=array();
-           
-     
-          
-            $i=4;
-            foreach($Requirement as $r)
-            {
-                $maxR= max($Requirement->pluck('count')->toArray());
-                if($r->count==$maxR) {$class='graphic_alert_green';}
-                if($r->count<$maxR ){$class='graphic_alert_'.intval($i);}
-            
-                //if($r->count==$TotalRequirement->count()-1){$class='graphic_alert_green';}
+        $data=array();
+        $type=array();
+        $i=4;
+        foreach($Requirement as $r)
+        {
+            $maxR= max($Requirement->pluck('count')->toArray());
+            if($r->count==$maxR) {$class='graphic_alert_green';}
+            if($r->count<$maxR ){$class='graphic_alert_'.intval($i);}
+        
+            //if($r->count==$TotalRequirement->count()-1){$class='graphic_alert_green';}
+            array_push($type,$r->type);
+            array_push($data,($r->count));//,'className'=>$class));
 
-                array_push($type,$r->type);
-                array_push($data,($r->count));//,'className'=>$class));
-
-            }
+        }
         return response()->json(array('type' => $type,'data' => $data));
- 
-
     }
-
 
     public function chartMilestones(Request $request)
     {
@@ -1926,15 +1945,12 @@ foreach ($querytasks as $k=>$query) {
         array_push($data, $started_value);
 
         return response()->json(array('months' => $months, 'data' => $data));
-
     }
 
     public function chartTasks(Request $request)
     {
 
         if($request->has('project_id')){
-            
-        
             $project = Project::find($request->project_id);
             
             $begin = ($project->start);
@@ -1943,68 +1959,62 @@ foreach ($querytasks as $k=>$query) {
             orderBy('index', 'asc')
                 ->whereRaw("start_date BETWEEN CAST('$begin' AS DATE) AND CAST('$end' AS DATE)")
                 ->get();
-                $tasktotal=Task::where('project_id', '=', $request->project_id)->count();
-            }else{
-                $firstdate =Project::select('start')->min('start');
-                $lastdate =Project::select('finish')->max('finish');
-                $begin = ($firstdate);
-                $end = ($lastdate);
+            $tasktotal=Task::where('project_id', '=', $request->project_id)->count();
+        }else{
+            $firstdate =Project::select('start')->min('start');
+            $lastdate =Project::select('finish')->max('finish');
+            $begin = ($firstdate);
+            $end = ($lastdate);
 
-                $tasks = Task::orderBy('index', 'asc')
-                    ->whereRaw("start_date BETWEEN CAST('$begin' AS DATE) AND CAST('$end' AS DATE)")
-                    ->get();
-                    $tasktotal=Task::all()->count();
+            $tasks = Task::orderBy('index', 'asc')
+                ->whereRaw("start_date BETWEEN CAST('$begin' AS DATE) AND CAST('$end' AS DATE)")
+                ->get();
+            $tasktotal=Task::all()->count();
+        }
 
+        $countoverdues = 0;
+        $countonpprogress=0;
+        $countcompleted=0;
+        $countcompletedbefore=0;
+        $type=array();
+        $data=array();
+        $today = new DateTime(Carbon::now()->format('Y-m-d'));
+        foreach ($tasks as $task) {
+         
+            $duedate = new DateTime(date('Y-m-d', strtotime($task->due_date)));
+
+            if ($duedate < $today && $task->progress != 100) {
+                $countoverdues++;
             }
-
-               
-
-
-            $countoverdues = 0;
-            $countonpprogress=0;
-            $countcompleted=0;
-            $countcompletedbefore=0;
-            $type=array();
-            $data=array();
-            $today = new DateTime(Carbon::now()->format('Y-m-d'));
-            foreach ($tasks as $task) {
-             
-                $duedate = new DateTime(date('Y-m-d', strtotime($task->due_date)));
-
-                if ($duedate < $today && $task->progress != 100) {
-                    $countoverdues++;
-                }
-                if ($duedate < $today && $task->progress == 100) {
-                    $countcompleted++;
-                }
-                if ($duedate > $today && $task->progress == 100) {
-                    $countcompletedbefore++;
-                }
-                if ($duedate > $today && $task->progress != 100) {
-                    $countonpprogress++;
-                }
+            if ($duedate < $today && $task->progress == 100) {
+                $countcompleted++;
             }
-            if($countoverdues>0){
+            if ($duedate > $today && $task->progress == 100) {
+                $countcompletedbefore++;
+            }
+            if ($duedate > $today && $task->progress != 100) {
+                $countonpprogress++;
+            }
+        }
+        if($countoverdues>0){
             array_push($type, 'OverDue');
             array_push($data, array('value'=>$countoverdues));
-            }
-            if($countcompleted>0){
+        }
+        if($countcompleted>0){
             array_push($type, 'Completed');
             array_push($data,  array('value'=>$countcompleted));
-            }
-            if($countonpprogress>0){
+        }
+        if($countonpprogress>0){
             array_push($type, 'On Progress');
             array_push($data, array('value'=>$countonpprogress));
-            }
-            if($countcompletedbefore>0){
+        }
+        if($countcompletedbefore>0){
             array_push($type, 'Completed Before Date');    
             array_push($data, array('value'=>$countcompletedbefore));
-            }  
+        }  
         
         return response()->json(array('type' =>  $type,'data' =>  $data,'total' =>  $tasktotal));
-
     }
-
 
     public function chartMilestonesTasks(Request $request)
     {
@@ -2021,8 +2031,8 @@ foreach ($querytasks as $k=>$query) {
         $type = array();
    
 
-        $due_value = array('name' => 'Due milestones');
-        $started_value = array('name' => 'Started milestones');
+        $due_value = array('name' => 'Due milestones', 'className'=>'ct-series-a');
+        $started_value = array('name' => 'Started milestones', 'className'=>'ct-series-b');
 
         $due_data = array();
         $started_data = array();
@@ -2075,9 +2085,7 @@ foreach ($querytasks as $k=>$query) {
 
         array_push($type, 'Due milestones');
         return response()->json(array('type' => $type,'data' => $data));
-
     }
-
 
     public function chartMissingMilestonesTasks(Request $request)
     {
@@ -2142,10 +2150,7 @@ foreach ($querytasks as $k=>$query) {
        // array_push($data, $started_value);
 
         return response()->json(array('total' => $totaltask, 'data' => $data));
-
     }
-
-
 
     public function chartOverdueTasks(Request $request)
     {
@@ -2201,7 +2206,6 @@ foreach ($querytasks as $k=>$query) {
         array_push($data, $started_value);
 
         return response()->json(array('months' => $months, 'data' => $data));
-
     }
 
     public function chartTaskCompleted(Request $request)
@@ -2248,7 +2252,6 @@ foreach ($querytasks as $k=>$query) {
 
 
         return response()->json(array('months' => $months, 'data' => $data));
-
     }
 
     public function chartPlannedHours(Request $request)
@@ -2264,22 +2267,41 @@ foreach ($querytasks as $k=>$query) {
 
         $months = array();
 
-        $planned_value = array('name' => 'Planned Hours');
-        $real_value = array('name' => 'Real Hours');
-
-
         $planned_data = array();
         $real_data = array();
         foreach ($period as $dt) {
             $months[] = $dt->format('M');
-
             /******************/
-
             $indicators = $this->calculateBasicsIndicators($project, $request, $dt);
             $planned_data[] = $indicators['total_planned_hours'];
             $real_data[] = $indicators['total_real_hours'];
-
         }
+
+        $planed_total = 0;
+        $real_data_total = 0;
+
+        foreach($planned_data as $value){
+            $planed_total += $value;
+        }
+        foreach($real_data as $value){
+            $real_data_total += $value;
+        }
+        $class_barra = "";
+        $class_legend = "";
+        if($real_data_total < $planed_total){
+            $class_barra = "ct-series-a"; // Rojo
+            $class_legend = 'ct-series-9'; //Rojo
+        }else if($real_data_total == $planed_total){
+            $class_barra = "ct-series-c"; // Amarillo
+            $class_legend = 'ct-series-2'; // Amarillo
+        }else if($real_data_total > $planed_total){
+            $class_barra = "ct-series-b"; // Verde
+            $class_legend = "ct-series-1"; // Verde
+        }
+
+        $planned_value = array('name'=>'Planned Hours','className'=>'ct-series-n');
+        $real_value = array('name'=>'Real Hours','className'=>$class_barra);
+        $codigo_colores = array(['ct-series-13', $class_legend]); // Color de legenda
 
         $planned_value['data'] = $planned_data;
         $real_value['data'] = $real_data;
@@ -2287,9 +2309,7 @@ foreach ($querytasks as $k=>$query) {
         array_push($data, $planned_value);
         array_push($data, $real_value);
 
-
-        return response()->json(array('months' => $months, 'data' => $data));
-
+        return response()->json(array('type'=>$codigo_colores,'months' => $months,'data' => $data));
     }
 
     public function chartCompletedProjects(Request $request)
@@ -2305,7 +2325,6 @@ foreach ($querytasks as $k=>$query) {
 
 
         return response()->json(array('data' => $data));
-
     }
 
     public function chartCancelledProjects(Request $request)
@@ -2346,10 +2365,7 @@ foreach ($querytasks as $k=>$query) {
 
 
         return response()->json(array('months' => $months, 'data' => $data));
-
     }
-
-  
 
     private function calculateBasicsIndicators($project, $request, $dt)
     {
@@ -2357,7 +2373,7 @@ foreach ($querytasks as $k=>$query) {
 
         $contract = Contract::join('customers', 'customers.id', '=', 'contracts.customer_id')
         ->where('contracts.project_id', '=', $project->id)->get(['contracts.*', 'customers.company_id'])->first();
-    $currency = Currency::find($contract->currency_id);
+        $currency = Currency::find($contract->currency_id);
             
         $tasks = Task::where('project_id', '=', $request->project_id)->orderBy('index', 'asc')->get();
         $task = $tasks[0]; //TODO: esto en teria esta mal, deberia haber una forma en la tabla project de saber su porcentage de progreso
@@ -2393,9 +2409,7 @@ foreach ($querytasks as $k=>$query) {
             'tasks' => $tasks,
             'total_planned_hours' => $team->total_planned_hours,
             'total_real_hours' => $team->total_real_hours);
-
     }
-
 
     public function calculateBasicsIndicators_total()
     {
@@ -2456,9 +2470,7 @@ foreach ($querytasks as $k=>$query) {
             'tasks' =>Task::all(),
             'total_planned_hours' => $estimated_progress,
             'total_real_hours' => $total_real_hours );
-
     }
-
 
     private function profit_and_loss_team($dt, $contract, $project, $currency)
     {
@@ -2515,7 +2527,6 @@ foreach ($querytasks as $k=>$query) {
         return $team;
     }
 
-
     private function profit_and_loss_team_total($dt,$dt2, $contract, $project, $currency)
     {
 
@@ -2570,696 +2581,672 @@ foreach ($querytasks as $k=>$query) {
         $team = $team->data;
         return $team;
     }
-
-
     // Dashboard
-
      public function chartTicketsStats(Request $request)
     {
-         if ($request->has('project_id') ) {
-               // $project = Project::find($request->project_id);
-                 $Tasks = Task::where('project_id',$request->project_id)->pluck('id');
-                $tickets = Ticket::whereIn('task_id',$Tasks);
-                $taskquery=Task::where('project_id',$request->project_id)->whereIn('tasks.id',$Tasks);
-                }else{
-                     $Tasks = Task::all()->pluck('id');
-                    $tickets = Ticket::whereIn('task_id',$Tasks);
+        if ($request->has('project_id') ) {
+            // $project = Project::find($request->project_id);
+            $Tasks = Task::where('project_id',$request->project_id)->pluck('id');
+            $tickets = Ticket::whereIn('tickets.task_id',$Tasks);
+            $taskquery=Task::where('project_id',$request->project_id)->whereIn('tasks.id',$Tasks);
+        }else{
+            $Tasks = Task::all()->pluck('id');
+            $tickets = Ticket::whereIn('tickets.task_id',$Tasks);
             $taskquery=Task::whereIn('tasks.id',$Tasks);
-
-                }
-                $tasktotal=$tickets->count();
-$userTickets =$tickets->distinct()->pluck('assignee_id');
+        }
+        $tasktotal=$tickets->count();
+        $userTickets =$tickets->distinct()->pluck('assignee_id');
         $data = array();
 
-if ($request->has('option') ) {
+        if ($request->has('option') ) {
 
-$data=array();
-$name=array();
-$type=array();
+            $data=array();
+            $name=array();
+            $type=array();
 
 
-    if($request->option==1) 
-    {
-        if (!$request->has('project_id') ) {
-$userTicketsType =$tickets->select('users.name AS user_name','type',\DB::raw('count(tickets.id) as count'))
-                    ->join('users', 'users.id', '=', 'tickets.assignee_id')
-                    ->groupBy('type')->orderBy(\DB::raw('count(tickets.id)'),'DESC')->get();
-      
-        }else{
-            $userTicketsType =$tickets->select('users.name AS user_name','type',\DB::raw('count(tickets.id) as count'))
-            ->join('users', 'users.id', '=', 'tickets.assignee_id')
-            ->WhereIn('tickets.assignee_id',$userTickets)
-            ->groupBy('type')->orderBy(\DB::raw('count(tickets.id)'),'DESC')->get();
+            if($request->option==1) 
+            {
+                if (!$request->has('project_id') ) {
+                    $userTicketsType =$tickets->select('users.name AS user_name','type',\DB::raw('count(tickets.id) as count'))
+                            ->join('task_resources', 'task_resources.id', '=', 'tickets.assignee_id')
+                            ->join('users', 'users.id', '=', 'task_resources.user_id')
+                            ->groupBy('type')->orderBy(\DB::raw('count(tickets.id)'),'DESC')->get();
 
-        }
-$i=1;
-foreach ($userTicketsType as $k=>$query) {
-    if($k==0) {$class='graphic_alert_red';}
-    if($k>0 && $k<count($userTicketsType)-1){$class='graphic_alert_'.intval($i);}
-    $i++;
-
-    if($k==count($userTicketsType)-1){$class='graphic_alert_green';}
-    array_push($data, array('value'=> $query->count,'className'=> $class));
- //array_push($data, $query->count);
- $class='';
- switch($query->type)
- {
-    case 1 :
-    array_push($type, 'User Story');
-    break;
-    case 2 :
-        array_push($type, 'Bug');
-    break;
-    case 3 :
-    array_push($type, 'Risk');
-    break ;
-    case 4 :
-    array_push($type, 'Epic');
-    break ;
-     case 5 :
-     array_push($type, 'Scope Changes');
-    break;
-    
-
- }
-}
-       
-
-    }
-
-    if($request->option==2 ) 
-    {
-        if (!$request->has('project_id') ) {
-
-$userTicketsStatus =$tickets->select('users.name AS user_name','status',\DB::raw('count(tickets.id) as count'))
-                    ->join('users', 'users.id', '=', 'tickets.assignee_id')
-                    
-                    ->groupBy('status')->orderBy(\DB::raw('count(tickets.id)'),'DESC')->get();
-        }else{
-            $userTicketsStatus =$tickets->select('users.name AS user_name','status',\DB::raw('count(tickets.id) as count'))
-            ->join('users', 'users.id', '=', 'tickets.assignee_id')
-            ->WhereIn('tickets.assignee_id',$userTickets)
-
-            ->groupBy('status')->orderBy(\DB::raw('count(tickets.id)'),'DESC')->get();
-
-        }
-
-$data=array();
-foreach ($userTicketsStatus as $k=>$query) {
-    if($k==0) {$class='graphic_alert_red';}
-    if($k>0 && $k<count($userTicketsStatus)-1){$class='graphic_alert_green';}
-    
-    if($k==count($userTicketsStatus)-1){$class='graphic_alert_yellow';}
-    array_push($data, array('value'=> $query->count,'className'=> $class));
-    $class='';
-    //array_push($data, $query->count);
- switch($query->status)
- {
-    case 1 :
-    array_push($type, 'To do');
-    break;
-    case 2 :
-        array_push($type, 'Waiting');
-    break;
-    case 3 :
-    array_push($type, 'In Progress');
-    break ;
-    case 4 :
-    array_push($type, 'Canceled');
-    break ;
-     case 5 :
-     array_push($type, 'Rescheduled');
-    break;
-    case 6 :
-    array_push($type, 'Resolved');
-    break;
-
- }
-}
-
-    }
-    if($request->option==3 ) 
-    {
-        if (!$request->has('project_id') ) {
-
-$userTicketsPriority =$tickets->select('users.name AS user_name','priority',\DB::raw('count(tickets.id) as count'))
-                    ->join('users', 'users.id', '=', 'tickets.assignee_id')
-                    ->groupBy('priority')->orderBy(\DB::raw('count(tickets.id)'),'DESC')->get();
-        }else{
-            $userTicketsPriority =$tickets->select('users.name AS user_name','priority',\DB::raw('count(tickets.id) as count'))
-                    ->join('users', 'users.id', '=', 'tickets.assignee_id')
+                }else{
+                    $userTicketsType =$tickets->select('users.name AS user_name','type',\DB::raw('count(tickets.id) as count'))
+                    ->join('task_resources', 'task_resources.id', '=', 'tickets.assignee_id')
+                    ->join('users', 'users.id', '=', 'task_resources.user_id')
                     ->WhereIn('tickets.assignee_id',$userTickets)
+                    ->groupBy('type')->orderBy(\DB::raw('count(tickets.id)'),'DESC')->get();
 
-                    ->groupBy('priority')->orderBy(\DB::raw('count(tickets.id)'),'DESC')->get();
+                }
+                $i=1;
+                foreach ($userTicketsType as $k=>$query) {
+                    if($k==0) {$class='graphic_alert_red';}
+                    if($k>0 && $k<count($userTicketsType)-1){$class='graphic_alert_'.intval($i);}
+                    $i++;
 
+                    if($k==count($userTicketsType)-1){$class='graphic_alert_green';}
+                    array_push($data, array('value'=> $query->count));
+                    //array_push($data, $query->count);
+                    $class='';
+                    switch($query->type)
+                    {
+                        case 1 :
+                            array_push($type, 'User Story');
+                        break;
+                        case 2 :
+                            array_push($type, 'Bug');
+                        break;
+                        case 3 :
+                            array_push($type, 'Risk');
+                        break ;
+                        case 4 :
+                            array_push($type, 'Epic');
+                        break ;
+                        case 5 :
+                            array_push($type, 'Scope Changes');
+                        break;
+                    }
+                }
+            }
+
+            if($request->option==2 ) 
+            {
+                if (!$request->has('project_id') ) {
+
+                    $userTicketsStatus =$tickets->select('users.name AS user_name','status',\DB::raw('count(tickets.id) as count'))
+                        ->join('task_resources', 'task_resources.id', '=', 'tickets.assignee_id')  
+                        ->join('users', 'users.id', '=', 'task_resources.user_id')  
+                        ->groupBy('status')->orderBy(\DB::raw('count(tickets.id)'),'DESC')->get();
+                }else{
+                    $userTicketsStatus =$tickets->select('users.name AS user_name','status',\DB::raw('count(tickets.id) as count'))
+                    ->join('task_resources', 'task_resources.id', '=', 'tickets.assignee_id')
+                    ->join('users', 'users.id', '=', 'task_resources.user_id')
+                    ->WhereIn('tickets.assignee_id',$userTickets)
+                    ->groupBy('status')->orderBy(\DB::raw('count(tickets.id)'),'DESC')->get();
+                }
+
+                $data=array();
+                foreach ($userTicketsStatus as $k=>$query) {
+                    // if($k==0) {$class='graphic_alert_red';}
+                    // if($k>0 && $k<count($userTicketsStatus)-1){$class='graphic_alert_green';}
+                    // if($k==count($userTicketsStatus)-1){$class='graphic_alert_yellow';}
+
+                    array_push($data, array('value'=> $query->count));
+                    $class='';
+                    //array_push($data, $query->count);
+                    switch($query->status)
+                    {
+                        case 1 :
+                            array_push($type, 'To do');
+                        break;
+                        case 2 :
+                            array_push($type, 'Waiting');
+                        break;
+                        case 3 :
+                            array_push($type, 'In Progress');
+                        break ;
+                        case 4 :
+                            array_push($type, 'Canceled');
+                        break ;
+                        case 5 :
+                            array_push($type, 'Rescheduled');
+                        break;
+                        case 6 :
+                            array_push($type, 'Resolved');
+                        break;
+                    }
+                }
+            }
+
+            if($request->option==3 ) 
+            {
+                if (!$request->has('project_id') ) {
+
+                    $userTicketsPriority =$tickets->select('users.name AS user_name','priority',\DB::raw('count(tickets.id) as count'))
+                        ->join('task_resources', 'task_resources.id', '=', 'tickets.assignee_id')
+                        ->join('users', 'users.id', '=', 'task_resources.user_id')
+                        ->groupBy('priority')->orderBy(\DB::raw('count(tickets.id)'),'DESC')->get();
+                }else{
+                    $userTicketsPriority =$tickets->select('users.name AS user_name','priority',\DB::raw('count(tickets.id) as count'))
+                        ->join('task_resources', 'task_resources.id', '=', 'tickets.assignee_id')
+                        ->join('users', 'users.id', '=', 'task_resources.user_id')
+                        ->WhereIn('tickets.assignee_id',$userTickets)
+                        ->groupBy('priority')->orderBy(\DB::raw('count(tickets.id)'),'DESC')->get();
+                }
+
+                $data=array();
+                foreach ($userTicketsPriority as $k=>$query) {
+                    if($k==0) {$class='graphic_alert_red';}
+                    if($k>0 && $k<count($userTicketsPriority)-1){$class='graphic_alert_yellow';}
+                    if($k==count($userTicketsPriority)-1){$class='graphic_alert_green';}
+
+                    array_push($data, array('value'=> $query->count,'className'=> $class));
+                    $class='';
+                    switch($query->priority)
+                    {
+                        case 1 :
+                            array_push($type, 'Low');
+                        break;
+                        case 2 :
+                            array_push($type, 'Medium');
+                        break;
+                        case 3 :
+                            array_push($type, 'High');
+                        break ;
+                    }
+                }
+            }
         }
-$data=array();
-foreach ($userTicketsPriority as $k=>$query) {
-    if($k==0) {$class='graphic_alert_red';}
-    if($k>0 && $k<count($userTicketsPriority)-1){$class='graphic_alert_yellow';}
-
-    if($k==count($userTicketsPriority)-1){$class='graphic_alert_green';}
-    array_push($data, array('value'=> $query->count,'className'=> $class));
-    $class='';
- switch($query->priority)
- {
-    case 1 :
-    array_push($type, 'Low');
-    break;
-    case 2 :
-        array_push($type, 'Medium');
-    break;
-    case 3 :
-    array_push($type, 'High');
-    break ;
-   
-    
-
- }
-}
-
-     }
-    }
         
         return response()->json(array('data' => $data,'type' => $type,'total' => $tasktotal));
-
     }
-
     /// Lista de opciones
     //// 1 completed
     //// 2 overdue
     //// 3 en progreso
-
-       public function listTasks(Request $request)
+    public function listTasks(Request $request)
     {
         $data=array();
         $name=array();
         $label="";
-         if ($request->has('project_id') ) {
+        $class="";
+        if ($request->has('project_id') ) {
                
-                 $Tasks = Task::where('project_id',$request->project_id);
-                          if ($request->has('option') ) {
-                            switch ($request->option) {
-                                case '1':
-                                    $Tasks->where('progress',100);
-                                    $label='Completed';
-                                    break;
-                                    case '2':
-                                     $Tasks->where('due_date','<',Carbon::now())->where('progress','!=',100);
-                                     $label='Overdue';
-                                    break;
-                                    case '3':
-                                     $Tasks->where('tasks.due_date','>=',Carbon::now())->where('progress','!=',100)
-                                     ->Join('tickets', 'tickets.task_id', '=', 'tasks.id');
-                                     $label='In Progress';
-                                    break;
-                                
-                            
-                            }
-                            }
-                            $tasktotal=Task::where('project_id',$request->project_id)->get();
-                 }else{
+                $Tasks = Task::where('project_id',$request->project_id);
+            if ($request->has('option') ) {
+                $tasktotal=Task::where('project_id',$request->project_id)->get();
+                switch ($request->option) {
+                    case '1':
+                        $Tasks->where('progress',100);
+                        $k=$Tasks->count();
+                        $label='Completed';
 
+                        array_push($data, array('value'=> count($tasktotal)-$k, 'className'=> 'graphic_alert_2'));
+                        array_push($name, 'Others Tickets');
+                        array_push($data, array('value'=> $k, 'className'=> 'graphic_alert_green'));
+                        array_push($name, $label);
+                        $class = array('ct-series-2', 'ct-series-1');
+                    break;
+                    case '2':
+                         $Tasks->where('due_date','<',Carbon::now())->where('progress','!=',100);
+                         $k=$Tasks->count();
+                         $label='Overdue';
 
-                       if ($request->has('option') ) {
-                            switch ($request->option) {
-                                case '1':
-                                 $Tasks =   Task::where('progress',100);
-                                 $label='Completed';
-                                    break;
-                                    case '2':
-                                 $Tasks =    Task::where('due_date','<',Carbon::now())->where('progress','!=',100);
-                                 $label='Overdue';
-                                    break;
-                                    case '3':
-                                $Tasks =     Task::where('tasks.due_date','>=',Carbon::now())->where('progress','!=',100)
-                                     ->Join('tickets', 'tickets.task_id', '=', 'tasks.id');  
-                                     $label='In Progress';                                   
-                                    break;
-                                
-                               }
-                            }else{
-                                $Tasks = Task::all();
-                            }
-                            $tasktotal=Task::all();
+                        array_push($data, array('value'=> $k, 'className'=> 'graphic_alert_red'));
+                        array_push($name, $label);
+                        array_push($data, array('value'=> count($tasktotal)-$k, 'className'=> 'graphic_alert_2'));
+                        array_push($name, 'Others Tickets');
+                        $class = array('ct-series-0', 'ct-series-2');
+                    break;
+                    case '3':
+                         $Tasks->where('tasks.due_date','>=',Carbon::now())->where('progress','!=',100)
+                         ->Join('tickets', 'tickets.task_id', '=', 'tasks.id');
+                         $k=$Tasks->count();
+                         $label='In Progress';
 
+                        array_push($data, array('value'=> $k, 'className'=> 'graphic_alert_yellow'));
+                        array_push($name, $label);
+                        array_push($data, array('value'=> count($tasktotal)-$k, 'className'=> 'graphic_alert_3'));
+                        array_push($name, 'Others Tickets');
+                        $class = array('ct-series-2', 'ct-series-4');                     
+                    break;    
+                    break;
                 }
-                $k=$Tasks->count();
+            }
+        }else{
 
-                if($k==0) {$class='graphic_alert_red';}
-                if($k>0 && $k<count($tasktotal)-1){$class='graphic_alert_red';}
+            if ($request->has('option') ) {
+                $tasktotal=Task::all(); // se obitnenen todas las tareas
+                switch ($request->option) {
+                    case '1':
+                        $Tasks =   Task::where('progress',100);
+                        $k=$Tasks->count();
+                        $label='Completed';
+                        array_push($data, array('value'=> count($tasktotal)-$k, 'className'=> 'graphic_alert_2'));
+                        array_push($name, 'Others Tickets');
+                        array_push($data, array('value'=> $k, 'className'=> 'graphic_alert_green'));
+                        array_push($name, $label);
+                        $class = array('ct-series-2', 'ct-series-1');
+                    break;
+                    case '2':
+                        $Tasks =    Task::where('due_date','<',Carbon::now())->where('progress','!=',100);
+                        $k=$Tasks->count();
+                        $label='Overdue';   
+                        array_push($data, array('value'=> $k, 'className'=> 'graphic_alert_red'));
+                        array_push($name, $label);
+                        array_push($data, array('value'=> count($tasktotal)-$k, 'className'=> 'graphic_alert_2'));
+                        array_push($name, 'Others Tickets');
+                        $class = array('ct-series-0', 'ct-series-2');
+                    break;
+                    case '3':
+                        $Tasks =     Task::where('tasks.due_date','>=',Carbon::now())->where('progress','!=',100)
+                         ->Join('tickets', 'tickets.task_id', '=', 'tasks.id');
+                         $k=$Tasks->count();
+                        $label='In Progress';
+                        array_push($data, array('value'=> $k, 'className'=> 'graphic_alert_yellow'));
+                        array_push($name, $label);
+                        array_push($data, array('value'=> count($tasktotal)-$k, 'className'=> 'graphic_alert_3'));
+                        array_push($name, 'Others Tickets');
+                        $class = array('ct-series-2', 'ct-series-4');                              
+                    break;    
+                }
+            }else{
+                $Tasks = Task::all();
+            }
+            $tasktotal=Task::all();
+        }
+        
+        //     $k=$Tasks->count();
             
-                if($k==count($tasktotal)-1){$class='graphic_alert_green';}
-                array_push($data, array('value'=> $k,'className'=> $class));
-                array_push($name, $label);
-                array_push($data, array('value'=> count($tasktotal)-$k,'className'=> 'graphic_alert_green'));
-                array_push($name, 'Others Tickets');
+        //     if($k==0) {$class='graphic_alert_red';}
+        //     if($k>0 && $k<count($tasktotal)-1){$class='graphic_alert_red';}
+        //     if($k==count($tasktotal)-1){$class='graphic_alert_green';}
 
-        return response()->json(array('type' =>$name ,'data' =>$data ,'total'=> count($tasktotal)));
+        //     array_push($data, array('value'=> $k, 'className'=> $class));
+        //     array_push($name, $label);
+        //     array_push($data, array('value'=> count($tasktotal)-$k, 'className'=> 'graphic_alert_green'));
+        //     array_push($name, 'Others Tickets');
+        
 
+        return response()->json(array('className'=>$class, 'type' =>$name ,'data' =>$data ,'total'=> count($tasktotal)));
     }
 
     function array_group(array $data, $by_column)
-{
-    $result = [];
-    foreach ($data as $item) {
-        $column = $item[$by_column];
-        unset($item[$by_column]);
-        $result[$column][] = $item;
-    }
-    return $result;
-}
-
-
-public function chartTicketsStatsType(Request $request)
-{
-     if ($request->has('project_id') ) {
-           // $project = Project::find($request->project_id);
-             $Tasks = Task::where('project_id',$request->project_id)->pluck('id');
-            $tickets = Ticket::whereIn('task_id',$Tasks);
-            $taskquery=Task::where('project_id',$request->project_id)->whereIn('tasks.id',$Tasks)->count();
-            }else{
-                 $Tasks = Task::all()->pluck('id');
-                $tickets = Ticket::whereIn('task_id',$Tasks);
-        $taskquery=Task::whereIn('tasks.id',$Tasks)->count();
-
-            }
-$ticketT=$tickets->count();
-$userTickets =$tickets->distinct()->pluck('assignee_id');
-    $data = array();
-
-if ($request->has('type') ) {
-
-$data=array();
-$name=array();
-$type=array();
-
-
-
-    if (!$request->has('project_id') ) {
-    $userTicketsType =$tickets->select('users.name AS user_name','type','status','priority',\DB::raw('count(tickets.id) as count'))
-                ->join('users', 'users.id', '=', 'tickets.assignee_id')
-                ->Where('tickets.type','=',$request->type);
-            //    ->groupBy('type')->orderBy(\DB::raw('count(tickets.id)'),'DESC')->get();
-  
-
-                
-    }else{
-        $userTicketsType =$tickets->select('users.name AS user_name','type','status','priority',\DB::raw('count(tickets.id) as count'))
-        ->join('users', 'users.id', '=', 'tickets.assignee_id')
-        ->Where('tickets.type','=',$request->type)
-        ->WhereIn('tickets.assignee_id',$userTickets);
-       // ->groupBy('type')->orderBy(\DB::raw('count(tickets.id)'),'DESC')->get();
-
-    }
-
-    if ($request->has('option') ) {
-        if($request->option=='2'){
-            $userTicketsType = $userTicketsType->groupBy('status')->orderBy(\DB::raw('count(tickets.id)'),'DESC')->get();
-
-        }
-        if($request->option=='3'){
-            $userTicketsType = $userTicketsType->groupBy('priority')->orderBy(\DB::raw('count(tickets.id)'),'DESC')->get();
-
-        }
-    }else{
-        $userTicketsType = $userTicketsType->orderBy(\DB::raw('count(tickets.id)'),'DESC')->get();
-    }
-// var_dump($userTicketsType);
-// die;
-$i=1;
-foreach ($userTicketsType as $k=>$query) {
-if($k==0) {$class='graphic_alert_red';}
-if($k>0 && $k<count($userTicketsType)-1){$class='graphic_alert_'.intval($i);}
-$i++;
-//if($k==count($userTicketsType)-1){$class='graphic_alert_red';}
-array_push($data, array('value'=> $query->count,'className'=> $class));
-$class='';
-if ($request->has('option') ) {
-    if($request->option==2){
-
-    switch($query->status)
     {
-    case 1 :
-    array_push($type, 'To do');
-    break;
-    case 2 :
-        array_push($type, 'Waiting');
-    break;
-    case 3 :
-    array_push($type, 'In Progress');
-    break ;
-    case 4 :
-    array_push($type, 'Canceled');
-    break ;
-     case 5 :
-     array_push($type, 'Rescheduled');
-    break;
-    case 6 :
-    array_push($type, 'Resolved');
-    break;
-    
+        $result = [];
+        foreach ($data as $item) {
+            $column = $item[$by_column];
+            unset($item[$by_column]);
+            $result[$column][] = $item;
+        }
+        return $result;
     }
+
+    public function chartTicketsStatsType(Request $request)
+    {
+        if ($request->has('project_id') ) {
+            // $project = Project::find($request->project_id);
+            $Tasks = Task::where('project_id',$request->project_id)->pluck('id');
+            $tickets = Ticket::whereIn('tickets.task_id',$Tasks);
+            $taskquery=Task::where('project_id',$request->project_id)->whereIn('tasks.id',$Tasks)->count();
+        }else{
+            $Tasks = Task::all()->pluck('id');
+            $tickets = Ticket::whereIn('tickets.task_id',$Tasks);
+            $taskquery=Task::whereIn('tasks.id',$Tasks)->count();
+        }
+
+        $ticketT=$tickets->count();
+        $userTickets =$tickets->distinct()->pluck('assignee_id');
+        $data = array();
+
+        if ($request->has('type') ) {
+
+            $data=array();
+            $name=array();
+            $type=array();
+
+            if (!$request->has('project_id') ) {
+                $userTicketsType =$tickets->select('users.name AS user_name','type','status','priority',\DB::raw('count(tickets.id) as count'))
+                    ->join('task_resources', 'task_resources.id', '=', 'tickets.assignee_id')
+                    ->join('users', 'users.id', 'task_resources.user_id')
+                    ->Where('tickets.type','=',$request->type);
+                //    ->groupBy('type')->orderBy(\DB::raw('count(tickets.id)'),'DESC')->get();
+            }else{
+                $userTicketsType =$tickets->select('users.name AS user_name','type','status','priority',\DB::raw('count(tickets.id) as count'))
+                ->join('task_resources', 'task_resources.id', '=', 'tickets.assignee_id')
+                ->join('users', 'users.id', '=', 'task_resources.user_id')
+                ->Where('tickets.type','=',$request->type)
+                ->WhereIn('tickets.assignee_id',$userTickets);
+
+               // ->groupBy('type')->orderBy(\DB::raw('count(tickets.id)'),'DESC')->get();
+            }
+
+            if ($request->has('option') ) {
+                if($request->option=='2'){
+                    $userTicketsType = $userTicketsType->groupBy('status')->orderBy(\DB::raw('count(tickets.id)'),'DESC')->get();
+
+                }
+                if($request->option=='3'){
+                    $userTicketsType = $userTicketsType->groupBy('priority')->orderBy(\DB::raw('count(tickets.id)'),'DESC')->get();
+
+                }
+            }else{
+                $userTicketsType = $userTicketsType->orderBy(\DB::raw('count(tickets.id)'),'DESC')->get();
+            }
+            // var_dump($userTicketsType);
+            // die;
+            $i=1;
+            foreach ($userTicketsType as $k=>$query) {
+                if($k==0) {$class='graphic_alert_red';}
+                if($k>0 && $k<count($userTicketsType)-1){$class='graphic_alert_'.intval($i);}
+
+                $i++;
+                //if($k==count($userTicketsType)-1){$class='graphic_alert_red';}
+                array_push($data, array('value'=> $query->count,'className'=> $class));
+
+                $class='';
+                if ($request->has('option') ) {
+                    if($request->option==2){
+
+                        switch($query->status)
+                        {
+                            case 1 :
+                            array_push($type, 'To do');
+                            break;
+                            case 2 :
+                                array_push($type, 'Waiting');
+                            break;
+                            case 3 :
+                            array_push($type, 'In Progress');
+                            break ;
+                            case 4 :
+                            array_push($type, 'Canceled');
+                            break ;
+                             case 5 :
+                             array_push($type, 'Rescheduled');
+                            break;
+                            case 6 :
+                            array_push($type, 'Resolved');
+                            break;
+                        
+                        }
+                    }
+                    if($request->option==3){
+
+                        switch($query->priority)
+                        {
+                            case 1 :
+                                array_push($type, 'Low');
+                                break;
+                                case 2 :
+                                    array_push($type, 'Medium');
+                                break;
+                                case 3 :
+                                array_push($type, 'High');
+                                break ;
+                        }
+                    }
+                }
+            }
+        }
+        if ($request->has('total') ) {
+            if($request->total==1){
+               
+                if ($request->has('project_id') ) {
+                    // $project = Project::find($request->project_id);
+                      $Tasks = Task::where('project_id',$request->project_id)->pluck('id');
+                     $tickets = Ticket::whereIn('task_id',$Tasks);
+                     $taskquery=Task::where('project_id',$request->project_id)->whereIn('tasks.id',$Tasks)->count();
+                }else{
+                    $Tasks = Task::all()->pluck('id');
+                    $tickets = Ticket::whereIn('task_id',$Tasks);
+                    $taskquery=Task::whereIn('tasks.id',$Tasks)->count();
+                }
+
+                // $data[0]['value']=array($data[0]['value'],);
+                // $data[0]['className']=array($data[0]['className'],'graphic_alert_green');
+                array_push($data,array('value'=>$taskquery-intval($data[0]['value']),'className'=>'graphic_alert_green'));
+                if ($request->has('type') ) {
+
+                    switch($query->type)
+                    {
+                        case 1 :
+                        array_push($type, 'User Story');
+                        break;
+                        case 2 :
+                            array_push($type, 'Bug');
+                        break;
+                        case 3 :
+                        array_push($type, 'Risk');
+                        break ;
+                        case 4 :
+                        array_push($type, 'Epic');
+                        break ;
+                         case 5 :
+                         array_push($type, 'Scope Changes');
+                        break;
+                    }
+                    array_push($type, 'Others Tickets');
+                }     
+            }
+        }
+        
+        // $t =$taskquery-intval($data[0]['value']);
+        // return $t;
+        return response()->json(array('type' => $type,'data' => $data,'total' =>$taskquery-intval($data[0]['value']) ));
     }
-if($request->option==3){
-
-switch($query->priority)
-{
-    case 1 :
-        array_push($type, 'Low');
-        break;
-        case 2 :
-            array_push($type, 'Medium');
-        break;
-        case 3 :
-        array_push($type, 'High');
-        break ;
-
-}
-}
-}
-
-}
-   
-}
-if ($request->has('total') ) {
-    if($request->total==1){
-       
+    ////////////////////////Resources
+    public function chartResourceUtilization(Request $request)
+    {
+        $data=array();
+        $name=array();
+        $label="";
+        $tasktotal=0;
         if ($request->has('project_id') ) {
             // $project = Project::find($request->project_id);
               $Tasks = Task::where('project_id',$request->project_id)->pluck('id');
              $tickets = Ticket::whereIn('task_id',$Tasks);
-             $taskquery=Task::where('project_id',$request->project_id)->whereIn('tasks.id',$Tasks)->count();
+             $taskquery=Task::where('project_id',$request->project_id)->whereIn('tasks.id',$Tasks);
              }else{
                   $Tasks = Task::all()->pluck('id');
                  $tickets = Ticket::whereIn('task_id',$Tasks);
-         $taskquery=Task::whereIn('tasks.id',$Tasks)->count();
- 
+         $taskquery=Task::whereIn('tasks.id',$Tasks);
+
              }
+        $tasktotal=$taskquery->count();
+             $userTickets =$tickets->distinct()->pluck('assignee_id');
 
+             $today = new DateTime(Carbon::now()->format('Y-m-d'));
 
-// $data[0]['value']=array($data[0]['value'],);
-// $data[0]['className']=array($data[0]['className'],'graphic_alert_green');
-array_push($data,array('value'=>$taskquery-intval($data[0]['value']),'className'=>'graphic_alert_green'));
-if ($request->has('type') ) {
-
-    switch($query->type)
-     {
-        case 1 :
-        array_push($type, 'User Story');
-        break;
-        case 2 :
-            array_push($type, 'Bug');
-        break;
-        case 3 :
-        array_push($type, 'Risk');
-        break ;
-        case 4 :
-        array_push($type, 'Epic');
-        break ;
-         case 5 :
-         array_push($type, 'Scope Changes');
-        break;
-        
-    
-     }
-     array_push($type, 'Others Tickets');
-    }     
-}
-}
-
-
-    // $t =$taskquery-intval($data[0]['value']);
-    // return $t;
-    return response()->json(array('type' => $type,'data' => $data,'total' =>$taskquery-intval($data[0]['value']) ));
-
-}
-
-
-////////////////////////Resources
-
-public function chartResourceUtilization(Request $request)
-{
-    $data=array();
-    $name=array();
-    $label="";
-    $tasktotal=0;
-    if ($request->has('project_id') ) {
-        // $project = Project::find($request->project_id);
-          $Tasks = Task::where('project_id',$request->project_id)->pluck('id');
-         $tickets = Ticket::whereIn('task_id',$Tasks);
-         $taskquery=Task::where('project_id',$request->project_id)->whereIn('tasks.id',$Tasks);
-         }else{
-              $Tasks = Task::all()->pluck('id');
-             $tickets = Ticket::whereIn('task_id',$Tasks);
-     $taskquery=Task::whereIn('tasks.id',$Tasks);
-
-         }
-$tasktotal=$taskquery->count();
-         $userTickets =$tickets->distinct()->pluck('assignee_id');
-
-         $today = new DateTime(Carbon::now()->format('Y-m-d'));
-
-     if ($request->has('project_id') ) {
-           
-        $userTickets =$tickets->select('users.name AS user_name',\DB::raw('count(tickets.id) as count'))
-        ->join('users', 'users.id', '=', 'tickets.assignee_id')
-        ->join('tasks', 'tickets.task_id', '=', 'tasks.id')
-
-        ->WhereIn('tickets.assignee_id',$userTickets)
-        
-        ->Where('tasks.project_id',$request->project_id)
-        ->Where('tickets.due_date','<',$today)
-        ->Where('tickets.status','<>',6)
-        ->groupBy('users.name')->orderBy(\DB::raw('count(tickets.id)'),'DESC')->get();
-
-        $Tasks = Task::where('project_id',$request->project_id)->pluck('id');
-        $tickets = Ticket::whereIn('task_id',$Tasks);
-
-        //$tasktotal=$tickets->count();
-             }else{
-           
+         if ($request->has('project_id') ) {
+               
             $userTickets =$tickets->select('users.name AS user_name',\DB::raw('count(tickets.id) as count'))
             ->join('users', 'users.id', '=', 'tickets.assignee_id')
+            ->join('tasks', 'tickets.task_id', '=', 'tasks.id')
+
             ->WhereIn('tickets.assignee_id',$userTickets)
+            
+            ->Where('tasks.project_id',$request->project_id)
             ->Where('tickets.due_date','<',$today)
             ->Where('tickets.status','<>',6)
-            ->groupBy('users.name')->orderBy(\DB::raw('count(tickets.id)'),'DESC')->get();    
-        }
-            
-            $k=$Tasks->count();
+            ->groupBy('users.name')->orderBy(\DB::raw('count(tickets.id)'),'DESC')->get();
 
-            $i=1;
-            $maxR= max($userTickets->pluck('count')->toArray());
-            $minR= min($userTickets->pluck('count')->toArray());
-            foreach ($userTickets as $ut) {
-                $k=$ut->count;
+            $Tasks = Task::where('project_id',$request->project_id)->pluck('id');
+            $tickets = Ticket::whereIn('task_id',$Tasks);
 
-                // if($ut->count==$maxR) {$class='graphic_alert_green';}
-                // //if($ut->count==$minR) {$class='graphic_alert_red';}
-                // if($ut->count<$maxR ){$class='graphic_alert_'.intval($i);}
-
-            // if($k==($tasktotal)-1){$class='graphic_alert_green';}
-            array_push($data, array('value'=> $k)); //'className'=> $class
-            array_push($name, $ut->user_name);
-            $i++;
+            //$tasktotal=$tickets->count();
+                 }else{
+               
+                $userTickets =$tickets->select('users.name AS user_name',\DB::raw('count(tickets.id) as count'))
+                ->join('users', 'users.id', '=', 'tickets.assignee_id')
+                ->WhereIn('tickets.assignee_id',$userTickets)
+                ->Where('tickets.due_date','<',$today)
+                ->Where('tickets.status','<>',6)
+                ->groupBy('users.name')->orderBy(\DB::raw('count(tickets.id)'),'DESC')->get();    
             }
+                
+                $k=$Tasks->count();
 
-            
-            // array_push($data, array('value'=> count($tasktotal),'className'=> 'graphic_alert_green'));
-            // array_push($name, 'Total');
+                $i=1;
+                $maxR= max($userTickets->pluck('count')->toArray());
+                $minR= min($userTickets->pluck('count')->toArray());
+                foreach ($userTickets as $ut) {
+                    $k=$ut->count;
 
-    return response()->json(array('type' =>$name ,'data' =>$data,'total' =>($tasktotal)));
+                    // if($ut->count==$maxR) {$class='graphic_alert_green';}
+                    // //if($ut->count==$minR) {$class='graphic_alert_red';}
+                    // if($ut->count<$maxR ){$class='graphic_alert_'.intval($i);}
 
-}
+                // if($k==($tasktotal)-1){$class='graphic_alert_green';}
+                array_push($data, array('value'=> $k)); //'className'=> $class
+                array_push($name, $ut->user_name);
+                $i++;
+                }
 
+                
+                // array_push($data, array('value'=> count($tasktotal),'className'=> 'graphic_alert_green'));
+                // array_push($name, 'Total');
 
-//////////////////////////////////////
+        return response()->json(array('type' =>$name ,'data' =>$data,'total' =>($tasktotal)));
+    }
+    //////////////////////////////////////
+    public function chartIssues(Request $request)
+    {
+        if ($request->has('project_id') ) {
+            // $project = Project::find($request->project_id);
+            $Tasks = Task::where('project_id',$request->project_id)->pluck('id');
+            $tickets = Ticket::whereIn('tickets.task_id',$Tasks);
+            $taskquery=Task::where('project_id',$request->project_id)->whereIn('tasks.id',$Tasks);
+        }else{
+            $Tasks = Task::all()->pluck('id');
+            $tickets = Ticket::whereIn('tickets.task_id',$Tasks);
+            $taskquery=Task::whereIn('tasks.id',$Tasks);
+        }
+        $ticketT= $tickets->count();
+        $userTickets =$tickets->distinct()->pluck('assignee_id');
+        $data = array();
 
+        $data=array();
+        $name=array();
+        $type=array();
 
-
-public function chartIssues(Request $request)
-{
-     if ($request->has('project_id') ) {
-           // $project = Project::find($request->project_id);
-             $Tasks = Task::where('project_id',$request->project_id)->pluck('id');
+        if (!$request->has('project_id') ) {
+            $userTicketsType =$tickets->select('users.name AS user_name','type','status','priority',\DB::raw('count(tickets.id) as count'))
+            ->join('task_resources', 'task_resources.id', '=', 'tickets.assignee_id')
+            ->join('users', 'users.id', '=', 'task_resources.user_id')
+            ->Where('tickets.type','=',2)->orWhere('tickets.type','=',5)->get();
+            // ->groupBy('type')->orderBy(\DB::raw('count(tickets.id)'),'DESC')->get();
+            // $ticketT= $tickets->count();
+        }else{
+            $userTicketsType =$tickets->select('users.name AS user_name','type','status','priority',\DB::raw('count(tickets.id) as count'))
+            ->join('task_resources', 'task_resources.id', '=', 'tickets.assignee_id')
+            ->join('users', 'users.id', '=', 'task_resources.user_id')
+            ->Where('tickets.type','=',2)->orWhere('tickets.type','=',5)
+            ->WhereIn('tickets.assignee_id',$userTickets)->get();
+           // ->groupBy('type')->orderBy(\DB::raw('count(tickets.id)'),'DESC')->get();
+        }
+        foreach ($userTicketsType as $k=>$query) {
+            array_push($data, array('value'=> $query->count,'className'=> 'graphic_alert_red'));
+            array_push($name, 'Issues Tickets');
+            array_push($data, array('value'=> $ticketT-$query->count,'className'=> 'graphic_alert_green'));
+            array_push($name, 'Others Tickets');
+        }
+        
+        return response()->json(array('type' =>$name ,'data' =>$data ,'total' =>$ticketT));
+    }
+    ////////// Response Times
+    public function chartResponseTimes(Request $request)
+    {
+        $data=array();
+        $name=array();
+        $label="";
+        $tasktotal=0;
+        if ($request->has('project_id') ) {
+            // $project = Project::find($request->project_id);
+            $Tasks = Task::where('project_id',$request->project_id)->pluck('id');
             $tickets = Ticket::whereIn('task_id',$Tasks);
             $taskquery=Task::where('project_id',$request->project_id)->whereIn('tasks.id',$Tasks);
-            }else{
-                 $Tasks = Task::all()->pluck('id');
-                $tickets = Ticket::whereIn('task_id',$Tasks);
+        }else{
+            $Tasks = Task::all()->pluck('id');
+            $tickets = Ticket::whereIn('task_id',$Tasks);
             $taskquery=Task::whereIn('tasks.id',$Tasks);
-
-            }
-            $ticketT= $tickets->count();
-
-
-$userTickets =$tickets->distinct()->pluck('assignee_id');
-    $data = array();
-
-
-$data=array();
-$name=array();
-$type=array();
-
-
-
-    if (!$request->has('project_id') ) {
-    $userTicketsType =$tickets->select('users.name AS user_name','type','status','priority',\DB::raw('count(tickets.id) as count'))
-                ->join('users', 'users.id', '=', 'tickets.assignee_id')
-                ->Where('tickets.type','=',2)->orWhere('tickets.type','=',5)->get();
-                //    ->groupBy('type')->orderBy(\DB::raw('count(tickets.id)'),'DESC')->get();
-             //   $ticketT= $tickets->count();
-
-
-                
-    }else{
-        $userTicketsType =$tickets->select('users.name AS user_name','type','status','priority',\DB::raw('count(tickets.id) as count'))
-        ->join('users', 'users.id', '=', 'tickets.assignee_id')
-        ->Where('tickets.type','=',2)->orWhere('tickets.type','=',5)
-        ->WhereIn('tickets.assignee_id',$userTickets)->get();
-       // ->groupBy('type')->orderBy(\DB::raw('count(tickets.id)'),'DESC')->get();
-    }
-    foreach ($userTicketsType as $k=>$query) {
-   
-     
-        array_push($data, array('value'=> $query->count,'className'=> 'graphic_alert_red'));
-     array_push($name, 'Issues');
-     array_push($data, array('value'=> $ticketT-$query->count,'className'=> 'graphic_alert_green'));
-     array_push($name, 'Others Tickets');
-
-    }
-    
-    return response()->json(array('type' =>$name ,'data' =>$data ,'total' =>$ticketT));
-
-}
-
-
-////////// Response Times
-
-public function chartResponseTimes(Request $request)
-{
-    $data=array();
-    $name=array();
-    $label="";
-    $tasktotal=0;
-    if ($request->has('project_id') ) {
-        // $project = Project::find($request->project_id);
-          $Tasks = Task::where('project_id',$request->project_id)->pluck('id');
-         $tickets = Ticket::whereIn('task_id',$Tasks);
-         $taskquery=Task::where('project_id',$request->project_id)->whereIn('tasks.id',$Tasks);
-         }else{
-              $Tasks = Task::all()->pluck('id');
-             $tickets = Ticket::whereIn('task_id',$Tasks);
-            $taskquery=Task::whereIn('tasks.id',$Tasks);
-
-         }
+        }
         $tasktotal=$taskquery->count();
-         $userTickets =$tickets->distinct()->pluck('assignee_id');
+        $userTickets =$tickets->distinct()->pluck('assignee_id');
 
-         $today = new DateTime(Carbon::now()->format('Y-m-d'));
-         $userResponsetime=array();
+        $today = new DateTime(Carbon::now()->format('Y-m-d'));
+        $userResponsetime=array();
         foreach($userTickets as $user)
         {
-            
-                if($request->has('project_id')){
-                    
-            
-                    $project = Project::find($request->project_id);
-                    
-                    $begin = ($project->start);
-                    $end = ($project->finish);
-                    $tasks = Task::where('project_id', '=', $request->project_id)
-                    ->join('tickets', 'tickets.task_id', '=', 'tasks.id')
-                    ->where('tickets.assignee_id',$user)
-                    ->orderBy('index', 'asc')
-
-                        ->whereRaw("start_date BETWEEN CAST('$begin' AS DATE) AND CAST('$end' AS DATE)")
-
-                        ->get();
-                        $tasktotal=Task::where('project_id', '=', $request->project_id)->count();
                 
-                        
-            
-                    }else{
-                    $firstdate =Project::select('start')->min('start');
-                    $lastdate =Project::select('finish')->max('finish');
-                    $begin = ($firstdate);
-                    $end = ($lastdate);
+            if($request->has('project_id')){
+                
+                $project = Project::find($request->project_id);
+                
+                $begin = ($project->start);
+                $end = ($project->finish);
+                $tasks = Task::where('project_id', '=', $request->project_id)
+                ->join('tickets', 'tickets.task_id', '=', 'tasks.id')
+                ->where('tickets.assignee_id',$user)
+                ->orderBy('index', 'asc')
+                ->whereRaw("start_date BETWEEN CAST('$begin' AS DATE) AND CAST('$end' AS DATE)")->get();
+                $tasktotal=Task::where('project_id', '=', $request->project_id)->count();
+            }else{
+                $firstdate =Project::select('start')->min('start');
+                $lastdate =Project::select('finish')->max('finish');
+                $begin = ($firstdate);
+                $end = ($lastdate);
 
-                    $tasks = Task::join('tickets', 'tickets.task_id', '=', 'tasks.id')
-                    ->where('tickets.assignee_id',$user)->orderBy('index', 'asc')
-                        ->whereRaw("start_date BETWEEN CAST('$begin' AS DATE) AND CAST('$end' AS DATE)")
-                        ->get();
-                        $tasktotal=Task::all()->count();
+                $tasks = Task::join('tickets', 'tickets.task_id', '=', 'tasks.id')
+                ->where('tickets.assignee_id',$user)->orderBy('index', 'asc')
+                    ->whereRaw("start_date BETWEEN CAST('$begin' AS DATE) AND CAST('$end' AS DATE)")
+                    ->get();
+                $tasktotal=Task::all()->count();
+            }
+                
+            $countoverdues = 0;
+            $countonpprogress=0;
+            $countcompleted=0;
+            $countcompletedbefore=0;
+            $type=array();
+            $data=array();
+            foreach ($tasks as $task) {
+             
 
-                    }
-            
-            
-                    $countoverdues = 0;
-                    $countonpprogress=0;
-                    $countcompleted=0;
-                    $countcompletedbefore=0;
-                    $type=array();
-                    $data=array();
-                    foreach ($tasks as $task) {
-                     
-        
-                        $duedate = new DateTime(date('Y-m-d', strtotime($task->due_date)));
-                        $today = new DateTime(Carbon::now()->format('Y-m-d'));
-        
-                        if ($duedate < $today && $task->progress != 100) {
-                            $countoverdues++;
-                        }
-                        if ($duedate < $today && $task->progress == 100) {
-                            $countcompleted++;
-                        }
-                        if ($duedate > $today && $task->progress == 100) {
-                            $countcompletedbefore++;
-                        }
-                        if ($duedate > $today && $task->progress != 100) {
-                            $countonpprogress++;
-                        }
-                     
-                    }
-                     
-                    // if($countoverdues>0){
-                    //     array_push($type, 'OverDue');
-                    //     array_push($data, array('value'=>$countoverdues));
-                    //     }
-                    //     if($countcompleted>0){
-                    //     array_push($type, 'Completed');
-                    //     array_push($data,  array('value'=>$countcompleted));
-                    //     }
-                    //     if($countonpprogress>0){
-                    //     array_push($type, 'On Progress');
-                    //     array_push($data, array('value'=>$countonpprogress));
-                    //     }
-                    //     if($countcompletedbefore>0){
-                    //     array_push($type, 'Completed Before Date');    
-                    //     array_push($data, array('value'=>$countcompletedbefore));
-                    //     }   
-                    $totalperusercompleted=$countonpprogress+$countcompletedbefore;
-                    $userName=User::find($user);
-                        array_push($type, 'Completed');
-                        array_push($data,  array('value'=>$totalperusercompleted));
-                        array_push($type, 'OverDue');
-                        array_push($data, array('value'=>$countoverdues));
-                        array_push($userResponsetime,array('user'=>$userName->name,'type' =>$type ,'data' =>$data));
-                        $countoverdues = 0;
-                        $countonpprogress=0;
-                        $countcompleted=0;
-                        $countcompletedbefore=0;
-                        $type=array();
-                        $data=array();
-                  
+                $duedate = new DateTime(date('Y-m-d', strtotime($task->due_date)));
+                $today = new DateTime(Carbon::now()->format('Y-m-d'));
 
+                if ($duedate < $today && $task->progress != 100) {
+                    $countoverdues++;
                 }
-               
-
-    return response()->json($userResponsetime);
-
-}
+                if ($duedate < $today && $task->progress == 100) {
+                    $countcompleted++;
+                }
+                if ($duedate > $today && $task->progress == 100) {
+                    $countcompletedbefore++;
+                }
+                if ($duedate > $today && $task->progress != 100) {
+                    $countonpprogress++;
+                }
+             
+            }
+                         
+            // if($countoverdues>0){
+            //     array_push($type, 'OverDue');
+            //     array_push($data, array('value'=>$countoverdues));
+            //     }
+            //     if($countcompleted>0){
+            //     array_push($type, 'Completed');
+            //     array_push($data,  array('value'=>$countcompleted));
+            //     }
+            //     if($countonpprogress>0){
+            //     array_push($type, 'On Progress');
+            //     array_push($data, array('value'=>$countonpprogress));
+            //     }
+            //     if($countcompletedbefore>0){
+            //     array_push($type, 'Completed Before Date');    
+            //     array_push($data, array('value'=>$countcompletedbefore));
+            //     }   
+            $totalperusercompleted=$countonpprogress+$countcompletedbefore;
+            $userName=User::find($user);
+            array_push($type, 'Completed');
+            array_push($data,  array('value'=>$totalperusercompleted));
+            array_push($type, 'OverDue');
+            array_push($data, array('value'=>$countoverdues));
+            array_push($userResponsetime,array('user'=>$userName->name,'type' =>$type ,'data' =>$data));
+            $countoverdues = 0;
+            $countonpprogress=0;
+            $countcompleted=0;
+            $countcompletedbefore=0;
+            $type=array();
+            $data=array();
+        }
+                   
+        return response()->json($userResponsetime);
+    }
 
 
 /////////

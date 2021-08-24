@@ -241,7 +241,7 @@ Route::get('/holidays_templates/{id}/delete', 'HolidayTemplateController@delete'
 Route::post('/holidays_templates/update', 'HolidayTemplateController@update');
 
 //Catalog
-Route::get('/catalog', 'CatalogController@index')->name('catalog');
+Route::get('/catalog', 'CatalogController@index');
 Route::get('/catalog/{parameter}/view/{lang_system}/{type}/{directory}', 'CatalogController@index');
 
 
@@ -333,8 +333,7 @@ Route::get('/projects/{id}/pdf', 'ProjectController@pdf');
 Route::post('/projects/delete', 'ProjectController@delete');
 Route::post('/projects/update', 'ProjectController@update');
 Route::get('/projects/{id}/show', 'ProjectController@show');
-Route::post('/projects/download', 'ProjectController@download');
-Route::post('/projects/validate', 'ProjectController@validate_download');
+Route::post('projects/validate_download', 'ProjectController@validate_download');
 
 // Capacity Planing
 Route::get('/capacity_planing', 'CapacityPlanningController@index');
@@ -507,7 +506,6 @@ Route::get('/kpis_category/{id}/delete', 'KpiCategoryController@delete');
 Route::post('/kpis_category/update', 'KpiCategoryController@update');
 
 Route::get('/kpis_functions', 'KpiFunctionsController@index');
-Route::get('/main-menu/{parameter}/{parameter2}/kpis_functions', 'KpiFunctionsController@index');
 Route::get('/kpis_functions/{category_kpi}', 'KpiFunctionsController@index');
 
 // ProjectRows
@@ -516,12 +514,12 @@ Route::get('/project/rows/{id}', 'ProjectRowController@index');
 // ProjectKpiAlerts
 Route::get('/project_kpi_alerts/create', 'ProjectKpiAlertController@create');
 
-Route::post('/project_kpi_alerts/{id}/update', 'ProjectKpiAlertController@update');
-Route::post('/project_kpi_alerts/{id}', 'ProjectKpiAlertController@store');
+// Route::post('/project_kpi_alerts/{id}/update', 'ProjectKpiAlertController@update');
+// Route::post('/project_kpi_alerts/{id}', 'ProjectKpiAlertController@store');
 
-Route::post('/project_kpi_alerts', 'ProjectKpiAlertController@store');
 Route::get('/project_kpi_alerts/{id}/edit', 'ProjectKpiAlertController@edit');
 Route::get('/project_kpi_alerts/{id}/delete', 'ProjectKpiAlertController@delete');
+Route::post('/project_kpi_alerts', 'ProjectKpiAlertController@store');
 Route::post('/project_kpi_alerts/update', 'ProjectKpiAlertController@update');
 
 // Contracts
@@ -534,8 +532,7 @@ Route::get('/contracts/{id}/show', 'ContractController@show');
 Route::get('/contracts/{id}/edit', 'ContractController@edit');
 Route::post('/contracts/delete', 'ContractController@delete');
 Route::post('/contracts/update', 'ContractController@update');
-Route::post('/contracts/download', 'ContractController@download');
-Route::post('/contracts/validate', 'ContractController@validate_download');
+Route::post('/contracts/validate_download', 'ContractController@validate_download');
 
 // ContractRows
 Route::get('/contract/rows/{id}', 'ContractRowController@index');
@@ -571,7 +568,8 @@ Route::post('/contract_materials/update', 'ContractMaterialController@update');
 
 // AdditionalHours
 Route::get('/additional_hours', 'AdditionalHourController@index');
-Route::get('/main-menu/{parameter}/additional_hours', 'AdditionalHourController@index');
+Route::get('/knowledge_area/team_management/additional_hours', 'AdditionalHourController@index');
+Route::get('/process_group/executing/additional_hours', 'AdditionalHourController@index');
 Route::get('/additional_hours/create', 'AdditionalHourController@create');
 Route::post('/additional_hours', 'AdditionalHourController@store');
 Route::get('/additional_hours/{id}/edit', 'AdditionalHourController@edit');
@@ -792,8 +790,10 @@ Route::post('/tasks/update', 'TaskController@update');
 Route::post('/tasks/do_import', 'TaskController@do_import');
 
 // Sprints
-Route::get('/sprints/{project_id}', 'SprintsController@index');
-Route::get('/sprints/{project_id}/{parameter?}', 'SprintsController@index');
+Route::get('/sprints/{project_id}', 'SprintsController@index'); // Ruta en knowledge Area / Time Management 
+Route::get('/planning/sprints/{project_id}', 'SprintsController@index'); // Ruta en Process Group / Planning
+Route::get('/closing/sprints/{project_id}', 'SprintsController@index'); // Rutea en Process Groupe / Closing
+
 Route::get('/sprints/create', 'SprintsController@create');
 Route::get('/sprints/{id}/tickets', 'TicketController@indexsprints');
 Route::get('/sprints/{id}', 'SprintsController@show');
@@ -941,6 +941,7 @@ Route::post('/notes/update', 'NoteController@update');
 
 // Workboard
 Route::get('/workboard', 'WorkboardController@index');
+Route::get('/workboard/{group}', 'WorkboardController@grouping');
 Route::get('/workboard/{id}/edit', 'WorkboardController@edit');
 
 // Capacity Planning
@@ -1016,13 +1017,9 @@ Route::get('/credit', 'HelpController@credit');
 Route::get('/help', 'HelpController@help');
 Route::get('/about', 'HelpController@about');
 Route::get('/started', 'HelpController@started');
-Route::get('/kpis', 'HelpController@kpis');
 Route::get('/admin', 'HelpController@admin');
 Route::get('/guie-users', 'HelpController@users');
-Route::get('/guie/{archivo}', 'HelpController@download');
 Route::get('/help-kpis', 'HelpController@kpis');
-Route::get('/admin', 'HelpController@admin');
-Route::get('/guie-users', 'HelpController@users');
 Route::get('/download/{lang}/{archivo}', 'HelpController@download');
 
 

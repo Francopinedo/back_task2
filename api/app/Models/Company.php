@@ -8,8 +8,24 @@ class Company extends Model {
 
 	protected $table = 'companies';
 	public $timestamps = true;
-	protected $fillable = array('name', 'address', 'city_id', 'email', 'phone', 'billing_name', 'billing_address', 'tax_number1',
-		'bank_name', 'account_number', 'swiftcode', 'aba', 'currency_id', 'industry_id', 'user_id', 'logo_path');
+	protected $fillable = array(
+		'name', 
+		'address', 
+		'country_id', 
+		'city_id', 
+		'email', 
+		'phone', 
+		'billing_name', 
+		'billing_address', 
+		'tax_number1',
+		'bank_name', 
+		'account_number', 
+		'swiftcode', 
+		'aba', 
+		'currency_id', 
+		'industry_id', 
+		'user_id', 
+		'logo_path');
 
 	public function City()
 	{
@@ -32,5 +48,10 @@ class Company extends Model {
     public function RocketChatUsers()
     {
         return $this->hasMany('App\RocketChatUser','company_id','id');
+    }
+
+    public function Country()
+    {
+    	return $this->belongsTo('App\Country');
     }
 }

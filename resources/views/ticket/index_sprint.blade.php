@@ -42,7 +42,7 @@
                     {data: 'assignee_name', name: 'assignee_name'},
                     {data: 'status', name: 'status'},
                     {data: 'group', name: 'group'},
-                    {data: 'sprint', name: 'sprint'},
+                    // {data: 'sprint', name: 'sprint'},
                     {data: 'due_date', name: 'due_date'},
                     {data: 'requester_name', name: 'requester_name'},
                     {data: 'priority', name: 'priority'},
@@ -80,6 +80,8 @@
                             return '{{ __('tickets.type_3') }}';
                         if (data == 4)
                             return '{{ __('tickets.type_4') }}';
+                        if (data == 5)
+                            return '{{ __('tickets.type_5') }}';
                     }
                 },
                     {
@@ -114,7 +116,7 @@
                         }
                     },
                     {
-                        targets: 10,
+                        targets: 9,
                         data: null,
                         render: function (data, type, row) {
 
@@ -130,7 +132,7 @@
                         }
                     },
                     {
-                        targets: 11,
+                        targets: 10,
                         data: null,
                         render: function (data, type, row) {
                             if (data == 0)
@@ -149,7 +151,7 @@
                         }
                     },
                     {
-                        targets: 12,
+                        targets: 11,
                         data: null,
                         render: function (data, type, row) {
                             if (data == 0)
@@ -164,7 +166,7 @@
 
                         }
                     }, {
-                        targets: 13,
+                        targets: 12,
                         data: null,
                         render: function (data, type, row) {
                             if (data == 0)
@@ -205,7 +207,6 @@
                 <div class="uk-width-1-1">
 
                     <h3>{{__('tickets.tickets_test')}} {{$sprint->long_name}}</h3>
-
                     @if(session()->has('message'))
                         <div class="uk-alert uk-alert-{{ session('alert-class', 'close') }}" data-uk-alert>
                             <a href="#" class="uk-alert-close uk-close"></a>
@@ -231,7 +232,7 @@
                                 <th title="{{__('tickets_tooltip.assignee')}}">{{ __('tickets.assignee') }}</th>
                                 <th title="{{__('tickets_tooltip.status')}}">{{ __('tickets.status') }}</th>
                                 <th title="{{__('tickets_tooltip.group')}}">{{ __('tickets.group') }}</th>
-                                <th title="{{__('tickets_tooltip.sprint')}}">{{ __('tickets.sprint') }}</th>
+                                {{-- <th title="{{__('tickets_tooltip.sprint')}}">{{ __('tickets.sprint') }}</th> --}}
                                 <th title="{{__('tickets_tooltip.due_date')}}">{{ __('tickets.due_date') }}</th>
                                 <th title="{{__('tickets_tooltip.requester')}}">{{ __('tickets.requester') }}</th>
 

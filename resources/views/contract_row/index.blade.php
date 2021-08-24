@@ -83,8 +83,8 @@
                     var i = 0;
                     api.columns().every(function () {
                         if (i == 13) {
-                            console.log(this
-                                .data());
+                            // console.log(this
+                            //     .data());
                             var sum = this
                                 .data()
                                 .reduce(function (a, b) {
@@ -178,7 +178,19 @@
                                 '<a title="{{__('general.delete')}}" href="/contract_expenses/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>'
                             <?php } ?>;
                     }
-                }],
+                },
+                {
+                    targets: 2,
+                    data: null,
+                    render: function (data, type, row) {
+                        if (data == 0) {
+                            return 'No';
+                        } else {
+                            return 'si';
+                        }
+                    }
+                },
+                ],
                 initComplete: function (settings, json) {
                     tableActions.initEdit();
                     // tableActions.initAjaxCreate();
@@ -264,7 +276,19 @@
                                 '<a title="{{__('general.delete')}}" href="/contract_services/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>'
                             <?php } ?>;
                     }
-                }],
+                },
+                {
+                    targets: 2,
+                    data: null,
+                    render: function (data, type, row) {
+                        if (data == 0) {
+                            return 'No';
+                        } else {
+                            return 'si';
+                        }
+                    }
+                },
+                ],
                 "footerCallback": function (row, data, start, end, display) {
                     var api = this.api();
 
@@ -358,7 +382,19 @@
                                 '<a title="{{__('general.delete')}}" href="/contract_materials/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>'
                             <?php } ?>;
                     }
-                }],
+                },
+                {
+                    targets: 2,
+                    data: null,
+                    render: function (data, type, row) {
+                        if (data == 0) {
+                            return 'No';
+                        } else {
+                            return 'si';
+                        }
+                    }
+                },
+                ],
 
                 "footerCallback": function (row, data, start, end, display) {
                     var api = this.api();

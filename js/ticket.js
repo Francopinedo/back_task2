@@ -40,6 +40,12 @@ var Ticket = (function () {
 
             })
 
+            $("#requester_name").on('change', function () {
+                $("#requester_email").val($("#requester_name").val());
+                $("#requester_type").val($("#requester_name").val());
+
+            })
+
         },
 
     };

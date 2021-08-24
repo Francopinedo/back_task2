@@ -65,4 +65,5 @@ return [
 	'add_new'			  => 'Añadir Nuevo',
 	'file'			  => 'Descargar en pdf',
 	'type_project'		=> 'Tipo de Proyecto',
+	'add_a_customer' 	=> 'Para operar con este módulo debe de existir un cliente'
 ];

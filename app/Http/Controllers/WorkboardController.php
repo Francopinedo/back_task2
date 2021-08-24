@@ -19,24 +19,76 @@ class WorkboardController extends Controller
      */
     public function index()
     {
-    	$phases = $this->getFromApi('POST', 'tasks/phases', ['project_id' => session('project_id')]);
-
-    	$tickets = [];
-    	foreach ($phases as $phase)
-    	{
-    		$tickets[$phase->phase]	= $this->getFromApi('GET', 'tickets/by_phase?phase='.$phase->phase.'&user_id='.Auth::id());
-    	}
-
+       
     	// para el form de edit
     	$company = $this->getFromApi('GET', 'companies/fromUser/'.Auth::id());
     	$users = $this->getFromApi('GET', 'users?company_id='.$company->id);
         $contacts = $this->getFromApi('GET', 'contacts?company_id='.$company->id);
         return view('workboard/index', [
-			'phases'   => $phases,
 			'contacts'   => $contacts,
-			'tickets'  => $tickets,
 			'company'  => $company,
 			'users'  => $users,
+        ]);
+    }
+
+    public function grouping($group){
+        $tickets = [];
+        $groupedby = [];
+
+        if($group == 'phase'){
+            $groupedby = $this->getFromApi('POST', 'tasks/phases', ['project_id' => session('project_id')]);
+            // Tickets por Phase
+            foreach ($groupedby as $phase)
+            {
+                $tickets[$phase->phase] = $this->getFromApi('GET', 'tickets/by_phase?phase='.$phase->phase.'&user_id='.Auth::id());
+            }
+        }
+        if($group == 'version'){
+            $groupedby = $this->getFromApi('POST', 'tasks/version', ['project_id' => session('project_id')]);
+            // Tickets por Version
+            foreach ($groupedby as $v)
+            {
+                $tickets[$v->version]   = $this->getFromApi('GET', 'tickets/by_version?version='.$v->version.'&user_id='.Auth::id());
+            }
+        }
+        if($group == 'release'){
+            $groupedby = $this->getFromApi('POST', 'tasks/release', ['project_id' => session('project_id')]);
+            // Tickets por Release
+            foreach ($groupedby as $release)
+            {
+                $tickets[$release->release]   = $this->getFromApi('GET', 'tickets/by_release?release='.$release->release.'&user_id='.Auth::id());
+            }
+        }
+        if($group == 'label'){
+            $groupedby = $this->getFromApi('POST', 'tasks/label', ['project_id' => session('project_id')]);
+            // Tickets por Label
+            foreach ($groupedby as $label)
+            {
+                $tickets[$label->label]   = $this->getFromApi('GET', 'tickets/by_label?label='.$label->label.'&user_id='.Auth::id());
+            }
+        }
+        if($group == 'sprint'){
+            $groupedby = $this->getFromApi('POST', 'sprints/sprint', ['project_id' => session('project_id')]);
+            // Tickets por Sprint
+            foreach ($groupedby as $sprint)
+            {
+                $tickets[$sprint->short_name]   = $this->getFromApi('GET', 'tickets/by_sprint?sprint_id='.$sprint->id.'&user_id='.Auth::id());
+            }
+        }
+        // para el form de edit
+        $company = $this->getFromApi('GET', 'companies/fromUser/'.Auth::id());
+        $users = $this->getFromApi('GET', 'users?company_id='.$company->id);
+        $contacts = $this->getFromApi('GET', 'contacts?company_id='.$company->id);
+
+        return response()->json([
+            'view' => view('workboard/grouping', [
+                'contacts' => $contacts,
+                'company' => $company,
+                'users' => $users,
+                'groupedby' => $groupedby,
+                'tickets'  => $tickets,
+                'group' => $group
+            ] )->render()
         ]);
     }
 
@@ -52,6 +104,7 @@ class WorkboardController extends Controller
         $users = $this->getFromApi('GET', 'task_resources?task_id=' . $ticket->task_id);
         $users2 = $this->getFromApi('GET', 'users?company_id=' . $company->id);
         $contacts = $this->getFromApi('GET', 'contacts?company_id='.$company->id);
+        $sprints = array();
 
     	return response()->json([
     		'view' => view('ticket/edit', [
@@ -59,7 +112,8 @@ class WorkboardController extends Controller
 				'contacts' => $contacts,
 				'redirect' => 'workboard',
 				'users'       => $users,
-				'users2'       => $users2
+				'users2'       => $users2,
+                'sprints' => $sprints,
     		] )->render()
     	]);
     }

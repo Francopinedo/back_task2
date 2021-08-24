@@ -42,5 +42,6 @@ return [
 	'info'               => 'Info',
 	'workgroups'         => 'Workgroups',
 	'delete_office'      => 'Delete this entire office',
-	'logo_path'          => 'Logo'
+	'logo_path'          => 'Logo',
+	'country'			 => 'Company country',
 ];

@@ -55,4 +55,5 @@ return [
 	'metagrids_store'				 => 'An error occurred in the Metagrid Creation',
 	'wiki_store'                  	 => 'An error occurred at Wiki Creation',
 	'error_upload'					 => 'This document is already uploaded, try another file',
+	'ticket_store'					 => 'An error occurred at ticket creation',
 ];

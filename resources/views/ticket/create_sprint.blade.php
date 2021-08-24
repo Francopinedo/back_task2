@@ -1,16 +1,13 @@
 <style>
-
     #create_div.switcher_active {
         width: 70%;
     }
-
-   
 </style>
+
  <form role="form" method="POST" action="{{ url('tickets') }}" id="data-form"
               data-redirect-on-success="{{ url('sprints/'.$sprint->id.'/tickets') }}">
-<div class="uk-grid" data-uk-grid-margin>
+    <div class="uk-grid" data-uk-grid-margin>
   
-
         <div class="uk-alert uk-alert-danger hide_when_empty" data-uk-alert="" id="status_code-error"></div>
 
     
@@ -252,7 +249,7 @@
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required owner_id-error"></span></div>
 
-   		<div class="md-input-wrapper">
+   		       <div class="md-input-wrapper">
                     <label>{{ __('tickets.contingency_plan') }}</label>
                     <textarea class="md-input" name="contingency_plan" ></textarea><span class="md-input-bar"></span>
                 </div>

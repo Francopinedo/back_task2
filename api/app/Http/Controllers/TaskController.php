@@ -95,7 +95,7 @@ class TaskController extends Controller
     }
 
 
-        public function index_export(Request $request)
+    public function index_export(Request $request)
     {
         $query = DB::table('tasks')
                     ->select(
@@ -254,38 +254,40 @@ class TaskController extends Controller
     public function update(Request $request, $id)
     {
 		try{
-        $task = Task::find($id);
-		
+            $task = Task::find($id);
+    		
 
-        if ($task == NULL) {
-            return $this->response->error('No existe', 450);
-        }
-
-        $data = $request->all();
-        if (empty($data)) {
-            return $this->response->error('No envio ningun parametro para actualizar', 452);
-        }
- if (!$request->has('requirement_id')) {
-        $data['requirement_id'] = NULL;
-       
-    }
-
-        $task->update($data);
-
-        if ($task) {
-            return $this->response->item($task, new TaskTransformer);
-        } else {
-            return $this->response->error('Error al editar', 451);
-        }
-			 } catch (\Exception $exception) {
-                return $exception;
+            if ($task == NULL) {
+                return $this->response->error('No existe', 450);
             }
+
+            $data = $request->all();
+            if (empty($data)) {
+                return $this->response->error('No envio ningun parametro para actualizar', 452);
+            }
+            if (!$request->has('requirement_id')) {
+                $data['requirement_id'] = NULL;
+               
+            }
+            if($task->phase != 'default'){
+                Task::where('phase', $task->phase)->update(['phase'=>$request->phase]);
+            }
+            $task->update($data);
+
+            if ($task) {
+                return $this->response->item($task, new TaskTransformer);
+            } else {
+                return $this->response->error('Error al editar', 451);
+            }
+		} catch (\Exception $exception) {
+            return $exception;
+        }
     }
 
     public function updateAll(Request $request)
     {
         try{
-//			return $request->tasks;
+			// return $request->tasks;
         foreach ($request->tasks as $data) {
 
             $task = Task::find($data['id']);
@@ -382,6 +384,75 @@ class TaskController extends Controller
         $phases = $query->get();
 
         return ['data' => $phases];
+    }
+
+    /**
+     * Version
+     *
+     * @Get("tasks/version")
+     * @Transaction({
+     *      @Response(200, body={
+     *        "id": "int"
+     *    })
+     * })
+     */
+    public function version(Request $request)
+    {
+        $query = Task::select('version')->distinct();
+
+        if ($request->has('project_id')) {
+            $query->where('project_id', $request->project_id);
+        }
+
+        $versions = $query->get();
+
+        return ['data' => $versions];   
+    }
+
+    /**
+     * Release
+     *
+     * @Get("tasks/release")
+     * @Transaction({
+     *      @Response(200, body={
+     *        "id": "int"
+     *    })
+     * })
+     */
+    public function release(Request $request)
+    {
+        $query = Task::select('release')->distinct();
+
+        if ($request->has('project_id')) {
+            $query->where('project_id', $request->project_id);
+        }
+
+        $releases = $query->get();
+
+        return ['data' => $releases];   
+    }
+
+    /**
+     * Label
+     *
+     * @Get("tasks/label")
+     * @Transaction({
+     *      @Response(200, body={
+     *        "id": "int"
+     *    })
+     * })
+     */
+    public function label(Request $request)
+    {
+        $query = Task::select('label')->distinct();
+
+        if ($request->has('project_id')) {
+            $query->where('project_id', $request->project_id);
+        }
+
+        $labels = $query->get();
+
+        return ['data' => $labels];   
     }
 
     public function datatables(Request $request)

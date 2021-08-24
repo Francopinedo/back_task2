@@ -125,13 +125,6 @@ class SettingsController extends Controller
 		   }else{
 		   	$request->merge(['knowledge_areas_active'=>'0']);
 		   }
-
-		   if (!empty($request['set']) && $request['set'] == 'on')
-		   {
-		   	$request->merge(['set' => '1']);
-		   } else {
-		   	$request->merge(['set' => '0']);
-		   }
 		
 		
 		$data = $request->all();

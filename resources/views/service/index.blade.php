@@ -107,7 +107,7 @@
                 		<div class="uk-width-medium-1-3" id="datatables-length"></div>
                 		<div class="uk-width-medium-1-3" id="datatables-pagination"></div>
                 		<div class="uk-width-medium-1-3">
-                			<a class="md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light" href="#" id="add-new')}}" title="{{ __('services.add_new') }}">{{ __('services.add_new') }}</a>
+                			<a class="md-btn md-btn-primary md-btn-wave-light waves-effect waves-button waves-light" href="#" id="add-new" title="{{ __('services.add_new') }}">{{ __('services.add_new') }}</a>
                 		</div>
                 	</div>
                 </div>

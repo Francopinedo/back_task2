@@ -33,32 +33,33 @@ class WorkingHourController extends Controller
         if (session()->has('project_id')) {
             $data['project'] = $this->getFromApi('GET', 'projects/' . session('project_id'));
 
-            if (isset($request->start)) {
-                $begin = new DateTime($request->start);
-            } else {
-                $begin = new DateTime($data['project']->start);
-            }
-
-            if (isset($request->finish)) {
-                $end = new DateTime($request->finish);
-            } else {
-                $end = new DateTime($data['project']->start);
-            }
-
-            // $end->add(new DateInterval('P1D'));
-
-            $end->setTime(0, 0, 1);
-            $interval = DateInterval::createFromDateString('1 day');
-            $period = new DatePeriod($begin, $interval, $end);
-
-            $workingHours = [];
-            $additionalHours = [];
 
             foreach ($users as $user) {
 
                 $totaluser = 0;
                 $totaluserAddti = 0;
                 $newusr = $user;
+                if (isset($request->start)) {
+                    $begin = new DateTime($request->start);
+                } else {
+                    $begin = new DateTime($data['project']->start);
+                }
+
+                if (isset($request->finish)) {
+                    $end = new DateTime($request->finish);
+                } else {
+                    $end = new DateTime($data['project']->start);
+                }
+
+
+                // $end->add(new DateInterval('P1D'));
+
+                $end->setTime(0, 0, 1);
+                $interval = DateInterval::createFromDateString('1 day');
+                $period = new DatePeriod($begin, $interval, $end);
+
+                $workingHours = [];
+                $additionalHours = [];
 
                 foreach ($period as $dt) {
 
@@ -70,7 +71,7 @@ class WorkingHourController extends Controller
                         
                         array_push($dates, $dt->format("Y-m-d"));
                     }
- 		if (!empty($workingHoursFromApi)) {
+        if (!empty($workingHoursFromApi)) {
             
                     //var_dump($workingHoursFromApi);
             
@@ -81,13 +82,13 @@ class WorkingHourController extends Controller
                     if ($workingHoursFromApi->hours >= 0) {
                         $totaluser = $totaluser + $workingHoursFromApi->hours;
                     }
-		}else{
- 			$wh = [];
+        }else{
+            $wh = [];
                     $wh['date'] = $dt->format("Y-m-d");
                     $wh['hours'] = 0;
-			$totaluser =0;
+            $totaluser =0;
 
-			}
+            }
 
                     $workingHours[$dt->format("Y-m-d")] = (object)$wh;
                     //$workingHours[$dt->format("Y-m-d")]  = $wh;

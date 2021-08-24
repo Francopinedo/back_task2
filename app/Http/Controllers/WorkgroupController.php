@@ -76,19 +76,19 @@ class WorkgroupController extends Controller
 
         $res = $this->getFromApi('POST', 'rcworkgroupchannel', $data);
         $data = ['name' => $res->fullname];
-        $res = $this->iredmailApiCall('POST', 'rcchannel', $data);
+        // $res = $this->iredmailApiCall('POST', 'rcchannel', $data);
 
         // validacion de la respuesta del api
-        if (!empty(json_decode($res->getBody()->__toString(), TRUE)['error'])) {
-            $jsonRes = json_decode($res->getBody()->__toString(), TRUE)['error'];
-            Validator::make($jsonRes,
-                ['status_code' => [Rule::in(['201', '200'])]],
-                ['in' => __('api_errors.workgroups_store')]
-            )->validate();
-        } else {
-            session()->flash('message', __('general.added'));
-            session()->flash('alert-class', 'success');
-        }
+        // if (!empty(json_decode($res->getBody()->__toString(), TRUE)['error'])) {
+        //     $jsonRes = json_decode($res->getBody()->__toString(), TRUE)['error'];
+        //     Validator::make($jsonRes,
+        //         ['status_code' => [Rule::in(['201', '200'])]],
+        //         ['in' => __('api_errors.workgroups_store')]
+        //     )->validate();
+        // } else {
+        //     session()->flash('message', __('general.added'));
+        //     session()->flash('alert-class', 'success');
+        // }
 
 
         return response()->json();

@@ -98,7 +98,7 @@
                                 <input class="md-input" required type="text"  id="period_from" name="start"
                                        placeholder="{{ __('capacity_planning.period_from') }}"
                                        value="{{ $contracts[0]->start_date}}"
-                                       data-uk-datepicker="{format:'YYYY-MM-DD'}"><!--{{ $contracts[0]->start_date}}-->
+                                       data-uk-datepicker="{format:'YYYY-MM-DD'}">
                             </div>
                         </div>
 
@@ -109,7 +109,7 @@
                             </div>
                         </div>
 
-                        <div class="uk-width-1-6"><!--{{ $contracts[0]->finish_date}}-->
+                        <div class="uk-width-1-6">
                             <div class="md-input-wrapper">
                                 <input class="md-input" required placeholder="{{ __('capacity_planning.period_to') }} "
                                        type="text" 
@@ -119,8 +119,7 @@
                         </div>
 
 
-<div class="uk-width-1-6">
-
+                        <div class="uk-width-1-6">
                             <div class="md-input-wrapper">
                                 <label>{{ __('capacity_planning.sprint_from') }}</label>
 
@@ -151,12 +150,9 @@
                             </div>
                         </div>
 
-
-<div class="uk-width-1-6">
-
+                        <div class="uk-width-1-6">
                             <div class="md-input-wrapper">
                                 <label>{{ __('capacity_planning.sprint_from') }}</label>
-
                             </div>
                         </div>
                         <div class="uk-width-1-6">

@@ -28,16 +28,6 @@
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required address-error"></span></div>
 
-               <!-- <div class="md-input-wrapper">
-                	<select name="city_id" data-md-selectize>
-                	    <option value="">{{ __('companies.city') }}...</option>
-                	    @foreach ($cities as $city)
-                	        <option value="{{ $city->id }}">{{ $city->name }} ({{ $city->location_name }})</option>
-                	    @endforeach
-                	</select>
-                </div>
-                <div class="parsley-errors-list filled"><span class="parsley-required city_id-error"></span></div>
--->
                 <div class="md-input-wrapper">
                 	<label>{{ __('companies.email') }}</label>
                 	<input type="email" class="md-input" name="email"><span class="md-input-bar"></span>
@@ -97,6 +87,22 @@
                 <div class="parsley-errors-list filled"><span class="parsley-required aba-error"></span></div>
 
                 <div class="md-input-wrapper">
+                    <select name="country_id" id="country_id" data-md-selectize>
+                        <option value="">{{ __('cities.country') }}...</option>
+                        @foreach ($countries as $country)
+                            <option value="{{ $country->id }}">{{ $country->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="parsley-errors-list filled"><span class="parsley-required country_id-error"></span></div>
+                
+                <div class="md-input-wrapper">
+                    <label>{{ __('companies.city') }}</label>
+                    <input type="text" class="md-input" name="city_name"><span class="md-input-bar"></span>
+                </div>
+                <div class="parsley-errors-list filled"><span class="parsley-required city_name-error"></span></div>
+
+                <div class="md-input-wrapper">
                 	<select name="currency_id" data-md-selectize>
                 	    <option value="">{{ __('companies.currency') }}...</option>
                 	    @foreach ($currencies as $currency)
@@ -129,4 +135,3 @@
 
 </div>
     	</form>
-

@@ -61,7 +61,7 @@ var RiskReport = (function () {
                     {data: 'assignee_name', name: 'assignee_name'},
                     {data: 'status', name: 'status'},
                     {data: 'group', name: 'group'},
-                    {data: 'sprint', name: 'sprint'},
+                    // {data: 'sprint', name: 'sprint'},
                     {data: 'due_date', name: 'due_date'},
                     {data: 'requester_name', name: 'requester_name'},
                     {data: 'priority', name: 'priority'},
@@ -212,7 +212,7 @@ var RiskReport = (function () {
                         }
                     },
                     {
-                        targets: 10,
+                        targets: 9,
                         data: null,
                         render: function (data, type, row) {
 
@@ -228,7 +228,7 @@ var RiskReport = (function () {
                         }
                     },
                     {
-                        targets: 11,
+                        targets: 10,
                         data: null,
                         render: function (data, type, row) {
                             if (data == 0)
@@ -247,7 +247,7 @@ var RiskReport = (function () {
                         }
                     },
                     {
-                        targets: 12,
+                        targets: 11,
                         data: null,
                         render: function (data, type, row) {
                             if (data == 0)
@@ -262,7 +262,7 @@ var RiskReport = (function () {
 
                         }
                     }, {
-                        targets: 13,
+                        targets: 12,
                         data: null,
                         render: function (data, type, row) {
                             if (data == 0)

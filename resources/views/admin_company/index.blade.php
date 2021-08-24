@@ -9,6 +9,7 @@
 	            { data: 'id', name: 'id', visible: false },
 	            { data: 'name', name: 'name' },
 	            { data: 'phone', name: 'phone' },
+	            {data: 'country_name', name: 'country_name'},
 	            { data: 'city_name', name: 'city_name' },
 	            { data: 'industry_name', name: 'industry_name' },
 	            { data: 'actions', name: 'actions'}
@@ -51,6 +52,7 @@
                 	        	<th title="{{__('companies_tooltip.id')}}">{{ __('companies.id') }}</th>
                 	        	<th title="{{__('companies_tooltip.name')}}">{{ __('companies.name') }}</th>
                 	        	<th title="{{__('companies_tooltip.phone')}}">{{ __('companies.phone') }}</th>
+                	        	<th title="{{__('companies_tooltip.country')}}">{{ __('companies.country') }}</th>
                 	        	<th title="{{__('companies_tooltip.city')}}">{{ __('companies.city') }}</th>
                 	        	<th title="{{__('companies_tooltip.industry')}}">{{ __('companies.industry') }}</th>
                 	        	<th title="{{__('general.actions')}}">{{ __('general.actions') }}</th>
@@ -74,7 +76,7 @@
 @endsection
 
 @section('create_div')
-	@component('admin_company/create', ['cities' => [], 'currencies' => $currencies, 'industries' => $industries])
+	@component('admin_company/create', ['cities' => [], 'countries' => $countries, 'currencies' => $currencies, 'industries' => $industries])
 
 	@endcomponent
 @endsection

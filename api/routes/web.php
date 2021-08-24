@@ -535,6 +535,7 @@ $api->get('kpis/chartCancelledProjects', 'App\Http\Controllers\KpiController@cha
   $api->get('dashboard', 'App\Http\Controllers\DashboardController@index');
   $api->get('dashboard/chartEv', 'App\Http\Controllers\DashboardController@chartEv');
   $api->get('dashboard/chartEvTotal', 'App\Http\Controllers\DashboardController@chartEvTotal');
+  $api->get('dashboard/chartEvTotalProject', 'App\Http\Controllers\DashboardController@chartEvTotalProject');
 
   $api->get('dashboard/calculateBasicsIndicators_total', 'App\Http\Controllers\DashboardController@calculateBasicsIndicators_total');
 
@@ -882,7 +883,13 @@ $api->delete('dashboard_category/{id}', 'App\Http\Controllers\DashboardCategoryC
     $api->get('tasks/index_export', 'App\Http\Controllers\TaskController@index_export');
 
     $api->get('tasks/datatables', 'App\Http\Controllers\TaskController@datatables');
+
     $api->post('tasks/phases', 'App\Http\Controllers\TaskController@phases');
+    $api->post('tasks/version', 'App\Http\Controllers\TaskController@version');
+    $api->post('tasks/release', 'App\Http\Controllers\TaskController@release');
+    $api->post('tasks/label', 'App\Http\Controllers\TaskController@label');
+    $api->post('tasks/sprint', 'App\Http\Controllers\TaskController@sprint');
+
     $api->get('tasks/{id}', 'App\Http\Controllers\TaskController@show');
     $api->post('tasks', 'App\Http\Controllers\TaskController@store');
     $api->post('tasks/store/all', 'App\Http\Controllers\TaskController@storeAll');
@@ -898,7 +905,13 @@ $api->delete('dashboard_category/{id}', 'App\Http\Controllers\DashboardCategoryC
     // Tickets
     $api->get('tickets', 'App\Http\Controllers\TicketController@index');
     $api->get('tickets/datatables', 'App\Http\Controllers\TicketController@datatables');
+
     $api->get('tickets/by_phase', 'App\Http\Controllers\TicketController@byPhase');
+    $api->get('tickets/by_version', 'App\Http\Controllers\TicketController@byVersion');
+    $api->get('tickets/by_release', 'App\Http\Controllers\TicketController@byRelease');
+    $api->get('tickets/by_label', 'App\Http\Controllers\TicketController@byLabel');
+    $api->get('tickets/by_sprint', 'App\Http\Controllers\TicketController@bySprint');
+
     $api->get('tickets/{id}', 'App\Http\Controllers\TicketController@show');
     $api->post('tickets', 'App\Http\Controllers\TicketController@store');
     $api->patch('tickets/{id}', 'App\Http\Controllers\TicketController@update');
@@ -978,6 +991,7 @@ $api->delete('dashboard_category/{id}', 'App\Http\Controllers\DashboardCategoryC
 // Sprints
     $api->get('sprints', 'App\Http\Controllers\SprintsController@index');
     $api->get('sprints/projects/{id}', 'App\Http\Controllers\SprintsController@projects');
+    $api->post('sprints/sprint', 'App\Http\Controllers\SprintsController@sprint');
     $api->get('sprints/datatables', 'App\Http\Controllers\SprintsController@datatables');
     $api->get('sprints/{id}', 'App\Http\Controllers\SprintsController@show');
     $api->post('sprints', 'App\Http\Controllers\SprintsController@store');
