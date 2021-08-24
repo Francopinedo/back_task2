@@ -27,7 +27,7 @@ class CreateMetagridTable extends Migration {
 			$table->string('column_type', 2)->comment('T, P, N, D, I, L, HL');
 			$table->string('image_link', 2)->comment('Para datatype imagen');
 			$table->string('hyperlink_link', 2)->comment('Para datatype link o hyperlink');
-			$table->primary(['language','activity','document_type','code','version','variable_code','row_number','column_number']);
+			$table->primary(['language','activity','document_type','code','version','variable_code','row_number','column_number'], 'metagrid_primary');
 		});
 	}
 

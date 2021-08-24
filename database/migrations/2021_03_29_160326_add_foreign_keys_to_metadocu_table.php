@@ -14,10 +14,10 @@ class AddForeignKeysToMetadocuTable extends Migration {
 	{
 		Schema::table('metadocu', function(Blueprint $table)
 		{
-			$table->foreign('activity')->references('id')->on('activities')->onUpdate('RESTRICT')->onDelete('RESTRICT');
-			$table->foreign('document_id')->references('id')->on('documents')->onUpdate('RESTRICT')->onDelete('RESTRICT');
-			$table->foreign('document_type')->references('id')->on('doctypes')->onUpdate('RESTRICT')->onDelete('RESTRICT');
-			$table->foreign('language')->references('id')->on('languages')->onUpdate('RESTRICT')->onDelete('RESTRICT');
+			$table->foreign('activity')->references('id')->on('activities')->onUpdate('CASCADE')->onDelete('CASCADE');
+			$table->foreign('document_id')->references('id')->on('documents')->onUpdate('CASCADE')->onDelete('CASCADE');
+			$table->foreign('document_type')->references('id')->on('doctypes')->onUpdate('CASCADE')->onDelete('CASCADE');
+			$table->foreign('language')->references('id')->on('languages')->onUpdate('CASCADE')->onDelete('CASCADE');
 		});
 	}
 

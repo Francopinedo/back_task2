@@ -14,10 +14,10 @@ class AddForeignKeysToContractsTable extends Migration {
 	{
 		Schema::table('contracts', function(Blueprint $table)
 		{
-			$table->foreign('currency_id')->references('id')->on('currencies')->onUpdate('RESTRICT')->onDelete('CASCADE');
-			$table->foreign('customer_id')->references('id')->on('customers')->onUpdate('RESTRICT')->onDelete('CASCADE');
-			$table->foreign('engagement_id')->references('id')->on('engagements')->onUpdate('RESTRICT')->onDelete('CASCADE');
-			$table->foreign('project_id')->references('id')->on('projects')->onUpdate('RESTRICT')->onDelete('CASCADE');
+			$table->foreign('currency_id')->references('id')->on('currencies')->onUpdate('CASCADE')->onDelete('CASCADE');
+			$table->foreign('customer_id')->references('id')->on('customers')->onUpdate('CASCADE')->onDelete('CASCADE');
+			$table->foreign('engagement_id')->references('id')->on('engagements')->onUpdate('CASCADE')->onDelete('CASCADE');
+			$table->foreign('project_id')->references('id')->on('projects')->onUpdate('CASCADE')->onDelete('CASCADE');
 		});
 	}
 

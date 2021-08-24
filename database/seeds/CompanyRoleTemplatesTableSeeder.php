@@ -11,7 +11,19 @@ class CompanyRoleTemplatesTableSeeder extends Seeder
      */
     public function run()
     {
+        DB::table('company_role_templates')->truncate();
+
         DB::table('company_role_templates')->insert([
+            [
+                'title' => 'Admin',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s') 
+            ],
+            [
+                'title' => 'User',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s') 
+            ],
             [
                 'title' => 'Project Manager',
                 'created_at' => date('Y-m-d H:i:s'),

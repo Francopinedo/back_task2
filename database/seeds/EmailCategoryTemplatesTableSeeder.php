@@ -11,6 +11,10 @@ class EmailCategoryTemplatesTableSeeder extends Seeder
      */
     public function run()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('email_category_templates')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
         DB::table('email_category_templates')->insert([
             [
                 'title' => 'Providers',

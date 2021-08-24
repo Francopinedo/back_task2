@@ -14,9 +14,9 @@ class AddForeignKeysToAbsencesTable extends Migration {
 	{
 		Schema::table('absences', function(Blueprint $table)
 		{
-			$table->foreign('absence_type_id')->references('id')->on('absence_types')->onUpdate('RESTRICT')->onDelete('RESTRICT');
-			$table->foreign('project_id')->references('id')->on('projects')->onUpdate('RESTRICT')->onDelete('RESTRICT');
-			$table->foreign('user_id')->references('id')->on('users')->onUpdate('RESTRICT')->onDelete('CASCADE');
+			$table->foreign('absence_type_id')->references('id')->on('absence_types')->onUpdate('CASCADE')->onDelete('CASCADE');
+			$table->foreign('project_id')->references('id')->on('projects')->onUpdate('CASCADE')->onDelete('CASCADE');
+			$table->foreign('user_id')->references('id')->on('users')->onUpdate('CASCADE')->onDelete('CASCADE');
 		});
 	}
 

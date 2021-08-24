@@ -14,9 +14,9 @@ class AddForeignKeysToContractExpensesTable extends Migration {
 	{
 		Schema::table('contract_expenses', function(Blueprint $table)
 		{
-			$table->foreign('contract_id')->references('id')->on('contracts')->onUpdate('RESTRICT')->onDelete('RESTRICT');
-			$table->foreign('currency_id')->references('id')->on('currencies')->onUpdate('RESTRICT')->onDelete('RESTRICT');
-			$table->foreign('expense_id')->references('id')->on('expenses')->onUpdate('RESTRICT')->onDelete('RESTRICT');
+			$table->foreign('contract_id')->references('id')->on('contracts')->onUpdate('CASCADE')->onDelete('CASCADE');
+			$table->foreign('currency_id')->references('id')->on('currencies')->onUpdate('CASCADE')->onDelete('CASCADE');
+			$table->foreign('expense_id')->references('id')->on('expenses')->onUpdate('CASCADE')->onDelete('CASCADE');
 		});
 	}
 

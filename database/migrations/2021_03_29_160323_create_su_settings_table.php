@@ -19,7 +19,6 @@ class CreateSuSettingsTable extends Migration {
 			$table->integer('workflows_enabled')->comment('0= No 1=Yes');
 			$table->integer('payments_enabled')->comment('0= No 1=Yes');
 			$table->integer('wiki_enabled')->comment('0= No 1=Yes');
-			$table->integer('set');
 			$table->integer('mail_server_enable')->default(1);
 			$table->text('mail_server_protocol', 65535)->comment('smtp (default)');
 			$table->text('mail_server_encryption', 65535)->comment('ssl (default)');

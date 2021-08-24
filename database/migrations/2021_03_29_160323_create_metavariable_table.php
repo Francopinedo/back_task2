@@ -26,7 +26,7 @@ class CreateMetavariableTable extends Migration {
 			$table->string('image_link');
 			$table->string('hyperlink_link');
 			$table->string('dependencies');
-			$table->primary(['language','activity','document_type','code','version','variable_code']);
+			// $table->primary(['language','activity','document_type','code','version','variable_code']);
 		});
 	}
 

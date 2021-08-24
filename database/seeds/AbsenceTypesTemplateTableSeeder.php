@@ -11,6 +11,7 @@ class AbsenceTypesTemplateTableSeeder extends Seeder
      */
     public function run()
     {
+        DB::table('absence_types_template')->truncate();
         DB::table('absence_types_template')->insert([
                 [
                     'country_id' => 1,
@@ -133,11 +134,6 @@ class AbsenceTypesTemplateTableSeeder extends Seeder
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s')
                 ],
-
-
-
-
-
                 [
                     'country_id' => 1,
                     'city_id' => 4,
@@ -177,11 +173,6 @@ class AbsenceTypesTemplateTableSeeder extends Seeder
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s')
                 ],
-
-
-
-
-
                 [
                     'country_id' => 1,
                     'city_id' => 4,
@@ -221,10 +212,6 @@ class AbsenceTypesTemplateTableSeeder extends Seeder
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s')
                 ],
-
-
-
-
             ]
 
         );

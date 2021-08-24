@@ -15,9 +15,9 @@ class CreateCompaniesTable extends Migration {
 		Schema::create('companies', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->timestamps();
 			$table->string('name', 100);
 			$table->string('address', 150)->nullable();
+			$table->integer('country_id')->unsigned()->nullable()->index('companies_country_id_foreign');
 			$table->integer('city_id')->unsigned()->nullable()->index('companies_city_id_foreign');
 			$table->string('email', 100)->nullable();
 			$table->string('phone', 20)->nullable();
@@ -34,6 +34,7 @@ class CreateCompaniesTable extends Migration {
 			$table->integer('industry_id')->unsigned()->nullable()->index('companies_industry_id_foreign');
 			$table->integer('user_id')->unsigned()->index('companies_user_id_foreign');
 			$table->text('logo_path', 65535)->nullable();
+			$table->timestamps();
 		});
 	}
 

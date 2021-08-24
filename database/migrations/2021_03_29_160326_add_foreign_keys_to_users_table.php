@@ -14,13 +14,13 @@ class AddForeignKeysToUsersTable extends Migration {
 	{
 		Schema::table('users', function(Blueprint $table)
 		{
-			$table->foreign('city_id')->references('id')->on('cities')->onUpdate('RESTRICT')->onDelete('RESTRICT');
-			$table->foreign('company_role_id')->references('id')->on('company_roles')->onUpdate('RESTRICT')->onDelete('RESTRICT');
-			$table->foreign('office_id')->references('id')->on('offices')->onUpdate('RESTRICT')->onDelete('RESTRICT');
-			$table->foreign('project_role_id')->references('id')->on('project_roles')->onUpdate('RESTRICT')->onDelete('RESTRICT');
-			$table->foreign('seniority_id')->references('id')->on('seniorities')->onUpdate('RESTRICT')->onDelete('RESTRICT');
-			$table->foreign('user_id')->references('id')->on('users')->onUpdate('RESTRICT')->onDelete('CASCADE');
-			$table->foreign('workgroup_id')->references('id')->on('workgroups')->onUpdate('RESTRICT')->onDelete('RESTRICT');
+			$table->foreign('city_id')->references('id')->on('cities')->onUpdate('CASCADE')->onDelete('CASCADE');
+			$table->foreign('company_role_id')->references('id')->on('company_roles')->onUpdate('CASCADE')->onDelete('CASCADE');
+			$table->foreign('office_id')->references('id')->on('offices')->onUpdate('CASCADE')->onDelete('CASCADE');
+			$table->foreign('project_role_id')->references('id')->on('project_roles')->onUpdate('CASCADE')->onDelete('CASCADE');
+			$table->foreign('seniority_id')->references('id')->on('seniorities')->onUpdate('CASCADE')->onDelete('CASCADE');
+			$table->foreign('user_id')->references('id')->on('users')->onUpdate('CASCADE')->onDelete('CASCADE');
+			$table->foreign('workgroup_id')->references('id')->on('workgroups')->onUpdate('CASCADE')->onDelete('CASCADE');
 		});
 	}
 

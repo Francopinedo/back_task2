@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class EngagementsTableSeeder extends Seeder
+class KpisCategoryTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,55 +11,56 @@ class EngagementsTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        DB::table('engagements')->truncate();
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-
-        DB::table('engagements')->insert([
+        DB::table('kpis_category')->insert([
             [
-                'id' => 1,
-                'name' => 'Time & Material',
+                'name' => 'Cost',
+                'company_id' => 1,
+                'roles' => ["Admin","Project Manager"],
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
-                'id' => 2,
-                'name' => 'Fixed Price',
+                'name' => 'Schedule',
+                'company_id' => 1,
+                'roles' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
-                'id' => 3,
-                'name' => 'Incentive',
+                'name' => 'Resources',
+                'company_id' => 1,
+                'roles' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
-                'id' => 4,
-                'name' => 'Unit Price',
+                'name' => 'Risk',
+                'company_id' => 1,
+                'roles' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
-                'id' => 5,
-                'name' => 'Cost Plus',
+                'name' => 'Quality',
+                'company_id' => 1,
+                'roles' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
-                'id' => 6,
-                'name' => 'Percentage of Construction Fee',
+                'name' => 'Agile',
+                'company_id' => 1,
+                'roles' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
-                'id' => 7,
-                'name' => 'Staff Augmentation',
+                'name' => 'Dashboard',
+                'company_id' => 1,
+                'roles' => ["Admin","User","Project Manager","Delivery Manager","Technical Leader"],
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
-            ],
-
-
+            ]
         ]);
     }
 }

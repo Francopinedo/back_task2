@@ -18,6 +18,7 @@ class CreateContractsTable extends Migration {
 			$table->timestamps();
 			$table->integer('customer_id')->unsigned()->index('contracts_customer_id_foreign');
 			$table->integer('project_id')->unsigned()->nullable()->index('contracts_project_id_foreign');
+			$table->string('type_project', 100)->nullable();
 			$table->string('sow_number', 150);
 			$table->string('amendment_number', 150)->nullable();
 			$table->date('date');

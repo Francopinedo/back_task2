@@ -15,15 +15,19 @@ class RolesTableSeeder extends Seeder
      */
     public function run()
     {
+    	DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+    	DB::table('roles')->truncate();
+    	DB::table('role_user')->truncate();
+    	DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 	    /**
 	     * Add Roles
 	     *
 	     */
-    	if (Role::where('name', '=', 'Admin')->first() === null) {
+    	if (Role::where('name', '=', 'Super User')->first() === null) {
 	        $adminRole = Role::create([
-	            'name' => 'Admin',
+	            'name' => 'Super User',
 	            'slug' => 'admin',
-	            'description' => 'Admin Role',
+	            'description' => 'Super User',
 	            'level' => 5,
         	]);
 	    }
@@ -37,14 +41,14 @@ class RolesTableSeeder extends Seeder
 	        ]);
 	    }
 
-    	if (Role::where('name', '=', 'Unverified')->first() === null) {
-	        $userRole = Role::create([
-	            'name' => 'Unverified',
-	            'slug' => 'unverified',
-	            'description' => 'Unverified Role',
-	            'level' => 0,
-	        ]);
-	    }
+    	// if (Role::where('name', '=', 'Unverified')->first() === null) {
+	    //     $userRole = Role::create([
+	    //         'name' => 'Unverified',
+	    //         'slug' => 'unverified',
+	    //         'description' => 'Unverified Role',
+	    //         'level' => 0,
+	    //     ]);
+	    // }
 
     }
 

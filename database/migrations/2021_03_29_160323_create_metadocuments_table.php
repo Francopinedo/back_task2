@@ -14,7 +14,7 @@ class CreateMetadocumentsTable extends Migration {
 	{
 		Schema::create('metadocuments', function(Blueprint $table)
 		{
-			$table->integer('id', true);
+			$table->integer('id');
 			$table->integer('language_id')->unsigned();
 			$table->integer('activity_id')->unsigned();
 			$table->integer('doctype_id')->unsigned();
@@ -27,7 +27,7 @@ class CreateMetadocumentsTable extends Migration {
 			$table->integer('document_id')->unsigned()->nullable();
 			$table->timestamps();
 			$table->softDeletes();
-			$table->primary(['language_id','activity_id','doctype_id','version','id']);
+			$table->primary(['id','language_id','activity_id','doctype_id','version'], 'metadocuments_primary');
 		});
 	}
 

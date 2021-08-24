@@ -11,6 +11,10 @@ class ActivitiesTableSeeder extends Seeder
      */
     public function run()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('activities')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        
         DB::table('activities')->insert([
             [
                 'activity_desc' => 'Agriculture',

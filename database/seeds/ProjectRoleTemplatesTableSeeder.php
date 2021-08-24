@@ -11,11 +11,12 @@ class ProjectRoleTemplatesTableSeeder extends Seeder
      */
     public function run()
     {
+        DB::table('project_role_templates')->truncate();
         DB::table('project_role_templates')->insert([[
-            'title' => 'Project Manager',
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s')
-        ],
+                'title' => 'Project Manager',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
+            ],
             [
                 'title' => 'Program Manager',
                 'created_at' => date('Y-m-d H:i:s'),
@@ -35,6 +36,7 @@ class ProjectRoleTemplatesTableSeeder extends Seeder
                 'title' => 'Functional Analyst',
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
-            ]]);
+            ]
+        ]);
     }
 }

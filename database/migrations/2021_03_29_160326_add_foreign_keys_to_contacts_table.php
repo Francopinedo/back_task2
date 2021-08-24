@@ -14,11 +14,11 @@ class AddForeignKeysToContactsTable extends Migration {
 	{
 		Schema::table('contacts', function(Blueprint $table)
 		{
-			$table->foreign('city_id')->references('id')->on('cities')->onUpdate('RESTRICT')->onDelete('CASCADE');
-			$table->foreign('company_id')->references('id')->on('companies')->onUpdate('RESTRICT')->onDelete('CASCADE');
-			$table->foreign('country_id')->references('id')->on('countries')->onUpdate('RESTRICT')->onDelete('CASCADE');
-			$table->foreign('industry_id')->references('id')->on('industries')->onUpdate('RESTRICT')->onDelete('CASCADE');
-			$table->foreign('project_id')->references('id')->on('projects')->onUpdate('RESTRICT')->onDelete('CASCADE');
+			$table->foreign('city_id')->references('id')->on('cities')->onUpdate('CASCADE')->onDelete('CASCADE');
+			$table->foreign('company_id')->references('id')->on('companies')->onUpdate('CASCADE')->onDelete('CASCADE');
+			$table->foreign('country_id')->references('id')->on('countries')->onUpdate('CASCADE')->onDelete('CASCADE');
+			$table->foreign('industry_id')->references('id')->on('industries')->onUpdate('CASCADE')->onDelete('CASCADE');
+			$table->foreign('project_id')->references('id')->on('projects')->onUpdate('CASCADE')->onDelete('CASCADE');
 		});
 	}
 

@@ -14,8 +14,8 @@ class AddForeignKeysToCompanychatroomUsersTable extends Migration {
 	{
 		Schema::table('companychatroom_users', function(Blueprint $table)
 		{
-			$table->foreign('companychatroom_id')->references('id')->on('companychatroom')->onUpdate('RESTRICT')->onDelete('RESTRICT');
-			$table->foreign('user_id')->references('id')->on('users')->onUpdate('RESTRICT')->onDelete('RESTRICT');
+			$table->foreign('companychatroom_id')->references('id')->on('companychatroom')->onUpdate('CASCADE')->onDelete('CASCADE');
+			$table->foreign('user_id')->references('id')->on('users')->onUpdate('CASCADE')->onDelete('CASCADE');
 		});
 	}
 
