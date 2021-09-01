@@ -52,7 +52,6 @@ class CustomerController extends Controller
      */
     public function edit($id){
     	$customer = $this->getFromApi('GET', 'customers/'.$id);
-        dd($customer);
     	$cities = $this->getFromApi('GET', 'cities');
     	$currencies = $this->getFromApi('GET', 'currencies');
     	$industries = $this->getFromApi('GET', 'industries');

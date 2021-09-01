@@ -16,12 +16,17 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     protected $table = 'users';
     public $timestamps = true;
     protected $fillable = array('name', 'email', 'password', 'address', 'office_phone',
-        'home_phone', 'cell_phone', 'city_id', 'company_role_id', 'project_role_id',
+        'home_phone', 'cell_phone', 'country_id', 'city_id', 'company_role_id', 'project_role_id',
         'seniority_id', 'office_id', 'workgroup_id', 'profile_image_path', 'sidebar', 'theme', 'user_id','tooltip','timezone');
 
     protected $rules = [
         'email_address' => 'sometimes|required|email|unique:users'
     ];
+
+    public function Country()
+    {
+        return $this->belongsTo('App\Country');
+    }
 
     public function City()
     {

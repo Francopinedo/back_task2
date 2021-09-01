@@ -18,5 +18,8 @@ return [
 	'add_file_tooltip' => 'Agregar de su directorio un archivo',
 	'start_upload_tooltip'	=> 'Iniciar la carga del archivo',
 	'cancel_upload_tooltip' => 'Cancelar la carga del archivo',
+	'manual'	=> 'Manual',
+	'automatic'	=> 'Automatico',
+	'option' 	=> 'Seleccionar tipo de generación',
 
 ];

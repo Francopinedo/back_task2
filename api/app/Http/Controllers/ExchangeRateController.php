@@ -181,7 +181,7 @@ class ExchangeRateController extends Controller {
   	{
   		$query = DB::table('exchange_rates')
                     ->select(
-                    	'exchange_rates.id', 'exchange_rates.currency_id', 'exchange_rates.company_id',
+                    	'exchange_rates.id', 'exchange_rates.currency_id', 'exchange_rates.currency_unit', 'exchange_rates.company_id',
                     	'exchange_rates.value','exchange_rates.quotation_url','exchange_rates.quotation_date', 'companies.name AS company_name',
                     	'currencies.name AS currency_name');
 

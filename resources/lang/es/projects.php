@@ -89,7 +89,6 @@ return [
 	'generate_billing'              => 'Generar Facturacion',
 	'initiating'                    => 'Iniciandose',
 	'planning'                      => 'Planificandose',
-	'planning'                      => 'Planificandose',
 	'executing'                     => 'Ejecutandose',
 	'closing'                       => 'Cerrandose',
 	'waiting'                       => 'Esperando',

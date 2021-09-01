@@ -8,7 +8,7 @@ class ExchangeRate extends Model {
 
 	protected $table = 'exchange_rates';
 	public $timestamps = true;
-	protected $fillable = array('currency_id', 'company_id', 'value','quotation_date','quotation_url');
+	protected $fillable = array('currency_id', 'currency_unit', 'company_id', 'value','quotation_date','quotation_url');
 
 	public function Currency()
 	{

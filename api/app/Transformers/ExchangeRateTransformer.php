@@ -22,6 +22,7 @@ class ExchangeRateTransformer extends TransformerAbstract
         return [
 			'id'          => $exchangeRate->id,
 			'currency_id' => $exchangeRate->currency_id,
+            'currency_unit' => $exchangeRate->currency_unit,
 			'company_id'  => $exchangeRate->company_id,
 			'value'       => $exchangeRate->value,
 			'quotation_date'       => $exchangeRate->quotation_date,

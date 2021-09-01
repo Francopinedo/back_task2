@@ -24,5 +24,10 @@ return [
 			'fields_add_feature'		     => 'Funcionalidad de Añadir Campos',
 			'alfred_active'			         => 'Alfred Activado',
 			'field_captions'		         => 'Ayuda de Campos Activada',
-			'set'							 => 'Wiki Activada'
+			'set'							 => 'Wiki Activada',
+			'log_level'						 => 'Nivel de Registro',
+			'none' => 'Ninguno ( No hay grabacion de Log )',
+			'delete' => 'Eliminar ( Graba solo las acciones de Eliminar )',
+			'audit' => 'Auditoria - Graba las acciones Guardar, Importar, Actualizar, Actualizar Contrasena  y Eliminar',
+			'extreme' => 'Extreme ( Graba todas las Acciones )',
 ];

@@ -7,6 +7,7 @@ return [
 	'name'            => 'Nombre',
 	'company'         => 'Compañia',
 	'address'         => 'Direccion',
+	'country'		  => 'Pais',
 	'city'            => 'Ciudad',
 	'industry'        => 'Industria',
 	'email'           => 'Correo Electronico',

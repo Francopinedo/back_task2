@@ -37,6 +37,7 @@ class SettingsTransformer extends TransformerAbstract
 			'field_captions'			 => $settings->field_captions,
 			'system_log'			 => $settings->system_log,
 			'sox_audit_log'			 => $settings->sox_audit_log,
+			'log_level'		=> empty($settings->log_level)? array() : json_decode($settings->log_level),
 			'process_group_active'			 => $settings->process_group_active,
 			'knowledge_areas_active'			 => $settings->knowledge_areas_active,
 						'version'			 => $settings->version,

@@ -7,6 +7,7 @@ return [
 	'name'      => 'Name',
 	'company'   => 'Company',
 	'address'   => 'Address',
+	'country'	=> 'Country',
 	'city'      => 'City',
 	'industry'  => 'Industry',
 	'email'     => 'Email',

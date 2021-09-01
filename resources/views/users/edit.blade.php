@@ -81,9 +81,20 @@
                     <div class="parsley-errors-list filled"><span class="parsley-required timezone-error"></span>
                     </div>
 
- <div class="md-input-wrapper md-input-select">
+                    <div class="md-input-wrapper md-input-select">
+                        <label>{{ __('users.country') }}</label>
+                        <select name="country_id" id="country_id2" data-md-selectize>
+                            <option value="">{{ __('users.country') }}...</option>
+                            @foreach ($countries as $country)
+                                <option value="{{ $country->id }}" {{ ($country->id == $user->city_id) ? 'selected' : '' }}>{{ $country->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="parsley-errors-list filled"><span class="parsley-required city_id-error"></span></div>
+
+                <div class="md-input-wrapper md-input-select">
                     <label>{{ __('users.city') }}</label>
-                    <select name="city_id" id="city_id" data-md-selectize>
+                    <select name="city_id" id="city_id2" data-md-selectize>
                         <option value="">{{ __('users.city') }}...</option>
                         @foreach ($cities as $city)
                             <option value="{{ $city->id }}" {{ ($city->id == $user->city_id) ? 'selected' : '' }}>{{ $city->name }}</option>

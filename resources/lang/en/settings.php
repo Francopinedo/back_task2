@@ -28,6 +28,11 @@ return [
 			'knowledge_areas_active'		 => 'Knowlegde Area Menu',
 			'version'		 => 'Version',
 			'max_users'		 => 'Max Users',
-			'set'			=> 'Wiki Activated'
+			'set'			=> 'Wiki Activated',
+			'log_level'		=> 'Log Level',
+			'none' => 'None ( There is no log recording )',
+			'delete' => 'Delete ( Record only the action "Delte" )',
+			'audit' => 'Audit ( Save the actions Store, do_import, Update, update_password and Delete )',
+			'extreme' => 'Extreme ( Graba todas las Acciones )',
 
 ];

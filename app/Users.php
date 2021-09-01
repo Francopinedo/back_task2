@@ -8,7 +8,12 @@ class Users extends Model {
 
 	protected $table = 'users';
 	public $timestamps = true;
-	protected $fillable = array('name', 'email', 'password', 'address', 'office_phone', 'home_phone', 'cell_phone', 'city_id', 'company_id', 'company_role_id', 'project_role_id', 'seniority_id', 'office_id', 'workgroup_id');
+	protected $fillable = array('name', 'email', 'password', 'address', 'office_phone', 'home_phone', 'cell_phone', 'country_id', 'city_id', 'company_id', 'company_role_id', 'project_role_id', 'seniority_id', 'office_id', 'workgroup_id');
+
+	public function Country()
+	{
+		return $this->belongsTo('App\Country');
+	}
 
 	public function City()
 	{

@@ -12,6 +12,7 @@ class Provider extends Model {
 							'name',
 							'address',
 							'city_id',
+							'country_id',
 							'email_1',
 							'email_2',
 							'email_3',
@@ -29,6 +30,11 @@ class Provider extends Model {
 							'industry_id',
 							'company_id','logo_path'
 						);
+
+	public function Country()
+	{
+		return $this->belongsTo('App\Country');
+	}
 
 	public function City()
 	{

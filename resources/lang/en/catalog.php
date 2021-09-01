@@ -21,5 +21,7 @@ return [
 	'start_upload_tooltip'	=> 'Start file upload',
 	'cancel_upload_tooltip' => 'Cancel file upload',
 	'add_file_tooltip' => 'Add a file from your directory',
+	'manual'	=> 'Manual',
+	'automatic'	=> 'Automatic',
 
 ];

@@ -25,12 +25,39 @@ var Users = (function () {
 
         events: function () {
 
+            var country =  "#country_id", city="#city_id", office="#office_id";
+            
+            if($("#country_id2").length>0){
+                country = "#country_id2";
+                city = "#city_id2";
+                office="#office_id2";
+            }
+            // Filtrar la ciudad dependiendo el pais
+            $(city).selectize();
+            $(country).on('change', function () {
+                $.ajax({
+                    url: Users.API_PATH + '/cities',
+                    type: 'GET',
+                    data: {country_id: $(this).val()},
+                    dataType: 'json'
+                }).done(
+                    function (data) {
+                        var html = '<option value="">City...</option>';
 
-            // $('#office_id').selectize();
-            $('#office_id2').selectize();
+                        $(city).selectize()[0].selectize.destroy();
 
-            $("#city_id2").on('change', function () {
-                console.log('chage....');
+                        $.each(data.data, function (i, value) {
+                            html += '<option value="' + value.id + '">' + value.name + '</option>';
+                        });
+
+                        $(city).html(html);
+                        $(city).selectize();
+                    }
+                );
+            });
+            // Filtrar la la oficina dependiendo la ciudad
+            $(office).selectize();
+            $(city).on('change', function () {
                 var html = '<option value="">Office...</option>';
                 $.ajax({
                     url: Users.API_PATH + '/offices',
@@ -41,19 +68,14 @@ var Users = (function () {
                     function (data) {
                         var html = '<option value="">Office...</option>';
                         
-
-                        $('#office_id2').selectize()[0].selectize.destroy();
+                        $(office).selectize()[0].selectize.destroy();
 
                         $.each(data.data, function (i, value) {
-                            console.log(value);
                             html += '<option value="' + value.id + '">' + value.title + '</option>';
                         });
 
-                        $('#office_id2').html(html);
-                        $('#office_id2').selectize();
-
-
-
+                        $(office).html(html);
+                        $(office).selectize();
                     }
                 );
             });

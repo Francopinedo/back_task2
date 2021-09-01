@@ -87,6 +87,16 @@
 					</li>
                 <li class="uk-width-medium-1-2 uk-row-first">
 
+                    <div class="md-input-wrapper md-input-select">
+                        <label>{{ __('users.country') }}</label>
+                        <select name="country_id" id="country_id" data-md-selectize>
+                            <option value="">{{ __('users.country') }}...</option>
+                            @foreach ($countries as $country)
+                                <option value="{{ $country->id }}">{{ $country->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="parsley-errors-list filled"><span class="parsley-required city_id-error"></span></div>
 
                     <div class="md-input-wrapper md-input-select">
                         <label>{{ __('users.city') }}</label>
@@ -199,39 +209,16 @@
 {{-- @endif --}}
 
 <script src="{{ asset('js/table_actions.js') }}"></script>
+<script src="{{ asset('js/users.js') }}"></script>
 <script type="text/javascript">
-    
-    $(function(){
-        $("#city_id").on('change', function () {
-            console.log('chage....');
-            var html = '<option value="">Office...</option>';
-            $.ajax({
-                url: API_PATH + '/offices',
-                type: 'GET',
-                data: {city_id: $(this).val(), company_id:$("#company_id").val()},
-                dataType: 'json'
-            }).done(
-                function (data) {
-                    var html = '<option value="">Office...</option>';
-                    
-                    $('#office_id').selectize()[0].selectize.destroy();
-
-                    $.each(data.data, function (i, value) {
-                        console.log(value);
-                        html += '<option value="' + value.id + '">' + value.title + '</option>';
-                    });
-
-                    $('#office_id').html(html);
-                    $('#office_id').selectize();
-                }
-            );
-        });
-    });
 
     $('.cancel-ajax_create-btn').on('click', function (e) {
         e.preventDefault();
         $('#ajax_create_div_toggle').hide();
         $('#ajax_create_div').removeClass('switcher_active');
+    });
+    $(function(){
+        Users.init('<?php echo e(env('API_PATH')); ?>', '<?php echo e(env('APP_URL')); ?>');
     });
 
     tableActions.initAjaxCreateForm();

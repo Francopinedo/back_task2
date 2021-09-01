@@ -29,6 +29,7 @@ class ProviderController extends Controller {
 	 *   		"id": "int",
      *  		"name": "string",
      *  		"address": "string",
+     *      "country_id": "int",
      *  		"city_id": "int",
      *  		"email_1": "string",
      *  		"email_2": "string",
@@ -70,6 +71,7 @@ class ProviderController extends Controller {
 	 * @Request({
      *  		"name": "string",
      *  		"address": "string (opt)",
+     *      "country_id": "int (opt)",
      *  		"city_id": "int (opt)",
      *  		"email_1": "string",
      *  		"email_2": "string",
@@ -93,6 +95,7 @@ class ProviderController extends Controller {
 	 *   		"id": "int",
      *  		"name": "string",
      *  		"address": "string",
+     *      "country_id": "int",
      *  		"city_id": "int",
      *  		"email_1": "string",
      *  		"email_2": "string",
@@ -149,6 +152,7 @@ class ProviderController extends Controller {
 	 *   		"id": "int",
      *  		"name": "string",
      *  		"address": "string",
+     *      "country_id": "int",
      *  		"city_id": "int",
      *  		"email_1": "string",
      *  		"email_2": "string",
@@ -171,7 +175,7 @@ class ProviderController extends Controller {
 	 */
   	public function show($id)
   	{
-  		$provider = Provider::with('industry', 'city', 'currency')->findOrFail($id);
+  		$provider = Provider::with('industry', 'country', 'city', 'currency')->findOrFail($id);
 
   		return $this->response->item($provider, new ProviderTransformer);
   	}
@@ -186,6 +190,7 @@ class ProviderController extends Controller {
 	 * @Request({
      *  		"name": "string",
      *  		"address": "string" (opt),
+     *      "country_id": "int (opt)",
      *  		"city_id": "int" (opt),
      *  		"email_1": "string",
      *  		"email_2": "string",
@@ -208,6 +213,7 @@ class ProviderController extends Controller {
 	 *   		"id": "int",
      *  		"name": "string",
      *  		"address": "string",
+     *      "country_id": "int",
      *  		"city_id": "int",
      *  		"email_1": "string",
      *  		"email_2": "string",
@@ -297,6 +303,7 @@ class ProviderController extends Controller {
                     	'providers.id',
                     	'providers.name',
                     	'providers.address',
+                     'providers.country_id',
                     	'providers.city_id',
                     	'providers.email_1',
                     	'providers.email_2',
@@ -316,12 +323,14 @@ class ProviderController extends Controller {
                     	'providers.company_id',
                     	'industries.name AS industry_name',
                     	'currencies.name AS currency_name',
+                     'countries.name AS country_name',
                     	'cities.name AS city_name',
-'providers.logo_path AS logo_path'
+                     'providers.logo_path AS logo_path'
                     );
 
         $query->leftJoin('industries', 'industries.id', '=', 'providers.industry_id');
         $query->leftJoin('currencies', 'currencies.id', '=', 'providers.currency_id');
+        $query->leftJoin('countries', 'countries.id', '=', 'providers.country_id');
         $query->leftJoin('cities', 'cities.id', '=', 'providers.city_id');
 
         if ($request->has('company_id'))

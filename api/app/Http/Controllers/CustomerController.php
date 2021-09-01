@@ -30,6 +30,7 @@ class CustomerController extends Controller {
 	 *   		"company_id": "int",
      *  		"name": "string",
      *  		"address": "string",
+     *      "country_id": "int",
      *  		"city_id": "int",
      *  		"email": "int",
      *  		"phone": "string",
@@ -46,7 +47,7 @@ class CustomerController extends Controller {
 	 */
   	public function index(Request $request)
   	{
-  		$query = Customer::with('industry', 'currency', 'city');
+  		$query = Customer::with('industry', 'country', 'currency', 'city');
 
   		if ($request->has('company_id'))
   		{
@@ -71,6 +72,7 @@ if ($request->has('customer_id'))
 	 * 			"comany_id": "string",
      *  		"name": "string",
      *  		"address": "string (opt)",
+     *      "country_id": "int(opt)",
      *  		"city_id": "int (opt)",
      *  		"email": "int (opt)",
      *  		"phone": "string (opt)",
@@ -91,6 +93,7 @@ if ($request->has('customer_id'))
 	 *   		"company_id": "int",
      *  		"name": "string",
      *  		"address": "string",
+     *      "country_id": "int",
      *  		"city_id": "int",
      *  		"email": "int",
      *  		"phone": "string",
@@ -143,6 +146,7 @@ if ($request->has('customer_id'))
      *  		"company_id": "int",
      *  		"name": "string",
      *  		"address": "string",
+     *      "country_id": "int",
      *  		"city_id": "int",
      *  		"industry_id": "int",
      *  		"email": "string",
@@ -168,6 +172,7 @@ if ($request->has('customer_id'))
      *  		"company_id": "int",
      *  		"name": "string",
      *  		"address": "string (opt)",
+     *      "country_id": "int (opt)",
      *  		"city_id": "int (opt)",
      *  		"industry_id": "int (opt)",
      *  		"email": "string (opt)",
@@ -179,6 +184,7 @@ if ($request->has('customer_id'))
      *  		"company_id": "int",
      *  		"name": "string",
      *  		"address": "string",
+     *      "country_id": "int (opt)",
      *  		"city_id": "int",
      *  		"industry_id": "int",
      *  		"email": "string",
@@ -255,7 +261,7 @@ if ($request->has('customer_id'))
 
   		$query = DB::table('customers')
                     ->select(
-                    	'customers.id', 'customers.company_id', 'customers.name', 'customers.address', 'customers.city_id',
+                    	'customers.id', 'customers.company_id', 'customers.name', 'customers.address', 'customers.country_id', 'customers.city_id',
                     	'customers.industry_id', 'customers.email', 'customers.phone');
 
         if (!empty($userId))

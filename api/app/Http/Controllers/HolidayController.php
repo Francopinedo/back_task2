@@ -237,8 +237,6 @@ class HolidayController extends Controller {
     public function reload(Request $request)
     {
 
-    Holiday::where('company_id', $data['company_id'])->where('added_by', 'reload')->delete();
-
         if (!$request->has('company_id'))
         {
             return $this->response->error('Faltan datos', 450);

@@ -79,12 +79,12 @@ class CreateCompany extends Command
             }
         }
 
-        if (env('IREDMAIL_API_HOST')) {
-            foreach ($irmApiRoutes as $route) {
-                $client->request('POST', env('IREDMAIL_API_HOST') . $route, $params);
-                $bar->advance();
-            }
-        }
+        // if (env('IREDMAIL_API_HOST')) {
+        //     foreach ($irmApiRoutes as $route) {
+        //         $client->request('POST', env('IREDMAIL_API_HOST') . $route, $params);
+        //         $bar->advance();
+        //     }
+        // }
 
         $request = $client->request('GET', env('API_PATH') . 'countries');
         $countries = json_decode($request->getBody()->__toString())->data;

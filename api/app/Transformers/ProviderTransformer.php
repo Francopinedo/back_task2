@@ -2,11 +2,12 @@
 
 namespace Transformers;
 
-use League\Fractal\TransformerAbstract;
-use App\Models\Provider;
-use App\Industry;
 use App\City;
+use App\Country;
 use App\Currency;
+use App\Industry;
+use App\Models\Provider;
+use League\Fractal\TransformerAbstract;
 
 class ProviderTransformer extends TransformerAbstract
 {
@@ -17,7 +18,7 @@ class ProviderTransformer extends TransformerAbstract
      * @var array
      */
     protected $availableIncludes = [
-        'industry', 'city', 'currency'
+        'industry', 'country', 'city', 'currency'
     ];
 
     public function transform(Provider $provider)
@@ -26,6 +27,7 @@ class ProviderTransformer extends TransformerAbstract
 			'id'              => $provider->id,
 			'name'            => $provider->name,
 			'address'         => $provider->address,
+			'country_id'	  => $provider->country_id,
 			'city_id'         => $provider->city_id,
 			'email_1'         => $provider->email_1,
 			'email_2'         => $provider->email_2,
@@ -57,6 +59,18 @@ class ProviderTransformer extends TransformerAbstract
     	}
 
         return $this->item($industry, new IndustryTransformer);
+    }
+
+    public function includeCountry(provider $provider)
+    {
+    	if (empty($provider->country))
+    	{
+    		$country = new Country();
+    	}else{
+    		$country = $provider->country;
+    	}
+
+    	return $this->item($country, new CountryTransformer);
     }
 
     public function includeCity(Provider $provider)

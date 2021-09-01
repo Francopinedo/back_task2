@@ -40,6 +40,7 @@ class UserController extends Controller
      *            "office_phone": "string",
      *            "home_phone": "string",
      *            "cell_phone": "string",
+     *            "country_id": 'int',
      *            "city_id": "int",
      *            "profile_image_path": "string",
      *            "office_id": "int"
@@ -49,7 +50,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $query = User::select('users.id', 'users.name', 'users.email', 'users.address', 'users.office_phone',
-            'users.home_phone', 'users.cell_phone', 'users.city_id', 'users.profile_image_path', 'users.office_id');
+            'users.home_phone', 'users.cell_phone', 'users.country_id', 'users.city_id', 'users.profile_image_path', 'users.office_id');
 
         if ($request->has('company_id')) {
             $query->join('company_users', 'company_users.user_id', '=', 'users.id');
@@ -118,12 +119,13 @@ class UserController extends Controller
         $query = DB::table('users')
             ->select(
                 'users.name', 'users.email', 'users.address', 'users.office_phone',
-                'users.home_phone', 'users.cell_phone', 
+                'users.home_phone', 'users.cell_phone', 'countries.name AS country_name',
                 'cities.name AS city_name', 'offices.title AS office_name', 'company_roles.title AS role_name',
                 'project_roles.title AS project_role_name',
                 'seniorities.title as seniority', 'offices.hours_by_day',
                  'users.workplace',
                 'workgroups.title AS workgroup_title', 'roles.slug')
+            ->leftjoin('countries', 'countries.id', '=', 'users.country_id')
             ->leftjoin('cities', 'cities.id', '=', 'users.city_id')
             ->leftjoin('offices', 'offices.id', '=', 'users.office_id')
             ->leftjoin('seniorities', 'seniorities.id', '=', 'users.seniority_id')
@@ -164,6 +166,7 @@ class UserController extends Controller
      *        "office_phone": "string",
      *        "home_phone": "string",
      *        "cell_phone": "string",
+     *        "country_id": "int",
      *        "city_id": "int",
      *        "profile_image_path": "string (opt)"
      * })
@@ -176,6 +179,7 @@ class UserController extends Controller
      *            "office_phone": "string",
      *            "home_phone": "string",
      *            "cell_phone": "string",
+     *            "country_id": "int",
      *            "city_id": "int",
      *            "profile_image_path": "string"
      *    }),
@@ -251,7 +255,7 @@ class UserController extends Controller
         //crea relacion entre la compania y el usuario
         CompanyUser::create(['company_id' => $company->id, 'user_id' => $user->id]);
         //selecciona el companyRole en base al id de la compania y al titulo del rol
-        $companyRole = CompanyRole::where('company_id',$company->id)->where('title','Project Manager')->firstOrFail();
+        $companyRole = CompanyRole::where('company_id',$company->id)->where('title','Admin')->firstOrFail();
         //selecciona el rol del usuario en base al id del companyrol
         $role = Role::where('company_role_id',$companyRole->id)->firstOrFail();
         //crea relacion entre el rol y el usuario
@@ -298,6 +302,7 @@ class UserController extends Controller
      *            "office_phone": "string",
      *            "home_phone": "string",
      *            "cell_phone": "string",
+     *            "country_id": "int",
      *            "city_id": "int",
      *            "profile_image_path": "string"
      *    })
@@ -327,6 +332,7 @@ class UserController extends Controller
      *        "office_phone": "string",
      *        "home_phone": "string",
      *        "cell_phone": "string",
+     *        "country_id": "int",
      *        "city_id": "int",
      *        "profile_image_path": "string (opt)",
      *        "company_role_id": "int"
@@ -340,6 +346,7 @@ class UserController extends Controller
      *            "office_phone": "string",
      *            "home_phone": "string",
      *            "cell_phone": "string",
+     *            "country_id": "int",
      *            "city_id": "int",
      *            "profile_image_path": "string"
      *    }),
@@ -431,11 +438,12 @@ class UserController extends Controller
         $query = DB::table('users')
             ->select(
                 'users.id', 'users.name', 'users.email', 'users.address', 'users.office_phone',
-                'users.home_phone', 'users.cell_phone', 'users.city_id', 'users.profile_image_path',
+                'users.home_phone', 'users.cell_phone', 'users.country_id', 'users.city_id', 'users.profile_image_path', 'countries.name AS country_name',
                 'cities.name AS city_name', 'offices.title AS office_name', 'company_roles.title AS role_name',
                 'project_roles.title AS project_role_name',
                 'seniorities.title as seniority', 'offices.hours_by_day', 'users.workplace', 'users.timezone',
                 'workgroups.title AS workgroup_title', 'roles.slug')
+            ->leftjoin('countries', 'countries.id', '=', 'users.country_id')
             ->leftjoin('cities', 'cities.id', '=', 'users.city_id')
             ->leftjoin('offices', 'offices.id', '=', 'users.office_id')
             ->leftjoin('seniorities', 'seniorities.id', '=', 'users.seniority_id')

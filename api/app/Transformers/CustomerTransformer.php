@@ -6,6 +6,7 @@ use League\Fractal\TransformerAbstract;
 use App\Customer;
 use App\Industry;
 use App\City;
+use App\Country;
 use App\Currency;
 use App\Models\Project;
 
@@ -18,7 +19,7 @@ class CustomerTransformer extends TransformerAbstract
      * @var array
      */
     protected $availableIncludes = [
-        'industry', 'city', 'currency', 'projects'
+        'industry', 'country', 'city', 'currency', 'projects'
     ];
 
     public function transform(Customer $customer)
@@ -28,6 +29,7 @@ class CustomerTransformer extends TransformerAbstract
 			'company_id'      => $customer->company_id,
 			'name'            => $customer->name,
 			'address'         => $customer->address,
+            'country_id'      => $customer->country_id,
 			'city_id'         => $customer->city_id,
 			'email'           => $customer->email,
 			'phone'           => $customer->phone,
@@ -55,6 +57,19 @@ class CustomerTransformer extends TransformerAbstract
     	}
 
         return $this->item($industry, new IndustryTransformer);
+    }
+
+    public function includeCountry(Customer $customer)
+    {
+        if (empty($customer->country))
+        {
+            $country = new Country();
+        }
+        else{
+            $country = $customer->country;
+        }
+
+        return $this->item($country, new CountryTransformer);
     }
 
     public function includeCity(Customer $customer)
