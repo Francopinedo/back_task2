@@ -13,6 +13,7 @@
                 {data: 'address', name: 'address'},
                 {data: 'home_phone', name: 'home_phone'},
                 {data: 'cell_phone', name: 'cell_phone'},
+                {data: 'country_name', name: 'country_name'},
                 {data: 'city_name', name: 'city_name'},
                 {data: 'office_name', name: 'office_name'},
                 {data: 'role_name', name: 'role_name'},
@@ -82,6 +83,7 @@
                             <th title="{{__('users_tooltip.address')}}">{{ __('users.address') }}</th>
                             <th title="{{__('users_tooltip.home_phone')}}">{{ __('users.home_phone') }}</th>
                             <th title="{{__('users_tooltip.cell_phone')}}">{{ __('users.cell_phone') }}</th>
+                            <th title="{{ __('users_tooltip.country') }}">{{ __('users.country') }}</th>
                             <th title="{{__('users_tooltip.city')}}">{{ __('users.city') }}</th>
                             <th title="{{__('users_tooltip.office')}}">{{ __('users.office') }}</th>
                             <th title="{{__('users_tooltip.company_role')}}">{{ __('users.company_role') }}</th>
@@ -122,7 +124,7 @@
                 $data['company_id'] = $company_id;
             }
 
-
+                $data['countries'] = $countries;
                 $data['companyRoles'] = $companyRoles;
                 $data['url'] = Request::path();
 

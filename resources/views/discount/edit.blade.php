@@ -8,7 +8,7 @@
     	    <input type="hidden" name="id" value="{{ $discount->id }}">
     		<div class="uk-width-medium-1-1 uk-row-first">
 
-                <div class="md-input-wrapper">
+                <div class="md-input-wrapper md-input-filled">
                 	<label>{{ __('discounts.detail') }}</label>
                 	<input type="text" class="md-input" name="detail" required value="{{ $discount->detail }}"><span class="md-input-bar"></span>
                 </div>
@@ -21,7 +21,7 @@
                 <div class="parsley-errors-list filled"><span class="parsley-required amount-error"></span></div>
 
 
-				<div class="md-input-wrapper">
+				<div class="md-input-wrapper md-input-filled">
 					<label>{{ __('discounts.percentage') }}</label>
 					<input type="text" class="md-input" id="percentage" required onkeydown="Discounts.blocktheother(1);"  name="percentage"
                            value="{{isset($discount->percentage)?$discount->percentage:0}}" >

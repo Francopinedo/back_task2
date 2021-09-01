@@ -64,7 +64,7 @@
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required seniority_id-error"></span></div>
 
-                <div class="md-input-wrapper">
+                <div class="md-input-wrapper md-input-filled">
                 	<label>{{ __('rates.title') }}</label>
                 	<input type="text" class="md-input" name="title" value="{{ $rate->title }}"><span class="md-input-bar"></span>
                 </div>

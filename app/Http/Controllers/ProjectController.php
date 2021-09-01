@@ -16,7 +16,7 @@ class ProjectController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth','systemaudit', 'deletecontrol']);
+        $this->middleware(['auth','systemaudit', 'loglevel', 'deletecontrol']);
     }
 
     /**
@@ -117,9 +117,6 @@ class ProjectController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        } 
         $data = $request->all();
 
         $res = $this->apiCall('POST', 'projects', $data);
@@ -148,7 +145,7 @@ class ProjectController extends Controller
 
         $res = $this->getFromApi('POST', 'rcprojectchannel', $data);
         $data = ['name' => $res->fullname];
-        $res = $this->iredmailApiCall('POST','rcchannel',$data);
+        // $res = $this->iredmailApiCall('POST','rcchannel',$data);
 
         return response()->json();
     }
@@ -339,8 +336,7 @@ class ProjectController extends Controller
 
     public function forProjectSelection($customer_id)
     {
-        $projects = $this->getFromApi('GET', 'projects?customer_id=' . $customer_id . '&user_id=' . Auth::id());
-
+        $projects = $this->getFromApi('GET', 'projects?customer_id=' . $customer_id );
         return response()->json([
             'view' => view('project/forProjectSelection', ['projects' => $projects])->render()
         ]);

@@ -19,6 +19,15 @@
             </li>
             <li>
                 <div class="md-list-addon-element">
+                    <i class="fa fa-globe fa-2x" aria-hidden="true"></i>
+                </div>
+                <div class="md-list-content">
+                    <span class="md-list-heading">{{ $customer->country->data->name }}</span>
+                    <span class="uk-text-small uk-text-muted">{{ __('customers.country') }}</span>
+                </div>
+            </li>
+            <li>
+                <div class="md-list-addon-element">
                     <i class="fa fa-map-marker fa-2x" aria-hidden="true"></i>
                 </div>
                 <div class="md-list-content">

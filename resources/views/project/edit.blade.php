@@ -134,18 +134,27 @@
             </div>
             <div class="parsley-errors-list filled"><span class="parsley-required status-error"></span></div>
 
-            <div class="md-input-wrapper md-input-filled">
-                <label>{{ __('projects.presales_responsable') }}</label>
-                <input type="text" class="md-input" name="presales_responsable" value="{{ $project->presales_responsable }}"><span class="md-input-bar"></span>
-            </div>
-            <div class="parsley-errors-list filled"><span class="parsley-required presales_responsable-error"></span></div>
+            <div class="md-input-wrapper md-input-select">
+                    <label>{{ __('projects_tooltip.presales_responsable') }}</label>
+                    <select name="presales_resonsable" data-md-selectize>
+                        <option value="">{{ __('projects.presales_responsable') }}...</option>
+                        @foreach ($users as $user)
+                            <option value="{{ $user->name }}" {{($project->presales_responsable == $user->name) ? 'selected' : ''}}>{{ $user->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="parsley-errors-list filled"><span class="parsley-required presales_responsable-error"></span></div>
 
-            <div class="md-input-wrapper md-input-filled">
-                <label>{{ __('projects.technical_estimator') }}</label>
-                <input type="text" class="md-input" name="technical_estimator" value="{{ $project->technical_estimator }}"><span class="md-input-bar"></span>
-            </div>
-            <div class="parsley-errors-list filled"><span class="parsley-required technical_estimator-error"></span>
-            </div>
+            <div class="md-input-wrapper md-input-select">
+                    <label>{{ __('projects_tooltip.technical_estimator') }}</label>
+                    <select name="technical_estimator" data-md-selectize>
+                        <option value="">{{ __('projects.technical_estimator') }}...</option>
+                        @foreach ($users as $user)
+                            <option value="{{ $user->name }}" {{($project->technical_estimator == $user->name) ? 'selected' : ''}}>{{ $user->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="parsley-errors-list filled"><span class="parsley-required technical_estimator-error"></span></div>
 
             <div class="md-input-wrapper md-input-filled md-input-select">
                 <label>{{ __('projects.engagement') }}</label>

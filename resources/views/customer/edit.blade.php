@@ -28,7 +28,7 @@
 
                 <div class="md-input-wrapper md-input-filled md-input-select">
                 	<label>{{ __('customers.country') }}</label>
-                	<select name="country_id" id="country_id" data-md-selectize>
+                	<select name="country_id" id="country_id2" data-md-selectize>
                 	    <option value="">{{ __('customers.country') }}...</option>
                 	    @foreach ($countries as $country)
                 	        <option value="{{ $country->id }}" {{ ($country->id == $customer->country_id) ? 'selected' : '' }}>{{ $country->name }} </option>
@@ -40,7 +40,7 @@
 
                 <div class="md-input-wrapper md-input-filled md-input-select">
                 	<label>{{ __('customers.city') }}</label>
-                	<select name="city_id" id="city_id" data-md-selectize>
+                	<select name="city_id" id="city_id2" data-md-selectize>
                 	    <option value="">{{ __('customers.city') }}...</option>
                 	    @foreach ($cities as $city)
                 	        <option value="{{ $city->id }}" {{ ($city->id == $customer->city_id) ? 'selected' : '' }}>{{ $city->name }} ({{ $city->location_name }})</option>
@@ -172,6 +172,31 @@
     	e.preventDefault();
     	$('#edit_div_toggle').hide();
     	$('#edit_div').removeClass('switcher_active');
+    });
+
+    $('#city_id2').selectize();
+    $("#country_id2").on('change', function () {
+        console.log('chage....');
+        $.ajax({
+            url: API_PATH + '/cities',
+            type: 'GET',
+            data: {country_id: $(this).val()},
+            dataType: 'json'
+        }).done(
+            function (data) {
+                var html = '<option value="">City...</option>';
+
+                $('#city_id2').selectize()[0].selectize.destroy();
+
+                $.each(data.data, function (i, value) {
+                    console.log(value);
+                    html += '<option value="' + value.id + '">' + value.name + '</option>';
+                });
+
+                $('#city_id2').html(html);
+                $('#city_id2').selectize();
+            }
+        );
     });
 
     tableActions.initEditForm();

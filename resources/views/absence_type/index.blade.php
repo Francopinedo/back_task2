@@ -69,7 +69,7 @@
 
             $.ajax({
                 data:  parametros,
-                url:   API_PATH + 'absence_type/reload',
+                url:   API_PATH + 'absence_types/reload',
                 type:  'post',
                 success:  function (response) {
                     location.reload();

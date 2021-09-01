@@ -165,39 +165,6 @@
                     </div>
                 </div>
 
-
-                {{-- <div id="modal_about" class="uk-modal">
-                    <div class="uk-modal-dialog uk-width-auto uk-margin-auto-vertical">
-                        <button type="button" class="uk-modal-close uk-close"></button>
-                        <div class="uk-modal-header">
-                            <h2 class="uk-modal-title">{{__('header.about') }}</h2>
-                        </div>
-                        <div class="uk-modal-body">
-                            <iframe src="{{url('/about')}}"  width="100%" frameborder="0"  uk-responsive></iframe>
-                        </div>
-                        <div class="uk-modal-footer uk-text-right">
-                            <button class="uk-button uk-button-default uk-modal-close" type="button">Close</button>
-
-                        </div>
-
-                    </div>
-                </div>
-
-                <div id="modal_credit" class="uk-modal">
-                    <div class="uk-modal-dialog uk-width-auto uk-margin-auto-vertical">
-                        <button type="button" class="uk-modal-close uk-close"></button>
-                        <div class="uk-modal-header">
-                            <h2 class="uk-modal-title">{{__('header.credit') }}</h2>
-                        </div>
-                        <div class="uk-modal-body">
-                            <iframe src="{{url('/credit')}}"  frameborder="0"  uk-responsive></iframe>
-                        </div>
-                        <div class="uk-modal-footer uk-text-right">
-                            <button class="uk-button uk-button-default uk-modal-close" type="button">Close</button>
-                        </div>
-
-                    </div>
-                </div> --}}
                 <!-- Modal de Guia de Task Control Getting Started -->
                 <div id="modal_started" class="uk-modal">
                     <div class="uk-modal-dialog uk-width-auto uk-margin-auto-vertical">
@@ -434,6 +401,9 @@
                         <li data-uk-tooltip="{pos:'top-left'}" title="{{ Auth::user()->tooltip==0 ? '' :__('sidebar.my_company') }}" class="{{ (Request::is('companies') ? 'select_active' : '') }} title-organization">
                             <a href="{{ url('companies') }}">{{ __('sidebar.my_company') }}</a>
                         </li>
+                        <li data-uk-tooltip="{pos:'top-left'}" title="{{ Auth::user()->tooltip==0 ? '' :__('sidebar.cities') }}" class="{{ (Request::is('cities') ? 'select_active' : '') }} title-organization">
+                            <a href="{{ url('cities') }}">{{ __('sidebar.cities') }}</a>
+                        </li>
                         <li data-uk-tooltip="{pos:'top-left'}" title="{{ Auth::user()->tooltip==0 ? '' :__('sidebar.offices') }}" class="{{ (Request::is('offices') ? 'select_active' : '') }} title-organization">
                             <a href="{{ url('offices') }}">{{ __('sidebar.offices') }}</a>
                         </li>
@@ -454,9 +424,6 @@
                         </li>
                         <li data-uk-tooltip="{pos:'top-left'}" title="{{ Auth::user()->tooltip==0 ? '' :__('sidebar.absence_types') }}" class="{{ (Request::is('absence_types')? 'select_active' : '') }} title-organization">
                             <a href="{{ url('absence_types') }}">{{ __('sidebar.absence_types') }}</a>
-                        </li>
-                        <li data-uk-tooltip="{pos:'top-left'}" title="{{ Auth::user()->tooltip==0 ? '' :__('sidebar.cities') }}" class="{{ (Request::is('cities') ? 'select_active' : '') }} title-organization">
-                            <a href="{{ url('cities') }}">{{ __('sidebar.cities') }}</a>
                         </li>
                         <li data-uk-tooltip="{pos:'top-left'}" title="{{ Auth::user()->tooltip==0 ? '' :__('sidebar.company_roles') }}" class="{{ (Request::is('company_roles') ? 'select_active' : '') }} title-organization">
                             <a href="{{ url('company_roles') }}">{{ __('sidebar.company_roles') }}</a>
@@ -578,7 +545,8 @@
                             Request::is('emails') ||
                             Request::is('kpis_category') ||
                             Request::is('kpis') ||
-                            Request::is('projects')
+                            Request::is('projects') ||
+                            Request::is('repository_backup') 
                         ) ? 'current_section' : '';
             @endphp
             <!-- Item Projects -->
@@ -610,12 +578,14 @@
                         <li data-uk-tooltip="{pos:'top-left'}" title="{{ Auth::user()->tooltip==0 ? '' :__('sidebar.projects') }}" class="{{ (Request::is('projects') ? 'select_active' : '') }} title-projects">
                             <a href="{{ url('projects') }}">{{ __('sidebar.projects') }}</a>
                         </li>
+                        <li data-uk-tooltip="{pos:'top-left'}" title="{{ Auth::user()->tooltip==0 ? '' :__('sidebar.repository_backup') }}" class="{{ (Request::is('repository_backup') ? 'select_active' : '') }} title-settings">
+                            <a href="{{ url('repository_backup') }}">{{ __('sidebar.repository_backup') }}</a>
+                        </li>
                     </ul>
                 </li>
             @endif
             @php
                 $class = (
-                            Request::is('repository_backup') ||
                             Request::is('audit_log')
                         ) ? 'current_section' : '';
             @endphp
@@ -630,8 +600,8 @@
                     </span>
 
                     <ul class="second_level list-settings k-group k-menu-group">
-                        <li data-uk-tooltip="{pos:'top-left'}" title="{{ Auth::user()->tooltip==0 ? '' :__('sidebar.repository_backup') }}" class="{{ (Request::is('repository_backup') ? 'select_active' : '') }} title-settings">
-                            <a href="{{ url('repository_backup') }}">{{ __('sidebar.repository_backup') }}</a>
+                        <li data-uk-tooltip="{pos:'top-left'}" title="{{ Auth::user()->tooltip==0 ? '' :__('sidebar.su_settings') }}" class="{{ (Request::is('settings') ? 'select_active' : '') }} title-tooltip k-item k-state-default">
+                            <a href="{{ url('settings') }}" class="k-link">{{ __('sidebar.su_settings') }}</a>
                         </li>
                         <li data-uk-tooltip="{pos:'top-left'}" title="{{ Auth::user()->tooltip==0 ? '' :__('sidebar.audit_log') }}" class="{{ (Request::is('audit_log') ? 'select_active' : '') }} title-settings">
                             <a href="{{ url('audit_log') }}">{{ __('sidebar.audit_log') }}</a>
@@ -1644,8 +1614,8 @@
     <input type="hidden" id="API_PATH" value="<?php echo e(env('API_PATH')); ?>">
     <div id="page_content_inner">
 
-        @yield('content')
 
+        @yield('content')
         <div id="app">
                 <v-app>
                     @if (Auth::user()->hasPermission('view.users'))

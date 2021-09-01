@@ -11,7 +11,7 @@ class SprintsController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth','systemaudit', 'deletecontrol']);
+        $this->middleware(['auth','systemaudit', 'loglevel', 'deletecontrol']);
     }
 
     /**

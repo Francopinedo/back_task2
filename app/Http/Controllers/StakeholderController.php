@@ -11,7 +11,7 @@ class StakeholderController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth','systemaudit']);
+        $this->middleware(['auth','systemaudit', 'loglevel']);
     }
 
     /**

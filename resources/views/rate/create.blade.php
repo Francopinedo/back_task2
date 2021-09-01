@@ -114,6 +114,7 @@
 
 <script src="{{ asset('js/rates.js') }}"></script>
 <script type="text/javascript">
-
-    Rates.init('<?php echo e(env('API_PATH')); ?>', '<?php echo e(env('APP_URL')); ?>');
+    $(function(){
+        Rates.init('<?php echo e(env('API_PATH')); ?>', '<?php echo e(env('APP_URL')); ?>');
+    })
 </script>

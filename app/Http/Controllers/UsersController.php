@@ -18,7 +18,7 @@ class UsersController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['auth','systemaudit']);
+        $this->middleware(['auth','systemaudit', 'loglevel']);
     }
 
     /**
@@ -227,7 +227,7 @@ class UsersController extends Controller
             $validator =Validator::make($request->all(), [
 
                 'name' => 'required',
-                'email' => 'required|email|unique:users',
+                'email' => 'required|email|unique:users,email',
                 'password' => [
                     'required',
                     'string',

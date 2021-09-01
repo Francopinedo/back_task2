@@ -67,5 +67,6 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'deletecontrol' => \App\Http\Middleware\DeleteControl::class,
+        'loglevel' => \App\Http\Middleware\LogLevel::class,
     ];
 }

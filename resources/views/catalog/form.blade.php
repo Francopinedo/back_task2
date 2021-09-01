@@ -102,10 +102,10 @@
                                         
                                         <option value="">{{ __('catalog.option') }}...</option>
                                         @if(!empty($type))
-                                            <option value="1" selected> Manual</option>
+                                            <option value="1" selected>{{__('catalog.manual')}}</option>
                                         @endif
-                                        <option value="1" > Manual</option>
-                                        <option value="2"> Automatic</option>
+                                        <option value="1" > {{__('catalog.manual')}}</option>
+                                        <option value="2"> {{__('catalog.automatic')}}</option>
                                     </select>
                                 </div>
                             </div>

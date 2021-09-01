@@ -11,7 +11,7 @@ class SettingsController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth','systemaudit']);
+        $this->middleware(['auth','systemaudit', 'loglevel']);
     }
 
     /**
@@ -128,6 +128,7 @@ class SettingsController extends Controller
 		
 		
 		$data = $request->all();
+        $data['log_level'] = json_encode($data['log_level']);
 		
     	$res = $this->apiCall('POST', 'settings/'.$id, $data);
 
@@ -148,10 +149,7 @@ class SettingsController extends Controller
 
     	$settings = $this->getFromApi('GET', 'settings');
 	
-    return view('settings/edit' , [
-			'settings'   => $settings[0],
-
-        ]);
+    return redirect()->back();
     }
 
 }

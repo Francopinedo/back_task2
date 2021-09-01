@@ -4,7 +4,7 @@
         padding-top: 15px;
     }
     #effective {
-        padding-top: 25px;
+        padding-top: 40px;
         padding-bottom: 15px;
     }
 </style>

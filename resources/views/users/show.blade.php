@@ -62,7 +62,7 @@
                     <img class="md-user-image md-list-addon-avatar" src="assets/img/avatars/avatar_02_tn.png" alt="">
                 </div>
                 <div class="md-list-content">
-                    <span class="md-list-heading">Bianka Turner</span>
+                    <span class="md-list-heading">{{$user->name}}</span>
                     <span class="uk-text-small uk-text-muted">{{__('users.assigned')}}</span>
                 </div>
             </li>

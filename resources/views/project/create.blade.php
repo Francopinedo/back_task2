@@ -8,6 +8,10 @@
     #create_div.switcher_active {
         width: 50%;
     }
+    #sow_number, #identificador, #technical_estimator, #estimated_renueve, #estimated_margin, #target_margin, #financial_deviation_threshold, #time_deviation_threshold, #hours_by_day {
+        padding-top: 30px;
+        padding-bottom: 10px;
+    }
 
 </style>
  <form role="form" method="POST" action="{{ url('projects') }}" id="data-form"
@@ -101,13 +105,13 @@
 
                 <div class="md-input-wrapper">
                     <label>{{ __('projects_tooltip.sow_number') }}</label>
-                    <input type="text" class="md-input" name="sow_number"><span class="md-input-bar"></span>
+                    <input type="text" class="md-input" name="sow_number" id="sow_number"><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required sow_number-error"></span></div>
 
                 <div class="md-input-wrapper">
                     <label>{{ __('projects_tooltip.identificator') }}</label>
-                    <input type="text" class="md-input" name="identificator"><span class="md-input-bar"></span>
+                    <input type="text" class="md-input" name="identificator" id="identificador"><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required identificator-error"></span></div>
 
@@ -115,30 +119,38 @@
                     <label>{{ __('projects_tooltip.status') }}</label>
                     <select name="status" data-md-selectize>
                         <option value="">{{ __('projects.status') }}...</option>
-                        <option value="{{ __('projects.initiating') }}">{{ __('projects.initiating') }}...</option>
-                        <option value="{{ __('projects.planning') }}">{{ __('projects.planning') }}...</option>
-                        <option value="{{ __('projects.executing') }}">{{ __('projects.executing') }}...</option>
-                        <option value="{{ __('projects.closing') }}">{{ __('projects.closing') }}...</option>
-                        <option value="{{ __('projects.waiting') }}">{{ __('projects.waiting') }}...</option>
-                        <option value="{{ __('projects.completed') }}">{{ __('projects.completed') }}...</option>
-                        <option value="{{ __('projects.cancelled') }}">{{ __('projects.cancelled') }}...</option>
+                        <option value="{{ __('projects.initiating') }}">{{ __('projects.initiating') }}</option>
+                        <option value="{{ __('projects.planning') }}">{{ __('projects.planning') }}</option>
+                        <option value="{{ __('projects.executing') }}">{{ __('projects.executing') }}</option>
+                        <option value="{{ __('projects.closing') }}">{{ __('projects.closing') }}</option>
+                        <option value="{{ __('projects.waiting') }}">{{ __('projects.waiting') }}</option>
+                        <option value="{{ __('projects.completed') }}">{{ __('projects.completed') }}</option>
+                        <option value="{{ __('projects.cancelled') }}">{{ __('projects.cancelled') }}</option>
                     </select>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required status-error"></span></div>
 
-                <div class="md-input-wrapper">
+                <div class="md-input-wrapper md-input-select">
                     <label>{{ __('projects_tooltip.presales_responsable') }}</label>
-                    <input type="text" class="md-input" name="presales_responsable"><span class="md-input-bar"></span>
+                    <select name="presales_resonsable" data-md-selectize>
+                        <option value="">{{ __('projects.presales_responsable') }}...</option>
+                        @foreach ($users as $user)
+                            <option value="{{ $user->name }}">{{ $user->name }}</option>
+                        @endforeach
+                    </select>
                 </div>
-                <div class="parsley-errors-list filled"><span
-                            class="parsley-required presales_responsable-error"></span></div>
+                <div class="parsley-errors-list filled"><span class="parsley-required presales_responsable-error"></span></div>
 
-                <div class="md-input-wrapper">
+                <div class="md-input-wrapper md-input-select">
                     <label>{{ __('projects_tooltip.technical_estimator') }}</label>
-                    <input type="text" class="md-input" name="technical_estimator"><span class="md-input-bar"></span>
+                    <select name="technical_estimator" data-md-selectize>
+                        <option value="">{{ __('projects.technical_estimator') }}...</option>
+                        @foreach ($users as $user)
+                            <option value="{{ $user->name }}">{{ $user->name }}</option>
+                        @endforeach
+                    </select>
                 </div>
-                <div class="parsley-errors-list filled"><span class="parsley-required technical_estimator-error"></span>
-                </div>
+                <div class="parsley-errors-list filled"><span class="parsley-required technical_estimator-error"></span></div>
 
                 <div class="md-input-wrapper md-input-select">
                     <label>{{ __('projects_tooltip.engagement') }}</label>
@@ -153,7 +165,7 @@
 
  <div class="md-input-wrapper">
                     <label>{{ __('projects_tooltip.estimated_revenue') }}</label>
-                    <input type="text" class="md-input" name="estimated_revenue"><span class="md-input-bar"></span>
+                    <input type="text" class="md-input" name="estimated_revenue" id="estimated_renueve"><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required estimated_revenue-error"></span>
                 </div>
@@ -192,7 +204,7 @@
 
                 <div class="md-input-wrapper">
                     <label>{{ __('projects_tooltip.estimated_margin') }}</label>
-                    <input type="text" class="md-input" name="estimated_margin"><span class="md-input-bar"></span>
+                    <input type="text" class="md-input" name="estimated_margin" id="estimated_margin"><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required estimated_margin-error"></span>
                 </div>
@@ -207,13 +219,13 @@
 
                 <div class="md-input-wrapper">
                     <label>{{ __('projects_tooltip.target_margin') }}</label>
-                    <input type="text" class="md-input" name="target_margin"><span class="md-input-bar"></span>
+                    <input type="text" class="md-input" name="target_margin" id="target_margin"><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required target_margin-error"></span></div>
 
                 <div class="md-input-wrapper">
                     <label>{{ __('projects_tooltip.financial_deviation_threshold') }}</label>
-                    <input type="text" class="md-input" name="financial_deviation_threshold"><span
+                    <input type="text" class="md-input" name="financial_deviation_threshold" id="financial_deviation_threshold"><span
                             class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span
@@ -221,7 +233,7 @@
 
                 <div class="md-input-wrapper">
                     <label>{{ __('projects_tooltip.time_deviation_threshold') }}</label>
-                    <input type="text" class="md-input" name="time_deviation_threshold"><span
+                    <input type="text" class="md-input" name="time_deviation_threshold" id="time_deviation_threshold"><span
                             class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span
@@ -229,7 +241,7 @@
 
                 <div class="md-input-wrapper">
                     <label>{{ __('projects_tooltip.hours_by_day') }}</label>
-                    <input type="text" class="md-input hours_by_day" name="hours_by_day"><span
+                    <input type="text" class="md-input hours_by_day" name="hours_by_day" id="hours_by_day"><span
                             class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span

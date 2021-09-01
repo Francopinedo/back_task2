@@ -175,6 +175,34 @@
     	</form>
 
 <script>
+
+    $(function(){
+        $('#city_id').selectize();
+        $("#country_id").on('change', function () {
+            console.log('chage....');
+            $.ajax({
+                url: API_PATH + '/cities',
+                type: 'GET',
+                data: {country_id: $(this).val()},
+                dataType: 'json'
+            }).done(
+                function (data) {
+                    var html = '<option value="">City...</option>';
+
+                    $('#city_id').selectize()[0].selectize.destroy();
+
+                    $.each(data.data, function (i, value) {
+                        console.log(value);
+                        html += '<option value="' + value.id + '">' + value.name + '</option>';
+                    });
+
+                    $('#city_id').html(html);
+                    $('#city_id').selectize();
+                }
+            );
+        });
+    });
+
   var form = $('#data-form');
             $('#add-btn').on('click', function (e) {
                 form.submit();

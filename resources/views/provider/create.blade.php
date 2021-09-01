@@ -6,7 +6,9 @@
     #create_div.switcher_active {
         width: 50%;
     }
-
+    #phone_1, #phone_2, #phone_3 {
+        padding-top: 25px;
+    }
 </style>
     	<form role="form" method="POST" files=true  action="{{ url('providers') }}" id="data-form" data-redirect-on-success="{{ url('providers') }}" enctype="multipart/form-data">
  
@@ -19,7 +21,7 @@
     		<li class="uk-width-medium-1-4 uk-row-first">
                 <div class="md-input-wrapper">
                 	<label>{{ __('providers.name') }}</label>
-                	<input type="text" class="md-input" name="name" required><span class="md-input-bar"></span>
+                	<input type="text" class="md-input" name="name" id="name" required><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required name-error"></span></div>
 
@@ -74,32 +76,32 @@
 			  <li class="uk-width-medium-1-4 uk-row-first">
  
                 <div class="md-input-wrapper">
-                	<label>{{ __('providers.phone_1') }}</label>
-                	<input type="text" class="md-input" name="phone_1"><span class="md-input-bar"></span>
+                	<label for="phone_1">{{ __('providers.phone_1') }}</label>
+                	<input type="tel" id="phone_1" placeholder="54-911-6783445" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}" class="md-input" name="phone_1"><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required phone_1-error"></span></div>
  
                 <div class="md-input-wrapper">
-                	<label>{{ __('providers.phone_2') }}</label>
-                	<input type="text" class="md-input" name="phone_2"><span class="md-input-bar"></span>
+                	<label for="phone_2">{{ __('providers.phone_2') }}</label>
+                	<input type="text" class="md-input" id="phone_2" placeholder="54-911-6783445" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}" name="phone_2"><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required phone_2-error"></span></div>
  
                 <div class="md-input-wrapper">
-                	<label>{{ __('providers.phone_3') }}</label>
-                	<input type="text" class="md-input" name="phone_3"><span class="md-input-bar"></span>
+                	<label for="phone_3">{{ __('providers.phone_3') }}</label>
+                	<input type="text" class="md-input" id="phone_3" placeholder="54-911-6783445" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}" name="phone_3"><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required phone_3-error"></span></div>
 
                 <div class="md-input-wrapper">
                 	<label>{{ __('providers.billing_name') }}</label>
-                	<input type="text" class="md-input" name="billing_name"><span class="md-input-bar"></span>
+                	<input type="text" class="md-input" name="billing_name" id="billing_name"><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required billing_name-error"></span></div>
 
                 <div class="md-input-wrapper">
                 	<label>{{ __('providers.billing_address') }}</label>
-                	<input type="text" class="md-input" name="billing_address"><span class="md-input-bar"></span>
+                	<input type="text" class="md-input" name="billing_address" id="billing_address"><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required billing_address-error"></span></div>
 
@@ -203,6 +205,55 @@
 
 
 <script>
+    $(function(){
+        /* Capturando los datos del nombre de proveedor para agregarselos a el campo nombre de facturacion */
+        $('input[name=name]').keyup(function(){
+            if($(this).val() !== ''){
+                $('#billing_name').parent().addClass('md-input-filled');
+                $('input[name=billing_name]').val($('input[name=name]').val());
+            }else{
+                $('input[name=billing_name]').val(' ');
+                $('#billing_name').parent().removeClass('md-input-filled');
+            }
+        });
+        /* Capturando los datos del direccion de proveedor para agregarselos a el campo direccion en la facturcion */
+        $('input[name=address]').keyup(function(){
+            if($(this).val() !== ''){
+                $('#billing_address').parent().addClass('md-input-filled');
+                $('input[name=billing_address]').val($('input[name=address]').val());
+            }else{
+                $('input[name=billing_address]').val('');
+                $('#billing_address').parent().removeClass('md-input-filled');
+            }
+        });
+        
+
+        $('#city_id').selectize();
+        $("#country_id").on('change', function () {
+            console.log('chage....');
+            $.ajax({
+                url: API_PATH + '/cities',
+                type: 'GET',
+                data: {country_id: $(this).val()},
+                dataType: 'json'
+            }).done(
+                function (data) {
+                    var html = '<option value="">City...</option>';
+
+                    $('#city_id').selectize()[0].selectize.destroy();
+
+                    $.each(data.data, function (i, value) {
+                        console.log(value);
+                        html += '<option value="' + value.id + '">' + value.name + '</option>';
+                    });
+
+                    $('#city_id').html(html);
+                    $('#city_id').selectize();
+                }
+            );
+        });
+    });
+
   var form = $('#data-form');
             $('#add-btn').on('click', function (e) {
                 form.submit();

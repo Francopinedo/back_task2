@@ -9,6 +9,7 @@
 		var columns = [
 	            { data: 'id', name: 'id', visible: false },
 	            { data: 'value', name: 'value' },
+                {data: 'currency_unit', name: 'currency_unit'},
 	            { data: 'currency_name', name: 'currency_name' },
 		{ data: 'quotation_url', name: 'quotation_url' },
 			{ data: 'quotation_date', name: 'quotation_date' },
@@ -83,6 +84,7 @@
                 	        <tr>
                 	        	<th title="{{__('exchange_rates_tooltip.id')}}">{{ __('exchange_rates.id') }}</th>
                 	        	<th title="{{__('exchange_rates_tooltip.value')}}">{{ __('exchange_rates.value') }}</th>
+                                <th title="{{ __('exchange_rates_tooltip.currency_code') }}">{{ __('exchange_rates.currency_code') }}</th>
                 	        	<th title="{{__('exchange_rates_tooltip.currency')}}">{{ __('exchange_rates.currency') }}</th>
                                 <th title="{{__('exchange_rates_tooltip.quotation_url')}}">{{ __('exchange_rates.quotation_url') }}</th>
                                 <th title="{{__('exchange_rates_tooltip.quotation_date')}}">{{ __('exchange_rates.quotation_date') }}</th>

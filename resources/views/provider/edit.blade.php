@@ -27,8 +27,19 @@
                 <div class="parsley-errors-list filled"><span class="parsley-required address-error"></span></div>
 
                 <div class="md-input-wrapper md-input-filled md-input-select">
+                    <label>{{ __('providers.country') }}</label>
+                    <select name="country_id" id="country_id2" data-md-selectize>
+                        <option value="">{{ __('providers.country') }}...</option>
+                        @foreach ($countries as $country)
+                            <option value="{{ $country->id }}" {{ ($country->id == $provider->country_id) ? 'selected' : '' }}>{{ $country->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="parsley-errors-list filled"><span class="parsley-required city_id-error"></span></div>
+
+                <div class="md-input-wrapper md-input-filled md-input-select">
                 	<label>{{ __('providers.city') }}</label>
-                	<select name="city_id" data-md-selectize>
+                	<select name="city_id" id="city_id2" data-md-selectize>
                 	    <option value="">{{ __('providers.city') }}...</option>
                 	    @foreach ($cities as $city)
                 	        <option value="{{ $city->id }}" {{ ($city->id == $provider->city_id) ? 'selected' : '' }}>{{ $city->name }}</option>
@@ -179,33 +190,6 @@
 
             </li>
 
-        <li class="uk-width-medium-1-4 uk-row-first">
-
-
-                    <label>{{ __('providers.logo_path') }}</label>
-                               <br/>
-                <div class="thumbnail">
-                                        @if (empty($provider->logo_path) || $provider->logo_path=='')
-                                            <img alt="logo" id="logo_path_img2"
-                                                 src="{{ URL::to('/') }}/assets/img/avatardefault.png">
-
-                                        @else
-                                            <img src="{{ URL::to('/') .'/assets/img/providers/'. $provider->id .'/'. $provider->logo_path }}"
-                                                 id="logo_path_img2" alt="" >
-                                        @endif
-                                    </div>
-
-                                    <a class="uk-form-file md-btn" id="upload_widget_opener">Upload image
-                                        <input type="file" name="logo_path" accept="image/*" onchange="document.getElementById('logo_path_img2').src = window.URL.createObjectURL(this.files[0])" />
-                                    </a>
-                                </div>
-        <div class="parsley-errors-list filled"><span class="parsley-required logo_path-error"></span></div>
-
-
-
-
-            </li>
-
 			    		<li class="uk-width-medium-1-1 uk-row-first">
 							<div class="uk-margin-medium-top">
                     <a class="md-btn md-btn-primary md-btn-wave-light md-btn-block waves-effect waves-button waves-light" href="#" id="update-btn">{{ __('providers.update') }}</a>
@@ -216,8 +200,9 @@
 
 </div>
     	</form>
-
+<script src="{{ asset('js/provider.js') }}"></script>
 <script type="text/javascript">
+    provider.init();
 	$('.cancel-edit-btn').on('click', function(e){
     	e.preventDefault();
     	$('#edit_div_toggle').hide();
@@ -226,8 +211,30 @@
 
     // tableActions.initEditForm();
 
+    $('#city_id2').selectize();
+    $("#country_id2").on('change', function () {
+        console.log('chage....');
+        $.ajax({
+            url: API_PATH + '/cities',
+            type: 'GET',
+            data: {country_id: $(this).val()},
+            dataType: 'json'
+        }).done(
+            function (data) {
+                var html = '<option value="">City...</option>';
 
+                $('#city_id2').selectize()[0].selectize.destroy();
 
+                $.each(data.data, function (i, value) {
+                    console.log(value);
+                    html += '<option value="' + value.id + '">' + value.name + '</option>';
+                });
+
+                $('#city_id2').html(html);
+                $('#city_id2').selectize();
+            }
+        );
+    });
 
      var form = $('#data-form-edit');
             $('#update-btn').on('click', function (e) {

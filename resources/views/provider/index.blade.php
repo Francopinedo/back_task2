@@ -18,6 +18,7 @@
 
  			},
 	            { data: 'name', name: 'name' },
+	            {data: 'country_name', name: 'country_name'},
 	            { data: 'city_name', name: 'city_name' },
 	            { data: 'address', name: 'address' },
 	            { data: 'email_1', name: 'email_1' },
@@ -106,6 +107,7 @@
                 	        	<th title="{{ __('providers_tooltip.id')}}">{{ __('providers.id') }}</th>
 <th title="{{ __('providers_tooltip.logo_path')}}">{{ __('providers.logo_path') }}</th>
                 	        	<th title="{{ __('providers_tooltip.name')}}">{{ __('providers.name') }}</th>
+                	        	<th title="{{ __('providers_tooltip.country') }}">{{ __('providers.country') }}</th>
                 	        	<th title="{{ __('providers_tooltip.city')}}">{{ __('providers.city') }}</th>
                 	        	<th title="{{ __('providers_tooltip.address')}}">{{ __('providers.address') }}</th>
                 	        	<th title="{{ __('providers_tooltip.email_1')}}">{{ __('providers.email_1') }}</th>

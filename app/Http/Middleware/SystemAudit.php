@@ -70,29 +70,29 @@ class SystemAudit
 			}
 			if($method!='login' || $method!='index' || $method!='show'  || $method!='create'|| $method!='edit'|| $method!='select' || $method!='forContracts' || $method!='rawDirectory'|| $method!='forProjectSelection') {
 		
-				$data['date_action'] = $now->toDateTimeString();
-				$data['process_name'] =$controller;
-				$data['action_name'] =$method;
-				$data['user_id'] =isset($request->user_id)?$request->user_id:Auth::id();
-				$data['user_name'] =isset($request->user_id)?\App\User::find($request->user_id)->name: 
-				empty(Auth::id())?\App\User::find(Auth::id())->name:'';
-				$data['user_comment'] ='SYSTEM LOG';
-				$data['action'] =$method;
-				$data['table_name'] =$table_name;
-				$data['reason'] = isset($request->reason) ? $request->reason : 'LOG '.$method;
-				$data['business_rule'] ='';
-				$data['customer_id'] =isset($request->customer_id)?$request->customer_id:(session('customer_id'))?session('customer_id'):'';
-				$data['project_id'] =isset($request->project_id)?$request->project_id:(session('project_id'))?session('project_id'):'';
-				$data['role'] =isset($request->user_id)?\App\Role::find(\App\RoleUser::where('user_id',$request->user_id)->first()->role_id)->name: (Auth::user())? \App\Role::find(\App\RoleUser::where('user_id',Auth::user()->id)->first()->role_id)->name: 'N/A';
+				// $data['date_action'] = $now->toDateTimeString();
+				// $data['process_name'] =$controller;
+				// $data['action_name'] =$method;
+				// $data['user_id'] =isset($request->user_id)?$request->user_id:Auth::id();
+				// $data['user_name'] =isset($request->user_id)?\App\User::find($request->user_id)->name: 
+				// empty(Auth::id())?\App\User::find(Auth::id())->name:'';
+				// $data['user_comment'] ='SYSTEM LOG';
+				// $data['action'] =$method;
+				// $data['table_name'] =$table_name;
+				// $data['reason'] = isset($request->reason) ? $request->reason : 'LOG '.$method;
+				// $data['business_rule'] ='';
+				// $data['customer_id'] =isset($request->customer_id)?$request->customer_id:(session('customer_id'))?session('customer_id'):'';
+				// $data['project_id'] =isset($request->project_id)?$request->project_id:(session('project_id'))?session('project_id'):'';
+				// $data['role'] =isset($request->user_id)?\App\Role::find(\App\RoleUser::where('user_id',$request->user_id)->first()->role_id)->name: (Auth::user())? \App\Role::find(\App\RoleUser::where('user_id',Auth::user()->id)->first()->role_id)->name: 'N/A';
 
 
-				$client2 = new GuzzleHttpClient();
-		    	$params2 = ['form_params' => $data];
-				$params2['http_errors'] = false;
-				$params2['timeout'] = 300;
-		    	$res=$client2->request('POST', env('API_PATH').'audit_log', $params2);
+				// $client2 = new GuzzleHttpClient();
+		  //   	$params2 = ['form_params' => $data];
+				// $params2['http_errors'] = false;
+				// $params2['timeout'] = 300;
+		  //   	$res=$client2->request('POST', env('API_PATH').'audit_log', $params2);
 	    	
-				$jsonres=json_decode($res->getBody()->__toString(), TRUE);
+				// $jsonres=json_decode($res->getBody()->__toString(), TRUE);
 					//$res = $client->request('POST', env('API_PATH').'audit_log', $data);
 				//\Log::info($jsonres);
 

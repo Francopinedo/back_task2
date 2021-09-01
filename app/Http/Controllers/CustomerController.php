@@ -16,8 +16,7 @@ class CustomerController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth','systemaudit', 'deletecontrol']);
-        // $this->middleware('deletecontrol')->only('delete');
+        $this->middleware(['auth','systemaudit', 'loglevel', 'deletecontrol']);
     }
 
     /**
@@ -200,8 +199,7 @@ class CustomerController extends Controller
      */
     public function show($id)
     {
-		$customer = $this->getFromApi('GET', 'customers/'.$id.'?include=industry,city,currency');
-
+		$customer = $this->getFromApi('GET', 'customers/'.$id.'?include=industry,country,city,currency');
     	return response()->json([
     		'view' => view('customer/show', ['customer' => $customer] )->render(),
     	]);
@@ -215,7 +213,6 @@ class CustomerController extends Controller
     	$company = $this->getFromApi('GET', 'companies/fromUser/'.Auth::id());
 
     	$customers = $this->getFromApi('GET', 'customers?include=projects&company_id='.$company->id);
-
     	foreach ($customers as $key => $customer)
     	{
     		if (empty($customer->projects->data))

@@ -14,6 +14,17 @@
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required value-error"></span></div>
 
+                <div class="md-input-wrapper md-input-filled md-input-select">
+                    <label>{{ __('exchange_rates.currency_code') }}</label>
+                    <select name="currency_unit" data-md-selectize>
+                        <option value="">{{ __('exchange_rates.currency_code') }}...</option>
+                        @foreach ($currencies as $currency)
+                            <option value="{{ $currency->code }}" {{ ($currency->code == $exchange_rate->currency_unit) ? 'selected' : '' }}>{{ $currency->code }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="parsley-errors-list filled"><span class="parsley-required currency_unit-error"></span></div>
+
                	<div class="md-input-wrapper md-input-filled md-input-select">
                		<label>{{ __('exchange_rates.currency') }}</label>
                 	<select name="currency_id" data-md-selectize>
