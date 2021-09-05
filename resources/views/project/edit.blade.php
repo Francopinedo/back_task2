@@ -8,6 +8,11 @@
     #edit_div.switcher_active {
         width: 50%;
     }
+
+    #estimated_margin, #estimated_department_margin, #target_margin, #financial_deviation_threshold, #time_deviation_threshold{
+        padding-top: 30px;
+        padding-bottom: 10px;
+    }
 </style>
 
 <form role="form" method="POST" action="{{ url('projects/update') }}" id="data-form-edit" data-redirect-on-success="{{ url('projects') }}">
@@ -108,26 +113,26 @@
                 <label>{{ __('projects.status') }}</label>
                 <select name="status" data-md-selectize>
                     <option value="">{{ __('projects.status') }}...</option>
-                    <option value="{{ ucfirst(__('projects.initiating')) }}" {{ ($project->status == ucfirst(__('projects.initiating'))) ? 'selected' : '' }}>{{ ucfirst(__('projects.initiating')) }}
+                    <option value="Initiating" {{ ($project->status == "Initiating") ? 'selected' : '' }}>{{ ucfirst(__('projects.initiating')) }}
                         
                     </option>
-                    <option value="{{ ucfirst(__('projects.planning')) }}" {{ ($project->status == ucfirst(__('projects.planning'))) ? 'selected' : '' }}>{{ ucfirst(__('projects.planning')) }}
+                    <option value="Planning" {{ ($project->status == "Planning") ? 'selected' : '' }}>{{ ucfirst(__('projects.planning')) }}
                         
                     </option>
-                    <option value="{{ ucfirst(__('projects.executing')) }}" {{ ($project->status == ucfirst(__('projects.executing'))) ? 'selected' : '' }}>{{ ucfirst(__('projects.executing')) }}
+                    <option value="Executing" {{ ($project->status == "Executing") ? 'selected' : '' }}>{{ ucfirst(__('projects.executing')) }}
                         
                     </option>
-                    <option value="{{ ucfirst(__('projects.closing')) }}" {{ ($project->status == ucfirst(__('projects.closing'))) ? 'selected' : '' }}>{{ ucfirst(__('projects.closing')) }}
+                    <option value="Closing" {{ ($project->status == "Closing") ? 'selected' : '' }}>{{ ucfirst(__('projects.closing')) }}
                         
                     </option>
-                    <option value="{{ ucfirst(__('projects.waiting')) }}" {{ ($project->status == ucfirst(__('projects.waiting'))) ? 'selected' : '' }}>{{ ucfirst(__('projects.waiting')) }}
+                    <option value="Waiting" {{ ($project->status == "Waiting") ? 'selected' : '' }}>{{ ucfirst(__('projects.waiting')) }}
                         
                     </option>
-                    <option value="{{ ucfirst(__('projects.completed')) }}" {{ ($project->status == ucfirst(__('projects.completed'))) ? 'selected' : '' }}>{{ ucfirst(__('projects.completed')) }}
+                    <option value="Completed" {{ ($project->status == "Completed") ? 'selected' : '' }}>{{ ucfirst(__('projects.completed')) }}
                         
                     </option>
 
-                    <option value="{{ ucfirst(__('projects.cancelled')) }}" {{ ($project->status == ucfirst(__('projects.cancelled'))) ? 'selected' : '' }}>{{ ucfirst(__('projects.cancelled')) }}
+                    <option value="Cancelled" {{ ($project->status == "Cancelled") ? 'selected' : '' }}>{{ ucfirst(__('projects.cancelled')) }}
                         
                     </option>
                 </select>
@@ -136,7 +141,7 @@
 
             <div class="md-input-wrapper md-input-select">
                     <label>{{ __('projects_tooltip.presales_responsable') }}</label>
-                    <select name="presales_resonsable" data-md-selectize>
+                    <select name="presales_responsable" data-md-selectize>
                         <option value="">{{ __('projects.presales_responsable') }}...</option>
                         @foreach ($users as $user)
                             <option value="{{ $user->name }}" {{($project->presales_responsable == $user->name) ? 'selected' : ''}}>{{ $user->name }}</option>
@@ -169,7 +174,7 @@
 
             <div class="md-input-wrapper md-input-filled">
                 <label>{{ __('projects.estimated_revenue') }}</label>
-                <input type="text" class="md-input" name="estimated_revenue"
+                <input type="number" class="md-input" name="estimated_revenue"
                        value="{{ $project->estimated_revenue }}"><span class="md-input-bar"></span>
             </div>
             <div class="parsley-errors-list filled"><span class="parsley-required estimated_revenue-error"></span>
@@ -210,46 +215,46 @@
 
             <div class="md-input-wrapper md-input-filled">
                 <label>{{ __('projects.estimated_cost') }}</label>
-                <input type="text" class="md-input" name="estimated_cost" value="{{ $project->estimated_cost }}"><span class="md-input-bar"></span>
+                <input type="number" class="md-input" name="estimated_cost" value="{{ $project->estimated_cost }}"><span class="md-input-bar"></span>
             </div>
             <div class="parsley-errors-list filled"><span class="parsley-required estimated_cost-error"></span></div>
 
             <div class="md-input-wrapper md-input-filled">
                 <label>{{ __('projects.estimated_margin') }}</label>
-                <input type="text" class="md-input" name="estimated_margin" value="{{ $project->estimated_margin }}"><span class="md-input-bar"></span>
+                <input type="number" class="md-input" name="estimated_margin" id="estimated_margin" value="{{ $project->estimated_margin }}" min="0" max="100"><span class="md-input-bar"></span>
             </div>
             <div class="parsley-errors-list filled"><span class="parsley-required estimated_margin-error"></span></div>
 
             <div class="md-input-wrapper md-input-filled">
                 <label>{{ __('projects.estimated_department_margin') }}</label>
-                <input type="text" class="md-input" name="estimated_department_margin" value="{{ $project->estimated_department_margin }}"><span class="md-input-bar"></span>
+                <input type="number" class="md-input" name="estimated_department_margin" id="estimated_department_margin" value="{{ $project->estimated_department_margin }}" min="0" max="100"><span class="md-input-bar"></span>
             </div>
             <div class="parsley-errors-list filled"><span class="parsley-required estimated_department_margin-error"></span></div>
 
             <div class="md-input-wrapper md-input-filled">
                 <label>{{ __('projects.target_margin') }}</label>
-                <input type="text" class="md-input" name="target_margin" value="{{ $project->target_margin }}"><span class="md-input-bar"></span>
+                <input type="number" class="md-input" name="target_margin" id="target_margin" value="{{ $project->target_margin }}" min="0" max="100"><span class="md-input-bar"></span>
             </div>
             <div class="parsley-errors-list filled"><span class="parsley-required target_margin-error"></span></div>
 
             <div class="md-input-wrapper md-input-filled">
                 <label>{{ __('projects.financial_deviation_threshold') }}</label>
-                <input type="text" class="md-input" name="financial_deviation_threshold"
-                       value="{{ $project->financial_deviation_threshold }}"><span class="md-input-bar"></span>
+                <input type="number" class="md-input" name="financial_deviation_threshold" id="financial_deviation_threshold" 
+                       value="{{ $project->financial_deviation_threshold }}" min="0" max="100"><span class="md-input-bar"></span>
             </div>
             <div class="parsley-errors-list filled"><span class="parsley-required financial_deviation_threshold-error"></span></div>
 
             <div class="md-input-wrapper md-input-filled">
                 <label>{{ __('projects.time_deviation_threshold') }}</label>
-                <input type="text" class="md-input" name="time_deviation_threshold"
-                       value="{{ $project->time_deviation_threshold }}"><span class="md-input-bar"></span>
+                <input type="number" class="md-input" name="time_deviation_threshold" id="time_deviation_threshold" 
+                       value="{{ $project->time_deviation_threshold }}" min="0" max="100"><span class="md-input-bar"></span>
             </div>
             <div class="parsley-errors-list filled"><span class="parsley-required time_deviation_threshold-error"></span></div>
 
 
             <div class="md-input-wrapper md-input-filled">
                 <label>{{ __('projects.hours_by_day') }}</label>
-                <input type="text" required class="md-input hours_by_day" name="hours_by_day" value="{{ $project->hours_by_day }}"><span class="md-input-bar"></span>
+                <input type="number" required class="md-input hours_by_day" name="hours_by_day" value="{{ $project->hours_by_day }}"><span class="md-input-bar"></span>
             </div>
             <div class="parsley-errors-list filled"><span class="parsley-required hours_by_day-error"></span></div>
 

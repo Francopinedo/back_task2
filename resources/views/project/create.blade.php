@@ -8,7 +8,7 @@
     #create_div.switcher_active {
         width: 50%;
     }
-    #sow_number, #identificador, #technical_estimator, #estimated_renueve, #estimated_margin, #target_margin, #financial_deviation_threshold, #time_deviation_threshold, #hours_by_day {
+    #sow_number, #identificador, #technical_estimator, #estimated_cost, #estimated_renueve, #estimated_margin, #estimated_department_margin, #target_margin, #financial_deviation_threshold, #time_deviation_threshold, #hours_by_day {
         padding-top: 30px;
         padding-bottom: 10px;
     }
@@ -165,7 +165,7 @@
 
  <div class="md-input-wrapper">
                     <label>{{ __('projects_tooltip.estimated_revenue') }}</label>
-                    <input type="text" class="md-input" name="estimated_revenue" id="estimated_renueve"><span class="md-input-bar"></span>
+                    <input type="number" class="md-input" name="estimated_revenue" id="estimated_renueve"><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required estimated_revenue-error"></span>
                 </div>
@@ -197,43 +197,43 @@
 
                 <div class="md-input-wrapper">
                     <label>{{ __('projects_tooltip.estimated_cost') }}</label>
-                    <input type="text" class="md-input" name="estimated_cost"><span class="md-input-bar"></span>
+                    <input type="number" class="md-input" name="estimated_cost" id="estimated_cost"><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required estimated_cost-error"></span>
                 </div>
 
                 <div class="md-input-wrapper">
-                    <label>{{ __('projects_tooltip.estimated_margin') }}</label>
-                    <input type="text" class="md-input" name="estimated_margin" id="estimated_margin"><span class="md-input-bar"></span>
+                    <label>{{ __('projects.estimated_margin') }}</label>
+                    <input type="number" class="md-input" name="estimated_margin" id="estimated_margin" min="1" max="100"><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required estimated_margin-error"></span>
                 </div>
 
                 <div class="md-input-wrapper">
-                    <label>{{ __('projects_tooltip.estimated_department_margin') }}</label>
-                    <input type="text" class="md-input" name="estimated_department_margin"><span
+                    <label>{{ __('projects.estimated_department_margin') }}</label>
+                    <input type="number" class="md-input" name="estimated_department_margin" id="estimated_department_margin" min="1" max="100"><span
                             class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span
                             class="parsley-required estimated_department_margin-error"></span></div>
 
                 <div class="md-input-wrapper">
-                    <label>{{ __('projects_tooltip.target_margin') }}</label>
-                    <input type="text" class="md-input" name="target_margin" id="target_margin"><span class="md-input-bar"></span>
+                    <label>{{ __('projects.target_margin') }}</label>
+                    <input type="number" class="md-input" name="target_margin" id="target_margin" min="1" max="100"><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required target_margin-error"></span></div>
 
                 <div class="md-input-wrapper">
-                    <label>{{ __('projects_tooltip.financial_deviation_threshold') }}</label>
-                    <input type="text" class="md-input" name="financial_deviation_threshold" id="financial_deviation_threshold"><span
+                    <label>{{ __('projects.financial_deviation_threshold') }}</label>
+                    <input type="number" class="md-input" name="financial_deviation_threshold" id="financial_deviation_threshold" min="1" max="100"><span
                             class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span
                             class="parsley-required financial_deviation_threshold-error"></span></div>
 
                 <div class="md-input-wrapper">
-                    <label>{{ __('projects_tooltip.time_deviation_threshold') }}</label>
-                    <input type="text" class="md-input" name="time_deviation_threshold" id="time_deviation_threshold"><span
+                    <label>{{ __('projects.time_deviation_threshold') }}</label>
+                    <input type="number" class="md-input" name="time_deviation_threshold" id="time_deviation_threshold" min="1" max="100"><span
                             class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span
@@ -241,7 +241,7 @@
 
                 <div class="md-input-wrapper">
                     <label>{{ __('projects_tooltip.hours_by_day') }}</label>
-                    <input type="text" class="md-input hours_by_day" name="hours_by_day" id="hours_by_day"><span
+                    <input type="number" class="md-input hours_by_day" name="hours_by_day" id="hours_by_day"><span
                             class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span

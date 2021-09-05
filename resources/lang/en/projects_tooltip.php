@@ -33,7 +33,7 @@ return [
 	'project_manager'               => 'Project Manager',
 	'delivery_manager'              => 'Delivery Manager: (If Any).',
 	'technical_director'            => 'Technical Director',
-	'estimated_department_margin'   => 'Estimated Department Margin',
+	'estimated_department_margin'   => '% Estimated Department Margin',
 	'alerts'                        => 'Alerts',
 	'items'                         => 'Items',
 	'total'                         => 'Total',
