@@ -6,7 +6,7 @@ return [
 	'id' => 'Id',
 	'name' => 'Name',
 	'lang' => 'Language',
-	'activity' => 'Activity (Industry)',
+	'industry' => 'Activity (Industry)',
 	'docType' => 'Document Type (Select One)',
 	'code' => 'Code',
 	'version' => 'Version',

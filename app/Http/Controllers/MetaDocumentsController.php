@@ -19,9 +19,9 @@ class MetaDocumentsController extends Controller
     {
         $metadocuments = $this->getFromApi('GET', 'metadocuments/datatables');
         $languages = $this->getFromApi('GET', 'languages');
-        $activities = \App\Activity::all();
+        $industries = \App\Industry::all();
         $docTypes = \App\DocType::all();
-        return view('metadocuments/index', ['metadocuments' => $metadocuments,'languages' => $languages, 'activities' => $activities, 'docTypes' => $docTypes]);
+        return view('metadocuments/index', ['metadocuments' => $metadocuments,'languages' => $languages, 'industries' => $industries, 'docTypes' => $docTypes]);
     }
 
     /**
@@ -45,7 +45,7 @@ class MetaDocumentsController extends Controller
     	$validator =Validator::make($request->all(), [
 			'name' => 'required',
 			'language_id' => 'required',
-			'activity_id' => 'required',
+			'industry_id' => 'required',
             'doctype_id' => 'required',
             'version' => 'required',
             'path_ref' => 'required',
@@ -101,11 +101,11 @@ class MetaDocumentsController extends Controller
         $metadocument = $this->getFromApi('GET', 'metadocuments/'.$id);
 
     	$languages = $this->getFromApi('GET', 'languages');
-        $activities = \App\Activity::all();
+        $industries = \App\Industry::all();
         $docTypes = \App\DocType::all();
 
     	return response()->json([
-    		'view' => view('metadocuments/edit', ['metadocument' => $metadocument,'languages' => $languages, 'activities' => $activities, 'docTypes' => $docTypes] )->render()
+    		'view' => view('metadocuments/edit', ['metadocument' => $metadocument,'languages' => $languages, 'industries' => $industries, 'docTypes' => $docTypes] )->render()
     	]);
     }
 
@@ -122,7 +122,7 @@ class MetaDocumentsController extends Controller
     	$validator =Validator::make($request->all(), [
 			'name' => 'required',
 			'language_id' => 'required',
-			'activity_id' => 'required',
+			'industry_id' => 'required',
             'doctype_id' => 'required',
             'version' => 'required',
            

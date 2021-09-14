@@ -6,7 +6,7 @@ return [
 	'id'              => 'Id',
 	'name'            => 'Nombre',
 	'lang'            => 'Lenguaje',
-	'activity'        => 'Actividad (Industria)',
+	'industry'        => 'Actividad (Industria)',
 	'docType'         => 'Tipo de Documento (Seleccione Uno)',
 	'code'            => 'Codigo',
 	'version'         => 'Version',

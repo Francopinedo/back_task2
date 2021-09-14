@@ -19,15 +19,15 @@
                 <div class="parsley-errors-list filled"><span class="parsley-required languaje-error"></span></div>
 
                 <div class="md-input-wrapper md-input-select">
-                    <label>{{ __('metadocuments.activity') }}</label>
-                    <select name="activity_id" data-md-selectize>
-                        <option value="">{{ __('metadocuments.activity') }}...</option>
-                        @foreach ($activities as $a)
-                            <option value="{{ $a->id }}" {{ (isset($metadocument) && $a->id == $metadocument->activity_id) ? 'selected' : '' }}>{{ $a->activity_desc }}</option>
+                    <label>{{ __('metadocuments.industry') }}</label>
+                    <select name="industry_id" data-md-selectize>
+                        <option value="">{{ __('metadocuments.industry') }}...</option>
+                        @foreach ($industries as $i)
+                            <option value="{{ $i->id }}" {{ (isset($metadocument) && $i->id == $metadocument->industry_id) ? 'selected' : '' }}>{{ $i->name }}</option>
                         @endforeach
                     </select>
                 </div>
-                <div class="parsley-errors-list filled"><span class="parsley-required activity-error"></span></div>
+                <div class="parsley-errors-list filled"><span class="parsley-required industry_id-error"></span></div>
 
                 <div class="md-input-wrapper md-input-select">
                     <label>{{ __('metadocuments.docType') }}</label>

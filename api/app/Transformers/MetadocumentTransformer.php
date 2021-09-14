@@ -15,7 +15,7 @@ class MetadocumentTransformer extends TransformerAbstract
 			'name'            => $m->name,
             'language_id'     => $m->language_id,
             'doctype_id'      => $m->doctype_id,
-            'activity_id'     => $m->activity_id,
+            'industry_id'     => $m->industry_id,
             'code'            => $m->code,
             'version'         => $m->version,
             'link_logo_left'  => $m->link_logo_left,

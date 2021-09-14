@@ -9,7 +9,7 @@
 	            { data: 'id', name: 'id'},
                 { data: 'name', name: 'name' },
 	            { data: 'language.name', name: 'language_name' },
-                { data: 'activity.activity_desc', name: 'activity_name' },
+                { data: 'industry.name', name: 'industry_name' },
                 { data: 'doctype.type_desc', name: 'doctype_name' },
                 { data: 'version', name: 'version' },
                 { data: 'link_logo_left', name: 'link_logo_left' },
@@ -72,7 +72,7 @@
 @endsection
 
 @section('create_div')
-	@component('metadocuments/create',['languages' => $languages, 'activities' => $activities, 'docTypes' => $docTypes])
+	@component('metadocuments/create',['languages' => $languages, 'industries' => $industries, 'docTypes' => $docTypes])
 
 	@endcomponent
 @endsection

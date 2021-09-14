@@ -36,7 +36,7 @@ class MetadocumentsController extends Controller {
 
     public function store(Request $request)
   	{
-        if (!$request->has('name') || !$request->has('language_id') || !$request->has('doctype_id') || !$request->has('activity_id') || !$request->has('version'))
+        if (!$request->has('name') || !$request->has('language_id') || !$request->has('doctype_id') || !$request->has('industry_id') || !$request->has('version'))
     	{
     		return $this->response->error('Faltan datos', 450);
     	}
@@ -57,7 +57,7 @@ class MetadocumentsController extends Controller {
     
     public function datatables(Request $request)
   	{ 
-		$metadocuments = Metadocument::with('doctype','language','activity');
+		$metadocuments = Metadocument::with('doctype','language','industry');
 
 		foreach ($metadocuments as $m)
 		{
