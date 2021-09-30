@@ -417,7 +417,7 @@ class UserController extends Controller
         if ($user == NULL) {
             return $this->response->error('No existe el usuario', 450);
         }
-//return $user;
+
         $user->delete();
 
         return $this->response->noContent();

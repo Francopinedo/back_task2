@@ -229,8 +229,6 @@ var tasks = (function () {
 
                             if (ind === lenght || lenght == '-1') {
 
-                                console.log(taskslist);
-
                                 var ret = {
 
                                     "tasks": taskslist,

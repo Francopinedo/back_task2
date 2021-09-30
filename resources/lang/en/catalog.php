@@ -10,7 +10,7 @@ return [
 	'upload'            => 'Upload',
 	'document'          => 'Select documents and click "Start upload"',
 	'upload_doc'        => 'Upload document to this directory',
-	'option' 			=> 'Select kind of generation',
+	'option' 			=> 'Select Type of Generation',
 	'knowledge_area'	=> 'Select a knowledge area',
 	'process_group'		=> 'Select a Process Group',
 	'add_file' 		=> 'Add File',

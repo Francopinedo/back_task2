@@ -15,7 +15,8 @@ class CountryTransformer extends TransformerAbstract
 			'name'              => $country->name,
 			'language_id'       => $country->language_id,
 			'code'       => $country->code,
-			'currency_id'       => $country->currency_id
+			'currency_id'       => $country->currency_id,
+			'mask_phone' => $country->mask_phone,
         ];
     }
 }

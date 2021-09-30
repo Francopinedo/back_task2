@@ -105,7 +105,7 @@
 
 
 <script type="text/javascript">
-    $('#create-btn').on('click', function(e){
+    $('#cancel-btn').on('click', function(e){
         e.preventDefault();
         $('#ajax_create_div_toggle').hide();
         $('#ajax_create_div').removeClass('switcher_active');

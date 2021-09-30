@@ -70,19 +70,19 @@
 
                 <div class="md-input-wrapper md-input-filled">
                 	<label>{{ __('providers.phone_1') }}</label>
-                	<input type="text" class="md-input" name="phone_1" value="{{ $provider->phone_1 }}"><span class="md-input-bar"></span>
+                	<input type="text" class="md-input" name="phone_1" id="phone_1" value="{{ $provider->phone_1 }}"><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required phone_1-error"></span></div>
 
                 <div class="md-input-wrapper md-input-filled">
                 	<label>{{ __('providers.phone_2') }}</label>
-                	<input type="text" class="md-input" name="phone_2" value="{{ $provider->phone_2 }}"><span class="md-input-bar"></span>
+                	<input type="text" class="md-input" name="phone_2" id="phone_2" value="{{ $provider->phone_2 }}"><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required phone_2-error"></span></div>
 
                 <div class="md-input-wrapper md-input-filled">
                 	<label>{{ __('providers.phone_3') }}</label>
-                	<input type="text" class="md-input" name="phone_3" value="{{ $provider->phone_3 }}"><span class="md-input-bar"></span>
+                	<input type="text" class="md-input" name="phone_3" id="phone_3" value="{{ $provider->phone_3 }}"><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required phone_3-error"></span></div>
 
@@ -120,13 +120,13 @@
 
                 <div class="md-input-wrapper md-input-filled">
                 	<label>{{ __('providers.swiftcode') }}</label>
-                	<input type="text" class="md-input" name="swiftcode" value="{{ $provider->swiftcode }}"><span class="md-input-bar"></span>
+                	<input type="text" class="md-input" name="swiftcode" id="swiftcode2" value="{{ $provider->swiftcode }}" maxlength="11"><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required swiftcode-error"></span></div>
 
                 <div class="md-input-wrapper md-input-filled">
                 	<label>{{ __('providers.aba') }}</label>
-                	<input type="text" class="md-input" name="aba" value="{{ $provider->aba }}"><span class="md-input-bar"></span>
+                	<input type="text" class="md-input" name="aba" value="{{ $provider->aba }}" minlength="9"><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required aba-error"></span></div>
 
@@ -200,8 +200,12 @@
 
 </div>
     	</form>
+
+<script src="{{asset('public/jQuery-Mask/dist/jquery.mask.js')}}"></script>
+<script src="{{asset('public/jQuery-Mask/dist/jquery.mask.min.js')}}"></script>
+<script src="{{asset('public/Inputmask/dist/inputmask.js')}}"></script>
 <script src="{{ asset('js/provider.js') }}"></script>
-<script type="text/javascript">
+<script>
     provider.init();
 	$('.cancel-edit-btn').on('click', function(e){
     	e.preventDefault();
@@ -210,7 +214,7 @@
     });
 
     // tableActions.initEditForm();
-
+    $(function(){
     $('#city_id2').selectize();
     $("#country_id2").on('change', function () {
         console.log('chage....');
@@ -234,36 +238,59 @@
                 $('#city_id2').selectize();
             }
         );
+        /*Creando mascara de telefono de acuerdo al pais*/
+        $.ajax({
+            url: API_PATH + '/countries/'+$(this).val(),
+            type: 'GET',
+            dataType: 'json',
+            success: function(data){
+                Inputmask({"mask": data.data['mask_phone']}).mask('#phone_1,#phone_2,#phone_3');
+                $('#phone_1,#phone_2,#phone_3').attr('placeholder', data.data['mask_phone']);
+            }
+        });
+    });
+        
     });
 
-     var form = $('#data-form-edit');
-            $('#update-btn').on('click', function (e) {
-                form.submit();
-            });
+    /* Mascara para el campo Codigo Swift */
+    $("#swiftcode2").mask(
+        'PPPPPPNNNNN',
+        {translation:
+            {
+                P: {pattern: /[A-Z]/},
+                N: {pattern: /[A-Z, 0-9]/, recursive: true}
+            }
+        }
+    );
 
-            $(form).submit(function (event) {
-                var formdata = new FormData(form.get(0));
-                event.preventDefault();
-                $.ajax({
-                    url: form.attr('action'),
-                    type: 'POST',
-                    data: formdata,
-                    dataType: 'json',
-                    processData: false, //For posting uploaded files we add this
-                    contentType: false, //For posting uploaded files we add this
-                    success: function (json) {
-                        window.location.replace(form.data('redirect-on-success'));
-                    },
-                    error: function (json) {
-                        if (json.status === 422) {
-                            var errors = json.responseJSON;
-                            $.each(json.responseJSON, function (key, value) {
-                                $('#' + key + '-error').html(value);
-                            });
-                        } else {
-                            // Error
-                        }
-                    }
-                });
-            });
+    var form = $('#data-form-edit');
+    $('#update-btn').on('click', function (e) {
+        form.submit();
+    });
+
+    $(form).submit(function (event) {
+        var formdata = new FormData(form.get(0));
+        event.preventDefault();
+        $.ajax({
+            url: form.attr('action'),
+            type: 'POST',
+            data: formdata,
+            dataType: 'json',
+            processData: false, //For posting uploaded files we add this
+            contentType: false, //For posting uploaded files we add this
+            success: function (json) {
+                window.location.replace(form.data('redirect-on-success'));
+            },
+            error: function (json) {
+                if (json.status === 422) {
+                    var errors = json.responseJSON;
+                    $.each(json.responseJSON, function (key, value) {
+                        $('.' + key + '-error').html(value);
+                    });
+                } else {
+                    // Error
+                }
+            }
+        });
+    });
 </script>

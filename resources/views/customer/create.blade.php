@@ -3,6 +3,9 @@
     #create_div.switcher_active {
         width: 40%;
     }
+    #swiftcode {
+        padding-top: 30px;
+    }
 
 </style>
     	<form role="form"  action="{{ url('customers') }}" id="data-form" data-redirect-on-success="{{ url('customers') }}">
@@ -103,13 +106,13 @@
 
                 <div class="md-input-wrapper">
                 	<label>{{ __('customers.swiftcode') }}</label>
-                	<input type="text" class="md-input" name="swiftcode"><span class="md-input-bar"></span>
+                	<input type="text" class="md-input" name="swiftcode" id="swiftcode" placeholder="BFRPARBAXXX" maxlength="11"><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required swiftcode-error"></span></div>
 
                 <div class="md-input-wrapper">
                 	<label>{{ __('customers.aba') }}</label>
-                	<input type="text" class="md-input" name="aba"><span class="md-input-bar"></span>
+                	<input type="text" class="md-input" name="aba" minlength="9"><span class="md-input-bar"></span>
                 </div>
                 <div class="parsley-errors-list filled"><span class="parsley-required aba-error"></span></div>
 
@@ -174,9 +177,22 @@
 		</div>
     	</form>
 
+<script src="{{asset('public/jQuery-Mask/dist/jquery.mask.js')}}"></script>
 <script>
 
+    /* Mascara para el campo Codigo Swift */
+    $("#swiftcode").mask(
+        'PPPPPPNNNNN',
+        {translation:
+            {
+                P: {pattern: /[A-Z]/},
+                N: {pattern: /[A-Z, 0-9]/, recursive: true}
+            }
+        }
+    )
+    
     $(function(){
+
         $('#city_id').selectize();
         $("#country_id").on('change', function () {
             console.log('chage....');
@@ -200,6 +216,16 @@
                     $('#city_id').selectize();
                 }
             );
+            /*Creando mascara de telefono de acuerdo al pais*/
+            $.ajax({
+                url: API_PATH + '/countries/'+$(this).val(),
+                type: 'GET',
+                dataType: 'json',
+                success: function(data){
+                    Inputmask({"mask": data.data['mask_phone']}).mask('#phone_1,#phone_2,#phone_3');
+                    $('#phone_1,#phone_2,#phone_3').attr('placeholder', data.data['mask_phone']);
+                }
+            });
         });
     });
 

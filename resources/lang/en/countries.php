@@ -7,5 +7,6 @@ return [
 	'name'              => 'Name',
 	'code'              => 'Code',
 	'language'          => 'Language',
-	'currency'          => 'Currency'
+	'currency'          => 'Currency',
+	'mask_phone'		=> 'Mask Phone',
 ];

@@ -20,6 +20,6 @@ return [
 	'cancel_upload_tooltip' => 'Cancelar la carga del archivo',
 	'manual'	=> 'Manual',
 	'automatic'	=> 'Automatico',
-	'option' 	=> 'Seleccionar tipo de generación',
+	'option' 	=> 'Seleccionar el tipo de generación',
 
 ];

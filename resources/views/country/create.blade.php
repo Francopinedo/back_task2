@@ -18,6 +18,12 @@
 				</div>
 				<div class="parsley-errors-list filled"><span class="parsley-required code-error"></span></div>
 
+                <div class="md-input-wrapper">
+                    <label>{{ __('countries.mask_phone') }}</label>
+                    <input type="text" class="md-input" name="mask_phone" required><span class="md-input-bar"></span>
+                </div>
+                <div class="parsley-errors-list filled"><span class="parsley-required mask_phone-error"></span></div>
+
                 <div class="md-input-wrapper md-input-select">
                 	<label>{{ __('countries.language') }}</label>
                 	<select name="language_id" data-md-selectize>

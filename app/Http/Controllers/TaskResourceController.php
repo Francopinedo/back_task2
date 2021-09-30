@@ -62,13 +62,12 @@ class TaskResourceController extends Controller
             'rate' => 'numeric|required',
             'currency_id' => 'required',
             // 'workplace'       => 'required',
-            'quantity' => 'required|numeric|max:' . $request->task_estimated_hours,
+            'quantity' => 'required|numeric',
             // 'load'            => 'required'
         ]);
-
         if ($validator->fails()) {
-    return response()->json($validator->errors(), 422);
-  } $data = $request->all();
+            return response()->json($validator->errors(), 422);
+        } $data = $request->all();
 
         $current_resources = $this->getFromApi('GET', 'task_resources?task_id=' . $data['task_id']);
 
@@ -81,11 +80,11 @@ class TaskResourceController extends Controller
 
         //echo $request->task_estimated_hours;
 
-        if ($hours > $request->task_estimated_hours) {
-            //echo $hours;
+        // if ($hours > $request->task_estimated_hours) {
+        //     //echo $hours;
 
-            return response()->json(array('quantity' => array('The sum of hours may not be greater than ' . $request->task_estimated_hours)), 422);
-        } else {
+        //     return response()->json(array('quantity' => array('The sum of hours may not be greater than ' . $request->task_estimated_hours)), 422);
+        // } else {
             $res = $this->apiCall('POST', 'task_resources', $data);
 
             // validacion de la respuesta del api
@@ -99,7 +98,7 @@ class TaskResourceController extends Controller
                 session()->flash('message', __('general.added'));
                 session()->flash('alert-class', 'success');
             }
-        }
+        // }    
 
         return response()->json();
     }

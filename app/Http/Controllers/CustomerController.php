@@ -66,13 +66,16 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
+        $customer = $this->getFromApi('GET', 'countries/'.$request->country_id);
 
     	// validacion del formulario
     	$validator =Validator::make($request->all(), [
 
 			'name'       => 'required',
 			'company_id' => 'required',
-             'phone'                 => 'phone:VE,US,AR|nullable',
+            'phone'                 => 'phone:VE,US,AR|nullable',
+            'swiftcode'               => 'min:8|max:11',
+            'aba'                     => 'min:9',
             'email'                 => 'email|nullable',
 	    ]);
 

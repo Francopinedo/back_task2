@@ -488,7 +488,7 @@ class TicketController extends Controller {
                     	'tickets.acceptance_criteria',
                     	'tickets.testing_criteria',
                     	'tickets.done_criteria',
-                    	'tickets.label',
+                    	// 'tickets.label',
                     	'tickets.comment',
                     	'owner.name as owner_name',
                     	'tickets.owner_id',

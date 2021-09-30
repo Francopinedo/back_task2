@@ -104,9 +104,9 @@
         //taskRows.initResources();
 	    tableActions.initAjaxCreateForm();
 
-        $('#project_role_id,#seniority_id,#currency_id,#workplace').on('change', function () {
+        $('#project_role_id,#seniority_id,#currency_id,#workplace,#user_id').on('change', function () {
 
-            if ($('#project_role_id').val() != '' && $('#seniority_id').val() != '' && $('#currency_id').val() != '' && $('#workplace').val() != '') {
+            if ($('#project_role_id').val() != '' && $('#seniority_id').val() != '' && $('#currency_id').val() != '' && $('#workplace').val() != '' && $('#user_id').val() != '') {
                 var info_url = API_PATH + 'rates?company_id=' + $('#company_id').val() + '&project_role_id=' + $('#project_role_id').val()
                     + '&seniority_id=' + $('#seniority_id').val() + '&currency_id=' + $('#currency_id').val();
                 //+ '&workplace=' + $('#workplace').val();
@@ -117,11 +117,30 @@
                     dataType: 'json'
                 }).done(
                     function (data) {
-                        $('#rate').val(data[0].value);
-                        $('#rate_id').val(data[0].id);
+                        $('#rate').val(data.data[0].value);
+                    }
+                );
+
+                var show_user = API_PATH + 'users/'+$('#user_id').val();
+                $.ajax({
+                    url: show_user,
+                    type: 'GET',
+                    dataType: 'json'
+                }).done(
+                    function(data){
+                        $.ajax({
+                            url: API_PATH+'offices/'+data.data.office_id,
+                            type: 'GET',
+                            dataType: 'json'
+                        }).done(
+                            function(data){
+                                $('#quantity').val(data.data.hours_by_day);
+                            }
+                        );      
                     }
                 );
             }
+
         });
 
 	</script>

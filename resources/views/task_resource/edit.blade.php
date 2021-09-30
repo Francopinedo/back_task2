@@ -1,3 +1,8 @@
+<style>
+    #rate, #quantity{
+        padding-top: 25px;
+    }
+</style>
 <div class="uk-grid" data-uk-grid-margin>
     <div class="uk-width-1-1">
 

@@ -49,19 +49,21 @@ class ProviderController extends Controller
             'city_id' => 'required',
             'currency_id' => 'required',
             'industry_id' => 'required',
-            'phone_1'                 => 'phone:VE,US,AR|nullable',
-            'phone_2'                 => 'phone:VE,US,AR|nullable',
-            'phone_3'                 => 'phone:VE,US,AR|nullable',
+            'phone_1'                 => 'phone|nullable',
+            'phone_2'                 => 'phone|nullable',
+            'phone_3'                 => 'phone|nullable',
+            'swiftcode'               => 'min:8|max:11',
+            'aba'                     => 'min:9',
             'email_1'                 => 'email|nullable',
             'email_2'                 => 'email|nullable',
             'email_3'                 => 'email|nullable'
         ]);
     
-	$file = $request->file('logo_path');
+        $file = $request->file('logo_path');
 
         if ($validator->fails()) {
-    return response()->json($validator->errors(), 422);
-  } $data = $request->all();
+            return response()->json($validator->errors(), 422);
+        } $data = $request->all();
         $data['logo_path'] =($file!=null || $file!='') ? $file->getClientOriginalName() : '';
         $res = $this->apiCall('POST', 'providers', $data);
 
@@ -128,18 +130,20 @@ class ProviderController extends Controller
         $validator =Validator::make($request->all(), [
 
             'name' => 'required',
-            'phone_1'                 => 'phone:VE,US,AR|nullable',
-            'phone_2'                 => 'phone:VE,US,AR|nullable',
-            'phone_3'                 => 'phone:VE,US,AR|nullable',
+            'phone_1'                 => 'nullable',
+            'phone_2'                 => 'nullable',
+            'phone_3'                 => 'nullable',
             'email_1'                 => 'email|nullable',
+            'swiftcode'               => 'min:8|max:11',
+            'aba'                     => 'min:9',
             'email_2'                 => 'email|nullable',
             'email_3'                 => 'email|nullable'
         ]);
         $file = $request->file('logo_path');
 
         if ($validator->fails()) {
-    return response()->json($validator->errors(), 422);
-  } $data = $request->all();
+            return response()->json($validator->errors(), 422);
+        } $data = $request->all();
         $data['logo_path'] =($file!=null || $file!='') ? $file->getClientOriginalName() : $provider->logo_path;
         $res = $this->apiCall('PATCH', 'providers/' . $data['id'], $data);
 

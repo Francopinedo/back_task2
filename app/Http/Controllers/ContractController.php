@@ -106,7 +106,7 @@ class ContractController extends Controller
         	$Project['start']=$data['start_date'];
         	$Project['finish']=$data['finish_date'];
         	$Project['customer_id']=$data['customer_id'];
-        	$Project['name']="Project-".$data['sow_number'];
+        	$Project['name']="Project-".$data['type_project'];
         	$Project['hours_by_day']=(new \Carbon\Carbon($data['workinghours_to']))->diff(new \Carbon\Carbon($data['workinghours_from']))->h;
         	$Project['name_convention']="";
         	$Project['holy_days']="";
