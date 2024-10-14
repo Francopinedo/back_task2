@@ -57,14 +57,10 @@ class MetadocumentsController extends Controller {
     
     public function datatables(Request $request)
   	{ 
-		$metadocuments = Metadocument::with('doctype','language','industry');
-
-		foreach ($metadocuments as $m)
-		{
-			$m->language_name = $m->language->name;
-			$m->doctype_name = $m->doctype->type_desc;
-			$m->activity_name = $m->activity->activity_desc;
-		}
+        $metadocuments = Metadocument::join('doctypes', 'doctypes.id', '=', 'metadocuments.doctype_id')
+            ->join('languages', 'languages.id', '=', 'metadocuments.language_id')
+            ->join('industries', 'industries.id', '=', 'metadocuments.industry_id')
+            ->get(['metadocuments.*', 'doctypes.type_desc as doctype_name', 'languages.name as language_name', 'industries.name as industry_name']);
 
   		return Datatables::of($metadocuments)->make(true);
 	}

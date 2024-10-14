@@ -78,7 +78,7 @@
                                           
 
                                         @else
-                                            <img style="width:100px" src="{{ URL::to('/') .'/assets/img/customers/'. $customer->id .'/'. $customer->logo_path }}"
+                                            <img style="width:100px" src="{{ URL::to('/') .'/logos/customers/'. $customer->id .'/'. $customer->logo_path }}"
                                                  alt="logo" id="logo_path" >
                                         @endif
                         </div>

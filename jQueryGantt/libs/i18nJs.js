@@ -146,7 +146,8 @@ function isHoliday(date) {
   var md = "#" + pad(date.getMonth() + 1) + "_" + pad(date.getDate()) + "#";
   var day = date.getDay();
 
-  return (day == 4 && thuIsHoly) || (day == 3 && wedIsHoly) || (day == 2 && tueIsHoly) || (day == 1 && monIsHoly) ||(day == 5 && friIsHoly) || (day == 6 && satIsHoly) || (day == 0 && sunIsHoly) || holidays.indexOf(ymd) > -1 || holidays.indexOf(md) > -1;
+  // return (day == 4 && thuIsHoly) || (day == 3 && wedIsHoly) || (day == 2 && tueIsHoly) || (day == 1 && monIsHoly) ||(day == 5 && friIsHoly) || (day == 6 && satIsHoly) || (day == 0 && sunIsHoly) || holidays.indexOf(ymd) > -1 || holidays.indexOf(md) > -1;
+  return holidays.indexOf(ymd) > -1 || holidays.indexOf(md) > -1;
 }
 
 

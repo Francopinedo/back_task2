@@ -28,7 +28,8 @@ class CatalogController extends Controller
         {
             $metavariables = $this->getFromApi('GET', 'metavariables');
             $idiomas = $this->getFromApi('GET', 'languages');
-
+            $customers = $this->getFromApi('GET', 'customers');
+            $companie = $this->getFromApi('GET', 'companies/fromUser/'.Auth::id().'?include=industry,city,currency');
 
             $params =[
                 'directories'    => array(),
@@ -37,6 +38,8 @@ class CatalogController extends Controller
                 'type'       => $type=='delete' || $type=='download' || $type=='view'?'':$type,
                 'lang'       => $lang,
                 'dir'       => $directory,
+                'customers' => $customers,
+                'companie'   => $companie->id
             ];
 
             return view('catalog/index' , $params);
@@ -52,7 +55,7 @@ class CatalogController extends Controller
      * Muestra listado
      */
      public function show($lang_system, $type, $directory)
-         {
+    {
 
          $documentos =Storage::disk('catalog')->files($lang_system."/".$type."/".$directory);
          
@@ -229,8 +232,8 @@ class CatalogController extends Controller
         ]);
 
         if ($validator->fails()) {
-    return response()->json($validator->errors(), 422);
-  } $data = $request->all();
+            return response()->json($validator->errors(), 422);
+        } $data = $request->all();
 
         $res = $this->apiCall('POST', 'offices', $data);
 
@@ -269,9 +272,9 @@ class CatalogController extends Controller
              'hours_by_day'      => 'required'
          ]);
 
-         if ($validator->fails()) {
-    return response()->json($validator->errors(), 422);
-  } $data = $request->all();
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        } $data = $request->all();
 
          $res = $this->apiCall('PATCH', 'offices/'.$data['id'], $data);
 

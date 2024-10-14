@@ -131,15 +131,29 @@
                     {data: 'currency_name', name: 'currency_name'},
                     {data: 'actions', name: 'actions'}
                 ],
-                columnDefs: [{
-                    targets: -1,
-                    data: null,
-                    render: function (data, type, row) {
-                        return '' +
-                            '<a href="/task_services/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
-                            '<a href="/task_services/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
-                    }
-                }],
+                columnDefs: [
+                    {
+                        targets: -1,
+                        data: null,
+                        render: function (data, type, row) {
+                            return '' +
+                                '<a href="/task_services/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
+                                '<a href="/task_services/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+                        }
+                    },
+                    {
+                        targets: 2,
+                        data: null,
+                        render: function (data, type, row) {
+
+                            if (data == 1)
+                                return '{{ __('tasks.yes') }}';
+                            if (data == 0)
+                                return '{{ __('tasks.no') }}';
+
+                        }
+                    },
+                ],
                 initComplete: function (settings, json) {
                     tableActions.initEdit();
                     // tableActions.initAjaxCreate();
@@ -171,15 +185,29 @@
                     {data: 'currency_name', name: 'currency_name'},
                     {data: 'actions', name: 'actions'}
                 ],
-                columnDefs: [{
-                    targets: -1,
-                    data: null,
-                    render: function (data, type, row) {
-                        return '' +
-                            '<a href="/task_materials/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
-                            '<a href="/task_materials/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
-                    }
-                }],
+                columnDefs: [
+                    {
+                        targets: -1,
+                        data: null,
+                        render: function (data, type, row) {
+                            return '' +
+                                '<a href="/task_materials/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
+                                '<a href="/task_materials/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+                        }
+                    },
+                    {
+                        targets: 2,
+                        data: null,
+                        render: function (data, type, row) {
+
+                            if (data == 1)
+                                return '{{ __('tasks.yes') }}';
+                            if (data == 0)
+                                return '{{ __('tasks.no') }}';
+
+                        }
+                    },
+                ],
                 initComplete: function (settings, json) {
                     tableActions.initEdit();
                     // tableActions.initAjaxCreate();
@@ -211,15 +239,29 @@
                     {data: 'currency_name', name: 'currency_name'},
                     {data: 'actions', name: 'actions'}
                 ],
-                columnDefs: [{
-                    targets: -1,
-                    data: null,
-                    render: function (data, type, row) {
-                        return '' +
-                            '<a href="/task_expenses/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
-                            '<a href="/task_expenses/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
-                    }
-                }],
+                columnDefs: [
+                    {
+                        targets: -1,
+                        data: null,
+                        render: function (data, type, row) {
+                            return '' +
+                                '<a href="/task_expenses/' + row.id + '/edit" class="table-actions edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i></a>' +
+                                '<a href="/task_expenses/' + row.id + '/delete" class="table-actions delete-btn"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+                        }
+                    },
+                    {
+                        targets: 2,
+                        data: null,
+                        render: function (data, type, row) {
+
+                            if (data == 1)
+                                return '{{ __('tasks.yes') }}';
+                            if (data == 0)
+                                return '{{ __('tasks.no') }}';
+
+                        }
+                    },
+                ],
                 initComplete: function (settings, json) {
                     tableActions.initEdit();
                     // tableActions.initAjaxCreate();

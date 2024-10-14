@@ -1,5 +1,4 @@
 <style>
-
     .uk-datepicker{
         min-width: initial!important;
         width: 215px!important;

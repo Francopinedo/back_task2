@@ -1004,6 +1004,8 @@ Route::get('metavariables/get_from_file/{lang}/{folder}/{file}', 'MetavariablesC
 Route::post('repository/store', 'RepositoryController@store');
 Route::post('update_preview', 'RepositoryController@updatePreview');
  Route::post('repository/send_by_mail', 'RepositoryController@sendFile');
+Route::get('catch_signature', 'RepositoryController@catchsignature');
+
  
 // Settings
 

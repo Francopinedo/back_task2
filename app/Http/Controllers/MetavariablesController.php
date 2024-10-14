@@ -191,7 +191,16 @@ class MetavariablesController extends Controller
         //{
             DB::transaction(function() use ($language,$folder,$filename,$kind) 
             {
-                $file = storage_path('app/public/catalog/'.$language.'/tagged/'.$folder.'/'.$filename.'.docx');
+                if(file_exists(storage_path('app/public/catalog/'.$language.'/tagged/'.$folder.'/'.$filename.'.docx'))){
+                    $file = storage_path('app/public/catalog/'.$language.'/tagged/'.$folder.'/'.$filename.'.docx');
+                    $extension = ".docx";
+                }
+                if(file_exists(storage_path('app/public/catalog/'.$language.'/tagged/'.$folder.'/'.$filename.'.doc'))){
+                    $file = storage_path('app/public/catalog/'.$language.'/tagged/'.$folder.'/'.$filename.'.doc');
+                    $extension = ".doc";
+                }
+
+                // $file = storage_path('app/public/catalog/'.$language.'/tagged/'.$folder.'/'.$filename.'.docx');
                 $template = new \PhpOffice\PhpWord\TemplateProcessor($file);
                 $vars = $template->getVariables();
 
@@ -233,7 +242,7 @@ class MetavariablesController extends Controller
                         $code = $code[0];
                         $var = $var[0];
                         $ovars[] = $var;
-                        if ($code != 'metagrid' && $code != 'l')
+                        if ($code != 'metagrid' && $code != '1')
                         {
                             //$name = $language == 'ES' ? 'name_es' : 'name_en';
                             //Vemos si ya existe en DB
@@ -300,17 +309,73 @@ class MetavariablesController extends Controller
         //    return 99;
         //}
     }
-    public function getFromFile($language,$folder,$file)
+    public function getFromFile($lang,$folder,$file)
     {
-        File::delete($file.'.docx');
+        if(file_exists(storage_path('app/public/catalog/'.$lang.'/tagged/'.$folder.'/'.$file.'.docx'))){
+            $file2 = storage_path('app/public/catalog/'.$lang.'/tagged/'.$folder.'/'.$file.'.docx');
+            $extension = ".docx";
+        } 
+        else if(file_exists(storage_path('app/public/catalog/'.$lang.'/tagged/'.$folder.'/'.$file.'.doc'))){
+            $file2 = storage_path('app/public/catalog/'.$lang.'/tagged/'.$folder.'/'.$file.'.doc');
+            $extension = '.doc';
+        }else {
+            return "File Type must be .doc or .docx"; 
+        }
+        // echo $file2;
+        File::delete($file.$extension);
         File::delete($file.'.odt');
+
+        $filewithroute = explode('.',$file);
+        $filename2 = explode('.',$file);
+        $metagrids = $this->getFromApi('GET', 'metagrids/'.$lang.'/'.$filewithroute[0]);
+        $template = new \PhpOffice\PhpWord\TemplateProcessor($file2);
+
+        //Realizamos ciclo para Sacar metavariables del documento
+        $language = \App\Language::where('code',$lang)->first();
+        $metadocument = \App\Metadocument::where('path_ref',$filename2[0])->where('language_id',$language->id)->first();        
+        $mvs = \App\Metavariable::where('metadocument_id',$metadocument->id)->get();
+
+        foreach ($mvs as $mv)
+        {
+            //Ahora obtenemos código de metavariable_kind_id
+            $mvk = \App\MetavariableKind::find($mv->metavariable_kind_id);
+                    
+            //Ahora creamos variable que incluya código
+            $new_key = $mv->name.'[['.$mvk->code.']]';
+            $template->setValue($new_key,'<a href="#" id="'.$mv->name.'_prev" onclick="goToForm(\''.$mv->name.'\')">Ver en formulario</a>');
+        }
+
+        $docs = \App\Document::where('metadocument_id',$metadocument->id)->get();
+        foreach ($docs as $doc)
+        {
+            //Cambiamos estado también a variables asociadas
+            $variables = \App\Variable::where('document_id',$doc->id)
+                                        ->delete();
+            $doc->delete();
+        }
+
+        //Ahora sacamos de metagrids
+        foreach ($metagrids as $mg)
+        {           
+            //Ahora creamos variable que incluya código
+            $new_key = $mg->name.'[[metagrid]]';
+            $template->setValue($new_key,'<a href="#" id="'.$mv->name.'_prev" onclick="goToForm(\''.$mv->name.'\')">Ver en formulario</a>aaaaa');
+        }
+
+        $new_file = $file.$extension;
+
+        $template->saveAs($new_file);
+        
+        $command = "export HOME=/var/www/html/devpanel && libreoffice --headless --convert-to odt ".$new_file;
+        exec($command);
+        
         //Primero actualizamos variables en caso de ser necesario
-        $response = $this->updateVariables($language,$folder,$file,1);
+        $response = $this->updateVariables($lang,$folder,$file,1);
         if ($response != 0)
         {
             return $response;
         }
-        $metavariables = $this->getFromApi('GET', 'metavariables/'.$language.'/'.$file);
+        $metavariables = $this->getFromApi('GET', 'metavariables/'.$lang.'/'.$file);
         
         //Obtenemos valores guardados (si es que existen)
         foreach ($metavariables as $m)
@@ -318,7 +383,7 @@ class MetavariablesController extends Controller
             $var = \App\Variable::where('metavariable_id',$m->id)->orderBy('created_at','DESC')->first();
             $m->var = !empty($var) ? $var->value : '';
         }
-        
+        // array_push($metavariables,Auth::user()->id);
         return $metavariables;
     }
 }

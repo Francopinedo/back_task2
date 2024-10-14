@@ -20,6 +20,8 @@ class CountriesTableSeeder extends Seeder
                 'name' => 'Argentina',
                 'language_id' => 1,
                 'currency_id' => 1,
+                'code'  => NULL,
+                'mask_phone'    => '+99-999-9999999',
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
@@ -27,6 +29,8 @@ class CountriesTableSeeder extends Seeder
                 'name' => 'United States',
                 'language_id' => 2,
                 'currency_id' => 2,
+                'code'  => NULL,
+                'mask_phone'    => '+9-999-999-9999',
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
@@ -34,6 +38,8 @@ class CountriesTableSeeder extends Seeder
                 'name' => 'Colombia',
                 'language_id' => 1,
                 'currency_id' => 3,
+                'code'  => NULL,
+                'mask_phone'    => '+99-999-9999999',
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
@@ -60,399 +66,399 @@ class CountriesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Åland Islands',
-                'language_id' => NULL,
+                'language_id' => 7,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Albania',
-                'language_id' => NULL,
+                'language_id' => 8,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Algeria',
-                'language_id' => NULL,
+                'language_id' => 9,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'American Samoa',
-                'language_id' => NULL,
+                'language_id' => 2,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Andorra',
-                'language_id' => NULL,
+                'language_id' => 11,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Angola',
-                'language_id' => NULL,
+                'language_id' => 12,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Anguilla',
-                'language_id' => NULL,
+                'language_id' => 2,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Antarctica',
-                'language_id' => NULL,
+                'language_id' => 2,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Antigua and Barbuda',
-                'language_id' => NULL,
+                'language_id' => 2,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Armenia',
-                'language_id' => NULL,
+                'language_id' => 15,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Aruba',
-                'language_id' => NULL,
+                'language_id' => 16,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Australia',
-                'language_id' => NULL,
+                'language_id' => 2,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Austria',
-                'language_id' => NULL,
+                'language_id' => 18,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Azerbaijan',
-                'language_id' => NULL,
+                'language_id' => 19,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Bahamas',
-                'language_id' => NULL,
+                'language_id' => 2,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Bahrain',
-                'language_id' => NULL,
+                'language_id' => 9,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Bangladesh',
-                'language_id' => NULL,
+                'language_id' => 20,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Barbados',
-                'language_id' => NULL,
+                'language_id' => 2,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Belarus',
-                'language_id' => NULL,
+                'language_id' => 21,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Belgium',
-                'language_id' => NULL,
+                'language_id' => 16,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Belize',
-                'language_id' => NULL,
+                'language_id' => 2,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Benin',
-                'language_id' => NULL,
+                'language_id' => 22,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Bermuda',
-                'language_id' => NULL,
+                'language_id' => 2,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Bhutan',
-                'language_id' => NULL,
+                'language_id' => 23,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Bolivia (Plurinational State of)',
-                'language_id' => NULL,
+                'language_id' => 1,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Bonaire, Sint Eustatius and Saba',
-                'language_id' => NULL,
+                'language_id' => 16,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Bosnia and Herzegovina',
-                'language_id' => NULL,
+                'language_id' => 26,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Botswana',
-                'language_id' => NULL,
+                'language_id' => 2,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Bouvet Island',
-                'language_id' => NULL,
+                'language_id' => 30,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'British Indian Ocean Territory',
-                'language_id' => NULL,
+                'language_id' => 2,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'United States Minor Outlying Islands',
-                'language_id' => NULL,
+                'language_id' => 2,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Virgin Islands (British)',
-                'language_id' => NULL,
+                'language_id' => 2,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Virgin Islands (U.S.)',
-                'language_id' => NULL,
+                'language_id' => 2,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Brunei Darussalam',
-                'language_id' => NULL,
+                'language_id' => 33,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Bulgaria',
-                'language_id' => NULL,
+                'language_id' => 34,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Burkina Faso',
-                'language_id' => NULL,
+                'language_id' => 22,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Burundi',
-                'language_id' => NULL,
+                'language_id' => 22,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Cambodia',
-                'language_id' => NULL,
+                'language_id' => 37,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Cameroon',
-                'language_id' => NULL,
+                'language_id' => 2,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Canada',
-                'language_id' => NULL,
+                'language_id' => 2,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Cabo Verde',
-                'language_id' => NULL,
+                'language_id' => 12,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Cayman Islands',
-                'language_id' => NULL,
+                'language_id' => 2,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Central African Republic',
-                'language_id' => NULL,
+                'language_id' => 22,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Chad',
-                'language_id' => NULL,
+                'language_id' => 22,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Chile',
-                'language_id' => NULL,
+                'language_id' => 1,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'China',
-                'language_id' => NULL,
+                'language_id' => 39,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Christmas Island',
-                'language_id' => NULL,
+                'language_id' => 2,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Cocos (Keeling) Islands',
-                'language_id' => NULL,
+                'language_id' => 2,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Comoros',
-                'language_id' => NULL,
+                'language_id' => 9,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Congo',
-                'language_id' => NULL,
+                'language_id' => 22,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Congo (Democratic Republic of the)',
-                'language_id' => NULL,
+                'language_id' => 22,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Cook Islands',
-                'language_id' => NULL,
+                'language_id' => 2,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Costa Rica',
-                'language_id' => NULL,
+                'language_id' => 1,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Croatia',
-                'language_id' => NULL,
+                'language_id' => 27,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Cuba',
-                'language_id' => NULL,
+                'language_id' => 1,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Curaçao',
-                'language_id' => NULL,
+                'language_id' => 16,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
                 'name' => 'Cyprus',
-                'language_id' => NULL,
+                'language_id' => 44,
                 'currency_id' => NULL,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')

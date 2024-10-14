@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use Mail;
+use Session;
+use Redirect;
+use File;
+use Validator;
+use TCPDF as PDF;
+use Carbon\Carbon;
+use App\models\Signature;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Validator;
-use Carbon\Carbon;
-use Redirect;
-use Session;
- use Mail;
 
 class RepositoryController extends Controller
 {
@@ -252,9 +256,10 @@ class RepositoryController extends Controller
         $template = new \PhpOffice\PhpWord\TemplateProcessor($archivo);
 
     }
+
     //$kind1: Es para verificar si es preview o se está generando doc definitivo
     //$kind2: Verifica tipo de doc (DOCX o PDF) o si se está guardando, o si es correo (3: Guardar doc)
-    public function updateDocument($language,$directory,$filename,$kind,$kind2=NULL)
+    public function updateDocument($customer,$project,$language,$directory,$knowledge_area,$archives,$filename,$kind,$kind2=NULL,$customer_logo)
     {
         //print_r($_POST);
         $file = storage_path('app/public/catalog/'.$language.'/tagged/'.$directory.'/'.$filename);
@@ -268,38 +273,56 @@ class RepositoryController extends Controller
         $document_with_table = new \PhpOffice\PhpWord\PhpWord();
         $template = new \PhpOffice\PhpWord\TemplateProcessor($file);
         $section = $document_with_table->addSection();
-        $tableStyle = new \PhpOffice\PhpWord\Style\Table;
-        $styleCell = array('valign' => 'center');
-        $fontFirstStyle = array('bold' => true, 'size' => '10', 'color' => 'FFFFFF','name' => 'Verdana');
-        $fontStyle = array('size' => '10','name' => 'Verdana');
-        $firstRowStyle = array(
-            'bgColor' => '000080',
-            'alignment' => \PhpOffice\PhpWord\SimpleType\JcTable::CENTER
-        );
-        //Agregamos estilos a la tabla
-        $tableStyle->setBorderColor('000000');
-        $tableStyle->setBorderSize(1);
-        $tableStyle->setUnit(\PhpOffice\PhpWord\Style\Table::WIDTH_PERCENT);
-        $tableStyle->setWidth(100 * 50);
-        /*
-        $tableStyle = array(
-            'borderColor' => '000000',
-            'borderSize'  => 16,
-            'cellMargin'  => 50
-        );*/
 
-        /*
-        $document_with_table->addFontStyle(
-            $fontStyleName,
-            array('name' => 'Tahoma', 'size' => 12, 'color' =>  'bold' => true)
-        );*/
+        // $sig = Signature::where('name',$filename.'.pdf')->first();
+        // if($sig){          
+        //     $bin = base64_decode($sig['signature']);
+        //     $im = imageCreateFromString($bin);
+        //     if (!$im) {
+        //         die('Base64 value is not a valid image');
+        //     }
+        //     $img_file = storage_path('app/public/temp/logo.png');
+        //     imagepng($im, $img_file, 0);
+        //     //$template->setImageValue('Signature', ["path"=>$img_file,"width"=>380,"height"=>120]);
+        //     if($kind2!=0)$template->setImageValue('Signature', $img_file);
+        //     File::delete($img_file);
+        //     if($kind2==0)DB::table('signature')->where('name',$filename.'.pdf')->delete();
+        // }
+
         //Creamos writer para convertir doc a xml
-
+        $k = 0;
         foreach ($metagrids as $m)
         {
             if (isset($_POST[$m->name.'_0_0'])) //Vemos si al menos hay un campo en la tabla
             {
-                
+                $section = $document_with_table->addSection();
+                //Agregamos estilos a la tabla
+                $tableStyle = new \PhpOffice\PhpWord\Style\Table;
+                $tableStyle->setBorderColor('000000');
+                $tableStyle->setBorderSize(1);
+                $tableStyle->setUnit(\PhpOffice\PhpWord\Style\Table::WIDTH_PERCENT);
+                $tableStyle->setWidth(100 * 50);
+
+                $tableStyle = array(
+                    'borderColor' => '000000',
+                    'borderSize'  => 16,
+                    'cellMargin'  => 50
+                );
+
+                $styleCell = array('valign' => 'center');
+                $fontFirstStyle = array('bold' => true, 'size' => '10', 'color' => 'FFFFFF','name' => 'Verdana');
+                $fontStyle = array('size' => '10','name' => 'Verdana');
+                /*
+                $document_with_table->addFontStyle(
+                   $fontStyleName,
+                  array('name' => 'Tahoma', 'size' => 12, 'color' => 'red', 'bold' => true)
+                );
+                */
+                $firstRowStyle = array(
+                    'bgColor' => '000080',
+                    'alignment' => \PhpOffice\PhpWord\SimpleType\JcTable::CENTER
+                );
+
                 $table = $section->addTable($tableStyle);
 
                 $i = 0;
@@ -317,36 +340,23 @@ class RepositoryController extends Controller
                         {
                             $table->addCell(2000)->addText($_POST[$m->name.'_'.$i.'_'.$j], $fontStyle);
                         }
-                        
+
                         $j+=1;
                     }
                     $i+=1;
                 }
 
+                //Creamos writer para convertir doc a xml
                 $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($document_with_table, 'Word2007');
                 //Obtenemos xml del documento temporal
                 $fullxml = $objWriter->getWriterPart('Document')->write();
-                $k = 0;
+
                 //Obtenemos xml
                 $tablexml[] = preg_replace('/^[\s\S]*(<w:tbl\b.*<\/w:tbl>).*/', '$1', $fullxml);
                 $template->setValue($m->name.'[[metagrid]]','</w:t></w:r></w:p>'.$tablexml[$k].'<w:p><w:r><w:t>');
                 $k+=1;
-
             }
         }
-        
-        
-
-        //Set tables
-        /*
-        $i = 0;
-        foreach ($metagrids as $m)
-        {
-            $template->setValue($m->name.'[[metagrid]]','</w:t></w:r></w:p>'.$tablexml[$i].'<w:p><w:r><w:t>');
-            $i+=1;
-        }*/
-        //Obtenemos id de usuario
-        //$user = \App\User::find(Auth::user()->id);
         
         //Debería haber sólo una carpeta
         foreach (scandir('logos/companies') as $folder)
@@ -357,7 +367,11 @@ class RepositoryController extends Controller
                 {
                     if ($logo != '.' && $logo != '..')
                     {
-                        $template->setImageValue('OUR_LOGO', 'logos/companies/'.$folder.'/'.$logo);
+                        if(!empty($company_logo)){
+                            $template->setImageValue('OUR_LOGO', 'logos/companies/'.$folder.'/'.$company_logo);
+                        }else{
+                            $template->setImageValue('OUR_LOGO', 'logos/companies/'.$folder.'/'.$logo);
+                        }
                     }
                 }
             }
@@ -372,7 +386,11 @@ class RepositoryController extends Controller
                 {
                     if ($logo != '.' && $logo != '..')
                     {
-                        $template->setImageValue('CUSTOMER_LOGO', 'logos/customers/'.$folder.'/'.$logo);
+                        if(!empty($customer_logo)){
+                            $template->setImageValue('CUSTOMER_LOGO', 'logos/customers/'.$folder.'/'.$customer_logo);
+                        }else{
+                            $template->setImageValue('CUSTOMER_LOGO', 'logos/customers/'.$folder.'/'.$logo);
+                        }
                     }
                 }
             }
@@ -399,7 +417,7 @@ class RepositoryController extends Controller
                     $new_key = $key.'[['.$mvk->code.']]';
                     $template->setValue($new_key,$val);
 
-                    if ($kind2 == 3 && $val != '') //Se está guardando doc, así que guardamos variable
+                    if ($kind2 == 1 && $val != '') //Se está guardando doc, así que guardamos variable
                     {
                         $vars[] = [
                             'metavariable' => $key,
@@ -432,19 +450,22 @@ class RepositoryController extends Controller
             $template->setValue($new_key,'<a href="#" id="'.$mv->name.'_prev" onclick="goToForm(\''.$mv->name.'\')">Ver en formulario</a>aaaaa');
         }
         //Agregamos logo
-        //$header = $section->addHeader();
+        $header = $section->addHeader();
         //$header->addImage('');
 
-        if ($kind == NULL && ($kind2 == 1 || $kind2 == 3)) //Es DOCX (y puede que se esté guardando)
+        $new_file = $filename;
+        
+        //Cambiamos estado a todos los documentos asociados al metadocumento (se eliminan con deleted_at) en caso que no sea previsualización
+        if ($kind2 == 0) 
         {
-            $new_file = storage_path('app/public/repository/'.$language.'/'.$directory.'/'.$filename);
-        }
-        else //Se está generando preview, o es PDF
-        {
-            $new_file = $filename;
-        }
-
-        if ($kind2 == 3)
+            $docs = \App\Document::where('metadocument_id',$metadocument->id)->get();
+            foreach ($docs as $doc)
+            {
+                //Cambiamos estado también a variables asociadas
+                $variables = \App\Variable::where('document_id',$doc->id)->delete();
+                $doc->delete();
+            }
+        } else if ($kind2 == 1)
         {
             //Primero obtenemos última versión de documento
             $oldDoc = \App\Document::withTrashed()->where('metadocument_id',$metadocument->id)->orderBy('updated_at','DESC')->first();
@@ -467,39 +488,128 @@ class RepositoryController extends Controller
                 ]);
             }
         }
-       else if ($kind == NULL) //Cambiamos estado a todos los documentos asociados al metadocumento (se eliminan con deleted_at) en caso que no sea previsualización
-        {
-            $docs = \App\Document::where('metadocument_id',$metadocument->id)->get();
-            foreach ($docs as $doc)
-            {
-                //Cambiamos estado también a variables asociadas
-                $variables = \App\Variable::where('document_id',$doc->id)
-                                            ->delete();
-                $doc->delete();
-            }
-        }
         
         $template->saveAs($new_file);
         
-        $command = "export HOME=/var/www/html/devpanel && libreoffice --headless --convert-to odt ".$new_file;
-        $result = exec($command);
+        if ($kind2 < 1 || $kind2==4) //PDF
+        {
+            $command = "export HOME=/var/www/html/devpanel && libreoffice --headless --convert-to odt ".$new_file;
+
+            $result = exec($command);
+            $result = explode('/',$result);
+            $result = explode('.',$result[sizeof($result)-1]);
+
+            if(null!==(session('customer_id')) && null!==(session('project_id'))){
+                //Movemos archivo
+                if($kind2==0 && file_exists(storage_path('app/public/repository/'.$customer.'/'.$project.'/'.$language.'/'.$directory.'/'.$knowledge_area.'/'.$archives.'/'.$filename2[0].'.docx'))){
+                    File::delete( storage_path('app/public/repository/'.$customer.'/'.$project.'/'.$language.'/'.$directory.'/'.$knowledge_area.'/'.$archives.'/'.$filename2[0].'.docx'));
+                }
+            }
+            return $result[0];
+        }
+
+        if($kind2 == 1) // docx
+        {
+            $command = "export HOME=/var/www/html/devpanel && libreoffice --headless --convert-to odt ".$new_file;
+
+            $result = exec($command);
+            $result = explode('/',$result);
+            $result = explode('.',$result[sizeof($result)-1]);
+
+            //Movemos archivo
+            rename($result[0].'.docx',storage_path('app/public/repository/'.$customer.'/'.$project.'/'.$language.'/'.$directory.'/'.$knowledge_area.'/'.$archives.'/'.$filename2[0].'.docx'));
+
+            return $result[0];
+        }
 
         if ($kind2 == 2) //PDF
         {
-            $command2 = "export HOME=/var/www/html/devpanel && libreoffice --headless --convert-to pdf ".$new_file;
-            $result2 = exec($command2);
+            $command = "export HOME=/var/www/html/devpanel && libreoffice --headless --convert-to pdf ".$new_file;
+            $result = exec($command);
+            $result = explode('/',$result);
+            $result = explode('.',$result[sizeof($result)-1]);
 
             //Movemos archivo
-            rename(base_path($filename2[0].'.pdf'),storage_path('app/public/repository/'.$language.'/'.$directory.'/'.$filename2[0].'.pdf'));
+            copy($result[0].'.pdf',storage_path('app/public/repository/'.$customer.'/'.$project.'/'.$language.'/'.$directory.'/'.$knowledge_area.'/'.$archives.'/'.$filename2[0].'.pdf'));
+
+            return $result[0];
         }
-    
+        // Enviarlo por email
+        if($kind2 == 5){
+            $files = [];
+            if(file_exists(storage_path('app/public/repository/'.$customer.'/'.$project.'/'.$language.'/'.$directory.'/'.$knowledge_area.'/'.$archives.'/'.$filename2[0].'.pdf'))){
+                array_push( $files,
+                    storage_path('app/public/repository/'.$customer.'/'.$project.'/'.$language.'/'.$directory.'/'.$knowledge_area.'/'.$archives.'/'.$filename2[0].'.pdf')
+
+                );
+            }
+            if(file_exists(storage_path('app/public/repository/'.$customer.'/'.$project.'/'.$language.'/'.$directory.'/'.$knowledge_area.'/'.$archives.'/'.$filename2[0].'.docx'))){
+                array_push( $files,
+                    storage_path('app/public/repository/'.$customer.'/'.$project.'/'.$language.'/'.$directory.'/'.$knowledge_area.'/'.$archives.'/'.$filename2[0].'.docx')
+
+                );
+            }
+
+            if(sizeof($files)>0){
+                $to = Auth::user()->email;
+                $from = 'mailchat.taskcontrol.net';
+                $fromName = 'TaskControl';
+                $subject = 'You have created this document';
+                if(sizeof($files)>1)$subject = "You have created these documents";
+                $htmlContent = '
+
+                ';
+                $headers = "From: $fromName"." <".$from.">";
+                $semi_rand = md5(time());
+                $mime_boundary = "==Multipart_Boundary_x{$semi_rand}x";
+                $headers .= "\nMIME-Version: 1.0\n" . "Content-Type: multipart/mixed;\n" . " boundary=\"{$mime_boundary}\"";
+                $message = "--{$mime_boundary}\n" . "Content-Type: text/html; charset=\"UTF-8\"\n" .
+                "Content-Transfer-Encoding: 7bit\n\n" . $htmlContent . "\n\n";
+                if(!empty($files)){
+                    for($i=0;$i<count($files);$i++){
+                        if(is_file($files[$i])){
+                            $file_name = basename($files[$i]);
+                            $file_size = filesize($files[$i]);
+
+                            $message .= "--{$mime_boundary}\n";
+                            $fp =    @fopen($files[$i], "rb");
+                            $data =  @fread($fp, $file_size);
+                            @fclose($fp);
+                            $data = chunk_split(base64_encode($data));
+                            $message .= "Content-Type: application/octet-stream; name=\"".$file_name."\"\n" .
+                            "Content-Description: ".$file_name."\n" .
+                            "Content-Disposition: attachment;\n" . " filename=\"".$file_name."\"; size=".$file_size.";\n" .
+                            "Content-Transfer-Encoding: base64\n\n" . $data . "\n\n";
+                        }
+                    }
+                }
+
+                $message .= "--{$mime_boundary}--";
+                $returnpath = "-f" . $from;
+
+                $mail = @mail($to, $subject, $message, $headers, $returnpath);
+
+                // Return true, if email sent, otherwise return false
+                if($mail){
+                    return 'Email have sent successfully';
+                }else{
+                    return 'Error ! ';
+                }
+
+            }else{
+                return 'You have not saved document yet.';
+            }
+        }
     }
 
     public function store(Request $request)
     {
-        $this->updateDocument($request->language,$request->directory,$request->filename,NULL,$request->kind);
+        $customer = $this->getFromApi('GET', 'customers/'.$request->customer_id);
+        $project = $this->getFromApi('GET', 'projects/'.$request->project_id);
+
+        $this->updateDocument($customer->name,$project->name,$request->language,$request->directory,$request->knowledge_area,$request->archives,$request->filename,NULL,$request->kind);
         
-        if ($request->kind == 3)
+        if ($request->kind == 1)
         {
             Session::flash('message','Document was successfully saved');
         }
@@ -508,18 +618,28 @@ class RepositoryController extends Controller
             Session::flash('message','Document generated successfully');
         }
 
-        return Redirect::to('/dashboard');
+        return Redirect::to('/catalog');
     }
 
     //Actualiza vista previa de documento (guarda en carpeta public documento odt actualizado)
     public function updatePreview()
     {
-        $this->updateDocument($_POST['language'],$_POST['directory'],$_POST['filename'],1,NULL);
+        $customer = $this->getFromApi('GET', 'customers/'.$_POST['customer_id']);
+        $project = $this->getFromApi('GET', 'projects/'.$_POST['project_id']);
 
-        return $_POST['filename2'];
+        return $this->updateDocument($customer->name,$project->name,$_POST['language'],$_POST['directory'],$_POST['knowledge_area'],$_POST['archives'],$_POST['filename'],1,$_POST['kind'],$_POST['customer_logo']);
     }
 
-    
+    public function catchsignature($filename){
+        $sig = Signature::where('name',$filename.'.odt')->first();
+        if($sig){
+            //DB::table('signature')->where('name','defaultname')->delete();
+            return 'success';
+        }else{
+            return 'fail';
+        }
+    }
+
     public function modificarTemplate()
     {
         $array = [
@@ -556,29 +676,20 @@ class RepositoryController extends Controller
 
 
         //return response()->download(storage_path('doc/'.$nameFile.'2.docx'));
-
-
     }
-
 
     public function download(Request $request)
     {
-
-
         $destinationPath = "app/public/repository/" . $request->file;
         // echo $destinationPath;
         if (Storage::disk('repository')->exists($request->file)) 
         {
             return response()->download(storage_path($destinationPath));
         }
-
     }
-
 
     public function delete(Request $request)
     {
-
-
         $destinationPath = "app/public/repository/" . $request->file;
         // echo $destinationPath;
         if ($exists = Storage::disk('repository')->exists($request->file)) {
@@ -587,11 +698,9 @@ class RepositoryController extends Controller
         } else {
             return response()->json(array('success' => false));
         }
-
     }
 
-
-  public function sendFile()
+    public function sendFile()
     {
         $cc = '';
         //Vemos si hay cc
@@ -624,7 +733,6 @@ class RepositoryController extends Controller
 
         Session::flash('message','Document was successfully sended');
 
-        return Redirect::to('/dashboard');
+        return Redirect::to('/catalog');
     }
-
 }

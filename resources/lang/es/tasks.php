@@ -62,5 +62,7 @@ return [
 		'actions'			    => 'Acciones',
 		'estimated_progress'    => 'Progreso Estimado',
 		'days'				    => 'Dias',
+		'yes'					=> 'Si',
+		'no'					=> 'No',
 
 ];

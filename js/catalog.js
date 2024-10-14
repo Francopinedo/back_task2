@@ -140,23 +140,23 @@ var Catalog = (function () {
 
                     $('#label_generation').show()
 
-                        $.ajax({
-                            url: Catalog.APP_URL+'/catalog/show/'+lang_system+'/tagged/' + dir,
-                            success: function (data) {
-                                // console.log(data);
-                                var html = '';
+                        // $.ajax({
+                        //     url: Catalog.APP_URL+'/catalog/show/'+lang_system+'/tagged/' + dir,
+                        //     success: function (data) {
+                        //         // console.log(data);
+                        //         var html = '';
         
-                                jQuery.each(data.documentos, function (i, value) {
+                        //         jQuery.each(data.documentos, function (i, value) {
         
-                                    var res = value.split('/');
+                        //             var res = value.split('/');
         
-                                    html += '  <div class="uk-width-1-2"><a style="font-size: 20px" onclick="getFromFile(\'' + value + '\')">' + res[3] + ' </a>   ' + '</div>';
-                                });
+                        //             html += '  <div class="uk-width-1-2"><a style="font-size: 20px" onclick="getFromFile(\'' + value + '\')">' + res[3] + ' </a>   ' + '</div>';
+                        //         });
         
-                                // console.log(html);
-                                $("#documents").html(html);
-                            }
-                        })
+                        //         // console.log(html);
+                        //         $("#documents").html(html);
+                        //     }
+                        // })
                 } 
 
             }
@@ -166,6 +166,7 @@ var Catalog = (function () {
             if(dir){
               if (type == 1)
                 {
+                    
                     if(dir!="" || dir!=0)
                     {
                         $("#upload_file_div").removeClass("hidden");
@@ -262,23 +263,23 @@ var Catalog = (function () {
                     //Cambiamos action de form
                     $('#fileupload').attr('action', '/repository/store');
                     
-                        $.ajax({
-                            url: Catalog.APP_URL+'/catalog/show/'+lang_system+'/tagged/' + dir,
-                            success: function (data) {
-                                // console.log(data);
-                                var html = '';
+                        // $.ajax({
+                        //     url: Catalog.APP_URL+'/catalog/show/'+lang_system+'/tagged/' + dir,
+                        //     success: function (data) {
+                        //         // console.log(data);
+                        //         var html = '';
         
-                                jQuery.each(data.documentos, function (i, value) {
+                        //         jQuery.each(data.documentos, function (i, value) {
         
-                                    var res = value.split('/');
+                        //             var res = value.split('/');
         
-                                    html += '  <div class="uk-width-1-2"><a style="font-size: 20px" onclick="getFromFile(\'' + value + '\')">' + res[3] + ' </a>   ' + '</div>';
-                                });
+                        //             html += '  <div class="uk-width-1-2"><a style="font-size: 20px" onclick="getFromFile(\'' + value + '\')">' + res[3] + ' </a>   ' + '</div>';
+                        //         });
         
-                                // console.log(html);
-                                $("#documents").html(html);
-                            }
-                        })
+                        //         // console.log(html);
+                        //         $("#documents").html(html);
+                        //     }
+                        // })
                 } 
 
             }
@@ -413,8 +414,10 @@ var Catalog = (function () {
             $("#option").on('change', function () {
                 if ($('#option').val() == 1)
                 {
+
                     if($("#directory").val()!="" || $("#directory").val()!=0)
                     {
+
                         $("#upload_file_div").removeClass("hidden");
                         $("#upload_file_div2").addClass("hidden");
                     }
@@ -426,6 +429,95 @@ var Catalog = (function () {
                 }
                 else
                 {
+                    // Accion solo para Usuario Admin
+                    $('#project_name').selectize();
+                    $('#customer_name').on('change', function () {
+                        $.ajax({
+                            url: Catalog.API_PATH + '/projects',
+                            type: 'GET',
+                            data: {customer_id: $(this).val()},
+                            dataType: 'json'
+                        }).done(
+                            function (data) {
+                                var html = '<option value="">Projects...</option>';
+                                $('#project_name').selectize()[0].selectize.destroy();
+
+                                $.each(data.data, function (i, value) {
+                                    html += '<option value="' + value.id + '">' + value.name + '</option>';
+                                });
+
+                                $('#project_name').html(html);
+                                $('#project_name').selectize();
+                            }
+                        );
+                    });
+                    // ==============================================
+                    $('#knowledge_area').selectize();
+                    $('#directory').on('change', function(){
+                       
+                        var knowledge = '<option value="">Knowledge Area...</option>';
+                        if(Catalog.lang_system == 'EN'){
+                            knowledge += '<option value="1-Integration_Management">1-Integration Management</option>';
+                            knowledge += '<option value="2-Scope_Management">2-Scope Management</option>';
+                            knowledge += '<option value="3-Time_Management">3-Time Management</option>';
+                            knowledge += '<option value="4-Cost_Management">4-Cost Management</option>';
+                            knowledge += '<option value="5-Quality_Management">5-Quality Management</option>';
+                            knowledge += '<option value="6-Team_Management">6-Team Management</option>';
+                            knowledge += '<option value="7-Communication_Management">7-Communication Management</option>';
+                            knowledge += '<option value="8-Risk_Management">8-Risk Management</option>';
+                            knowledge += '<option value="9-Stakeholder_Management">9-Stakeholder Management</option>';
+                            knowledge += '<option value="10-Procurement_Management">10-Procurement Management</option>';
+                        }
+                        if(Catalog.lang_system == 'ES') {
+                            knowledge += '<option value="1-Manejo_Integracion">1-Manejo De La Integracion</option>';
+                            knowledge += '<option value="2-Manejo_Alcance">2-Manejo Del Alcance</option>';
+                            knowledge += '<option value="3-Manejo_Tiempo">3-Manejo Del Tiempo</option>';
+                            knowledge += '<option value="4-Manjeo_Costos">4-Manejo De Los Costos</option>';
+                            knowledge += '<option value="5-Manejo_Calidad">5-Manejo De La Calidad</option>';
+                            knowledge += '<option value="6-Manjeo_Equipo">6-Manejo Del Equipo</option>';
+                            knowledge += '<option value="7-Manjeo_Comunicaciones">7-Manejo De Las Comunicaciones</option>';
+                            knowledge += '<option value="8-Manjeo_Riesgos">8-Manejo De Los Riesgos</option>';
+                            knowledge += '<option value="9-Manejo_Interesados">9-Manejo De Los Interesados</option>';
+                            knowledge += '<option value="10-Manjeo_Adquisiciones">10-Manejo De Las Adquisiciones</option>';
+                        }
+
+                        $('#knowledge_area').selectize()[0].selectize.destroy();
+                        $('#knowledge_area').html(knowledge);
+                        $('#knowledge_area').selectize();
+                    });
+
+                    $('#archives').selectize();
+                    $('#knowledge_area').on('change', function(){
+                        var archive = '<option value="" selected="selected">Sub Directory...</option>';
+
+                        if (Catalog.lang_system == 'ES') {
+                            archive += '<option value="1-Urgente">1-Urgente</option>';
+                            archive += '<option value="2-Correos">2-Correos</option>';
+                            archive += '<option value="3-Minutas">3-Minutas</option>';
+                            archive += '<option value="4-Reportes">4-Reportes</option>';
+                            archive += '<option value="5-Legales">5-Legales</option>';
+                            archive += '<option value="6-Planes">6-Planes</option>';
+                            archive += '<option value="7-Metricas">7-Metricas</option>';
+                            archive += '<option value="8-Otros">8-Otros</option>';
+                            archive += '<option value="9-Archivo">9-Archivo</option>';
+                        }
+                        if (Catalog.lang_system == 'EN') {
+                            archive += '<option value="1-Urgent">1-Urgent</option>';
+                            archive += '<option value="2-Mails">2-Mails</option>';
+                            archive += '<option value="3-Minutes">3-Minutes</option>';
+                            archive += '<option value="4-Reports">4-Reports</option>';
+                            archive += '<option value="5-Legal">5-Legal</option>';
+                            archive += '<option value="6-Plans">6-Plans</option>';
+                            archive += '<option value="7-Metrics">7-Metrics</option>';
+                            archive += '<option value="8-Others">8-Others</option>';
+                            archive += '<option value="9-Archives">9-Archives</option>';
+                        }
+
+                        $('#archives').selectize()[0].selectize.destroy();
+                        $('#archives').html(archive);
+                        $('#archives').selectize();
+                    });
+
                     if($("#directory").val()!="" || $("#directory").val()!=0)
                     {
                         $("#upload_file_div2").removeClass("hidden");
@@ -473,23 +565,23 @@ var Catalog = (function () {
                         $("#upload_file_div2").addClass("hidden");
                         $("#upload_file_div").addClass("hidden");
                     }
-                    $.ajax({
-                        url: Catalog.APP_URL+'/catalog/show/'+Catalog.lang_system+'/tagged/' + $("#directory").val(),
-                        success: function (data) {
-                            // console.log(data);
-                            var html = '';
+                    // $.ajax({
+                    //     url: Catalog.APP_URL+'/catalog/show/'+Catalog.lang_system+'/tagged/' + $("#directory").val(),
+                    //     success: function (data) {
+                    //         // console.log(data);
+                    //         var html = '';
     
-                            jQuery.each(data.documentos, function (i, value) {
+                    //         jQuery.each(data.documentos, function (i, value) {
     
-                                var res = value.split('/');
+                    //             var res = value.split('/');
     
-                                html += '  <div class="uk-width-1-2"><a style="font-size: 20px" onclick="getFromFile(\'' + value + '\')">' + res[3] + ' </a>   ' + '</div>';
-                            });
+                    //             html += '  <div class="uk-width-1-2"><a style="font-size: 20px" onclick="getFromFile(\'' + value + '\')">' + res[3] + ' </a>   ' + '</div>';
+                    //         });
     
-                            // console.log(html);
-                            $("#documents").html(html);
-                        }
-                    })
+                    //         // console.log(html);
+                    //         $("#documents").html(html);
+                    //     }
+                    // })
                 }
 
             });

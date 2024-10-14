@@ -8,9 +8,9 @@
 		var columns = [
 	            { data: 'id', name: 'id'},
                 { data: 'name', name: 'name' },
-	            { data: 'language.name', name: 'language_name' },
-                { data: 'industry.name', name: 'industry_name' },
-                { data: 'doctype.type_desc', name: 'doctype_name' },
+	            { data: 'language_name', name: 'language_name' },
+                { data: 'industry_name', name: 'industry_name' },
+                { data: 'doctype_name', name: 'doctype_name' },
                 { data: 'version', name: 'version' },
                 { data: 'link_logo_left', name: 'link_logo_left' },
                 { data: 'link_logo_right', name: 'link_logo_right' },

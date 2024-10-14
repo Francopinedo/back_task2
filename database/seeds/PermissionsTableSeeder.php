@@ -332,6 +332,24 @@ class PermissionsTableSeeder extends Seeder
             ]);
         }
 
+        if (Permission::where('name', '=', 'View catalog')->first() === null) {
+            Permission::create([
+                'name' => 'View catalog',
+                'slug' => 'view.catalog',
+                'description' => 'View Catalogs',
+                'model' => 'Permission',
+            ]);
+        }
+
+        if (Permission::where('name', '=', 'View repository')->first() === null) {
+            Permission::create([
+                'name' => 'View repository',
+                'slug' => 'view.repository',
+                'description' => 'View Repository',
+                'model' => 'Permission',
+            ]);
+        }
+
 
     }
 }

@@ -102,7 +102,7 @@ class CustomerController extends Controller
     	$custo=json_decode($res->getBody(), true);
 	
    
-		$destinationPath = "assets/img/customers/" . $custo['data']['id'].'/';
+		$destinationPath = "logos/customers/" . $custo['data']['id'].'/';
 
 	
             if($file!=null || $file!='') {
@@ -152,7 +152,7 @@ class CustomerController extends Controller
     	else
     	{
 
-            $destinationPath = "assets/img/customers/" . $request->id.'/';
+            $destinationPath = "logos/customers/" . $request->id.'/';
 
         if($file!=null || $file!='') {
                 $file->move(($destinationPath), $file->getClientOriginalName());

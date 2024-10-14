@@ -1,5 +1,7 @@
 <style>
-
+    #edit_div.switcher_active{
+        width: 600px;
+    }
     .uk-datepicker{
         min-width: initial!important;
         width: 215px!important;

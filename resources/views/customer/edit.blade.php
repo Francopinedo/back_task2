@@ -142,7 +142,7 @@
                                                  src="{{ URL::to('/') }}/assets/img/avatardefault.png">
 
                                         @else
-                                            <img src="{{ URL::to('/') .'/assets/img/customers/'. $customer->id .'/'. $customer->logo_path }}"
+                                            <img src="{{ URL::to('/') .'/logos/customers/'. $customer->id .'/'. $customer->logo_path }}"
                                                  alt="" id="logo_path_img2">
                                         @endif
                                     </div>  

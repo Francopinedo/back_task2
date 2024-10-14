@@ -19,36 +19,73 @@
         background: transparent !important;
     }
 
+    .floatButton0
+    {
+        position: fixed;
+        top: 50px;
+        right: 524px;
+        z-index: 100;
+        width: 75px;
+        text-align: center;
+    }
     .floatButton1
     {
         position: fixed;
         top: 50px;
-        right: 500px;
+        right: 440px;
         z-index: 100;
+        width: 75px;
+        text-align: center;
     }
-
     .floatButton2
     {
         position: fixed;
         top: 50px;
-        right: 350px;
+        right: 356px;
         z-index: 100;
+        width: 75px;
+        text-align: center;
     }
-
     .floatButton3
     {
         position: fixed;
         top: 50px;
-        right: 200px;
+        right: 272px;
         z-index: 100;
+        width: 75px;
+        text-align: center;
     }
-
     .floatButton4
     {
         position: fixed;
         top: 50px;
-        right: 50px;
+        right: 188px;
         z-index: 100;
+        width: 75px;
+        text-align: center;
+    }
+    .floatButton5
+    {
+        position: fixed;
+        top: 50px;
+        right: 104px;
+        z-index: 100;
+        width: 75px;
+        text-align: center;
+    }
+    .floatButton6
+    {
+        position: fixed;
+        top: 50px;
+        right: 20px;
+        z-index: 100;
+        width: 75px;
+        text-align: center;
+    }
+
+    .thumbnail.contenedor_compania, .thumbnail.contenedor_customers{
+        margin-top: 5px;
+        width: 30%;
     }
 
     .modal-body
@@ -76,7 +113,7 @@
                 
                 <form id="fileupload" action="catalog/uploadfile" method="post" enctype="multipart/form-data">
                     {{ csrf_field() }}
-
+                    <input type="hidden" name="project_session" value="{{Auth::user()->hasRole('1')}}">
                     <!-- Lenguaje del sistema | oculto -->                        
                     <div class="uk-form-row" style="display: none;">
                         <div class="uk-grid" data-uk-grid-margin="">
@@ -130,6 +167,79 @@
                         </div>
                     </div>
                     <!---------------------------------------------------------->
+                    <h4 id="notify" style="display: none;">Los siguientes campos son para seleccionar la ruta para guardar el documento a generar</h4>
+                    <!-- Customer | oculto -->
+                    <div class="uk-form-row" id="customer" style="display: none;">
+                        <div class="uk-grid" data-uk-grid-margin="">
+                            <div class="uk-width-medium-1 uk-row-first">
+                                <div class="uk-input-group uk-width-medium-1">
+                                    <select name="customer_id" id="customer_name" data-md-selectize>
+                                        <option value="">{{ __('catalog.customer') }}...</option>
+                                        @if(Auth::user()->hasRole('1'))
+                                            @foreach($customers as $customer)
+                                                <option value="{{ $customer->id }}">{{ $customer->name }}</option>
+                                            @endforeach
+                                        @else
+                                            <option value="{{session('customer_id')}}" selected>{{session('customer_name')}}</option>
+                                        @endif
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ----------------------------------------------- -->
+
+                    <!-- Project | oculto -->
+                    <div class="uk-form-row" id="project" style="display: none;">
+                        <div class="uk-grid" data-uk-grid-margin="">
+                            <div class="uk-width-medium-1 uk-row-first">
+                                <div class="uk-input-group uk-width-medium-1">
+                                    <select name="project_id" id="project_name" data-md-selectize>
+                                        <option value="">{{ __('catalog.project') }}...</option>
+                                        @if(!Auth::user()->hasRole('1'))
+                                            <option value="{{session('project_id')}}" selected>{{session('project_name')}}</option>
+                                        @endif
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ----------------------------------------------- -->
+                    <!-- Area de Conocimiento -->
+                    <div class="uk-form-row" id="container_knowledge_area" style="display: none;">
+                        <div class="uk-grid" data-uk-grid-margin="">
+                            <div class="uk-width-medium-1 uk-row-first">
+                                <div class="uk-input-group uk-width-medium-1">
+                                    <select name="knowledge_area" id="knowledge_area" data-md-selectize>
+                                        <option value="">{{ __('catalog.knowledge_area') }}...</option>
+                                        {{-- @if(isset($directories))
+                                            @foreach($directories as $directory)
+                                                <option value="{{ $directory->path }}">{{ $directory->nombre }}</option>
+                                            @endforeach
+                                        @endif --}}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Sub Carpetas de Area de Conocimiento -->
+                    <div class="uk-form-row" id="container_subfolders" style="display: none;">
+                        <div class="uk-grid" data-uk-grid-margin="">
+                            <div class="uk-width-medium-1 uk-row-first">
+                                <div class="uk-input-group uk-width-medium-1">
+                                    <select name="archives" id="archives" data-md-selectize>
+                                        <option value="">{{ __('catalog.directory') }}...</option>
+                                        {{-- @if(isset($directories))
+                                            @foreach($directories as $directory)
+                                                <option value="{{ $directory->path }}">{{ $directory->nombre }}</option>
+                                            @endforeach
+                                        @endif --}}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- -------------------------------------- -->
                     <div class="uk-form-row">
                         <div class="uk-grid" data-uk-grid-margin="">
                             <div class="uk-width-medium-1 uk-row-first">
@@ -196,7 +306,7 @@
         <div class="col-8" id="canvasContainer" style="display:none;">
             <div id="loading" style="text-align:center;"></div>
 
-            <div id="canvas"></div>
+            <div id="canvas" style="position: fixed;top: 62px;width: 54%;height: 94%"></div>
             <div id="error-message" style="display:none;" class="alert alert-danger alert-dismissible" role="alert"></div>
         </div>
         <div class="col-3">
@@ -276,87 +386,80 @@
 </div>
 
 @section('scripts')
-
-
-
     <!-- The template to display files available for upload -->
     <script id="template-upload" type="text/x-tmpl">
-{% for (var i=0, file; file=o.files[i]; i++) { %}
-    <tr class="template-upload fade">
-       <!-- <td>
-            <span class="preview"></span>
-        </td>-->
-        <td>
-            <p class="name">{%=file.name%}</p>
-            <strong class="error text-danger"></strong>
-        </td>
-        <td>
-            <p class="size">Processing...</p>
-            <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
-        </td>
-        <td>
-            {% if (!i && !o.options.autoUpload) { %}
-                <button style="display:none;" title="{{__('catalog.start_upload_tooltip')}}" class="btn btn-primary start" disabled>
-                    <i class="glyphicon glyphicon-upload"></i>
-                    <span>{{__('catalog.start')}}</span>
-                </button>
-            {% } %}
-            {% if (!i) { %}
-                <button style="display:none;" title="{{__('catalog.cancel_upload_tooltip')}}" class="btn btn-warning cancel">
-                    <i class="glyphicon glyphicon-ban-circle"></i>
-                    <span>{{__('catalog.cancel')}}</span>
-                </button>
-            {% } %}
-        </td>
-    </tr>
-{% } %}
-
-
+        {% for (var i=0, file; file=o.files[i]; i++) { %}
+            <tr class="template-upload fade">
+               <!-- <td>
+                    <span class="preview"></span>
+                </td>-->
+                <td>
+                    <p class="name">{%=file.name%}</p>
+                    <strong class="error text-danger"></strong>
+                </td>
+                <td>
+                    <p class="size">Processing...</p>
+                    <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
+                </td>
+                <td>
+                    {% if (!i && !o.options.autoUpload) { %}
+                        <button style="display:none;" title="{{__('catalog.start_upload_tooltip')}}" class="btn btn-primary start" disabled>
+                            <i class="glyphicon glyphicon-upload"></i>
+                            <span>{{__('catalog.start')}}</span>
+                        </button>
+                    {% } %}
+                    {% if (!i) { %}
+                        <button style="display:none;" title="{{__('catalog.cancel_upload_tooltip')}}" class="btn btn-warning cancel">
+                            <i class="glyphicon glyphicon-ban-circle"></i>
+                            <span>{{__('catalog.cancel')}}</span>
+                        </button>
+                    {% } %}
+                </td>
+            </tr>
+        {% } %}
     </script>
     <!-- The template to display files available for download -->
     <script id="template-download" type="text/x-tmpl">
-{% for (var i=0, file; file=o.files[i]; i++) { %}
-    <tr class="template-download fade">
-        <td>
-            <span class="preview">
-                {% if (file.thumbnailUrl) { %}
-                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
-                {% } %}
-            </span>
-        </td>
-        <td>
-            <p class="name">
-                {% if (file.url) { %}
-                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
-                {% } else { %}
-                    <span>{%=file.name%}</span>
-                {% } %}
-            </p>
-            {% if (file.error) { %}
-                <div><span class="label label-danger">Error</span> {%=file.error%}</div>
-            {% } %}
-        </td>
-        <td>
-            <span class="size">{%=o.formatFileSize(file.size)%}</span>
-        </td>
-        <td>
-            {% if (file.deleteUrl) { %}
-                <button class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
-                    <i class="glyphicon glyphicon-trash"></i>
-                    <span>Delete</span>
-                </button>
-                <input type="checkbox" name="delete" value="1" class="toggle">
-            {% } else { %}
-                <button class="btn btn-warning cancel">
-                    <i class="glyphicon glyphicon-ban-circle"></i>
-                    <span>Cancel</span>
-                </button>
-            {% } %}
-        </td>
-    </tr>
-{% } %}
-
-
+        {% for (var i=0, file; file=o.files[i]; i++) { %}
+            <tr class="template-download fade">
+                <td>
+                    <span class="preview">
+                        {% if (file.thumbnailUrl) { %}
+                            <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
+                        {% } %}
+                    </span>
+                </td>
+                <td>
+                    <p class="name">
+                        {% if (file.url) { %}
+                            <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
+                        {% } else { %}
+                            <span>{%=file.name%}</span>
+                        {% } %}
+                    </p>
+                    {% if (file.error) { %}
+                        <div><span class="label label-danger">Error</span> {%=file.error%}</div>
+                    {% } %}
+                </td>
+                <td>
+                    <span class="size">{%=o.formatFileSize(file.size)%}</span>
+                </td>
+                <td>
+                    {% if (file.deleteUrl) { %}
+                        <button class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
+                            <i class="glyphicon glyphicon-trash"></i>
+                            <span>Delete</span>
+                        </button>
+                        <input type="checkbox" name="delete" value="1" class="toggle">
+                    {% } else { %}
+                        <button class="btn btn-warning cancel">
+                            <i class="glyphicon glyphicon-ban-circle"></i>
+                            <span>Cancel</span>
+                        </button>
+                    {% } %}
+                </td>
+            </tr>
+        {% } %}
     </script>
 
 
@@ -375,18 +478,14 @@
     {{-- <script src="{{ asset('js/boot.js') }}" type="text/javascript" charset="utf-8"></script> --}}
 
     <script src="{{ asset('js/catalog.js') }}"></script>
-     <script src="{{ asset('js/doc_generation.js') }}"></script>
+    <script src="{{ asset('js/doc_generation.js') }}"></script>
     <script type="text/javascript">
 
-        DocGen.init('<?php echo e(strtoupper(app()->getLocale())); ?>', '<?php echo e(env('API_PATH')); ?>', '<?php echo e(env('APP_URL')); ?>');
+        DocGen.init('<?php echo e(strtoupper(app()->getLocale())); ?>', '<?php echo e(env('API_PATH')); ?>', '<?php echo e(env('APP_URL')); ?>', '{{$companie}}');
         
         Catalog.init('<?php echo e(strtoupper(app()->getLocale())); ?>', '<?php echo e(env('API_PATH')); ?>', '<?php echo e(env('APP_URL')); ?>','{{$type}}','{{$dir}}');
 
         Catalog.useDirectory('<?php echo e(strtoupper(app()->getLocale())) ?>', '{{$type}}','{{$dir}}');
-
-
-
-
     </script>
 
 @endsection

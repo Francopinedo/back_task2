@@ -54,7 +54,6 @@ class CompanyController extends Controller
     public function update(Request $request)
     {
 
-
     	/*==========================================================
     	=            ACTUALIZO DATOS BASICOS DE COMPANY            =
     	==========================================================*/
@@ -69,7 +68,7 @@ class CompanyController extends Controller
  
 			$extension = $file->getClientOriginalExtension();
 		
-		$destinationPath = "assets/img/companies/" . $companyData['id'].'/';
+		$destinationPath = "logos/companies/" . $companyData['id'].'/';
 
 
  		if($file!=null || $file!='') {

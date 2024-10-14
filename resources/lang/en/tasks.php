@@ -62,5 +62,7 @@ return [
 		'duration'			=> 'Duration',
 		'actions'			=> 'Actions',
 		'estimated_progress'=> 'Estimated Progress',
-		'days'				=> 'Days'
+		'days'				=> 'Days',
+		'yes'				=> 'Yes',
+		'no'				=> 'No',
 ];
